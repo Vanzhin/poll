@@ -62,6 +62,21 @@ services:
             networks:
                 - symfony-network
 
+        mailhog:
+            container_name: mailhog
+            image: mailhog/mailhog
+            restart: always
+            ports:
+                - "8025:8025"
+                - "1025:1025"
+
+            depends_on:
+                - symfony
+                - db_master
+            networks:
+                - symfony-network
+
+
 volumes:
     nginx_log:
     symfony_log:

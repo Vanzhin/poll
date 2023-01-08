@@ -16,6 +16,28 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            entry_point: form_login
+            login_link:
+                check_route: app_login_check
+                signature_properties: [ 'id' ]
+                # lifetime in seconds
+                lifetime: 7776000
+                success_handler: App\Security\Authentication\AuthenticationSuccessHandler
+                failure_handler: App\Security\Authentication\AuthenticationFailureHandler
+
+            form_login:
+                # "app_login" is the name of the route created previously
+                login_path: app_login
+                check_path: app_login
+
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                target: app_home
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 60480
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

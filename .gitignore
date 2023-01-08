@@ -2,3 +2,5 @@
 /docker/db/master/.data/
 
 .idea/
+
+docker/nginx/nginx_log/
