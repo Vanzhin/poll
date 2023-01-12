@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} Quizzes {% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h4>Ваш результат {{ score }} из {{ quiz.question| length }}</h4>
+        <div class="mb-3 form-control my-4">
+            <p>Пояснения</p>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox"
+                       id="checked" checked disabled>
+                <label class="form-check-label" for="checked">
+                    Ваши ответы
+                </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox"
+                       id="red" style="outline: 3px solid firebrick" disabled>
+                <label class="form-check-label" for="red">
+                    Ваши неверные ответы
+                </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox"
+                       id="limegreen" style="outline: 3px solid limegreen" disabled>
+                <label class="form-check-label" for="limegreen">
+                    Верные ответы
+                </label>
+            </div>
+        </div>
+
+        {% for question in quiz.question %}
+            <div class="form-control my-4">
+                <p>{{ question.content }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="mb-3">
+                        {% for variant in question.variant %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="{{ variant }}"
+                                       name="var_{{ loop.index - 1 }}"
+                                       id="flexCheck_{{ loop.index }}" disabled
+                                        {% if variant in  question.answer %} style="outline: 3px solid limegreen" {% endif %}
+                                        {% if variant in  question.currentAnswer %} checked {% endif %}
+                                        {% if variant in question.currentAnswer and variant not in question.answer %} style="outline: 3px solid firebrick" {% endif %}
+                                >
+                                <label class="form-check-label" for="flexCheck_{{ loop.index }}">
+                                    {{ variant }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="h3">{% if question.answer is same as(question.currentAnswer) %}
+                            <span class="text-success">
+                                <i class="bi bi-check-square-fill"></i>
+                            </span>
+                        {% else %}
+                            <span class="text-danger">
+                                <i class="bi bi-x-square-fill"></i>
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="d-flex  justify-content-around align-items-center mb-5">
+            <a href="{{ path('app_quiz') }}" class="btn btn-primary">К тестам</a>
+            <a href="{{ path('app_quiz_restart',{'quiz': quiz.id}) }}" class="btn btn-success">Пройти еще раз</a>
+            <a href="{{ path('app_login_link') }}" class="btn btn-secondary">Зарегистрироваться и сохранить</a>
+
+        </div>
+    </div>
+{% endblock %}

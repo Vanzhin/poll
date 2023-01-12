@@ -15,4 +15,10 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/home/test/{quiz}', name: 'app_home_test')]
+    public function test(int $quiz): Response
+    {
+        return $this->redirectToRoute('app_quiz_show',['quiz' => $quiz]);
+    }
 }

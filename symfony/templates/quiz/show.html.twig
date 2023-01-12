@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {{ quiz.title }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <form class="form-control my-4" method="POST" action="{{ path('app_quiz_show', {'quiz': quiz.id}) }}" enctype="multipart/form-data" autocomplete="off">
+            <p>{{ question.content }}</p>
+            <div class="mb-3">
+                {% if question.type.title == 'checkbox' %}
+                    {% for variant in question.variant %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="{{ variant }}" name="var_{{ loop.index - 1 }}" id="flexCheck_{{ loop.index }}">
+                            <label class="form-check-label" for="flexCheck_{{ loop.index }}">
+                                {{ variant }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% if question.type.title == 'radio' %}
+                    {% for variant in question.variant %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="{{ variant }}" name="var" id="flexCheck_{{ loop.index }}">
+                            <label class="form-check-label" for="flexCheck_{{ loop.index }}">
+                                {{ variant }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <input type="text" name="question_id" value="{{ question.id }}" hidden>
+            </div>
+            <button type="submit" class="btn btn-primary">Ответить</button>
+        </form>
+    </div>
+{% endblock %}

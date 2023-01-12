@@ -33,6 +33,8 @@ class Question
     #[ORM\ManyToOne(inversedBy: 'questions')]
     private ?Type $type = null;
 
+    private array $currentAnswer = [];
+
     public function __construct()
     {
         $this->quizzes = new ArrayCollection();
@@ -116,5 +118,21 @@ class Question
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCurrentAnswer(): array
+    {
+        return $this->currentAnswer;
+    }
+
+    /**
+     * @param array $currentAnswer
+     */
+    public function setCurrentAnswer(array $currentAnswer): void
+    {
+        $this->currentAnswer = $currentAnswer;
     }
 }
