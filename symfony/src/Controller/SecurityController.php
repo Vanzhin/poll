@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Factory\UserFactory;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
+use App\Service\QuizService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +48,15 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/login_link/{savedEmail}', name: 'app_login_link')]
-    public function requestLoginLink(ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, LoginLinkHandlerInterface $loginLinkHandler, UserRepository $userRepository, Request $request, Mailer $mailer, string $savedEmail = null): Response
+    public function requestLoginLink(ValidatorInterface        $validator,
+                                     UserFactory               $factory,
+                                     EntityManagerInterface    $entityManager,
+                                     LoginLinkHandlerInterface $loginLinkHandler,
+                                     UserRepository            $userRepository,
+                                     Request                   $request,
+                                     Mailer                    $mailer,
+                                     QuizService               $quizService,
+                                     string                    $savedEmail = null): Response
     {
         $email = $request->request->get('email');
         $violations = $validator->validate($email, [
@@ -56,26 +66,17 @@ class SecurityController extends AbstractController
         if (0 !== count($violations)) {
             $this->addFlash('security_flash', 'Указан не верный формат email.');
             return $this->render('security/login_link.html.twig', ['savedEmail' => $email]);
-
         }
 
         if ($request->isMethod('POST')) {
             $user = $userRepository->findOneBy(['email' => $email]);
             if (!$user) {
-                $user = new User();
-                $user->setEmail($email);
-                $user->setPassword(
-                    $userPasswordHasher->hashPassword(
-                        $user,
-                        '1234'
-                    )
-                );
+                $user = $factory->create($email);
                 $entityManager->persist($user);
                 $entityManager->flush();
             }
 
             $loginLinkDetails = $loginLinkHandler->createLoginLink($user);
-
 
             try {
                 $mailer->sendLoginLinkEmail($user, $loginLinkDetails);
@@ -83,8 +84,8 @@ class SecurityController extends AbstractController
                 $this->addFlash('email_failure_flash', 'При отправке сообщения произошла ощибка. Пожалуйста, повтортите попытку позже.');
                 return $this->render('security/login_link.html.twig', ['savedEmail' => $email]);
             }
-            // render a "Login link is sent!" page
-            $this->addFlash('mail_flash', 'Ссылка для входа в личный кабинет отправлена на ' . $user->getEmail());
+            $quizService->saveOneResult($user, $request->getSession()->get('current_quiz'));
+            $this->addFlash('email_flash', 'Ссылка для входа в личный кабинет отправлена на ' . $user->getEmail());
 
             return $this->render('security/login_link_sent.html.twig', ['savedEmail' => $email]);
         }

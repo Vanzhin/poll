@@ -2,35 +2,52 @@
 
 namespace App\Service;
 
+use App\Entity\Answer;
+use App\Entity\Question;
 use App\Entity\Quiz;
+use App\Entity\Result;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class QuizService
 {
-
     const NAME = 'quiz';
     const SAVE = 'quiz_to_save';
-    private static int $current;
+    const CURRENT = 'current_quiz';
+    private static int $currentQuestion;
 
-    public function __construct(private readonly RequestStack $requestStack)
+    public function __construct(private readonly RequestStack           $requestStack,
+                                private readonly EntityManagerInterface $entityManager)
     {
     }
 
-    public function updateOrCreate(int $id): void
+    public function updateOrCreate(int $quizId): void
     {
         $session = $this->requestStack->getSession();
         $data = $session->get(static::NAME, []);
 
-        if (isset($data[$id])) {
-            self::$current = count($data[$id]);
+        if (isset($data[$quizId])) {
+            self::$currentQuestion = count($data[$quizId]);
         } else {
-            self::$current = 0;
+            self::$currentQuestion = 0;
             $session->set(static::NAME, [
-                $id => [
+                $quizId => [
                 ]
             ]);
         }
+        $this->addCurrent($quizId);
 
+    }
+
+    private function addCurrent(int $quizId): void
+    {
+        $this->requestStack->getSession()->set(static::CURRENT, $quizId);
+    }
+
+    private function removeCurrent(int $quizId): void
+    {
+        $this->requestStack->getSession()->remove(static::CURRENT);
     }
 
     public function answerHandle(int $quizId): void
@@ -46,18 +63,18 @@ class QuizService
             }
 
         }
-        $this->setCurrent($data[$quizId]);
+        $this->setCurrentQuestion($data[$quizId]);
         $session->set(static::NAME, $data);
     }
 
-    public function getCurrent(): int
+    public function getCurrentQuestion(): int
     {
-        return self::$current;
+        return self::$currentQuestion;
     }
 
-    private function setCurrent(array $array): void
+    private function setCurrentQuestion(array $array): void
     {
-        self::$current = count($array);
+        self::$currentQuestion = count($array);
 
     }
 
@@ -76,11 +93,12 @@ class QuizService
         return $score;
 
     }
+
     public function setUserAnswer(Quiz $quiz): Quiz
     {
         $session = $this->requestStack->getSession();
         $answers = $session->get(static::NAME, [])[$quiz->getId()];
-        if ($answers){
+        if ($answers) {
             foreach ($quiz->getQuestion() as $question) {
                 $quiz->removeQuestion($question);
                 $question->setCurrentAnswer($answers[$question->getId()]);
@@ -91,7 +109,7 @@ class QuizService
         return $quiz;
     }
 
-    public function addQuizToSave(int $quizId): void
+    public function addToSave(int $quizId): void
     {
         $session = $this->requestStack->getSession();
         $quizzesToSave = $session->get(static::SAVE, []);
@@ -101,12 +119,12 @@ class QuizService
         $session->set(static::SAVE, $quizzesToSave);
     }
 
-    private function removeQuizToSave(int $quizId): void
+    private function removeToSave(int $quizId): void
     {
         $session = $this->requestStack->getSession();
         $quizzesToSave = $session->get(static::SAVE, []);
         if (in_array($quizId, $quizzesToSave)) {
-            unset($quizzesToSave[array_search ($quizId, $quizzesToSave)]);
+            unset($quizzesToSave[array_search($quizId, $quizzesToSave)]);
         }
         $session->set(static::SAVE, $quizzesToSave);
     }
@@ -117,7 +135,54 @@ class QuizService
         $data = $session->get(static::NAME, []);
         unset($data[$quizId]);
         $session->set(static::NAME, $data);
-        $this->removeQuizToSave($quizId);
+        $this->removeToSave($quizId);
+        $this->removeCurrent($quizId);
+
+    }
+
+    public function saveOneResult(User $user, int $quizId): bool
+    {
+        $session = $this->requestStack->getSession();
+        $userAnswers = $session->get(static::NAME, [])[$quizId];
+        if ($userAnswers) {
+            $quiz = $this->entityManager->find(Quiz::class, $quizId);
+            $result = new Result();
+            $result
+                ->setUser($user)
+                ->setQuiz($quiz)
+                ->setScore($this->getScore($quiz));
+            $this->entityManager->persist($result);
+            foreach ($userAnswers as $questionId => $userAnswer) {
+                $answer = new Answer();
+                $answer
+                    ->setResult($result)
+                    ->setQuestion($this->entityManager->find(Question::class, $questionId))
+                    ->setContent($userAnswer);
+                $this->entityManager->persist($answer);
+            }
+            $this->entityManager->flush();
+            $this->restart($quiz->getId());
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
+
+    public function saveAllResults(User $user): bool
+    {
+        $session = $this->requestStack->getSession();
+        $quizzesToSave = $session->get(static::SAVE, []);
+        if (!empty($quizzesToSave)) {
+            foreach ($quizzesToSave as $quizId) {
+                $quiz = $this->entityManager->find(Quiz::class, $quizId);
+                $this->saveOneResult($user, $quiz);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

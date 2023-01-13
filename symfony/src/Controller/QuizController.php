@@ -36,7 +36,7 @@ class QuizController extends AbstractController
             return $this->redirectToRoute('app_home_test', ['quiz' => $quiz->getId()]);
         }
 
-        $question = $quiz->getQuestion()->offsetGet($quizService->getCurrent());
+        $question = $quiz->getQuestion()->offsetGet($quizService->getCurrentQuestion());
         if ($question) {
             return $this->render('quiz/show.html.twig', [
                 'quiz' => $quiz,
@@ -54,7 +54,7 @@ class QuizController extends AbstractController
     {
         $score = $quizService->getScore($quiz);
 
-        $quizService->addQuizToSave($quiz->getId());
+        $quizService->addToSave($quiz->getId());
 
         $quiz = $quizService->setUserAnswer($quiz);
 

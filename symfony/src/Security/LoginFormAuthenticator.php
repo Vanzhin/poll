@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Service\QuizService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private readonly UrlGeneratorInterface $urlGenerator, private readonly QuizService $quizService)
     {
     }
 
@@ -49,6 +50,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
+        $this->quizService->saveOneResult($token->getUser(), $request->getSession()->get('current_quiz'));
+
         return new RedirectResponse($this->urlGenerator->generate('app_account'));
     }
 

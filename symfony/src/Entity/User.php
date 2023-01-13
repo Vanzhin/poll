@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -36,6 +38,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Result::class, orphanRemoval: true)]
+    private Collection $result;
+
+    public function __construct()
+    {
+        $this->result = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -133,5 +143,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         }
         return $string;
+    }
+
+    /**
+     * @return Collection<int, Result>
+     */
+    public function getResult(): Collection
+    {
+        return $this->result;
+    }
+
+    public function addResult(Result $result): self
+    {
+        if (!$this->result->contains($result)) {
+            $this->result->add($result);
+            $result->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResult(Result $result): self
+    {
+        if ($this->result->removeElement($result)) {
+            // set the owning side to null (unless already changed)
+            if ($result->getUser() === $this) {
+                $result->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
