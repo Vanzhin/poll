@@ -6,11 +6,9 @@ use App\Entity\Quiz;
 use App\Repository\QuizRepository;
 use App\Service\Paginator;
 use App\Service\QuizService;
-use SessionHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QuizController extends AbstractController
@@ -34,7 +32,7 @@ class QuizController extends AbstractController
 
         if ($request->isMethod('POST')) {
 
-            $quizService->answer($quiz->getId());
+            $quizService->answerHandle($quiz->getId());
             return $this->redirectToRoute('app_home_test', ['quiz' => $quiz->getId()]);
         }
 
@@ -52,39 +50,13 @@ class QuizController extends AbstractController
     }
 
     #[Route('/quiz/{quiz}/final', name: 'app_quiz_final')]
-    public function final(Quiz $quiz, Request $request): Response
+    public function final(Quiz $quiz, QuizService $quizService, Request $request): Response
     {
-        $session = $request->getSession();
-        $answers = $session->get('quiz')[$quiz->getId()];
-        unset($answers['current'], $answers['toSave']);
-        foreach ($answers as $key => $answer) {
-            $answers[$key] = array_values($answer);
+        $score = $quizService->getScore($quiz);
 
-        }
+        $quizService->addQuizToSave($quiz->getId());
 
-        //результат
-        $score = 0;
-        foreach ($quiz->getQuestion() as $question) {
-            if ($question->getAnswer() === $answers[$question->getId()]) {
-                $score++;
-            }
-        }
-
-        foreach ($quiz->getQuestion() as $question) {
-            $quiz->removeQuestion($question);
-            $question->setCurrentAnswer($answers[$question->getId()]);
-            $quiz->addQuestion($question);
-
-        }
-        $newQData = [];
-        foreach ($session->get('quiz') as $key => $value) {
-            if ($key === $quiz->getId()) {
-                $value['toSave'] = 1;
-            }
-            $newQData[$key] = $value;
-        }
-
-        $session->set('quiz', $newQData);
+        $quiz = $quizService->setUserAnswer($quiz);
 
         return $this->render('quiz/final.html.twig',
             [
@@ -96,12 +68,9 @@ class QuizController extends AbstractController
     }
 
     #[Route('/quiz/{quiz}/restart', name: 'app_quiz_restart')]
-    public function restart(Quiz $quiz, Request $request): Response
+    public function restart(Quiz $quiz, QuizService $quizService): Response
     {
-        $session = $request->getSession();
-        $data = $session->get('quiz');
-        unset($data[$quiz->getId()]);
-        $session->set('quiz', $data);
+        $quizService->restart($quiz->getId());
         return $this->redirectToRoute('app_quiz_show', ['quiz' => $quiz->getId()]);
 
     }
