@@ -12,6 +12,7 @@
         - yarn run dev
         - перейти в контейнер symfony и выполнить миграции командой
             - php bin/console doctrine:migrations:migrate
+            - php bin/console doctrine:fixtures:load
 
   приложение запускается на https://localhost:443 (у меня на  https://localhost )
     
