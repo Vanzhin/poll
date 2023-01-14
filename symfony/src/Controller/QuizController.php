@@ -41,6 +41,7 @@ class QuizController extends AbstractController
             return $this->render('quiz/show.html.twig', [
                 'quiz' => $quiz,
                 'question' => $question,
+                'currentQuestion' => $quizService->getCurrentQuestion(),
             ]);
         } else {
             return $this->redirectToRoute('app_quiz_final', ['quiz' => $quiz->getId()]);
