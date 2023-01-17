@@ -43,7 +43,7 @@ abstract class BaseFixtures extends Fixture
         $this->manager->flush();
     }
 
-    protected function getRandomReferences($className)
+    protected function getRandomReference($className)
     {
 
         if (!isset($this->referencesIndex[$className])) {

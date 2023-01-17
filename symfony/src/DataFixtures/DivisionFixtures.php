@@ -3,8 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Division;
-use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class DivisionFixtures extends BaseFixtures
@@ -14,7 +12,7 @@ class DivisionFixtures extends BaseFixtures
     {
         $this->createMany(Division::class, 10, function (Division $division) use ($manager) {
             $division
-                ->setTitle($this->faker->words($this->faker->numberBetween(1,5),true));
+                ->setTitle($this->faker->city . " ". $this->faker->country);
 
 
         });
