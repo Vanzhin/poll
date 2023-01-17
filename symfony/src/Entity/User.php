@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -134,9 +135,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param string|null $firstName
      */
-    public function setFirstName(?string $firstName): void
+    public function setFirstName(?string $firstName): self
     {
         $this->firstName = $firstName;
+        return $this;
     }
 
     public function getAvatarUrl(int $size = null): string
@@ -149,36 +151,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         }
         return $string;
-    }
-
-    /**
-     * @return Collection<int, Answer>
-     */
-    public function getAnswers(): Collection
-    {
-        return $this->answers;
-    }
-
-    public function addAnswer(Answer $answer): self
-    {
-        if (!$this->answers->contains($answer)) {
-            $this->answers->add($answer);
-            $answer->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAnswer(Answer $answer): self
-    {
-        if ($this->answers->removeElement($answer)) {
-            // set the owning side to null (unless already changed)
-            if ($answer->getUser() === $this) {
-                $answer->setUser(null);
-            }
-        }
-
-        return $this;
     }
 
     /**

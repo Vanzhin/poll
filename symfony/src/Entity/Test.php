@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test
@@ -19,8 +21,12 @@ class Test
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
+
+    #[ORM\Column(length: 100, unique: true)]
+    #[Gedmo\Slug(fields: ['title'])]
+    private ?string $slug = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, inversedBy: 'tests')]
     private Collection $ticket;

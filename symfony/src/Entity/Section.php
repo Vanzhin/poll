@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: SectionRepository::class)]
 class Section
@@ -16,8 +18,12 @@ class Section
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
+
+    #[ORM\Column(length: 100, unique: true)]
+    #[Gedmo\Slug(fields: ['title'])]
+    private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'section')]
     #[ORM\JoinColumn(nullable: false)]
@@ -88,5 +94,13 @@ class Section
         }
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 }

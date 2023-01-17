@@ -6,6 +6,8 @@ use App\Repository\DivisionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: DivisionRepository::class)]
 class Division
@@ -15,8 +17,12 @@ class Division
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
+
+    #[ORM\Column(length: 100, unique: true)]
+    #[Gedmo\Slug(fields: ['title'])]
+    private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'division', targetEntity: Section::class)]
     private Collection $section;
@@ -71,5 +77,13 @@ class Division
         }
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 }
