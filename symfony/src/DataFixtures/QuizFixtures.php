@@ -28,6 +28,7 @@ class QuizFixtures extends BaseFixtures implements DependentFixtureInterface
     {
         return [
             QuestionFixtures::class,
+            CategoryFixtures::class,
         ];
     }
 }

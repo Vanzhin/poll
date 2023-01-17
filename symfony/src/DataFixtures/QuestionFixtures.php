@@ -59,11 +59,15 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
     {
         foreach (self::$data as $item) {
             $this->create(Question::class, function (Question $question) use ($manager, $item) {
-                $question
-                    ->setContent($item['content'])
-                    ->setVariant($item['variant'])
-                    ->setAnswer($item['answer'])
-                    ->setType($manager->getRepository(Type::class)->findOneBy(['title'=>$item['type']]));
+                $question->setType($this->getRandomReferences(Type::class));
+                dd($question->getType()->getTitle());
+//        switch ($question->getType()->getTitle());
+
+//                    ->setContent($item['content'])
+//                    ->setVariant($item['variant'])
+//                    ->setAnswer($item['answer'])
+//                    ->setType($manager->getRepository(Type::class)->findOneBy(['title'=>$item['type']]))
+                ;
             });
         }
         $this->manager->flush();
