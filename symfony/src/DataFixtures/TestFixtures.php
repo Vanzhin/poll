@@ -14,9 +14,10 @@ class TestFixtures extends BaseFixtures implements DependentFixtureInterface
     {
         $this->createMany(Test::class, 100, function (Test $test) use ($manager) {
             $test
-                ->setTitle($this->faker->colorName . '-'. $this->faker->company)
+                ->setTitle($this->faker->colorName . '-' . $this->faker->company)
                 ->setSection($this->getRandomReference(Section::class));
-        });    }
+        });
+    }
 
     public function getDependencies(): array
     {
