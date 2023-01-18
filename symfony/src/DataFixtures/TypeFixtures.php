@@ -22,12 +22,12 @@ class TypeFixtures extends BaseFixtures
 
     function loadData(ObjectManager $manager)
     {
-        foreach (static::$titles as $i=>$title){
+        foreach (static::$titles as $i => $title) {
             $entity = $this->create(Type::class, function (Type $type) use ($manager, $title) {
                 $type
                     ->setTitle($title);
             });
-            $this->addReference(Type::class."|$i", $entity);
+            $this->addReference(Type::class . "|$i", $entity);
         }
 
         $this->manager->flush();
