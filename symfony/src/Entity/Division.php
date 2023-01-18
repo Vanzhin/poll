@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: DivisionRepository::class)]
@@ -15,8 +16,10 @@ class Division
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['main'])]
     private ?int $id = null;
 
+    #[Groups(['main'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
 
@@ -25,6 +28,7 @@ class Division
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'division', targetEntity: Section::class)]
+    #[Groups(['main'])]
     private Collection $section;
 
     public function __construct()

@@ -15,8 +15,7 @@ class ResultFixtures extends BaseFixtures implements DependentFixtureInterface
         $this->createMany(Result::class, 500, function (Result $result) use ($manager) {
             $result
                 ->setScore(0)
-                ->setUser($this->getRandomReference(User::class))
-                ;
+                ->setUser($this->getRandomReference(User::class));
         });
 
     }
