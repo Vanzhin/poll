@@ -12,7 +12,7 @@ class ResultFixtures extends BaseFixtures implements DependentFixtureInterface
 
     function loadData(ObjectManager $manager)
     {
-        $this->createMany(Result::class, 50, function (Result $result) use ($manager) {
+        $this->createMany(Result::class, 500, function (Result $result) use ($manager) {
             $result
                 ->setScore(0)
                 ->setUser($this->getRandomReference(User::class))
