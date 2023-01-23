@@ -1,0 +1,10 @@
+<div class="btn-group" role="group" aria-label="Basic outlined example">
+    <a href="{{ path(path, {'slug': article.slug}) }}"
+       class="btn btn-outline-primary"><i class="bi bi-pencil"></i></a>
+    <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#deleteModal"
+       data-bs-title="Раздел {{ article.title }}"
+       data-bs-slug="{{ article.slug }}"
+       data-bs-entity={{ entity }}
+
+    ><i class="bi bi-trash3"></i></a>
+</div>
