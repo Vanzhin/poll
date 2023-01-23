@@ -7,9 +7,9 @@
         "@symfony/webpack-encore": "^4.0.0",
         "core-js": "^3.23.0",
         "regenerator-runtime": "^0.13.9",
-        "vue": "^2.5",
-        "vue-loader": "^15.9.5",
-        "vue-template-compiler": "^2.7.14",
+        "vue": "^3.2.45",
+        "vue-loader": "^17.0.0",
+        "vue-router": "^4.1.6",
         "webpack": "^5.74.0",
         "webpack-cli": "^4.10.0",
         "webpack-notifier": "^1.15.0"
@@ -24,8 +24,16 @@
     },
     "dependencies": {
         "@popperjs/core": "^2.11.6",
+        "@vueblocks/vue-use-core": "^0.2.11",
+        "@vueblocks/vue-use-vuex": "^0.2.11",
+        "axios": "^1.2.2",
+        "babel-loader": "^9.1.2",
         "bootstrap": "^5.2.3",
         "jquery": "^3.6.3",
-        "popper.js": "^1.16.1"
+        "popper.js": "^1.16.1",
+        "sass": "^1.57.1",
+        "sass-loader": "^13.0.0",
+        "vue-template-compiler": "^2.7.14",
+        "vuex": "^4.1.0"
     }
 }

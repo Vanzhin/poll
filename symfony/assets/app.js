@@ -1,25 +1,14 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
-
-// any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
-
-// start the Stimulus application
-import $ from 'jquery'
-
-
 require('bootstrap')
 import './bootstrap';
 
-import Vue from "vue";
-new Vue({
-    el: '#app',
-    data: {
-        message: 'vue-test'
-    },
-    delimiters: ['${', '}$'],
-})
+import Appt from './Appt.vue'
+import { createApp } from 'vue'
+import router from './router'
+import store from './store/index';
+
+
+const app = createApp(Appt)
+app.use(router)
+app.use(store)
+app.mount('#app')
