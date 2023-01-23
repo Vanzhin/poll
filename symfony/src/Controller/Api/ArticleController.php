@@ -2,35 +2,35 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Division;
-use App\Repository\DivisionRepository;
+use App\Entity\Article;
+use App\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class DivisionController extends AbstractController
+class ArticleController extends AbstractController
 {
-    #[Route('/api/division', name: 'app_api_division',  methods: ['GET'])]
-    public function index(DivisionRepository $repository): JsonResponse
+    #[Route('/api/article', name: 'app_api_article',  methods: ['GET'])]
+    public function index(ArticleRepository $repository): JsonResponse
     {
-        $divisions = $repository->findAll();
+        $articles = $repository->findAll();
 
 
         return $this->json(
-            $divisions,
+            $articles,
             200,
             ['charset=utf-8'],
             ['groups' => 'main'],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    #[Route('/api/division/{slug}', name: 'app_api_division_show',  methods: ['GET'])]
-    public function show(Division $division): JsonResponse
+    #[Route('/api/article/{slug}', name: 'app_api_article_show',  methods: ['GET'])]
+    public function show(Article $article): JsonResponse
     {
 
         return $this->json(
-            $division,
+            $article,
             200,
             ['charset=utf-8'],
             ['groups' => 'main'],
