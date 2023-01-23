@@ -29,7 +29,7 @@ class Section
 
     #[ORM\ManyToOne(inversedBy: 'section')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Division $division = null;
+    private ?Article $article = null;
 
     #[ORM\OneToMany(mappedBy: 'section', targetEntity: Test::class)]
     private Collection $test;
@@ -56,14 +56,14 @@ class Section
         return $this;
     }
 
-    public function getDivision(): ?Division
+    public function getArticle(): ?Article
     {
-        return $this->division;
+        return $this->article;
     }
 
-    public function setDivision(?Division $division): self
+    public function setArticle(?Article $article): self
     {
-        $this->division = $division;
+        $this->article = $article;
 
         return $this;
     }

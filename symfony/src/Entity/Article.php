@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\DivisionRepository;
+use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,8 +10,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
-#[ORM\Entity(repositoryClass: DivisionRepository::class)]
-class Division
+#[ORM\Entity(repositoryClass: ArticleRepository::class)]
+class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,7 +27,7 @@ class Division
     #[Gedmo\Slug(fields: ['title'])]
     private ?string $slug = null;
 
-    #[ORM\OneToMany(mappedBy: 'division', targetEntity: Section::class)]
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Section::class)]
     #[Groups(['main'])]
     private Collection $section;
 

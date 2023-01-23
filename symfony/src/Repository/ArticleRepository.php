@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Division;
+use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Division>
+ * @extends ServiceEntityRepository<Article>
  *
- * @method Division|null find($id, $lockMode = null, $lockVersion = null)
- * @method Division|null findOneBy(array $criteria, array $orderBy = null)
- * @method Division[]    findAll()
- * @method Division[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Article|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Article|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Article[]    findAll()
+ * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DivisionRepository extends ServiceEntityRepository
+class ArticleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Division::class);
+        parent::__construct($registry, Article::class);
     }
 
-    public function save(Division $entity, bool $flush = false): void
+    public function save(Article $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class DivisionRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Division $entity, bool $flush = false): void
+    public function remove(Article $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class DivisionRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Division[] Returns an array of Division objects
+//     * @return Article[] Returns an array of Article objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class DivisionRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Division
+//    public function findOneBySomeField($value): ?Article
 //    {
 //        return $this->createQueryBuilder('d')
 //            ->andWhere('d.exampleField = :val')
