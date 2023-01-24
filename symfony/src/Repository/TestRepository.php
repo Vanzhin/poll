@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,26 @@ class TestRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('t');
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findAllQuestions(int $id)
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('t.id = :id')
+            ->setParameter('id', $id)
+            ->leftJoin('t.ticket', 'ti')
+            ->leftJoin('ti.question', 'qu')
+            ->addSelect(['qu', 'ti'])
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**

@@ -6,6 +6,7 @@ use App\Repository\TicketRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
@@ -16,12 +17,14 @@ class Ticket
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets')]
+//    #[Groups(['main'])]
     private Collection $question;
 
     #[ORM\ManyToMany(targetEntity: Test::class, mappedBy: 'ticket')]
     private Collection $tests;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['main'])]
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class)]

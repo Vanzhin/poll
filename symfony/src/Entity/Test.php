@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
@@ -22,6 +23,7 @@ class Test
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['main'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 100, unique: true)]
@@ -29,6 +31,7 @@ class Test
     private ?string $slug = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, inversedBy: 'tests')]
+    #[Groups(['main'])]
     private Collection $ticket;
 
     #[ORM\ManyToOne(inversedBy: 'test')]
