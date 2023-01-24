@@ -11,11 +11,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
-    #[Route('/api/article', name: 'app_api_article',  methods: ['GET'])]
+    #[Route('/api/article', name: 'app_api_article', methods: ['GET'])]
     public function index(ArticleRepository $repository): JsonResponse
     {
         $articles = $repository->findAll();
-
 
         return $this->json(
             $articles,
@@ -25,7 +24,7 @@ class ArticleController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    #[Route('/api/article/{slug}', name: 'app_api_article_show',  methods: ['GET'])]
+    #[Route('/api/article/{slug}', name: 'app_api_article_show', methods: ['GET'])]
     public function show(Article $article): JsonResponse
     {
 

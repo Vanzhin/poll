@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
@@ -20,15 +21,18 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['main'])]
     private ?string $title = null;
 
     #[ORM\Column]
+    #[Groups(['main'])]
     private array $variant = [];
 
     #[ORM\Column]
     private array $answer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[Groups(['main'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
