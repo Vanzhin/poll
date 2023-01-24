@@ -42,15 +42,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Answer::class)]
-    private Collection $answers;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Result::class, orphanRemoval: true)]
     private Collection $results;
 
     public function __construct()
     {
-        $this->answers = new ArrayCollection();
         $this->results = new ArrayCollection();
     }
 

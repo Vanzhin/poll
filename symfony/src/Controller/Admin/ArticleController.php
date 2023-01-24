@@ -46,7 +46,7 @@ class ArticleController extends AbstractController
     }
 
 
-    #[Route("admin/article/{slug}/edit", name: 'app_admin_article_edit')]
+    #[Route("admin/article/{id}/edit", name: 'app_admin_article_edit')]
     public function edit(Article $article, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(ArticleFormType::class, $article);
@@ -61,7 +61,7 @@ class ArticleController extends AbstractController
             'titleText' => 'Обновление раздела'
         ]);
     }
-    #[Route("admin/article/{slug}/delete", name: 'app_admin_article_delete')]
+    #[Route("admin/article/{id}/delete", name: 'app_admin_article_delete')]
     public function delete(Article $article, EntityManagerInterface $em): Response
     {
 

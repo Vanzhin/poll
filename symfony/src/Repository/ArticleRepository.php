@@ -39,6 +39,7 @@ class ArticleRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
     public function findLastUpdatedQuery(): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('a');
@@ -63,5 +64,13 @@ class ArticleRepository extends ServiceEntityRepository
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('a');
+    }
+
+    public function findAllSortedByName(string $direction = 'ASC')
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->orderBy('a.title', $direction)
+            ->getQuery()
+            ->getResult();
     }
 }

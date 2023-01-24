@@ -24,7 +24,7 @@
     const title = button.getAttribute('data-bs-title')
     const entity = button.getAttribute('data-bs-entity')
 
-    const slug = button.getAttribute('data-bs-slug')
+    const id = button.getAttribute('data-bs-id')
 
     // If necessary, you could initiate an AJAX request here
     // and then do the updating in a callback.
@@ -34,7 +34,7 @@
     const modalDeleteLink = deleteModal.querySelector('.modal-footer a')
 
     modalTitle.textContent = `Вы точно хотите удалить ${title}?`
-    modalDeleteLink.setAttribute("href", `/admin/${entity}/${slug}/delete`)
+    modalDeleteLink.setAttribute("href", `/admin/${entity}/${id}/delete`)
 })
 </script>
 {% endblock %}
