@@ -47,12 +47,10 @@ export default {
   .tests__block{
     width: 100%;
     padding: 10px;
-   
   }
   .test{
     &__block{
     margin: 10px 10px;}
-   
   }
   .test__card{
     background-color: #e2e5fc;

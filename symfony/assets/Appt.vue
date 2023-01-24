@@ -1,8 +1,5 @@
 <template>
   <Headers/>
-  
-  
-    
   <div class="container">
     <div class="wrapper">
       <RouterView />
@@ -39,7 +36,7 @@ export default {
 
 
 
-<style scoped>
+<style lang="scss">
 
 
 </style>
