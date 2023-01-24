@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Section;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,28 +40,28 @@ class SectionRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Section[] Returns an array of Section objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    private function findAllQuery(): QueryBuilder
+    {
+        $queryBuilder = $this->getOrCreateQueryBuilder();
+        return
+            $queryBuilder
+                ->leftJoin('s.test', 't')
+                ->addSelect('t');
+    }
 
-//    public function findOneBySomeField($value): ?Section
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findAllSortedByTitleQuery(string $direction = 'ASC'): QueryBuilder
+    {
+        return $this->findAllQuery()->orderBy('s.title', $direction);
+    }
+
+    public function findLatestQuery(string $direction = 'DESC'): QueryBuilder
+    {
+        return $this->findAllQuery()->orderBy('s.updatedAt', $direction);
+    }
+
+
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('s');
+    }
 }

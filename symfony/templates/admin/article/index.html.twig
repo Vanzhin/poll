@@ -1,0 +1,46 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ parent() }} Раздел{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Раздел</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <a href="{{ path('app_admin_article_create') }}" type="button" class="btn btn-sm btn-outline-success"><i
+                            class="bi bi-plus-lg"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="list-group">
+        {% for article in pagination %}
+            <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between gap-1"
+                 aria-current="true">
+                <div class="flex-fill">
+                    <div class="d-flex w-100 justify-content-start align-items-center gap-4">
+                        <h5 class="mb-1 d-flex justify-content-between align-items-center gap-4">
+                            {{ article.title }}
+                            <span class="badge bg-primary rounded-pill">{{ article.section|length }}</span>
+
+                        </h5>
+
+                        <small>{{ article.updatedAt|timeAgo }}</small>
+                    </div>
+                    <p class="mb-1">Краткое описание раздела</p>
+                    <small>Еще что-то</small>
+                </div>
+                {{ include('components/deleteUpdateButton.html.twig',{
+                    'path': 'app_admin_article_edit',
+                    'entity': article,
+                    'name': 'article',
+                    'transcription': 'Раздел'
+                }) }}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="navigation my-2">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+    {{ include('components/deleteModal.html.twig') }}
+
+{% endblock %}

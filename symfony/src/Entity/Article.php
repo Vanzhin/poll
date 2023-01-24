@@ -7,12 +7,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
+#[UniqueEntity(
+    fields: ['title'],
+    message: 'article.title.unique'
+)]
 class Article
 {
+    use TimestampableEntity;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,6 +31,7 @@ class Article
 
     #[Groups(['main'])]
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(message: 'article.title.not_blank')]
     private ?string $title = null;
 
     #[ORM\Column(length: 100, unique: true)]
@@ -65,7 +76,7 @@ class Article
     {
         if (!$this->section->contains($section)) {
             $this->section->add($section);
-            $section->setDivision($this);
+            $section->setArticle($this);
         }
 
         return $this;
@@ -75,8 +86,8 @@ class Article
     {
         if ($this->section->removeElement($section)) {
             // set the owning side to null (unless already changed)
-            if ($section->getDivision() === $this) {
-                $section->setDivision(null);
+            if ($section->getArticle() === $this) {
+                $section->setArticle(null);
             }
         }
 
