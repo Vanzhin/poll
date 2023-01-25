@@ -9,18 +9,20 @@
     </div>
     <div class="container">
       <div class="row">
-        <form action="">
+        <form @submit.prevent="onSubmit">
           <TestQuestion
             v-for="(qestion, index ) in qestions" 
             :key="qestion.id"
             :qestion="qestion"
             :index="index"
           />
+          <button type="submit">Проверить</button>
         </form>
       </div>
   </div>
 </div>
 </template>
+
 <script>
 import TestQuestion from '../components/TestQuestion.vue'
 export default {
@@ -43,6 +45,11 @@ export default {
         return this.$store.getters.setQuestions
       },
     },
+    methods: {
+      onSubmit(e){
+        console.dir(e.target)
+      },
+    }
     // mounted(){
     //   console.log(this.$route.params.id)
     //   this.testName = this.$store.getters.setTestTitle(this.$route.params.id)
