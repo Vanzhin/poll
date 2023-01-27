@@ -2,13 +2,11 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Article;
 use App\Entity\Test;
-use App\Repository\ArticleRepository;
 use App\Repository\TestRepository;
+use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TestController extends AbstractController
@@ -39,20 +37,16 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_show', methods: ['GET'])]
-    public function getRandomQuestion(Test $test, int $count): JsonResponse
+    public function getRandomQuestion(Test $test, TestRepository $testRepository, int $count): JsonResponse
     {
-//        $t = $testRepository->findAllQuestions($test->getId());
-//todo убрать это
-        $questions = [];
-        foreach ($test->getTicket() as $ticket) {
-            foreach ($ticket->getQuestion() as $question) {
-                $questions[] = $question;
-            }
+        try {
+            $response = ['test' => $test->getTitle(), 'questions' => $testRepository->getRandomQuestions($test, $count)];
+        } catch (Exception $e) {
 
+            $response =  $e->getMessage();
         }
-        shuffle($questions);
-        $data = array_chunk($questions, $count);
-        return $this->json(['test' => $test->getTitle(), 'questions' => $data[0]],
+
+        return $this->json($response,
             200,
             ['charset=utf-8'],
             ['groups' => 'main'],
