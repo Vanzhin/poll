@@ -5,7 +5,8 @@ import getters from './getters'
 import state from "./state";
 import modal from './modules/modal'
 import questions from './modules/questions'
-import tests from './modules/tests'
+import user from './modules/user'
+
 
 export default createStore({
   state,
@@ -16,5 +17,6 @@ export default createStore({
     modal,
     questions,
     tests,
+    user,
   },
 })

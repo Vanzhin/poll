@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="block">
         <div class="logo-block">
-          <RouterLink :to="{ name: 'home'}"> 
+          <RouterLink :to="{ name: 'home'}" class="routerLink"> 
             <div class="logo">
               <div class="logo-title">лого</div>
             </div>
@@ -14,7 +14,9 @@
           <input type="button" value="" class="search-button"/>
         </div>
         <div class="links">
-          <h5>   Личный кабинет  </h5>
+          <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
+            <h5>   Личный кабинет  </h5>
+          </RouterLink>
         </div>
         
       </div> 

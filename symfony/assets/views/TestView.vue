@@ -47,7 +47,8 @@ export default {
     },
     methods: {
       onSubmit(e){
-        console.dir(e.target)
+        console.dir(e.target[0])
+        console.log(e.target[0].value)
       },
     }
     // mounted(){

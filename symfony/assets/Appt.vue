@@ -13,7 +13,7 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import Headers from './components/Headers.vue'
-import QuestionNumbers from './components/QuestionNumbers.vue'
+
 export default {
   data() {
     return {
@@ -27,8 +27,6 @@ export default {
   },
   components: {
     Headers,
-    QuestionNumbers,
-    
   },
   
 } 

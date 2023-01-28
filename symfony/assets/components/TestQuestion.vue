@@ -4,7 +4,7 @@
             <div class="card flex-shrink-1 shadow">
               <i><b>{{ index+1 }})</b> {{ qestion.question }}</i>
               <input type="hidden" 
-                :name="'q' +  qestion.id " 
+                :name="'q' +  qestion.id" 
                 :value="answerSelect">
               <hr>
               <div class="custom-control custom-radio"
@@ -15,7 +15,7 @@
                 <input type="radio" 
                   :name="'q' + (index + 1) + (ind + 1)"  
                   :id="'q' + (index + 1) + (ind + 1) "
-                  :value= "'q' + qestion.id + '-' + ind"
+                  :value= "ind"
                   v-model="answerSelect"
                   v-if="answer!==''"
                   class="custom-control-input"  >

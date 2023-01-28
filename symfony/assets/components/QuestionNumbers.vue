@@ -8,7 +8,7 @@
                v-for="question in questions" 
                :key="question.id"
             >
-               <RouterLink :to="{ name: 'question', params: { id: question.id } }">
+               <RouterLink :to="{ name: 'question', params: { id: question.id } }" class="routerLink">
                   <div class="number" >
          
                      <p>{{ question.id }}</p>

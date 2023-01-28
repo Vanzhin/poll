@@ -1,7 +1,7 @@
 import './styles/app.css';
 require('bootstrap')
 import './bootstrap';
-
+import './app.scss';
 import Appt from './Appt.vue'
 import { createApp } from 'vue'
 import router from './router'
