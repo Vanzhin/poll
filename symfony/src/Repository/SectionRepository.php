@@ -64,4 +64,11 @@ class SectionRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('s');
     }
+    public function findAllSortedByName(string $direction = 'ASC')
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->orderBy('s.title', $direction)
+            ->getQuery()
+            ->getResult();
+    }
 }
