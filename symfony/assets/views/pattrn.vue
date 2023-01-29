@@ -3,7 +3,8 @@
 </template>
  
 <script>
- import TestQuestion from '../components/TestQuestion.vue'
+ import TestQuestion from '../components/TestQuestionRadio.vue'
+ import { mapGetters, mapActions, mapMutations} from "vuex"
  export default {
    components: {
      TestQuestion,
@@ -15,14 +16,15 @@
        
      }
    },
-    computed:{
-      
-     },
-     methods: {
-      
+    computed: mapGetters(["allPosts"]),
+   
+     methods: { 
+      ...mapActions(["fetchPost"]),
+      ...mapMutations([])
+    },
+     async mounted(){
+      this.fetchPost()
      }
-     // mounted(){
-     // }
    
  } 
  

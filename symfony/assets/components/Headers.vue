@@ -11,7 +11,9 @@
         </div>
         <div class="search">
           <input type="text" value="" name="s" placeholder="Поиск..." class="search-input"/>
-          <input type="button" value="" class="search-button"/>
+          <button class="search-button bi-search"></button>
+         
+          <!-- <div class="bi-search"></div> -->
         </div>
         <div class="links">
           <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
@@ -39,7 +41,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
 .container{
  
 }
@@ -64,12 +66,19 @@ export default {
   border: 1px solid saddlebrown;
   background-color: rgb(148, 114, 62);
   text-align: center;
+  &:hover{
+    background-color: rgb(196, 163, 114);
+  }
+
 }
 .logo-title{
   transform: rotate(20deg);
   text-align: center;
   transform:  scaleY(1) rotate(-45deg) translate(-7px,16%);
   font-size: 18px;
+  color:#204242;
+  padding-top: 3px;
+  
 }
 .search{
   display: flex;
@@ -94,7 +103,7 @@ export default {
 }
 .search-input:focus {
     outline-width: 0;
-    
+ 
 }
 .search-button{
   width: 30px;
@@ -105,10 +114,17 @@ export default {
  background-color: #664915;
 }
 .search-button:hover{
-  background-color: #b99146;
+  background-color: #896624;
+  &.bi-search::before{
+      color: #cad5d5;
+    }
 }
-.links:hover{
+.links{
+  & h5 {
+    color:#204242;
+  }
+  :hover{
   cursor: pointer;
-  color: #b99146;
-}
+  h5 {color: #82a5a5;}
+}}
 </style>

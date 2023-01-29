@@ -7,7 +7,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => import('../views/SectionsView.vue')
+      // component: () => import('../views/TicketView.vue'),
     },
     {
       path: '/about',
@@ -25,14 +26,20 @@ const router = createRouter({
       component: () => import('../views/QuestionsView.vue')
     },
     {
-      path: '/tests',
-      name: 'tests',
+      path: '/area/:id',
+      name: 'area',
       component: () => import('../views/TestsView.vue')
     },
     {
       path: '/test/:id',
       name: 'test',
-      component: () => import('../views/TestView.vue'),
+      component: () => import('../views/TicketsView.vue'),
+      props: true,
+    },
+    {
+      path: '/ticket/:id',
+      name: 'ticket',
+      component: () => import('../views/TicketView.vue'),
       props: true,
     },
     {
@@ -46,6 +53,11 @@ const router = createRouter({
       name: 'signup',
       component: () => import('../views/Signup.vue'),
       props: true,
+    },
+    {
+      path: '/chapter/:id',
+      name: 'chapter',
+      component: () => import('../views/AreasView.vue')
     },
     
   ]

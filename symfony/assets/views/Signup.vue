@@ -59,7 +59,7 @@
 </template>
  
 <script>
-  import TestQuestion from '../components/TestQuestion.vue'
+  
   export default {
     components: {
       

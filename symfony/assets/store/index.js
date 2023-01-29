@@ -5,8 +5,11 @@ import getters from './getters'
 import state from "./state";
 import modal from './modules/modal'
 import questions from './modules/questions'
+import tests from './modules/tests'
 import user from './modules/user'
-
+import sections from './modules/sections'
+import areas from './modules/areas'
+import tickets from './modules/tickets'
 
 export default createStore({
   state,
@@ -18,5 +21,8 @@ export default createStore({
     questions,
     tests,
     user,
+    sections,
+    areas,
+    tickets
   },
 })

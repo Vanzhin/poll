@@ -1,8 +1,8 @@
-import { SET_QUESTION, SET_TEST_TITLE } from './mutation-types.js'
+import { SET_QUESTION } from './mutation-types.js'
 
 
 const state = () => ({
-  tests: [
+  areas: [
     { 
       id: 1,
       title: "ЭБ 1344.2. Проверка знаний электротехнического персонала организаций, осуществляющего эксплуатацию оборудования кабельных линий электросетевого хозяйства потребителей (III группа по электробезопасности до 1000 В)",
@@ -40,10 +40,9 @@ const state = () => ({
       image: null
     },
   ],
-  testsTitle:'q',
+  area:{},
   
- 
-
+  
 })
 
 const actions = {
@@ -57,44 +56,37 @@ const actions = {
         console.log(err);
       });
   },
-  getQuestion(){},
-  setTestTitle ({dispatch, commit}, {id}) {
-    commit("SET_TEST_TITLE", id );
-  }
+  getQuestion(){}
 };
 
 const getters = {
-  getTests(state) {
-    return state.tests
+  getAreas(state) {
+    return state.areas 
   },
-  getTestTitle:(state)=>(id) =>{
-    return state.tests.find(test => {
-      return +test.id === +id}) 
+  getAreasOne(state) {
+    return state.areas.filter(area => {return area.type_responses === "one"}) 
   },
-  getTestTitleActive:(state)=>{
-    return state.testsTitle 
+  getAreaTitle:(state)=>(id) =>{
+    console.log(id)
+    return state.areas.find(area => {
+      console.log(+area.id === +id)
+      return +area.id === +id}) 
   }
 }
 
 const mutations = {
   GET_COURCES(state, cources) {
-    return state.cources = {
+    state.cources = {
       active: 0, list: cources, isLoaded: true
     }
   },
   [SET_QUESTION] (state, id) {
     if (state.cources.list.hasOwnProperty(id)) {
-      return state.cources.active = id;
+      state.cources.active = id;
     }
-    return;
-  },
-  [SET_TEST_TITLE] (state, id) {
-    return state.testsTitle = state.tests.find(test => {
-      return +test.id === +id}) ;
+    ;
   },
 }
-
-
 export default {
   namespaced: false,
   state,

@@ -1,14 +1,14 @@
 <template>
   <div class="">
     <div class="tests__block">
-      <h4>Эксплуатация оборудования кабельных линий электросетевого хозяйства потребителей</h4>
+      <h4>{{ areaTitle.title }}</h4>
       <h5>Выберите тест:</h5>
     </div>
     <div class="tests__block">
       <div
         v-for="test in tests" 
         :key="test.id"
-        class="test__block "
+        class="test__block"
       >
         
         <div class="test__card">
@@ -29,17 +29,21 @@
 <script>
 import { RouterLink } from 'vue-router'
 export default {
-   data() {
-      return {
-         count: 0
-      }
-   },
-   computed:{
-      tests () {
-         return this.$store.getters.setTests
+  data() {
+    return {
+      count: 0
+    }
+  },
+  computed:{
+    areaTitle () {
+        console.log(this.$route.params.id)
+        console.log(this.$store.getters.getAreaTitle(this.$route.params.id))
+        return this.$store.getters.getAreaTitle(this.$route.params.id)
       },
-   },
-  
+    tests () {
+      return this.$store.getters.getTests
+    },
+  },
 } 
 
 </script>
