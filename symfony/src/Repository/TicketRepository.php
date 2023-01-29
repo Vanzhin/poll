@@ -41,13 +41,18 @@ class TicketRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllBySection(Section $section): mixed
+    public function findAllBySection(Section $section = null): mixed
     {
-        return $this->getOrCreateQueryBuilder()
+        $tests = $this->getOrCreateQueryBuilder()
             ->leftJoin('ti.tests', 't')
-            ->leftJoin('t.section', 's')
-            ->andWhere('t.section = :section')
-            ->setParameter('section', $section)
+            ->leftJoin('t.section', 's');
+
+        if ($section){
+            $tests->andWhere('t.section = :section')
+                ->setParameter('section', $section);
+        }
+
+        return  $tests
             ->getQuery()
             ->getResult();
     }

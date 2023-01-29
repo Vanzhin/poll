@@ -2,7 +2,7 @@
     <a href="{{ path(path, {'id': entity.id}) }}"
        class="btn btn-outline-primary"><i class="bi bi-pencil"></i></a>
     <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#deleteModal"
-       data-bs-title="{{ transcription }} - {{ entity.title }}"
+       data-bs-title="{{ transcription }} - {{ entity.title ?? entity.firstName }}"
        data-bs-id="{{ entity.id }}"
        data-bs-entity={{ name }}
 
