@@ -18,6 +18,8 @@ class Question
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['main'])]
+
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
