@@ -1,6 +1,7 @@
 /docker/.idea/
 /docker/db/master/.data/
-
 .idea/
-
+.env
 docker/nginx/nginx_log/
+symfony/public/.htaccess
+symfony/.env
