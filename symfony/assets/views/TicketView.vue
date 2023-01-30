@@ -16,10 +16,14 @@
               v-if="qestion.type.title === 'radio'"
               :qestion="qestion"
               :index="index"
-              
             />
             <TestQuestionCheckbox
               v-else-if="qestion.type.title === 'checkbox'"
+              :qestion="qestion"
+              :index="index"
+            />
+            <TestQuestionOrdered
+              v-else-if="qestion.type.title === 'order'"
               :qestion="qestion"
               :index="index"
             />
@@ -27,7 +31,6 @@
               v-else
               :qestion="qestion"
               :index="index"
-              
             />
           </div>
           <button type="submit" class="button">Проверить</button>
@@ -40,12 +43,13 @@
 <script>
 import TestQuestionRadio from '../components/TestQuestionRadio.vue'
 import TestQuestionCheckbox from '../components/TestQuestionCheckbox.vue'
-
+import TestQuestionOrdered from '../components/TestQuestionOrdered.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
     TestQuestionRadio,
     TestQuestionCheckbox,
+    TestQuestionOrdered,
   },
   data() {
     return {
@@ -67,18 +71,14 @@ export default {
     onSubmit(e){
       const r = Array.from(e.target).filter(inp => inp.name.slice(0, 1) === "a")
         .map(inp => { return {[inp.name]: inp.value }})
-      
+       
+        // router.push({ name: 'user', params: { username: 'erina' } })
       console.log(r)
+      // this.getQuestionsDb(r)
     },
   },
   mounted(){
-    console.log(this.$route.params.id)
-    // this.testName = this.$store.getters.setTestTitle(this.$route.params.id)
-    if (+this.$route.params.id === 2000){
-      this.getQuestionsDb(20)
-    }
-    
-    
+    this.getQuestionsDb(this.$route.params.id)
   }
   
 } 

@@ -31,7 +31,7 @@ const state = () => ({
       "*На работников из числа электротехнического, электротехнологического и неэлектротехнического персонала, а также на работодателей",
       "На работников всех организаций независимо от формы собственности, занятых техническим обслуживанием электроустановок и выполняющих в них строительные, монтажные и ремонтные работы"], 
       id: 1,
-      "type":{"title":"checkbox"}},
+      "type":{"title":"order"}},
       
       {title:"При каком условии работники, не обслуживающие электроустановки, могут допускаться в РУ до 1000 В? ",
       variant:["В сопровождении оперативного персонала, обслуживающего данную электроустановку, имеющего группу IV, либо работника, имеющего право единоличного осмотра",
@@ -162,11 +162,22 @@ const state = () => ({
 })
 
 const actions = {
-  async getQuestionsDb({ commit },) {
+  async getQuestionsDb({ commit }, id) {
+    console.log("id - ",  id === "rnd20")
+    let url = ''
+    if (id === "rnd20") {
+      url = `/api/test/sinii-oao-khmel/question/20`
+    } else if (id === "rnd"){
+      const i = Math.floor(Math.random() * (30 - 1) + 1)
+      console.log("i - ",  i)
+      url = `/api/test/sinii-oao-khmel/question/${i}`
+    }
+    else { return }
+    
     try{
       const config = {
         method: 'get',
-        url: `/api/test/sinii-oao-khmel/question/10`,
+        url: url,
         headers: { 
           Accept: 'application/json', 
           // Authorization: `Bearer ${token}`
@@ -174,7 +185,7 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          console.log("getDbArticlesUserProfile - ",  data.questions)
+          console.log("getQuestionsDb - ",  data.questions)
           commit("SET_QUESTIONS", data.questions);
         })
     } catch (e) {
@@ -192,9 +203,7 @@ const getters = {
   getQuestions(state) {
     return state.questions 
   },
-  // setQuestionsOne(state) {
-  //   return state.questions.filter(question => {return question.type_responses === "one"}) 
-  // }
+  
 }
 
 const mutations = {

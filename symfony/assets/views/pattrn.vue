@@ -3,26 +3,25 @@
 </template>
  
 <script>
- import TestQuestion from '../components/TestQuestionRadio.vue'
- import { mapGetters, mapActions, mapMutations} from "vuex"
- export default {
-   components: {
-     TestQuestion,
-   },
-   data() {
-     return {
-       count: 0,
-         //  testName:''
-       
-     }
-   },
+  import TestQuestion from '../components/TestQuestionRadio.vue'
+  import { mapGetters, mapActions, mapMutations} from "vuex"
+  export default {
+    components: {
+      TestQuestion,
+    },
+    data() {
+      return {
+        count: 0,
+          //  testName:''
+      }
+    },
     computed: mapGetters(["allPosts"]),
    
-     methods: { 
+    methods: { 
       ...mapActions(["fetchPost"]),
       ...mapMutations([])
     },
-     async mounted(){
+      async mounted(){
       this.fetchPost()
      }
    
