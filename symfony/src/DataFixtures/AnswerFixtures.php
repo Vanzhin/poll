@@ -26,6 +26,7 @@ class AnswerFixtures extends BaseFixtures implements DependentFixtureInterface
             $score = 0;
             $tickets = [];
             foreach ($resultReference->getAnswers() as $answer) {
+//                todo сделать проверку, ввиду того что часть ответов идет индексами нужно доработать логику начисления баллов
                 if ($answer->getContent() === $answer->getQuestion()->getAnswer()) {
                     $score++;
                 }
