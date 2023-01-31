@@ -27,6 +27,11 @@
               :qestion="qestion"
               :index="index"
             />
+            <TestQuestionInputOne
+              v-else-if="qestion.type.title === 'input_one'"
+              :qestion="qestion"
+              :index="index"
+            />
             <TestQuestionRadio
               v-else
               :qestion="qestion"
@@ -44,12 +49,14 @@
 import TestQuestionRadio from '../components/TestQuestionRadio.vue'
 import TestQuestionCheckbox from '../components/TestQuestionCheckbox.vue'
 import TestQuestionOrdered from '../components/TestQuestionOrdered.vue'
+import TestQuestionInputOne from '../components/TestQuestionInputOne.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
     TestQuestionRadio,
     TestQuestionCheckbox,
     TestQuestionOrdered,
+    TestQuestionInputOne
   },
   data() {
     return {
@@ -73,7 +80,7 @@ export default {
         .map(inp => { return {[inp.name]: inp.value }})
        
         // router.push({ name: 'user', params: { username: 'erina' } })
-      console.log(r)
+      console.log(JSON.stringify(r))
       // this.getQuestionsDb(r)
     },
   },

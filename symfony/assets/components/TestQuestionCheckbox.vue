@@ -6,6 +6,7 @@
         :name="'a_' +  qestion.id" 
         :value="answerSelect">
       <hr>
+      <i class="i">Выберите правильные ответы.</i>
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in qestion.variant" 
         :key="answer"

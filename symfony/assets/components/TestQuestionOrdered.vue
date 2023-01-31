@@ -5,11 +5,13 @@
       <input type="hidden" 
         :name="'a_' +  qestion.id" 
         :value="answerSelect">
-      <hr>
+      <hr> 
+      <i class="i">Укажите ответы в правильном порядке.</i>
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in qestion.variant" 
         :key="answer"
       >
+       
         <div class="custom-control-number">
           {{  getOrdered(ind + 1) }}     
         <input type="checkbox" 
