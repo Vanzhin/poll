@@ -5,7 +5,6 @@
       <div class="test">
         <p>Билет №: {{ $route.params.id }}</p>  
       </div>
-      
     </div>
     <div class="container">
       <div class="row">
@@ -73,15 +72,17 @@ export default {
       return this.$store.getters.getQuestions
     },
   },
-  methods: {
-    ...mapActions(["getQuestionsDb"]),
-    onSubmit(e){
-      const r = Array.from(e.target).filter(inp => inp.name.slice(0, 1) === "a")
-        .map(inp => { return {[inp.name]: inp.value }})
+   methods: {
+    ...mapActions(["getQuestionsDb", "setResultDb"]),
+    async onSubmit(e){
+      const r = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
+        .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
        
         // router.push({ name: 'user', params: { username: 'erina' } })
-      console.log(JSON.stringify(r))
-      // this.getQuestionsDb(r)
+       console.log(JSON.stringify(r))
+      // console.log((r))
+      await this.setResultDb(r)
+      this.$router.push({ path:'/result'})
     },
   },
   mounted(){

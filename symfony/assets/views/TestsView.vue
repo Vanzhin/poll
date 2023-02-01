@@ -65,7 +65,7 @@ export default {
   }
   .test__card, .test__card-limitation{
     background-color: #e2e5fc;
-    font-weight: 600;
+   
     padding: 5px;
     display: flex;
     flex-direction: column;
@@ -75,6 +75,10 @@ export default {
     border: 1px solid rgba(0,0,0,.125);
     border-radius: 0.25rem;
   }
+  .test__card-limitation{
+    color: rgb(134, 134, 132);
+  }
+
   .test__card:hover{
     background-color: aliceblue;
   }

@@ -3,7 +3,8 @@
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
       <input type="hidden" 
-        :name="'a_' +  qestion.id" 
+        :id="'a_' +  qestion.id"
+        :name="qestion.id" 
         :value="answerSelect">
       <hr> 
       <i class="i">Укажите ответы в правильном порядке.</i>
@@ -13,11 +14,11 @@
       >
        
         <div class="custom-control-number">
-          {{  getOrdered(ind + 1) }}     
+          {{  getOrdered(ind )}}     
         <input type="checkbox" 
           :name="'q' + (index + 1) + (ind + 1)"  
           :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind + 1"
+          :value= "ind "
           v-model="answerSelect"
           v-if="answer!==''"
           class="custom-control-input"  >
@@ -47,7 +48,7 @@ export default {
   methods: {
     getOrdered(id){
       const ind = this.answerSelect.indexOf(id)
-      return ind>-1 ? ind+1 : ''
+      return ind>-1 ? ind + 1 : ''
     },
     
   },

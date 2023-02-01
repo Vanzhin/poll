@@ -15,7 +15,7 @@
         <hr>
         <input type="text" 
         :id="'a_' +  qestion.id"
-        :name="'a_' +  qestion.id" 
+        :name="qestion.id" 
         :value="answer">
       
       </div>

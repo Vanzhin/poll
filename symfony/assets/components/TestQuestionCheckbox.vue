@@ -3,7 +3,8 @@
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
       <input type="hidden" 
-        :name="'a_' +  qestion.id" 
+        :id="'a_' +  qestion.id"
+        :name="qestion.id" 
         :value="answerSelect">
       <hr>
       <i class="i">Выберите правильные ответы.</i>
@@ -14,7 +15,7 @@
         <input type="checkbox" 
           :name="'q' + (index + 1) + (ind + 1)"  
           :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind + 1"
+          :value= "ind "
           v-model="answerSelect"
           v-if="answer!==''"
           class="custom-control-input"  >
