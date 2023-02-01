@@ -2,17 +2,13 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Question;
 use App\Entity\Test;
 use App\Repository\TestRepository;
 use App\Service\QuestionService;
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TestController extends AbstractController
@@ -68,7 +64,7 @@ class TestController extends AbstractController
         foreach ($data as $answerData) {
             $response[] = $questionService->handle($answerData);
         }
-        
+
         return $this->json(['questions' => $response],
             200,
             ['charset=utf-8'],
