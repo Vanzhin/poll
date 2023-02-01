@@ -60,24 +60,16 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/handle', name: 'app_api_test_handle', methods: ['POST'])]
-    public function handle(Request $request, QuestionService $questionService)
+    public function handle(Request $request, QuestionService $questionService): JsonResponse
     {
 
         $data = json_decode($request->getContent(), true);
         $response = [];
-        foreach ($data as $answerData){
-
+        foreach ($data as $answerData) {
             $response[] = $questionService->handle($answerData);
         }
-//        $question = $em->find(Question::class,$test[0]);
-//        return new Response($data);
-
-//        return $data;
-//        $test = [];
-//        foreach ($data as $id => $value){
-//            $test[$id] = $value;
-//        }
-        return $this->json($response,
+        
+        return $this->json(['questions' => $response],
             200,
             ['charset=utf-8'],
             ['groups' => 'main'],
