@@ -27,15 +27,21 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                     $variants = $this->faker->words($this->faker->numberBetween(2, 5));
                     $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
                         ->setVariant($variants)
-                        ->setAnswer([$this->faker->randomElement($variants)])
+                        ->setAnswer([$this->faker->randomKey($variants)])
                         ->addTicket($this->getRandomReference(Ticket::class));
 
                     break;
                 case 'checkbox':
                     $variants = $this->faker->words($this->faker->numberBetween(2, 5));
                     $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
-                        ->setVariant($variants)
-                        ->setAnswer($this->faker->randomElements($variants, $this->faker->numberBetween(1, count($variants))))
+                        ->setVariant($variants);
+                    $values = $this->faker->randomElements($variants, $this->faker->numberBetween(1, count($variants)));
+                    $keys = [];
+                    foreach ($values as $value) {
+                        $keys[] = array_search($value, $variants);
+                    };
+                    sort($keys);
+                    $question->setAnswer($keys)
                         ->addTicket($this->getRandomReference(Ticket::class));
                     break;
                 case 'input_one':
@@ -68,18 +74,26 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                         $inputs[] = $this->faker->realTextBetween(10, 35) . '?' . static::BLANK_FIELD;
                     }
                     $question->setTitle($title . implode('', $inputs))
-                        ->setVariant($variants)
-                        ->setAnswer($answers)
+                        ->setVariant($variants);
+                    $keys = [];
+                    foreach ($answers as $value) {
+                        $keys[] = array_search($value, $variants);
+                    };
+                    $question->setAnswer($keys)
                         ->addTicket($this->getRandomReference(Ticket::class));
                     break;
                 case 'order':
                     $variants = $this->faker->words($this->faker->numberBetween(2, 5));
                     $answers = $variants;
                     shuffle($answers);
+                    $keys = [];
+                    foreach ($answers as $value) {
+                        $keys[] = array_search($value, $variants);
+                    };
                     $title = $this->faker->realTextBetween(10, 50);
                     $question->setTitle($title)
                         ->setVariant($variants)
-                        ->setAnswer($answers)
+                        ->setAnswer($keys)
                         ->addTicket($this->getRandomReference(Ticket::class));
                     break;
                 case 'checkbox_picture':
@@ -88,9 +102,15 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                     foreach ($variants as $variant) {
                         $pictures[] = static::PICTURE_MARK . 'picture' . $this->faker->numberBetween(1, 10) . '.jpeg' . static::PICTURE_MARK;
                     }
+                    $values = $this->faker->randomElements($variants, $this->faker->numberBetween(1, count($variants)));
+                    $keys = [];
+                    foreach ($values as $value) {
+                        $keys[] = array_search($value, $variants);
+                    };
+                    sort($keys);
                     $question->setTitle($this->faker->realTextBetween(30, 255) . '?' . static::QUESTION_SEPARATOR . implode('', $pictures))
                         ->setVariant($variants)
-                        ->setAnswer($this->faker->randomElements($variants, $this->faker->numberBetween(1, count($variants))))
+                        ->setAnswer($keys)
                         ->addTicket($this->getRandomReference(Ticket::class));
                     break;
                 case 'textarea':
