@@ -15,6 +15,17 @@
             <ResultTestQuestionCheckbox
               :qestion="qestion"
               :index="index"
+              v-if="qestion.type.title==='radio' || qestion.type.title==='checkbox'"
+            />
+            <ResultTestQuestionOrdered
+              :qestion="qestion"
+              :index="index"
+              v-else-if="qestion.type.title==='order'"
+            />
+            <ResultTestQuestionInputOne
+              :qestion="qestion"
+              :index="index"
+              v-else-if="qestion.type.title==='input_one'"
             />
           </div>
           
@@ -27,10 +38,14 @@
 <script>
 
 import ResultTestQuestionCheckbox from '../components/ResultTestQuestionCheckbox.vue'
+import ResultTestQuestionInputOne from '../components/ResultTestQuestionInputOne.vue'
+import ResultTestQuestionOrdered from '../components/ResultTestQuestionOrdered.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
-    ResultTestQuestionCheckbox
+    ResultTestQuestionCheckbox,
+    ResultTestQuestionInputOne,
+    ResultTestQuestionOrdered
   },
   data() {
     return {

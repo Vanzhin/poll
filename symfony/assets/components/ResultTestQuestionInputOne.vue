@@ -4,34 +4,29 @@
       <i class="result"
         :class="{resultTrue: qestion.result.score }"
       ><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      
       <hr>
-      
-      <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
-        :key="answer"
-      >
-        
-        <label v-if="answer!==''"
+      <div class="custom-control custom-radio">
+        <label v-if="getUserAnswer"
           class="custom-control-label f_sm " 
-          :class="classAnswer(ind)"
-        >{{ answer }}
+          :class="classAnswer()"
+        >{{ qestion.result.user_answer[0] }}
         </label>
-        
+        <label v-if="getUserAnswer && !qestion.result.score"
+          class="custom-control-label f_sm answer-true" 
+        > - {{ qestion.result.true_ansver[0] }}
+        </label>
       </div>
       <br>
-      
     </div>       
   </div>
 </template>
 <script>
-// v-model="answer"
+
 export default {
   props: ['qestion', 'index' ],
   data() {
     return {
-      count: 0,
-      answerSelect:[]
+     
     }
   },
   computed:{
@@ -40,16 +35,13 @@ export default {
     },
   },
   methods: {
-    classAnswer(ind){
+    classAnswer(){
       return  {
-        "answer-true": this.getUserAnswer && this.qestion.result.true_ansver.indexOf(ind) > -1 && this.qestion.result.user_answer.indexOf(ind) > -1,
-        "answer-user":  this.getUserAnswer && this.qestion.result.user_answer.indexOf(ind) > -1,
-        "answer":  this.getUserAnswer && this.qestion.result.true_ansver.indexOf(ind) > -1,
+        "answer-true": this.getUserAnswer && this.qestion.result.score,
+        "answer-user": this.getUserAnswer && !this.qestion.result.score,
       }
     },
-    getAnswer(ind){
-
-    }
+    
   } 
 }
 
