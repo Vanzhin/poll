@@ -7,28 +7,26 @@
         :name="qestion.id" 
         :value="answerSelect">
       <hr> 
-      <i class="i">Укажите ответы в правильном порядке.</i>
-      <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
-        :key="answer"
-      >
-       
-        <div class="custom-control-number">
-          {{  getOrdered(ind )}}     
-        <input type="checkbox" 
-          :name="'q' + (index + 1) + (ind + 1)"  
-          :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind "
-          v-model="answerSelect"
-          v-if="answer!==''"
-          class="custom-control-input"  >
-        </div> 
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
-        </label>
+      <i class="i">Расположите ответы в правильном порядке.</i>
+      <div  
+        @dragover.prevent="onDragover"
+        >
+        <div class="custom-control custom-radio"
+          v-for="(answer, ind ) in qestionVariantSort" 
+          :key="answer"
+          @dragstart="onDragStart($event, ind)"
+          draggable="true"
+          :name="answer.sort"
+        >
+        
+        
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm" 
+            :for="'q' + (index + 1) + (ind + 1)"
+          >{{ answer.title }}
+          </label>
+        </div>
       </div>
       <br>
       
@@ -42,7 +40,14 @@ export default {
   data() {
     return {
       count: 0,
-      answerSelect:[]
+      answerSelect:[],
+      qestionVariant:[],
+      blockY:0
+    }
+  },
+  computed:{
+    qestionVariantSort(){
+      return this.qestionVariant.sort((a,b) => a.sort-b.sort)
     }
   },
   methods: {
@@ -50,8 +55,27 @@ export default {
       const ind = this.answerSelect.indexOf(id)
       return ind>-1 ? ind + 1 : ''
     },
-    
+    onDragStart(e , item) {
+      e.dataTransver.dropEffect = 'copy'
+      e.dataTransver.effectAllowed = 'move'
+      e.dataTransver.setData()
+    },
+    onDragover(e){
+      if (this.blockY !== e.y){ this.blockY = e.y
+      console.log(e)
+      console.log(e.y, ' - ', e.toElement.offsetTop
+)
+      }
+
+      
+    }
   },
+  mounted(){
+    this.qestion.variant.forEach((item, index ) => 
+      this.qestionVariant.push({id:index, title:item, sort: index})
+    )
+    // console.log(this.qestionVariant)
+  }
 }
 
 </script>
@@ -69,6 +93,10 @@ export default {
     justify-content:flex-start;
     min-height: 1.5rem;
     padding-left: 1.5rem;
+    background-color: rgb(245 245 242);
+    border: 1px solid rgb(167, 167, 163);
+    border-radius: 10px;
+    margin-top: 2px;
     &-input{
       margin-left: 5px;
     }

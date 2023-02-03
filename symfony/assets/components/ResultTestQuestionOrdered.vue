@@ -63,7 +63,8 @@ export default {
   data() {
     return {
       count: 0,
-      answerSelect:[]
+      answerSelect:[],
+      qestionVariant:[]
     }
   },
   computed:{
@@ -82,7 +83,7 @@ export default {
 
     }
   },
-   
+  
 }
 
 </script>
