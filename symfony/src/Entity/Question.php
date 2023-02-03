@@ -43,6 +43,10 @@ class Question
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['main'])]
+    private array $subTitle = [];
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -155,6 +159,18 @@ class Question
                 $answer->setQuestion(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSubTitle(): array
+    {
+        return $this->subTitle;
+    }
+
+    public function setSubTitle(?array $subTitle): self
+    {
+        $this->subTitle = $subTitle;
 
         return $this;
     }

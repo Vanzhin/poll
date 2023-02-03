@@ -30,7 +30,6 @@ class TestController extends AbstractController
     #[Route('/api/test/{slug}', name: 'app_api_test_show', methods: ['GET'])]
     public function show(Test $test): JsonResponse
     {
-
         return $this->json(
             $test,
             200,
@@ -43,7 +42,7 @@ class TestController extends AbstractController
     public function getRandomQuestion(Test $test, TestRepository $testRepository, QuestionService $questionService, SessionService $sessionService, int $count): JsonResponse
     {
         try {
-            $sessionService->remove($questionService::SHUFFLED_VARIANTS);
+            $sessionService->remove($questionService::SHUFFLED);
             $response = ['test' => $test->getTitle(), 'questions' => $questionService->shuffleVariants($testRepository->getRandomQuestions($test, $count))];
         } catch (Exception $e) {
             $response = $e->getMessage();

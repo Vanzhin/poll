@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class QuestionService
 {
-    const SHUFFLED_VARIANTS = 'shuffled';
+    const SHUFFLED = 'shuffled';
 
     public function __construct(private readonly EntityManagerInterface $entityManager, private readonly SessionService $sessionService)
     {
@@ -29,6 +29,10 @@ class QuestionService
                     ],
                     "type" => $question->getType()
                 ];
+                if (!empty($question->getSubTitle())) {
+                    $response["subTitle"] = [$question->getSubTitle()];
+                }
+
             } else {
                 $response = [
                     "id" => $answerData["id"],
@@ -37,9 +41,9 @@ class QuestionService
             }
 
         } catch (\Exception $e) {
-            $response = ["error" => $e->getMessage()];
+            $response = ["error" => $e->getTrace()];
         } finally {
-            $this->sessionService->remove(self::SHUFFLED_VARIANTS);
+            $this->sessionService->remove(self::SHUFFLED);
             return $response;
         }
 
@@ -52,28 +56,56 @@ class QuestionService
                 $variants = $question->getVariant();
                 shuffle($variants);
                 $question->setVariant($variants);
-                $this->sessionService->add([$question->getId() => $variants], self::SHUFFLED_VARIANTS);
+
+                if (count($question->getSubTitle()) > 1) {
+                    $this->shuffleSubTitle($question);
+                }
+                $this->sessionService->add([$question->getId() => ["variant" => $question->getVariant(), "subTitle" => $question->getSubtitle()]], self::SHUFFLED);
             }
+
+
         }
         return $questions;
     }
 
-    private function getShuffledAnswers(Question $question, string $name = self::SHUFFLED_VARIANTS): array
+    public function shuffleSubTitle(Question $question): Question
+    {
+        $subTitle = $question->getSubTitle();
+        shuffle($subTitle);
+        $question->setSubTitle($subTitle);
+
+        return $question;
+    }
+
+    private function getShuffledAnswers(Question $question, string $name = self::SHUFFLED): array
     {
 //        $testSession = [
 //            6885 => ["sunt", "doloremque", "ipsa", "sint"],
 //            6321 => ["eum", "at", "reiciendis"],
 //            6514 => ["et", "debitis", "molestiae", "debitis", "recusandae"]
 //        ];
-        if ($this->sessionService->get($name) && array_key_exists($question->getId(),$this->sessionService->get($name))) {
+//        todo доработать если ответ в виде строки приходит типа input_many
+        if ($this->sessionService->get($name) && array_key_exists($question->getId(), $this->sessionService->get($name))) {
 //        if (array_key_exists($question->getId(), $testSession)) {
 
-            $shuffledVariants = $this->sessionService->get($name)[$question->getId()];
+            $shuffledVariants = $this->sessionService->get($name)[$question->getId()]['variant'];
+            $shuffledSubTitles = $this->sessionService->get($name)[$question->getId()]['subTitle'];
+
 //            $shuffledVariants = $testSession[$question->getId()];
 
             $answers = [];
             foreach ($question->getAnswer() as $answer) {
                 $answers[] = array_search($question->getVariant()[$answer], $shuffledVariants);
+            }
+            if (count($shuffledSubTitles) > 1) {
+                $answersWithSubTitle = [];
+                foreach ($shuffledSubTitles as $subTitle) {
+
+                    $answersWithSubTitle[] = $answers[array_search($subTitle, $question->getSubTitle())];
+
+                }
+                $answers = $answersWithSubTitle;
+
             }
 
         } else {
@@ -97,7 +129,7 @@ class QuestionService
 
                 break;
             case 'checkbox':
-                if (count(array_diff($questionAnswers, $userAnswers)) === 0) {
+                if (count(array_diff($userAnswers, $questionAnswers)) === 0) {
                     $score = true;
                 }
                 break;

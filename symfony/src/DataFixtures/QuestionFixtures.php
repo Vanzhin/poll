@@ -68,13 +68,14 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                 case 'conformity':
                     $variants = $this->faker->words($this->faker->numberBetween(2, 10));
                     $answers = $this->faker->randomElements($variants, $this->faker->numberBetween(2, count($variants)), true);
-                    $title = $this->faker->realTextBetween(10, 50) . '?' . static::QUESTION_SEPARATOR;
+                    $title = $this->faker->realTextBetween(10, 50) . '?';
                     $inputs = [];
                     foreach ($answers as $answer) {
-                        $inputs[] = $this->faker->realTextBetween(10, 35) . '?' . static::BLANK_FIELD;
+                        $inputs[] = $this->faker->realTextBetween(10, 35) . '?';
                     }
-                    $question->setTitle($title . implode('', $inputs))
-                        ->setVariant($variants);
+                    $question->setTitle($title)
+                        ->setVariant($variants)
+                        ->setSubTitle($inputs);
                     $keys = [];
                     foreach ($answers as $value) {
                         $keys[] = array_search($value, $variants);

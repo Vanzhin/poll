@@ -11,12 +11,12 @@ class TypeFixtures extends BaseFixtures
         'radio',
         'checkbox',
         'input_one',
-        'input_many',
+//        'input_many',
         'conformity',
         'order',
-        'checkbox_picture',
-        'textarea',
-        'blank',
+//        'checkbox_picture',
+//        'textarea',
+//        'blank',
     ];
 
 
