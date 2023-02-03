@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\Test;
 use App\Repository\TestRepository;
 use App\Service\QuestionService;
+use App\Service\SessionService;
 use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +30,6 @@ class TestController extends AbstractController
     #[Route('/api/test/{slug}', name: 'app_api_test_show', methods: ['GET'])]
     public function show(Test $test): JsonResponse
     {
-
         return $this->json(
             $test,
             200,
@@ -39,20 +39,20 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_show', methods: ['GET'])]
-    public function getRandomQuestion(Test $test, TestRepository $testRepository, int $count): JsonResponse
+    public function getRandomQuestion(Test $test, TestRepository $testRepository, QuestionService $questionService, SessionService $sessionService, int $count): JsonResponse
     {
         try {
-            $response = ['test' => $test->getTitle(), 'questions' => $testRepository->getRandomQuestions($test, $count)];
+            $sessionService->remove($questionService::SHUFFLED);
+            $response = ['test' => $test->getTitle(), 'questions' => $questionService->shuffleVariants($testRepository->getRandomQuestions($test, $count))];
         } catch (Exception $e) {
-
             $response = $e->getMessage();
+        } finally {
+            return $this->json($response,
+                200,
+                ['charset=utf-8'],
+                ['groups' => 'main'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
-
-        return $this->json($response,
-            200,
-            ['charset=utf-8'],
-            ['groups' => 'main'],
-        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
     #[Route('/api/test/handle', name: 'app_api_test_handle', methods: ['POST'])]
