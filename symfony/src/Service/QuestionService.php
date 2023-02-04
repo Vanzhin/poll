@@ -129,7 +129,7 @@ class QuestionService
 
                 break;
             case 'checkbox':
-                if (count(array_diff($userAnswers, $questionAnswers)) === 0) {
+                if (count(array_diff($questionAnswers, $userAnswers)) === 0) {
                     $score = true;
                 }
                 break;
