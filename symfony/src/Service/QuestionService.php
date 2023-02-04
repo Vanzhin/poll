@@ -30,7 +30,7 @@ class QuestionService
                     "type" => $question->getType()
                 ];
                 if (!empty($question->getSubTitle())) {
-                    $response["subTitle"] = [$question->getSubTitle()];
+                    $response["subTitle"] = $question->getSubTitle();
                 }
 
             } else {
