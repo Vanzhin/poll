@@ -38,7 +38,7 @@ class TestController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_show', methods: ['GET'])]
+    #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_question', methods: ['GET'])]
     public function getRandomQuestion(Test $test, TestRepository $testRepository, QuestionService $questionService, SessionService $sessionService, int $count): JsonResponse
     {
         try {
