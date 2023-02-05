@@ -7,25 +7,28 @@
         :name="qestion.id" 
         :value="answerSelect">
       <hr>
-      <i class="i">Выберите правильные ответы.</i>
+      <i class="i">Выберите ответы из выпадающего списка.</i>
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
+        v-for="(answer, ind ) in qestion.subTitle" 
         :key="answer"
       >
-        <input type="checkbox" 
-          :name="'q' + (index + 1) + (ind + 1)"  
-          :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind "
-          v-model="answerSelect"
-          v-if="answer!==''"
-          class="custom-control-input"  >
         <label 
           v-if="answer!==''"
           class="custom-control-label f_sm" 
           :for="'q' + (index + 1) + (ind + 1)"
         >{{ answer }}
         </label>
-        
+        <select 
+          v-model="answerSelect[ind]"
+          >
+          <option disabled value="">Выберите один из вариантов</option>
+          <option 
+            v-for="(variant, vInd ) in qestion.variant"
+            :value="vInd" 
+          >
+            {{ variant }}
+          </option>
+        </select>
       </div>
       <br>
       
@@ -33,23 +36,20 @@
   </div>
 </template>
 <script>
-// v-model="answer"
+
 export default {
   props: ['qestion', 'index' ],
   data() {
     return {
       count: 0,
-      answerSelect:[]
+       answerSelect:[] //(new Array(this.qestion.subTitle.length)).map(num => num="")
     }
   },
   computed:{
     
   },
   methods: {
-    setChangeAnswer(event){
-      console.log(event.target.value)
-      this.answer = event.target.value
-    }
+   
   } 
 }
 
@@ -64,8 +64,10 @@ export default {
     position: relative;
     display: flex;
     align-items:flex-start;
+    justify-content: space-between;
     min-height: 1.5rem;
     padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
   .f_sm {
       font-size: 0.9rem;

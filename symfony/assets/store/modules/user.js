@@ -5,7 +5,8 @@ import {
 
 const state = () => ({
  
-  question:{},
+  token:'',
+  isAutchUser: false,
   
   
 })
@@ -23,30 +24,18 @@ const actions = {
     return true
   }
   },
-  getQuestion(){}
+  
 };
 
 const getters = {
-  setQuestions(state) {
-    return state.questions 
+  getIsAutchUser(state) {
+    return state.isAutchUser
   },
-  setQuestionsOne(state) {
-    return state.questions.filter(question => {return question.type_responses === "one"}) 
-  }
+  
 }
 
 const mutations = {
-  GET_COURCES(state, cources) {
-    return state.cources = {
-      active: 0, list: cources, isLoaded: true
-    }
-  },
-  [SET_QUESTION] (state, id) {
-    if (state.cources.list.hasOwnProperty(id)) {
-      return state.cources.active = id;
-    }
-    return;
-  },
+  
 }
 export default {
   namespaced: false,

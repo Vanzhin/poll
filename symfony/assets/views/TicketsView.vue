@@ -11,7 +11,7 @@
       <div class="row text-center">
         <div class="col-6 col-sm-6 col-md-6 col-lg-6"> 
           <div class="card flex-shrink-1 shadow">
-            <RouterLink :to="{ name: 'ticket', params: { id: 2003 } }" class="py-2 link">
+            <RouterLink :to="{ name: 'ticket', params: { id: 'rndb' } }" class="py-2 link">
               Случайный билет
             </RouterLink>
             
@@ -19,37 +19,33 @@
         </div>
         <div class="col-6 col-sm-6 col-md-6 col-lg-6"> 
           <div class="card flex-shrink-1 shadow">
-            <RouterLink :to="{ name: 'ticket', params: { id: 2002 } }" class="py-2 link">
+            <RouterLink :to="{ name: 'ticket', params: { id: 'rnd' } }" class="py-2 link">
               Случайный набор
             </RouterLink>
           </div>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6"> 
           <div class="card flex-shrink-1 shadow">
-            <RouterLink :to="{ name: 'ticket', params: { id: 2001 } }" class="py-2 link">
+            <RouterLink :to="{ name: 'ticket', params: { id: 'rnd20' } }" class="py-2 link">
               Случайный набор из 20 вопросов
             </RouterLink>
           </div>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6"> 
           <div class="card flex-shrink-1 shadow">
-            <RouterLink :to="{ name: 'ticket', params: { id: 2000 } }" class="py-2 link">
+            <RouterLink :to="{ name: 'ticket', params: { id: 'rnd20t' } }" class="py-2 link">
               Случайный набор из 20 вопросов (таймер)
             </RouterLink>
           </div>
         </div>
-        <div class="container">
-          <div id="br"></div>
-          <div id="yandex_ad118" style="margin:0 auto;"></div>
-          <div id="br2"></div>
-        </div>
+      
 
         <div class="col-6 col-sm-6 col-md-3 col-lg-2"
           v-for="(ticket, ind) in tickets"
           :key="ticket.id"
         > 
           <div class="card flex-shrink-1 shadow">
-            <RouterLink :to="{ name: 'ticket', params: { id: ind } }" class="py-2 link">
+            <RouterLink :to="{ name: 'ticket', params: { id: ticket.id } }" class="py-2 link">
               Билет №{{ ind + 1 }}
             </RouterLink>
           </div>
@@ -62,17 +58,14 @@
 </template>
 
 <script>
-import TestQuestion from '../components/TestQuestionRadio.vue'
 import { RouterLink } from 'vue-router'
 export default {
   components: {
-    TestQuestion,
+   
   },
   data() {
     return {
       count: 0,
-        //  testName:''
-        //  testNumm: $route.params.id
     }
   },
    computed:{
@@ -84,13 +77,9 @@ export default {
       },
     },
     methods: {
-      onSubmit(e){
-        console.dir(e.target[0])
-        console.log(e.target[0].value)
-      },
+     
     },
     mounted(){
-      console.log(this.$route.params.id)
       this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
     }
   

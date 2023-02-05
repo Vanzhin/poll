@@ -6,18 +6,23 @@
     </div>
     <div class="tests__block">
       <div
-        v-for="test in tests" 
+        v-for="(test, index) in tests" 
         :key="test.id"
         class="test__block"
       >
         
-        <div class="test__card">
+        <div class="test__card"
+          v-if="getIsAutchUser || index < 3"
+        >
           <RouterLink :to="{ name: 'test', params: { id: test.id } }">
-            
-              {{ test.id }} - {{ test.title }}
-            
+            {{ test.id }} - {{ test.title }}
           </RouterLink>
-      
+        </div>
+        <div class="test__card-limitation "
+          v-else
+          title="У Вас ограниченный доступ. Подпишитесь на группу."
+        >
+          {{ test.id }} - {{ test.title }}
         </div>
         
       </div>
@@ -28,6 +33,7 @@
 </template>
 <script>
 import { RouterLink } from 'vue-router'
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   data() {
     return {
@@ -35,6 +41,7 @@ export default {
     }
   },
   computed:{
+    ...mapGetters(["getIsAutchUser"]),
     areaTitle () {
         console.log(this.$route.params.id)
         console.log(this.$store.getters.getAreaTitle(this.$route.params.id))
@@ -56,9 +63,9 @@ export default {
     &__block{
     margin: 10px 10px;}
   }
-  .test__card{
+  .test__card, .test__card-limitation{
     background-color: #e2e5fc;
-    font-weight: 600;
+   
     padding: 5px;
     display: flex;
     flex-direction: column;
@@ -68,6 +75,10 @@ export default {
     border: 1px solid rgba(0,0,0,.125);
     border-radius: 0.25rem;
   }
+  .test__card-limitation{
+    color: rgb(134, 134, 132);
+  }
+
   .test__card:hover{
     background-color: aliceblue;
   }

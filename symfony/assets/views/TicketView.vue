@@ -5,7 +5,6 @@
       <div class="test">
         <p>Билет №: {{ $route.params.id }}</p>  
       </div>
-      
     </div>
     <div class="container">
       <div class="row">
@@ -16,19 +15,28 @@
               v-if="qestion.type.title === 'radio'"
               :qestion="qestion"
               :index="index"
-              
             />
             <TestQuestionCheckbox
               v-else-if="qestion.type.title === 'checkbox'"
               :qestion="qestion"
               :index="index"
             />
-            <TestQuestionRadio
-              v-else
+            <TestQuestionInputOne
+              v-else-if="qestion.type.title === 'input_one'"
               :qestion="qestion"
               :index="index"
-              
             />
+            <TestQuestionOrdered
+              v-else-if="qestion.type.title === 'order'"
+              :qestion="qestion"
+              :index="index"
+            />
+            <TestQuestionConformity
+              v-else-if="qestion.type.title === 'conformity'"
+              :qestion="qestion"
+              :index="index"
+            />
+            
           </div>
           <button type="submit" class="button">Проверить</button>
         </form>
@@ -40,12 +48,17 @@
 <script>
 import TestQuestionRadio from '../components/TestQuestionRadio.vue'
 import TestQuestionCheckbox from '../components/TestQuestionCheckbox.vue'
-
+import TestQuestionOrdered from '../components/TestQuestionOrdered.vue'
+import TestQuestionInputOne from '../components/TestQuestionInputOne.vue'
+import TestQuestionConformity from '../components/TestQuestionConformity.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
     TestQuestionRadio,
     TestQuestionCheckbox,
+    TestQuestionOrdered,
+    TestQuestionInputOne,
+    TestQuestionConformity
   },
   data() {
     return {
@@ -62,23 +75,21 @@ export default {
       return this.$store.getters.getQuestions
     },
   },
-  methods: {
-    ...mapActions(["getQuestionsDb"]),
-    onSubmit(e){
-      const r = Array.from(e.target).filter(inp => inp.name.slice(0, 1) === "a")
-        .map(inp => { return {[inp.name]: inp.value }})
-      
-      console.log(r)
+   methods: {
+    ...mapActions(["getQuestionsDb", "setResultDb"]),
+    async onSubmit(e){
+      const r = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
+        .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
+       const ticket = JSON.stringify(r)
+        // router.push({ name: 'user', params: { username: 'erina' } })
+       console.log(ticket)
+      // console.log((r))
+      await this.setResultDb(ticket)
+      this.$router.push({ path:'/result'})
     },
   },
   mounted(){
-    console.log(this.$route.params.id)
-    // this.testName = this.$store.getters.setTestTitle(this.$route.params.id)
-    if (+this.$route.params.id === 2000){
-      this.getQuestionsDb(20)
-    }
-    
-    
+    this.getQuestionsDb(this.$route.params.id)
   }
   
 } 
