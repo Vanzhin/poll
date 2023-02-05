@@ -27,6 +27,11 @@
               :index="index"
               v-else-if="qestion.type.title==='input_one'"
             />
+            <ResultTestQuestionConformity
+              :qestion="qestion"
+              :index="index"
+              v-else-if="qestion.type.title==='conformity'"
+            />
           </div>
           
        
@@ -40,12 +45,14 @@
 import ResultTestQuestionCheckbox from '../components/ResultTestQuestionCheckbox.vue'
 import ResultTestQuestionInputOne from '../components/ResultTestQuestionInputOne.vue'
 import ResultTestQuestionOrdered from '../components/ResultTestQuestionOrdered.vue'
+import ResultTestQuestionConformity from '../components/ResultTestQuestionConformity.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
     ResultTestQuestionCheckbox,
     ResultTestQuestionInputOne,
-    ResultTestQuestionOrdered
+    ResultTestQuestionOrdered,
+    ResultTestQuestionConformity
   },
   data() {
     return {

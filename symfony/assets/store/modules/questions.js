@@ -26,6 +26,19 @@ const state = () => ({
 
   questions:[
       {title:"На кого распространяются Правила по ",
+      variant:["На работников",
+      "На организаций",
+      "электротехнического",
+      "независимо"], 
+      id: 100,
+      "type":{"title":"conformity"},
+      "subTitle":[
+        "На работников организаций независимо от форм ",
+        "На работников из числа электротехнического",
+        "На работников всех организаций независимо "
+      ]
+      },
+      {title:"На кого распространяются Правила по ",
       variant:["На работников промышленных предприятий",
       "На работников организаций независимо от форм ",
       "На работников из числа электротехнического",
@@ -164,7 +177,7 @@ const state = () => ({
     variant:[], 
     id: 8,
     result:{
-      true_ansver:["морковь","редис","тыква","картофель"],
+      true_answer:["морковь","редис","тыква","картофель"],
       user_answer:["редис","картофель","тыква","морковь"], 
       score: false
     },
@@ -174,7 +187,7 @@ const state = () => ({
     variant:["морковь","редис","тыква","картофель"], 
     id: 9,
     result:{
-      true_ansver:[1,2,3,0],
+      true_answer:[1,2,3,0],
       user_answer:[2,3,1,0], 
       score: false
     },
@@ -184,7 +197,7 @@ const state = () => ({
     variant:["морковь","редис","тыква","картофель"], 
     id: 11,
     result:{
-      true_ansver:[1,2,3,0],
+      true_answer:[1,2,3,0],
       user_answer:[1,2,3,0], 
       score: true
     },
@@ -197,7 +210,7 @@ const state = () => ({
     "На работников всех организаций независимо от формы собственности, занятых техническим обслуживанием электроустановок и выполняющих в них строительные, монтажные и ремонтные работы"],  
     id: 10,
     result:{
-      true_ansver:[1,2,3,0],
+      true_answer:[1,2,3,0],
       user_answer:[2,3,1,0], 
       score: false
     },
@@ -206,19 +219,19 @@ const state = () => ({
     {title:"В каком случае нарушен порядок хранения и выдачи ключей?",
     variant:[], 
     id: 5,
-    result:{true_ansver:["морковь"], user_answer:[], score: false},
+    result:{true_answer:["морковь"], user_answer:[], score: false},
     "type":{"title":"input_one"}
     },
     {title:"В каком случае нарушен порядок хранения и выдачи ключей?",
     variant:[], 
     id:6,
-    result:{true_ansver:["морковь"], user_answer:["капуста"], score: false},
+    result:{true_answer:["морковь"], user_answer:["капуста"], score: false},
     "type":{"title":"input_one"}
     },
     {title:"В каком случае нарушен порядок хранения и выдачи ключей?",
     variant:[], 
     id: 7,
-    result:{true_ansver:["морковь"], user_answer:["морковь"], score: true},
+    result:{true_answer:["морковь"], user_answer:["морковь"], score: true},
     "type":{"title":"input_one"}
     },
     {title:"На кого распространяются Правила по охране труда при эксплуатации электроустановок? ",
@@ -227,7 +240,7 @@ const state = () => ({
     "*На работников из числа электротехнического, электротехнологического и неэлектротехнического персонала, а также на работодателей",
     "На работников всех организаций независимо от формы собственности, занятых техническим обслуживанием электроустановок и выполняющих в них строительные, монтажные и ремонтные работы"], 
     id: 1,
-    result:{true_ansver:[0], user_answer:[], score: false},
+    result:{true_answer:[0], user_answer:[], score: false},
     "type":{"title":"radio"},
     },
     
@@ -236,7 +249,7 @@ const state = () => ({
     "*В сопровождении оперативного персонала, обслуживающего данную электроустановку, имеющего группу III, либо работника, имеющего право единоличного осмотра",
     "В сопровождении опытного работника из числа ремонтного персонала, имеющего группу по электробезопасности не ниже V"], 
     id: 2,
-    result:{true_ansver:[1], user_answer:[1], score: true},
+    result:{true_answer:[1], user_answer:[1], score: true},
     "type":{"title":"radio"}
     },
     
@@ -246,7 +259,7 @@ const state = () => ({
     "Разрешение дает административно-технический персонал",
     "*Предварительного разрешения оперативного персонала не требуется. Напряжение должно быть снято немедленно"], 
     id: 3,
-    result:{true_ansver:[2,3], user_answer:[1,2], score: false},
+    result:{true_answer:[2,3], user_answer:[1,2], score: false},
     "type":{"title":"checkbox"}
     },
     
@@ -256,7 +269,7 @@ const state = () => ({
     "Ключи от электроустановок , оперативное обслуживание которых осуществляется круглосуточно оперативным персоналом,  должны передаваться по смене с оформлением в оперативном журнале",
     "*Допускается возвращать ключи от электроустановок оперативному персоналу в течение трех дней после полного окончания работ"], 
     id: 4,
-    result:{true_ansver:[2,3], user_answer:[2,3], score: true},
+    result:{true_answer:[2,3], user_answer:[2,3], score: true},
     "type":{"title":"checkbox"}
     },
     
@@ -302,11 +315,11 @@ const actions = {
     console.log("id - ",  id === "rnd20")
     let url = ''
     if (id === "rnd20") {
-      url = `/api/test/sinii-oao-khmel/question/20`
+      url = `/api/test/krasnovato-korichnevyi-zao-telepivmetiz/question/10`
     } else if (id === "rnd"){
       const i = Math.floor(Math.random() * (30 - 1) + 1)
       console.log("i - ",  i)
-      url = `/api/test/sinii-oao-khmel/question/${i}`
+      url = `/api/test/krasnovato-korichnevyi-zao-telepivmetiz/question/${i}`
     }
     else { return }
     
@@ -328,13 +341,15 @@ const actions = {
         console.log(e.message);
     }
   },
+
   async setResultDb({ commit }, ticket ){
     try{
       const config = {
-        method: 'get',
+        method: 'post',
         url: '/api/test/handle',
         headers: { 
           Accept: 'application/json', 
+          'Content-Type': 'application/json'
           // Authorization: `Bearer ${token}`
         },
         data: ticket

@@ -12,7 +12,7 @@
       >
         
         <div class="test__card"
-          v-if="getLogInUser || index < 3"
+          v-if="getIsAutchUser || index < 3"
         >
           <RouterLink :to="{ name: 'test', params: { id: test.id } }">
             {{ test.id }} - {{ test.title }}
@@ -41,7 +41,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getLogInUser"]),
+    ...mapGetters(["getIsAutchUser"]),
     areaTitle () {
         console.log(this.$route.params.id)
         console.log(this.$store.getters.getAreaTitle(this.$route.params.id))

@@ -21,21 +21,22 @@
               :qestion="qestion"
               :index="index"
             />
-            <TestQuestionOrdered
-              v-else-if="qestion.type.title === 'order'"
-              :qestion="qestion"
-              :index="index"
-            />
             <TestQuestionInputOne
               v-else-if="qestion.type.title === 'input_one'"
               :qestion="qestion"
               :index="index"
             />
-            <TestQuestionRadio
-              v-else
+            <TestQuestionOrdered
+              v-else-if="qestion.type.title === 'order'"
               :qestion="qestion"
               :index="index"
             />
+            <TestQuestionConformity
+              v-else-if="qestion.type.title === 'conformity'"
+              :qestion="qestion"
+              :index="index"
+            />
+            
           </div>
           <button type="submit" class="button">Проверить</button>
         </form>
@@ -49,13 +50,15 @@ import TestQuestionRadio from '../components/TestQuestionRadio.vue'
 import TestQuestionCheckbox from '../components/TestQuestionCheckbox.vue'
 import TestQuestionOrdered from '../components/TestQuestionOrdered.vue'
 import TestQuestionInputOne from '../components/TestQuestionInputOne.vue'
+import TestQuestionConformity from '../components/TestQuestionConformity.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
     TestQuestionRadio,
     TestQuestionCheckbox,
     TestQuestionOrdered,
-    TestQuestionInputOne
+    TestQuestionInputOne,
+    TestQuestionConformity
   },
   data() {
     return {
@@ -77,11 +80,11 @@ export default {
     async onSubmit(e){
       const r = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
         .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-       
+       const ticket = JSON.stringify(r)
         // router.push({ name: 'user', params: { username: 'erina' } })
-       console.log(JSON.stringify(r))
+       console.log(ticket)
       // console.log((r))
-      await this.setResultDb(r)
+      await this.setResultDb(ticket)
       this.$router.push({ path:'/result'})
     },
   },

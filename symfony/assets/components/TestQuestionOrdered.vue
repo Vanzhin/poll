@@ -9,14 +9,16 @@
       <hr> 
       <i class="i">Расположите ответы в правильном порядке.</i>
       <div  
-        @dragover.prevent="onDragover"
+        @drop="onDrop($event)"
+        @dragover.prevent
+        @dragenter.prevent
         >
         <div class="custom-control custom-radio"
           v-for="(answer, ind ) in qestionVariantSort" 
           :key="answer"
           @dragstart="onDragStart($event, ind)"
           draggable="true"
-          :name="answer.sort"
+          :dataname="answer.sort"
         >
         
         
@@ -47,7 +49,13 @@ export default {
   },
   computed:{
     qestionVariantSort(){
-      return this.qestionVariant.sort((a,b) => a.sort-b.sort)
+      this.answerSelect = []
+      this.qestionVariant.sort((a,b) => a.sort-b.sort)
+      this.qestionVariant.forEach((item, index ) => {
+        item.sort = index
+        this.answerSelect.push(item.id)
+      })
+      return this.qestionVariant
     }
   },
   methods: {
@@ -55,18 +63,19 @@ export default {
       const ind = this.answerSelect.indexOf(id)
       return ind>-1 ? ind + 1 : ''
     },
-    onDragStart(e , item) {
-      e.dataTransver.dropEffect = 'copy'
-      e.dataTransver.effectAllowed = 'move'
-      e.dataTransver.setData()
-    },
-    onDragover(e){
-      if (this.blockY !== e.y){ this.blockY = e.y
-      console.log(e)
-      console.log(e.y, ' - ', e.toElement.offsetTop
-)
-      }
 
+    onDragStart(e , item) {
+      e.dataTransfer.dropEffect = 'copy'
+      e.dataTransfer.effectAllowed = 'move'
+      e.dataTransfer.setData('item', item.toString())
+    },
+    
+    onDrop(e){
+      const item = parseInt(e.dataTransfer.getData('item'))
+      const yEl = e.toElement.offsetParent.offsetTop + e.toElement.offsetTop + e.toElement.clientHeight/2
+      if (e.pageY > yEl  ) {
+        this.qestionVariant[item].sort = parseInt(e.toElement.attributes.dataname.value) + 0.5
+      } else this.qestionVariant[item].sort = parseInt(e.toElement.attributes.dataname.value) - 0.5
       
     }
   },

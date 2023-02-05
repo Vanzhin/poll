@@ -42,9 +42,9 @@ export default {
   methods: {
     classAnswer(ind){
       return  {
-        "answer-true": this.getUserAnswer && this.qestion.result.true_ansver.indexOf(ind) > -1 && this.qestion.result.user_answer.indexOf(ind) > -1,
-        "answer-user":  this.getUserAnswer && this.qestion.result.user_answer.indexOf(ind) > -1,
-        "answer":  this.getUserAnswer && this.qestion.result.true_ansver.indexOf(ind) > -1,
+        "answer-true": this.getUserAnswer && this.qestion.result.true_answer.indexOf(ind) > -1 && this.qestion.result.user_answer.indexOf(`${ind}`) > -1,
+        "answer-user": this.getUserAnswer && this.qestion.result.user_answer.indexOf(`${ind}`) > -1,
+        "answer": this.getUserAnswer && this.qestion.result.true_answer.indexOf(ind) > -1,
       }
     },
     getAnswer(ind){

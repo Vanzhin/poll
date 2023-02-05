@@ -24,7 +24,7 @@ const actions = {
     return true
   }
   },
-  getQuestion(){}
+  
 };
 
 const getters = {
