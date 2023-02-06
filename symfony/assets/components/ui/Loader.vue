@@ -1,0 +1,38 @@
+<template>
+  <div class="container">
+            <div class="loader">
+            </div>
+        </div>
+</template>
+<script>
+export default {
+}
+</script>
+
+<style lang="scss" scoped>
+  .container{
+    width: 100%;
+    min-height: 300px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px dashed teal;
+    animation: rotate 1s infinite linear;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg) scale(1);
+    }
+    to {
+        transform: rotate(360deg) scale(1.4);
+    }
+}
+</style>

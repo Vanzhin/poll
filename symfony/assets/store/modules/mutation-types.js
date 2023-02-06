@@ -2,6 +2,8 @@ export const SET_QUESTION = "SET_QUESTION"
 export const SET_TEST_TITLE = "SET_TEST_TITLE"
 export const SET_QUESTIONS = "SET_QUESTIONS"
 export const SET_RESULT_QUESTIONS = "SET_RESULT_QUESTIONS"
-
-
+export const SET_LOADER_TOGGLE = "SET_LOADER_TOGGLE"
+export const SET_IS_AUTCH_USER = "SET_IS_AUTCH_USER"
+export const SET_AUTCH_USER_TOKEN = "SET_AUTCH_USER_TOKEN"
+export const SET_PAGE_NAME = "SET_PAGE_NAME"
 export const URL = "test2-open"

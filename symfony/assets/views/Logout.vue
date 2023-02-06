@@ -47,6 +47,7 @@
  
 <script>
  import { RouterLink } from 'vue-router'
+ import { mapGetters, mapActions} from "vuex"
  export default {
    components: {
     
@@ -60,11 +61,15 @@
      }
    },
     computed:{
-      
+      ...mapGetters(["getPageName"])
      },
      methods: {
-      submit(){
+      ...mapActions(["setIsAutchUser",]),
+      async submit(){
           console.log('авторизация')
+          await this.setIsAutchUser()
+          console.log('this.getPageName', this.getPageName)
+          this.$router.push({ name: this.getPageName})
         }
      }
      // mounted(){

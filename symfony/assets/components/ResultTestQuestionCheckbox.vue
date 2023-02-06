@@ -6,19 +6,21 @@
       ><b>{{ index+1 }})</b> {{ qestion.title }}</i>
       
       <hr>
+     
+        <div class="custom-control custom-radio"
+          
+          v-for="(answer, ind ) in qestion.variant" 
+          :key="answer"
+        >
+          
+          <label v-if="answer!==''"
+            class="custom-control-label f_sm " 
+            :class="classAnswer(ind)"
+          >{{ answer }}
+          </label>
+          
+        </div>
       
-      <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
-        :key="answer"
-      >
-        
-        <label v-if="answer!==''"
-          class="custom-control-label f_sm " 
-          :class="classAnswer(ind)"
-        >{{ answer }}
-        </label>
-        
-      </div>
       <br>
       
     </div>       
@@ -36,7 +38,7 @@ export default {
   },
   computed:{
     getUserAnswer(){
-      return  this.qestion.result.user_answer.length > 0
+      return  this.qestion.result.user_answer.length > 0 && this.qestion.result.user_answer[0] !==''
     },
   },
   methods: {
