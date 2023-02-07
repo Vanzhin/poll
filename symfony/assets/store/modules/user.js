@@ -24,7 +24,29 @@ const actions = {
         .then((data)=>{
           console.log("getLogInUser - ",  data.token)
           commit("SET_AUTCH_USER_TOKEN", data.token);
-          commit("SET_IS_AUTCH_USER")
+          commit("SET_IS_AUTCH_USER", true)
+        })
+    } catch (e) {
+      console.log("ошибка - ",e)
+    }
+  },
+
+  async getLogOutUser({ commit }, user) {
+    try{
+      const config = {
+        method: 'post',
+        url: '/api/login_check',
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json'
+        },
+        data: user  
+      }
+      await axios(config)
+        .then((data)=>{
+          console.log("getLogInUser - ",  data.token)
+          commit("SET_AUTCH_USER_TOKEN", '');
+          commit("SET_IS_AUTCH_USER", false)
         })
     } catch (e) {
       console.log("ошибка - ",e)
@@ -34,8 +56,8 @@ const actions = {
   setPage ({ commit }, page) {
     commit("SET_PAGE_NAME", page);
   },
-  setIsAutchUser ({ commit }) {
-    commit("SET_IS_AUTCH_USER")
+  setIsAutchUser ({ commit }, pr) {
+    commit("SET_IS_AUTCH_USER", pr)
   }
   
 };
@@ -53,9 +75,9 @@ const getters = {
 }
 
 const mutations = {
-  [SET_IS_AUTCH_USER] (state,  ) {
+  [SET_IS_AUTCH_USER] (state, pr ) {
     console.log("SET_AUTCH_USER", )
-    state.isAutchUser = true
+    state.isAutchUser = pr
   },
   [SET_AUTCH_USER_TOKEN] (state, token  ) {
     console.log("SET_AUTCH_USER_TOKEN", )

@@ -67,7 +67,7 @@
       ...mapActions(["setIsAutchUser",]),
       async submit(){
           console.log('авторизация')
-          await this.setIsAutchUser()
+          await this.setIsAutchUser(true)
           console.log('this.getPageName', this.getPageName)
           this.$router.push({ name: this.getPageName})
         }

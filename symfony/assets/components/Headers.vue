@@ -15,12 +15,12 @@
          
           <!-- <div class="bi-search"></div> -->
         </div>
-        <div class="links">
+        <!-- <div class="links">
           <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
             <h5>   Личный кабинет  </h5>
           </RouterLink>
-        </div>
-        
+        </div> -->
+        <DropDownItems/>
       </div> 
     </div>
   </div> 
@@ -28,12 +28,16 @@
 
 <script>
 import { RouterLink } from 'vue-router'
+import DropDownItems from './ui/DropDownItems.vue';
 export default {
   data() {
     return {
       count: 0
     }
   },
+  components:{
+    DropDownItems
+  }
 } 
 
 </script>
