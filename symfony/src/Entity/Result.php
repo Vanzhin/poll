@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ResultRepository::class)]
 class Result
@@ -20,6 +21,7 @@ class Result
     private ?int $id = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['account'])]
     private ?int $score = null;
 
     #[ORM\OneToMany(mappedBy: 'result', targetEntity: Answer::class, orphanRemoval: true)]
@@ -30,6 +32,7 @@ class Result
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'results')]
+    #[Groups(['account'])]
     private ?Ticket $ticket = null;
 
     public function __construct()
