@@ -12,7 +12,7 @@ class ValidationService
     {
     }
 
-    public function isValid(string $data, string $type):bool
+    public function isValid(string $data, string $type): bool
     {
         $response = false;
         switch ($type) {
@@ -25,6 +25,19 @@ class ValidationService
                     $response = true;
                 }
                 break;
+
+        }
+        return $response;
+
+    }
+
+    public function validate(Object $entity): array
+    {
+        $response = [];
+        $errors = $this->validator->validate($entity);
+
+        for ($i=0; $i< count($errors); $i++) {
+            $response[$this->validator->validate($entity)->get($i)->getPropertyPath()] = $this->validator->validate($entity)->get($i)->getMessage();
 
         }
         return $response;
