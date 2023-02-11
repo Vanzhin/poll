@@ -12,8 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -46,7 +47,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/login_link/{savedEmail}', name: 'app_login_link')]
-    public function requestLoginLink(ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, LoginLinkHandlerInterface $loginLinkHandler, UserRepository $userRepository, Request $request, Mailer $mailer, string $savedEmail = null): Response
+    public function requestLoginLink(ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request, Mailer $mailer, string $savedEmail = null): Response
     {
         $email = $request->request->get('email');
         $violations = $validator->validate($email, [
@@ -74,11 +75,8 @@ class SecurityController extends AbstractController
                 $entityManager->flush();
             }
 
-            $loginLinkDetails = $loginLinkHandler->createLoginLink($user);
-
-
             try {
-                $mailer->sendLoginLinkEmail($user, $loginLinkDetails);
+                $mailer->sendLoginLinkEmail($user);
             } catch (TransportExceptionInterface $e) {
                 $this->addFlash('email_failure_flash', 'При отправке сообщения произошла ощибка. Пожалуйста, повтортите попытку позже.');
                 return $this->render('security/login_link.html.twig', ['savedEmail' => $email]);
@@ -93,19 +91,19 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/login_check', name: 'app_login_check')]
-    public function check(Request $request): Response
+    public function check(Request $request)
     {
-        // get the login link query parameters
-        $expires = $request->query->get('expires');
-        $username = $request->query->get('user');
-        $hash = $request->query->get('hash');
-
-        // and render a template with the button
-        return $this->render('security/process_login_link.html.twig', [
-            'expires' => $expires,
-            'user' => $username,
-            'hash' => $hash,
-        ]);
+//        // get the login link query parameters
+//        $expires = $request->query->get('expires');
+//        $username = $request->query->get('user');
+//        $hash = $request->query->get('hash');
+//
+//        // and render a template with the button
+//        return $this->render('security/process_login_link.html.twig', [
+//            'expires' => $expires,
+//            'user' => $username,
+//            'hash' => $hash,
+//        ]);
     }
 
 

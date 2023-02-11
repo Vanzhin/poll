@@ -7,6 +7,9 @@ controllers:
 login_check:
     path: /login_check
 
+app_api_login_link_check:
+    path: /api/login_link_check
+
 index:
     path: /{wildcard}
     controller: App\Controller\HomeController::index
@@ -15,6 +18,7 @@ index:
 
 api_login_check:
     path: /api/login_check
+
 
 api_refresh_token:
     path: /api/token/refresh

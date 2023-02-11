@@ -13,19 +13,22 @@ use Symfony\Component\Mailer\MailerInterface;
 //use Symfony\Component\Mailer\Messenger\SendEmailMessage;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 class Mailer
 {
 
-    private MailerInterface $mailer;
     private string $appName;
     private string $defaultFromEmail;
     private string $defaultFromName;
 
 
-    public function __construct(MailerInterface $mailer, string $appName, string $defaultFromEmail, string $defaultFromName)
+    public function __construct(private readonly MailerInterface $mailer,
+                                private readonly LoginLinkHandlerInterface $loginLinkHandler,
+                                string $appName,
+                                string $defaultFromEmail,
+                                string $defaultFromName)
     {
-        $this->mailer = $mailer;
         $this->appName = $appName;
         $this->defaultFromEmail = $defaultFromEmail;
         $this->defaultFromName = $defaultFromName;
@@ -86,16 +89,16 @@ class Mailer
             ->htmlTemplate($template);
     }
 
-    public function sendLoginLinkEmail(User $user, LoginLinkDetails $loginLinkDetails): void
+    public function sendLoginLinkEmail(User $user): void
     {
         $email = (new TemplatedEmail())
             ->from(new Address('welcome@poll.ru', 'poll bot'))
-            ->to(new Address($user->getEmail(), $user->getFirstName()?? 'пользователь'))
+            ->to(new Address($user->getEmail(), $user->getFirstName()?? 'Пользователь'))
             ->subject('login link')
             ->htmlTemplate('emails/login_link.html.twig')
             ->context(['user' => $user,
                 'appName' => $this->appName,
-                'loginLinkDetails' => $loginLinkDetails]);
+                'loginLinkDetails' => $this->loginLinkHandler->createLoginLink($user)]);
         $this->mailer->send($email);
     }
 }

@@ -13,7 +13,6 @@ class SessionService
     public function add(array $question, string $name): void
     {
         $session = $this->requestStack->getSession();
-//        $session->remove($name);
 
         if ($session->has($name)) {
             $data = $session->get($name, []);
@@ -23,6 +22,12 @@ class SessionService
         } else {
             $session->set($name, $question);
         }
+
+    }
+    public function set(string $data, string $name): void
+    {
+        $session = $this->requestStack->getSession();
+        $session->set($name, $data);
 
     }
 
