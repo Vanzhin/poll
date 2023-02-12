@@ -40,14 +40,14 @@ class ValidationService
         $errors = $this->validator->validate($entity);
 
         for ($i = 0; $i < count($errors); $i++) {
-            $response[$this->validator->validate($entity)->get($i)->getPropertyPath()] = $this->validator->validate($entity)->get($i)->getMessage();
+            $response[] = $this->validator->validate($entity)->get($i)->getMessage();
 
         }
         return $response;
 
     }
 
-    public function userPasswordValidate(string $data): ?string
+    public function userPasswordValidate(string $data): ?array
     {
         $errors = [];
 
@@ -66,7 +66,7 @@ class ValidationService
         for ($i = 0; $i < count($violations); $i++) {
             $errors[] = $violations->get($i)->getMessage();
         }
-        return implode(',',$errors);
+        return $errors;
 
     }
 }

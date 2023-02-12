@@ -25,12 +25,14 @@ class RegistrationController extends AbstractController
         $user = $userFactory->create($data['email'] ?? '', $data['password'] ?? '', $data['firstName'] ?? '');
         $errors = $validator->validate($user);
         if ($validator->userPasswordValidate($data['password'])){
-            $errors['password'] = $validator->userPasswordValidate($data['password']);
+            foreach($validator->userPasswordValidate($data['password']) as $error){
+                $errors[] = $error;
 
+            }
         }
 
         if ($data['password'] !== $data['confirmPassword']) {
-            $errors['confirmPassword'] = 'Пароли не совпадают.';
+            $errors[] = 'Пароли не совпадают.';
         }
         if (count($errors) > 0) {
             return $this->json([
