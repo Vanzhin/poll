@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ValidationService
@@ -31,16 +34,39 @@ class ValidationService
 
     }
 
-    public function validate(Object $entity): array
+    public function validate(object $entity): array
     {
         $response = [];
         $errors = $this->validator->validate($entity);
 
-        for ($i=0; $i< count($errors); $i++) {
+        for ($i = 0; $i < count($errors); $i++) {
             $response[$this->validator->validate($entity)->get($i)->getPropertyPath()] = $this->validator->validate($entity)->get($i)->getMessage();
 
         }
         return $response;
+
+    }
+
+    public function userPasswordValidate(string $data): ?string
+    {
+        $errors = [];
+
+        $violations = $this->validator->validate($data, [
+            new NotBlank([
+                'message' => 'Пароль не может быть пустым.'
+            ]),
+            new Length([
+                'min' => 6,
+                'minMessage' => 'Пароль должен быть не менее 6 символов.'
+            ])
+        ]);
+        if ($violations->count() === 0){
+            return null;
+        }
+        for ($i = 0; $i < count($violations); $i++) {
+            $errors[] = $violations->get($i)->getMessage();
+        }
+        return implode(',',$errors);
 
     }
 }

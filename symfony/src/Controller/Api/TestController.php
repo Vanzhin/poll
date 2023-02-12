@@ -44,11 +44,13 @@ class TestController extends AbstractController
         try {
             $sessionService->remove($questionService::SHUFFLED);
             $response = ['test' => $test->getTitle(), 'questions' => $questionService->shuffleVariants($testRepository->getRandomQuestions($test, $count))];
+            $status = 200;
         } catch (Exception $e) {
-            $response = $e->getMessage();
+            $response = ['error' => $e->getMessage()];
+            $status = 422;
         } finally {
             return $this->json($response,
-                200,
+                $status,
                 ['charset=utf-8'],
                 ['groups' => 'main'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);

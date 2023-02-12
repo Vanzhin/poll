@@ -26,10 +26,9 @@ class SecurityController extends AbstractController
         if (!$validator->isValid($email, 'email')) {
             return $this->json(
                 [
-                    'error' => 'Указан не верный формат email.',
-                    'email' => $email
+                    'error' => "Указан не верный формат почты ($email).",
                 ],
-                200,
+                422,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
 

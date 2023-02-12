@@ -14,25 +14,36 @@ class RegistrationController extends AbstractController
 {
     #[Route('/api/register', name: 'app_api_register', methods: ['POST'])]
     public function register(
-        Request                     $request,
-        EntityManagerInterface      $entityManager,
-        ValidationService           $validator,
-        UserFactory                 $userFactory
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        ValidationService      $validator,
+        UserFactory            $userFactory
     ): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $user = $userFactory->create(...$data);
+
+        $user = $userFactory->create($data['email'] ?? '', $data['password'] ?? '', $data['firstName'] ?? '');
         $errors = $validator->validate($user);
-        if (count($errors) > 0){
-            return $this->json($errors,
-                200,
+        if ($validator->userPasswordValidate($data['password'])){
+            $errors['password'] = $validator->userPasswordValidate($data['password']);
+
+        }
+
+        if ($data['password'] !== $data['confirmPassword']) {
+            $errors['confirmPassword'] = 'Пароли не совпадают.';
+        }
+        if (count($errors) > 0) {
+            return $this->json([
+                'message' => 'Ошибка при вводе данных',
+                'error' => $errors],
+                422,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }else{
+        } else {
             $entityManager->persist($user);
             $entityManager->flush();
         }
-        return $this->json(['message'=>'Пользователь зарегистрирован'],
+        return $this->json(['message' => 'Пользователь зарегистрирован'],
             200,
             ['charset=utf-8'],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
