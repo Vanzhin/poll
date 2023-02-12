@@ -1,5 +1,4 @@
 <template>
-    <div  @click="logOut">{{ getIsAutchUser }}</div>
     <div class="dropdown">
         <button class="btn btn-secondary "  data-bs-toggle="dropdown" aria-expanded="false">
            Личный кабинет
@@ -10,9 +9,9 @@
          
         >
           <div v-if="getIsAutchUser">
-            <li><RouterLink class="dropdown-item" :to="{ name: ''}">Статистика</RouterLink></li>
+            <li><RouterLink class="dropdown-item" :to="{ name: 'statistics'}">Статистика</RouterLink></li>
             <li><hr class="dropdown-divider"></li>
-            <li><RouterLink class="dropdown-item" :to="{ name: ''}" @click="logOut">Выйти</RouterLink></li>
+            <li><RouterLink class="dropdown-item" :to="{ name: 'home'}" @click="logOut">Выйти</RouterLink></li>
           </div> 
           <div v-else>
             <li><RouterLink class="dropdown-item" :to="{ name: 'logout'}">Авторизоваться</RouterLink></li>
@@ -30,9 +29,10 @@ export default {
     ...mapGetters(["getIsAutchUser"]),
   },
   methods:{
-    ...mapActions(["setIsAutchUser",]),
+    ...mapActions(["getLogOutUser"]),
     async logOut(){
-      await  this.setIsAutchUser(false)
+      await  this.getLogOutUser()
+      // this.$router.push({ name: 'home'})
     },
   }
 }

@@ -10,7 +10,7 @@
                 id="nik" 
                 type="text" 
                 placeholder="Придумайте ник"
-                v-model="nik"
+                v-model="firstName"
                 required
               />
             </div>
@@ -40,7 +40,7 @@
                 id="password_repeat" 
                 type="password" 
                 placeholder="Повторите пароль"
-                v-model="passwordRepeat"
+                v-model="confirmPassword"
                 required
               />
             </div>
@@ -59,7 +59,7 @@
 </template>
  
 <script>
-  
+  import { mapGetters, mapActions} from "vuex"
   export default {
     components: {
       
@@ -67,18 +67,27 @@
     data() {
       return {
         count: 0,
-        passwordRepeat:'',
+        confirmPassword:'',
         password:'',
         email:'',
-        nik:'',
+        firstName:'',
       }
     },
       computed:{
         
       },
       methods: {
-        submit(){
+        ...mapActions(["setIsAutchUser", "getLogInUser", "getRegistrationUser"]),
+        async submit(){
+          const user = {
+            confirmPassword: this.confirmPassword,
+            email: this.email,
+            firstName: this.firstName,
+            password: this.password, 
+          }
           console.log('Регистрация')
+          await this.getRegistrationUser(user)
+          
         }
       }
       // mounted(){

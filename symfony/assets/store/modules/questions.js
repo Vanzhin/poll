@@ -303,7 +303,8 @@ const state = () => ({
     // },
     
   ],
-  isLoader: false
+  isLoader: false,
+  
 })
 
 
@@ -313,18 +314,16 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, id) {
-    
-    const slag = 'krasnovato-korichnevyi-zao-telepivmetiz'
-    
-    console.log("id - ",  id === "rnd20")
+    const slag = 'armeiskii-zelionyi-oao-flotsoftkhmeltrast'
+    console.log("id - ",  id)
     let url = ''
-    if (id === "rnd20") {
+    if (id === "rnd20" || id === "rnd20t") {
       url = `/api/test/${slag}/question/10`
     } else if (id === "rnd"){
       const i = Math.floor(Math.random() * (30 - 1) + 1)
       console.log("i - ",  i)
       url = `/api/test/${slag}/question/${i}`
-    }
+    } 
     else { return }
     
     try{

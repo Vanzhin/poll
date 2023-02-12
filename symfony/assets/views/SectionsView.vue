@@ -39,35 +39,34 @@
 </template>
  
 <script>
- import TestQuestion from '../components/TestQuestionRadio.vue'
- import { RouterLink } from 'vue-router'
- export default {
-   components: {
-    
-   },
-   data() {
-     return {
-       count: 0,
-         //  testName:''
-        //  url:'http://test2-open/assets/img/',
-          urlCss: 'url(http://localhost:8080/build/img/',
-         urlCss: 'url(../img/'
-       
-     }
-   },
-    computed:{
-      sections () {
-        console.log (this.$store.getters.getSections)
+import TestQuestion from '../components/TestQuestionRadio.vue'
+import { RouterLink } from 'vue-router'
+export default {
+  components: {
+  
+  },
+  data() {
+    return {
+      count: 0,
+      //  testName:''
+      //  url:'http://test2-open/assets/img/',
+      urlCss: 'url(http://localhost:8080/build/img/',
+      urlCss: 'url(../img/'
+      
+    }
+  },
+  computed:{
+    sections () {
       return this.$store.getters.getSections
     },
-     },
-     methods: {
-      
-     }
-     // mounted(){
-     // }
-   
- } 
+    },
+    methods: {
+    
+    }
+    // mounted(){
+    // }
+  
+} 
  
 </script>
 <style lang="scss" scoped>

@@ -11,6 +11,9 @@
         <p>Билет №: {{ $route.params.id }}</p>  
       </div>
     </div>
+    <Timer
+      v-if="timeTicket"
+    />
     <div class="container">
       <div class="row">
         <form @submit.prevent="onSubmit">
@@ -56,6 +59,7 @@ import TestQuestionCheckbox from '../components/TestQuestionCheckbox.vue'
 import TestQuestionOrdered from '../components/TestQuestionOrdered.vue'
 import TestQuestionInputOne from '../components/TestQuestionInputOne.vue'
 import TestQuestionConformity from '../components/TestQuestionConformity.vue'
+import Timer from '../components/Timer.vue'
 import Loader from '../components/ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
@@ -65,11 +69,13 @@ export default {
     TestQuestionOrdered,
     TestQuestionInputOne,
     TestQuestionConformity,
-    Loader
+    Loader,
+    Timer
   },
   data() {
     return {
-      isLoader: true
+      isLoader: true,
+      timeTicket: false
     }
   },
   computed:{
@@ -93,6 +99,7 @@ export default {
   },
   async mounted(){
     await this.getQuestionsDb(this.$route.params.id)
+    if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
     this.isLoader = false
   }
 } 

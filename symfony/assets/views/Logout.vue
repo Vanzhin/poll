@@ -1,7 +1,7 @@
 <template>
    <section class="wrapper">
       <div class="login-page">
-         <form @submit.prevent="submit">
+         <form @submit.prevent="onSubmit">
             <div class="login-page-text">Вход на сайт</div>
             <div class="form">
                <div class="text-field">
@@ -9,6 +9,7 @@
                   <input class="text-field__input"
                     type="email" 
                     placeholder="Введите email"
+                    name="email"
                     v-model="email"
                     required
                   />
@@ -17,6 +18,7 @@
                   <label class="text-field__label" >Пароль</label>
                   <input class="text-field__input"
                     type="password" 
+                    name="password"
                     placeholder="Введите пароль"
                     v-model="password"
                     required
@@ -24,9 +26,10 @@
                </div>
                <div>
                 <label class="checkbox__container" >
+                  
                   <input type="checkbox"  class="checkbox__highload"
-                  v-model = "remember"
-                    
+                    v-model = "checkbox"
+                    name="checkbox"  
                   />
                   <span class="checkbox__highload2"></span>
                   запомнить меня
@@ -46,55 +49,57 @@
 </template>
  
 <script>
- import { RouterLink } from 'vue-router'
- import { mapGetters, mapActions} from "vuex"
- export default {
-   components: {
-    
-   },
-   data() {
-     return {
-       count: 0,
-       email:'',
-       password:'',
-       checkbox:'true'
-     }
-   },
+  import { RouterLink } from 'vue-router'
+  import { mapGetters, mapActions} from "vuex"
+  export default {
+    components: {
+      
+    },
+    data() {
+      return {
+        count: 0,
+        email:'',
+        password:'',
+        checkbox:'false'
+      }
+    },
     computed:{
       ...mapGetters(["getPageName"])
-     },
-     methods: {
-      ...mapActions(["setIsAutchUser",]),
-      async submit(){
-          console.log('авторизация')
-          await this.setIsAutchUser(true)
-          console.log('this.getPageName', this.getPageName)
-          this.$router.push({ name: this.getPageName})
+    },
+    methods: {
+      ...mapActions(["setIsAutchUser","getLogInUser"]),
+      async onSubmit(e){
+        console.log('авторизация')
+        const user = {
+          username: this.email, 
+          password: this.password, 
         }
-     }
+        console.log(user)
+        await  this.getLogInUser(user)
+        this.$router.push({ name: this.getPageName})
+      }
+    }
      // mounted(){
      // }
-   
- } 
- 
+  } 
 </script>
+
 <style lang="scss" scoped>
 .login-page {
-   max-width: 380px;
-   padding: 24px;
-   background: #cad5d5;
-   box-shadow: 0px 4px 15px rgba(34, 42, 70, 0.08);
-   border-radius: var(--radius);
-   margin: 100px auto;
-   &-text{
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 26px;
-      text-align: center;
-   }
-   
- }
- @media (min-width: 1024px) {
+  max-width: 380px;
+  padding: 24px;
+  background: #cad5d5;
+  box-shadow: 0px 4px 15px rgba(34, 42, 70, 0.08);
+  border-radius: var(--radius);
+  margin: 100px auto;
+  &-text{
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 26px;
+    text-align: center;
+  }
+}
+@media (min-width: 1024px) {
   
- }
+}
 </style>

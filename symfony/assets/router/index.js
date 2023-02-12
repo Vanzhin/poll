@@ -73,28 +73,30 @@ const router = createRouter({
       name: 'resultAutch',
       component: () => import('../views/ResultAutchView.vue')
     },
+    {
+      path: '/statistics',
+      name: 'statistics',
+      meta: {autch: true},
+      component: () => import('../views/StatisticsAutchView.vue')
+    },
+    
   ]
 })
 router.beforeEach((to, from, next) => {
   const requireAuth = to.meta.autch
   const userAutch = store.getters.getIsAutchUser
-  
-  console.log('userAutch', userAutch)
-  console.log(store)
-   console.log(from.name)
-   if (to.name === 'logout') {
+  // console.log('userAutch', userAutch)
+  // console.log(store)
+  // console.log(from.name)
+  if (to.name === 'logout') {
     store.dispatch('setPage' ,from.name)
-   }
+  }
   // store._actions.setPage(from.name)
   if (requireAuth && !userAutch) {
-   
     next('/logout')
   } else {
-    
     next()
   }
 })
 
 export default router
-// {/* <RouterLink :to="{ name: 'question', params: { id: question.id } }" */}
-// <RouterLink to="question"
