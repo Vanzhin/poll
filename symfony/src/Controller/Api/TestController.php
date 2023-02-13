@@ -74,4 +74,20 @@ class TestController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
+    #[Route('/api/auth/test/handle', name: 'app_api_auth_test_handle', methods: ['POST'])]
+    public function handleByUser(Request $request, QuestionService $questionService): JsonResponse
+    {
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        $response = [];
+        foreach ($data as $answerData) {
+            $response[] = $questionService->handle($answerData, $user);
+        }
+
+        return $this->json(['questions' => $response],
+            200,
+            ['charset=utf-8'],
+            ['groups' => 'main'],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
 }

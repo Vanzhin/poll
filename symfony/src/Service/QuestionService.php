@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Question;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class QuestionService
@@ -13,7 +14,7 @@ class QuestionService
     {
     }
 
-    public function handle(array $answerData): array
+    public function handle(array $answerData, User $user = null): array
     {
         try {
             $question = $this->entityManager->find(Question::class, $answerData["id"]);
@@ -23,12 +24,17 @@ class QuestionService
                     "title" => $question->getTitle(),
                     "variant" => $question->getVariant(),
                     "result" => [
-                        "true_answer" => $this->getShuffledAnswers($question),
-                        "user_answer" => $answerData["answer"],
                         "score" => $this->getQuestionScore($question, $answerData["answer"])
                     ],
                     "type" => $question->getType()
                 ];
+                if ($user){
+                    $response["result"] += [
+                        "true_answer" => $this->getShuffledAnswers($question),
+                        "user_answer" => $answerData["answer"],
+                    ];
+                }
+
                 if (!empty($question->getSubTitle())) {
                     $response["subTitle"] = $question->getSubTitle();
                 }
@@ -79,11 +85,6 @@ class QuestionService
 
     private function getShuffledAnswers(Question $question, string $name = self::SHUFFLED): array
     {
-//        $testSession = [
-//            6885 => ["sunt", "doloremque", "ipsa", "sint"],
-//            6321 => ["eum", "at", "reiciendis"],
-//            6514 => ["et", "debitis", "molestiae", "debitis", "recusandae"]
-//        ];
 //        todo доработать если ответ в виде строки приходит типа input_many
         if ($this->sessionService->get($name) && array_key_exists($question->getId(), $this->sessionService->get($name))) {
 //        if (array_key_exists($question->getId(), $testSession)) {
