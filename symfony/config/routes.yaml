@@ -3,11 +3,25 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
 login_check:
     path: /login_check
+
+app_api_login_link_check:
+    path: /api/login_link_check
 
 index:
     path: /{wildcard}
     controller: App\Controller\HomeController::index
     requirements:
         wildcard: .*
+
+api_login_check:
+    path: /api/login_check
+
+
+api_refresh_token:
+    path: /api/token/refresh
+
+#api_token_invalidate:
+#    path: /api/token/invalidate
