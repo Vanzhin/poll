@@ -6,6 +6,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ValidationService
@@ -39,8 +40,8 @@ class ValidationService
         $response = [];
         $errors = $this->validator->validate($entity);
 
-        for ($i = 0; $i < count($errors); $i++) {
-            $response[] = $this->validator->validate($entity)->get($i)->getMessage();
+        foreach ($errors as $error) {
+            $response[] = $error->getMessage();
 
         }
         return $response;
@@ -53,18 +54,22 @@ class ValidationService
 
         $violations = $this->validator->validate($data, [
             new NotBlank([
-                'message' => 'Пароль не может быть пустым.'
+                'message' => 'user.password.not_blank'
             ]),
             new Length([
                 'min' => 6,
-                'minMessage' => 'Пароль должен быть не менее 6 символов.'
+                'minMessage' => 'user.password.length'
+            ]),
+            new Regex([
+                'pattern' => '/^[A-Za-z0-9_]+$/',
+                'message' => 'user.password.regex'
             ])
         ]);
         if ($violations->count() === 0){
             return null;
         }
-        for ($i = 0; $i < count($violations); $i++) {
-            $errors[] = $violations->get($i)->getMessage();
+        foreach ($violations as $violation) {
+            $errors[] = $violation->getMessage();
         }
         return $errors;
 
