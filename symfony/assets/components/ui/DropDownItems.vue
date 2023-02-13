@@ -15,6 +15,7 @@
           </div> 
           <div v-else>
             <li><RouterLink class="dropdown-item" :to="{ name: 'logout'}">Авторизоваться</RouterLink></li>
+            <li><RouterLink class="dropdown-item" :to="{ name: 'logoutlink'}">По ссылке</RouterLink></li>
             <li><RouterLink class="dropdown-item" :to="{ name: 'signup'}">Зарегистрироваться</RouterLink></li>
           </div>
         </ul>

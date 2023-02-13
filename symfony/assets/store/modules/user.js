@@ -21,6 +21,25 @@ const state = () => ({
 })
 
 const actions = {
+  async getLoginByLinkUser({ commit }, email) {
+     try {
+      const config = {
+        method: 'get',
+        url: `/api/login_link/${email}`,
+        headers: { 
+          'Accept': 'application/json',
+          // 'Content-Type': 'application/json'
+        },
+      }
+      await axios(config)
+        .then((data)=>{
+          
+          console.log("getLogInUser - ", data )
+        })
+    } catch (e) {
+      console.log("ошибка - ", e)
+    }
+  },
   async getLogInUser({ commit }, user) {
     const data = JSON.stringify(user)
     console.log(data)
@@ -79,8 +98,7 @@ const actions = {
   },
   async getLogOutUser({ commit, state }) {
     const data = JSON.stringify({"refresh_token":state.refresh_token} )
-    // commit("SET_DELETE_USER_TOKEN", '');
-    // commit("SET_IS_AUTCH_USER", false)
+    
     try{
       const config = {
         method: 'post',
@@ -94,13 +112,13 @@ const actions = {
       await axios(config)
         .then((data)=>{
           console.log("getLogInUser - ",  data)
-          commit("SET_AUTCH_USER_TOKEN", '');
+          commit("SET_DELETE_USER_TOKEN", '');
           commit("SET_IS_AUTCH_USER", false)
         })
     } catch (e) {
       console.log("ошибка - ",e.response.data.message)
       if (e.response.data.message === "No refresh_token found.") {
-        commit("SET_AUTCH_USER_TOKEN", '');
+        commit("SET_DELETE_USER_TOKEN", '');
         commit("SET_IS_AUTCH_USER", false)
       }
     }

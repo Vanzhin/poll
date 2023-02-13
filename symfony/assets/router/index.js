@@ -52,6 +52,12 @@ const router = createRouter({
       props: true,
     },
     {
+      path: '/logoutlink',
+      name: 'logoutlink',
+      component: () => import('../views/LoginByLink.vue'),
+      props: true,
+    },
+    {
       path: '/signup',
       name: 'signup',
       component: () => import('../views/Signup.vue'),

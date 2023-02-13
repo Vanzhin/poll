@@ -314,7 +314,8 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, id) {
-    const slag = 'armeiskii-zelionyi-oao-flotsoftkhmeltrast'
+    //  const slag = 'belokuryi-oao-metalzheldorstroi' // опен серв
+    const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
     console.log("id - ",  id)
     let url = ''
     if (id === "rnd20" || id === "rnd20t") {
