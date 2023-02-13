@@ -1,4 +1,4 @@
-import { SET_QUESTIONS, SET_RESULT_QUESTIONS } from './mutation-types.js'
+import { SET_QUESTIONS, SET_RESULT_QUESTIONS, SET_LOADER_TOGGLE } from './mutation-types.js'
 import axios from 'axios';
 
 const state = () => ({
@@ -302,7 +302,9 @@ const state = () => ({
     // "type":{"title":"checkbox"} // для checkbox, radio
     // },
     
-  ]
+  ],
+  isLoader: false,
+  
 })
 
 
@@ -312,15 +314,17 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, id) {
-    console.log("id - ",  id === "rnd20")
+    //  const slag = 'belokuryi-oao-metalzheldorstroi' // опен серв
+    const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
+    console.log("id - ",  id)
     let url = ''
-    if (id === "rnd20") {
-      url = `/api/test/krasnovato-korichnevyi-zao-telepivmetiz/question/10`
+    if (id === "rnd20" || id === "rnd20t") {
+      url = `/api/test/${slag}/question/10`
     } else if (id === "rnd"){
       const i = Math.floor(Math.random() * (30 - 1) + 1)
       console.log("i - ",  i)
-      url = `/api/test/krasnovato-korichnevyi-zao-telepivmetiz/question/${i}`
-    }
+      url = `/api/test/${slag}/question/${i}`
+    } 
     else { return }
     
     try{
@@ -343,6 +347,7 @@ const actions = {
   },
 
   async setResultDb({ commit }, ticket ){
+    commit("SET_LOADER_TOGGLE")
     try{
       const config = {
         method: 'post',
@@ -358,12 +363,15 @@ const actions = {
         .then(({data})=>{
           console.log("setResultDb - ",  data.questions)
           commit("SET_RESULT_QUESTIONS", data.questions);
+          commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
         console.log(e.message);
     }
   },
-  
+  setIsLoader({ commit }){
+    commit("SET_LOADER_TOGGLE")
+  },
   getQuestion(){}
 };
 
@@ -372,7 +380,12 @@ const getters = {
     return state.questions 
   },
   getResultQuestions(state) {
+    console.log("resultQuestions ", state.resultQuestions)
     return state.resultQuestions 
+  },
+  getIsLoaderQuestions(state) {
+    console.log("isLoader ", state.isLoader)
+    return state.isLoader 
   },
   
 }
@@ -385,6 +398,10 @@ const mutations = {
   [SET_RESULT_QUESTIONS] (state, questions) {
     console.log("SET_RESULT_QUESTIONS", questions)
     state.resultQuestions = questions
+  },
+  [SET_LOADER_TOGGLE] (state,) {
+    console.log("SET_LOADER_TOGGLE", state.isLoader)
+    state.isLoader = !state.isLoader
   },
 }
 

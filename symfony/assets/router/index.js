@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import TestsView from '../views/TestsView.vue'
+import store from '../store/index';
 const router = createRouter({
   history: createWebHistory(""),
   routes: [
@@ -34,6 +35,7 @@ const router = createRouter({
     {
       path: '/test/:id',
       name: 'test',
+      meta: {autch: false},
       component: () => import('../views/TicketsView.vue'),
       props: true,
     },
@@ -50,6 +52,12 @@ const router = createRouter({
       props: true,
     },
     {
+      path: '/logoutlink',
+      name: 'logoutlink',
+      component: () => import('../views/LoginByLink.vue'),
+      props: true,
+    },
+    {
       path: '/signup',
       name: 'signup',
       component: () => import('../views/Signup.vue'),
@@ -58,6 +66,7 @@ const router = createRouter({
     {
       path: '/chapter/:id',
       name: 'chapter',
+      meta: {autch: false},
       component: () => import('../views/AreasView.vue')
     },
     {
@@ -65,9 +74,35 @@ const router = createRouter({
       name: 'result',
       component: () => import('../views/ResultView.vue')
     },
+    {
+      path: '/result/autch',
+      name: 'resultAutch',
+      component: () => import('../views/ResultAutchView.vue')
+    },
+    {
+      path: '/statistics',
+      name: 'statistics',
+      meta: {autch: true},
+      component: () => import('../views/StatisticsAutchView.vue')
+    },
+    
   ]
+})
+router.beforeEach((to, from, next) => {
+  const requireAuth = to.meta.autch
+  const userAutch = store.getters.getIsAutchUser
+  // console.log('userAutch', userAutch)
+  // console.log(store)
+  // console.log(from.name)
+  if (to.name === 'logout') {
+    store.dispatch('setPage' ,from.name)
+  }
+  // store._actions.setPage(from.name)
+  if (requireAuth && !userAutch) {
+    next('/logout')
+  } else {
+    next()
+  }
 })
 
 export default router
-// {/* <RouterLink :to="{ name: 'question', params: { id: question.id } }" */}
-// <RouterLink to="question"

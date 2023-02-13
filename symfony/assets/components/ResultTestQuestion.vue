@@ -4,24 +4,14 @@
       <i class="result"
         :class="{resultTrue: qestion.result.score }"
       ><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      <hr>
-      <div class="custom-control custom-radio">
-        <label v-if="getUserAnswer"
-          class="custom-control-label f_sm " 
-          :class="classAnswer()"
-        >{{ qestion.result.user_answer[0] }}
-        </label>
-        <label v-if="getUserAnswer && !qestion.result.score"
-          class="custom-control-label f_sm answer-true" 
-        > - {{ qestion.result.true_answer[0] }}
-        </label>
-      </div>
-      <br>
+      
+      
+      
     </div>       
   </div>
 </template>
 <script>
-
+// v-model="answer"
 export default {
   props: ['qestion', 'index' ],
   data() {
@@ -35,13 +25,6 @@ export default {
     },
   },
   methods: {
-    classAnswer(){
-      return  {
-        "answer-true": this.getUserAnswer && this.qestion.result.score,
-        "answer-user": this.getUserAnswer && !this.qestion.result.score,
-      }
-    },
-    
   } 
 }
 

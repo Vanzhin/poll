@@ -1,5 +1,10 @@
 <template>
-  <div class="container">
+  <div class="container"
+    :class="classObject"
+    :scroll="setIsActive()"
+  >
+  <div
+  :class="classObject"> 
     <div class="wrapper">
       <div class="block">
         <div class="logo-block">
@@ -15,25 +20,64 @@
          
           <!-- <div class="bi-search"></div> -->
         </div>
-        <div class="links">
+        <!-- <div class="links">
           <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
             <h5>   Личный кабинет  </h5>
           </RouterLink>
-        </div>
-        
+        </div> -->
+        <DropDownItems/>
       </div> 
     </div>
+  </div>
   </div> 
 </template>
 
 <script>
 import { RouterLink } from 'vue-router'
+import DropDownItems from './ui/DropDownItems.vue';
 export default {
   data() {
     return {
-      count: 0
+      
+        isActive: false
+    
+      
     }
   },
+  components:{
+    DropDownItems
+  },
+  computed:{
+    classObject() {
+      console.log(this.isActive)
+      return {
+      fixeds: this.isActive
+     
+    }
+  }
+  },
+  methods: {
+    setIsActive(){
+      let scrollY = window.pageYOffset;
+      console.log(scrollY)
+      // this.isActive = ind
+    },
+    
+  }, 
+  mounted() {
+    // window.addEventListener('scroll', function (){
+        
+    //   let scrollY = window.pageYOffset;
+    //   console.log(scrollY)
+     
+    //     if(scrollY > 68) {
+    //       this.setIsActive(true);
+    //     } else {
+    //       this.setIsActive(false);
+    //     }
+    // })
+  }
+  
 } 
 
 </script>
@@ -41,11 +85,14 @@ export default {
 
 <style lang="scss" scoped>
 .container{
+  position: relative;
  
 }
+
 .wrapper{
   background-color: #cad5d5;
   padding: 5px 0;
+  
 }
 .block{
   display: flex;
@@ -125,4 +172,12 @@ export default {
   cursor: pointer;
   h5 {color: #82a5a5;}
 }}
+.fixeds {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+
+    border-bottom: 1px solid rgb(218, 215, 215);
+    width: 100%;
+    }
 </style>

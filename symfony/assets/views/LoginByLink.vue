@@ -3,6 +3,7 @@
       <div class="login-page">
          <form @submit.prevent="onSubmit">
             <div class="login-page-text">Вход на сайт</div>
+            <p>Введите действующий email </p>
             <div class="form">
                <div class="text-field">
                   <label class="text-field__label" >Email</label>
@@ -14,33 +15,8 @@
                     required
                   />
                </div>
-               <div class="text-field">
-                  <label class="text-field__label" >Пароль</label>
-                  <input class="text-field__input"
-                    type="password" 
-                    name="password"
-                    placeholder="Введите пароль"
-                    v-model="password"
-                    required
-                  />
-               </div>
-               <div>
-                <label class="checkbox__container" >
-                  
-                  <input type="checkbox"  class="checkbox__highload"
-                    v-model = "checkbox"
-                    name="checkbox"  
-                  />
-                  <span class="checkbox__highload2"></span>
-                  запомнить меня
-                </label>
-               </div>
-               <div class="text-login">
-                  <RouterLink :to="{ name: 'signup'}" class="routerLink"> 
-                     <p> Пройти регистрацию</p>
-                  </RouterLink>
-               </div>
-                  <input class="btn" type="submit" value="Войти"/>
+               <p>Вам на почту придет ссылка для авторизации </p>
+               <input class="btn" type="submit" value="получить ссылку"/>
                   
             </div>
          </form>
@@ -49,11 +25,9 @@
 </template>
  
 <script>
-  import { RouterLink } from 'vue-router'
   import { mapGetters, mapActions} from "vuex"
   export default {
     components: {
-      
     },
     data() {
       return {
@@ -67,15 +41,12 @@
       ...mapGetters(["getPageName"])
     },
     methods: {
-      ...mapActions(["setIsAutchUser","getLogInUser"]),
+      ...mapActions(["setIsAutchUser","getLoginByLinkUser"]),
       async onSubmit(e){
         console.log('авторизация')
-        const user = {
-          username: this.email, 
-          password: this.password, 
-        }
-        console.log(user)
-        await  this.getLogInUser(user)
+      
+        console.log(this.email)
+        await  this.getLoginByLinkUser(this.email)
         this.$router.push({ name: this.getPageName})
       }
     }

@@ -18,13 +18,11 @@
               :key="answer"
               
             >
-              
               <label v-if="answer!==''"
                 class="custom-control-label f_sm " 
-                
+                :class="classAnswer(ind)"
               >{{ qestion.variant[answer] }}
               </label>
-              
             </div>
           </div>
         </div>
@@ -33,11 +31,9 @@
         > 
           <div class=" flex-shrink-1  answer-true">
             <div class="custom-control custom-radio"
-              v-for="(answer, ind ) in qestion.result.true_answer" 
+              v-for="(answer) in qestion.result.true_answer" 
               :key="answer"
-              
             >
-              
               <label v-if="answer!==''"
                 class="custom-control-label f_sm " 
                 
@@ -73,9 +69,10 @@ export default {
     },
   },
   methods: {
-    classAnswer(){
+    classAnswer(ind){
       return  {
-        "answer-true":  this.qestion.result.score,
+        "answer-true":  +this.qestion.result.user_answer[ind] === this.qestion.result.true_answer[ind]
+,
         "answer-user":  !this.qestion.result.score,
       }
     },

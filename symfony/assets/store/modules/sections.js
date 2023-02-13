@@ -67,7 +67,6 @@ const actions = {
 
 const getters = {
   getSections(state) {
-    console.log (state.sections)
     return state.sections 
   },
   getSectionTitle:(state)=>(id) =>{

@@ -1,16 +1,25 @@
 <template>
-  <div class="block">
+  <Loader
+    v-if="isLoader"
+  />
+  <div class="block"
+    v-else
+  >
     <div class="title">
       <h2> {{ testName.title }}</h2>
       <div class="test">
         <p>Билет №: {{ $route.params.id }}</p>  
       </div>
     </div>
+    <Timer
+      v-if="timeTicket"
+    />
     <div class="container">
       <div class="row">
         <form @submit.prevent="onSubmit">
           <div v-for="(qestion, index ) in qestions" 
-              :key="qestion.id">
+            :key="qestion.id"
+          >
             <TestQuestionRadio
               v-if="qestion.type.title === 'radio'"
               :qestion="qestion"
@@ -36,7 +45,6 @@
               :qestion="qestion"
               :index="index"
             />
-            
           </div>
           <button type="submit" class="button">Проверить</button>
         </form>
@@ -51,6 +59,8 @@ import TestQuestionCheckbox from '../components/TestQuestionCheckbox.vue'
 import TestQuestionOrdered from '../components/TestQuestionOrdered.vue'
 import TestQuestionInputOne from '../components/TestQuestionInputOne.vue'
 import TestQuestionConformity from '../components/TestQuestionConformity.vue'
+import Timer from '../components/Timer.vue'
+import Loader from '../components/ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
@@ -58,13 +68,14 @@ export default {
     TestQuestionCheckbox,
     TestQuestionOrdered,
     TestQuestionInputOne,
-    TestQuestionConformity
+    TestQuestionConformity,
+    Loader,
+    Timer
   },
   data() {
     return {
-      count: 0,
-        //  testName:''
-        //  testNumm: $route.params.id
+      isLoader: true,
+      timeTicket: false
     }
   },
   computed:{
@@ -80,18 +91,17 @@ export default {
     async onSubmit(e){
       const r = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
         .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-       const ticket = JSON.stringify(r)
-        // router.push({ name: 'user', params: { username: 'erina' } })
-       console.log(ticket)
-      // console.log((r))
-      await this.setResultDb(ticket)
+      const ticket = JSON.stringify(r)
       this.$router.push({ path:'/result'})
-    },
+      console.log(ticket)
+      await this.setResultDb(ticket)
+     },
   },
-  mounted(){
-    this.getQuestionsDb(this.$route.params.id)
+  async mounted(){
+    await this.getQuestionsDb(this.$route.params.id)
+    if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
+    this.isLoader = false
   }
-  
 } 
 
 </script>
