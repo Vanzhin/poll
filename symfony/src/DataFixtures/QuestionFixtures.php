@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Question;
 use App\Entity\Ticket;
 use App\Entity\Type;
+use App\Entity\Variant;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
@@ -26,7 +27,6 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                 case 'radio':
                     $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
                         ->addTicket($this->getRandomReference(Ticket::class));
-
                     break;
                 case 'checkbox':
                     $question->setTitle($this->faker->realTextBetween(30, 255) . '?');
@@ -83,6 +83,93 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                     break;
             }
         });
+        $questionsWithVariants = array_filter($this->referenceRepository->getReferencesByClass()[Question::class], function ($question) {
+            return in_array($question->getType()->getTitle(), ['radio', 'checkbox', 'conformity', 'order', 'checkbox_picture']);
+
+        });
+        foreach ($questionsWithVariants as $question) {
+            switch ($question->getType()->getTitle()) {
+
+                case 'radio':
+                    $this->createMany(Variant::class, $this->faker->numberBetween(2, 5), function (Variant $variant) use ($manager, $question) {
+
+                        $variant
+                            ->setTitle($this->faker->word())
+                            ->setWeight(1)
+                            ->setQuestion($question);
+
+                        $question->addVariant($variant);
+                    });
+                    $question->setAnswer([$this->faker->randomElement($question->getVariant())->getId()]);
+                    break;
+                case 'checkbox':
+                case 'checkbox_picture':
+
+                    $this->createMany(Variant::class, $this->faker->numberBetween(2, 6), function (Variant $variant) use ($manager, $question) {
+
+                        $variant
+                            ->setTitle($this->faker->word())
+                            ->setWeight(1)
+                            ->setQuestion($question);
+
+                        $question->addVariant($variant);
+
+                    });
+
+                    $variants = $question->getVariant()->toArray();
+                    $answers = $this->faker->randomElements($variants, $this->faker->numberBetween(1, $question->getVariant()->count()));
+                    $answerIds = [];
+                    foreach ($answers as $answer) {
+                        $answerIds[] = $answer->getId();
+                    }
+                    $question->setAnswer($answerIds);
+
+                    break;
+
+                case 'conformity':
+                    $this->createMany(Variant::class, $this->faker->numberBetween(2, 5), function (Variant $variant) use ($manager, $question) {
+//
+                        $variant
+                            ->setTitle($this->faker->word())
+                            ->setWeight(1)
+                            ->setQuestion($question);
+
+                        $question->addVariant($variant);
+
+                    });
+                    $variants = $question->getVariant()->toArray();
+                    $answers = $this->faker->randomElements($variants, count($question->getSubTitle()), true);
+                    $answerIds = [];
+                    foreach ($answers as $answer) {
+                        $answerIds[] = $answer->getId();
+                    }
+                    $question->setAnswer($answerIds);
+
+                    break;
+
+                case 'order':
+                    $this->createMany(Variant::class, $this->faker->numberBetween(3, 8), function (Variant $variant) use ($manager, $question) {
+//
+                        $variant
+                            ->setTitle($this->faker->word())
+                            ->setWeight(1)
+                            ->setQuestion($question);
+
+                        $question->addVariant($variant);
+
+                    });
+                    $variants = $question->getVariant()->toArray();
+                    shuffle($variants);
+                    $answerIds = [];
+                    foreach ($variants as $answer) {
+                        $answerIds[] = $answer->getId();
+                    }
+                    $question->setAnswer($answerIds);
+
+                    break;
+            }
+
+        }
     }
 
     public function getDependencies(): array
@@ -90,8 +177,6 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
         return [
             TypeFixtures::class,
             TicketFixtures::class,
-
-
         ];
     }
 }

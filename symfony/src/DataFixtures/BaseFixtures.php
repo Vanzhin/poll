@@ -36,7 +36,11 @@ abstract class BaseFixtures extends Fixture
 
     protected function createMany(string $className, int $count, callable $factory)
     {
-        for ($i = 0; $i < $count; $i++) {
+        $start = isset($this->referenceRepository->getReferencesByClass()[$className]) ? count($this->referenceRepository->getReferencesByClass()[$className]) : 0;
+
+//        $start = count($this->referencesIndex[$className]);
+//        dd($this->referencesIndex,$className, isset($this->referencesIndex[$className]), $start );
+        for ($i = $start; $i < $count + $start; $i++) {
             $entity = $this->create($className, $factory);
             $this->addReference("$className|$i", $entity);
         }
