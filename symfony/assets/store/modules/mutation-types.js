@@ -8,5 +8,5 @@ export const SET_AUTCH_USER_TOKEN = "SET_AUTCH_USER_TOKEN"
 export const SET_PAGE_NAME = "SET_PAGE_NAME"
 export const SET_DELETE_USER_TOKEN = "SET_DELETE_USER_TOKEN"
 export const SET_AUTH_ACCOUNT = "SET_AUTH_ACCOUNT"
-
+export const SET_LOGOUT_LINK_DATE = "SET_LOGOUT_LINK_DATE"
 export const URL = "test2-open"

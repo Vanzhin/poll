@@ -172,7 +172,8 @@ const state = () => ({
        
   ],
   questionsDb:[],
-  resultQuestions:[
+  resultQuestions:localStorage.getItem('resultQuestions') ?
+  JSON.parse(localStorage.getItem('resultQuestions')): [
     {title:"В каком случае нарушен порядок хранения и выдачи ключей?",
     variant:[], 
     id: 8,
@@ -314,8 +315,8 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, id) {
-    //  const slag = 'belokuryi-oao-metalzheldorstroi' // опен серв
-    const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
+     const slag = 'belokuryi-oao-metalzheldorstroi' // опен серв
+    // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
     console.log("id - ",  id)
     let url = ''
     if (id === "rnd20" || id === "rnd20t") {
@@ -398,6 +399,7 @@ const mutations = {
   [SET_RESULT_QUESTIONS] (state, questions) {
     console.log("SET_RESULT_QUESTIONS", questions)
     state.resultQuestions = questions
+    localStorage.setItem('resultQuestions', JSON.stringify(questions));
   },
   [SET_LOADER_TOGGLE] (state,) {
     console.log("SET_LOADER_TOGGLE", state.isLoader)

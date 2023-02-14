@@ -3,7 +3,8 @@ import {
   SET_AUTCH_USER_TOKEN, 
   SET_PAGE_NAME,
   SET_DELETE_USER_TOKEN,
-  SET_AUTH_ACCOUNT
+  SET_AUTH_ACCOUNT,
+  SET_LOGOUT_LINK_DATE
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -14,13 +15,16 @@ const state = () => ({
   refresh_token: localStorage.getItem('token') ?
       JSON.parse(localStorage.getItem('token')).refresh_token: "",
   isAutchUser: localStorage.getItem('token') ? true : false,
-  page: '',
+  page: localStorage.getItem('pageLink') ?
+   localStorage.getItem('pageLink'):"",
   email: '',
   password: '',
-  result: []
+  result: [],
+  logoutLinkDate: {}
 })
 
 const actions = {
+  // вход по ссылке
   async getLoginByLinkUser({ commit }, email) {
      try {
       const config = {
@@ -33,20 +37,25 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          
           console.log("getLogInUser - ", data )
+          commit("SET_LOGOUT_LINK_DATE",{
+            message: data.data.message,
+            url: data.data.link.url,
+            send: true 
+          })
         })
     } catch (e) {
       console.log("ошибка - ", e)
+      commit("SET_LOGOUT_LINK_DATE",{data:e, send: false })
     }
   },
+  //вход на сайт с помощью учетной записи
   async getLogInUser({ commit }, user) {
     const data = JSON.stringify(user)
     console.log(data)
     try {
       const config = {
         method: 'post',
-        maxBodyLength: Infinity,
         url: '/api/login_check',
         headers: { 
           'Accept': 'application/json',
@@ -62,7 +71,6 @@ const actions = {
           // }).join(''));
           const base64 = atob(base64Url)
           console.log("getLogInUser - ", JSON.parse(base64) )
-          
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)
         })
@@ -70,6 +78,7 @@ const actions = {
       console.log("ошибка - ", e)
     }
   },
+  //регистрация на сайте
   async getRegistrationUser({ commit }, user) {
     const data = JSON.stringify(user)
     console.log(data)
@@ -86,9 +95,7 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-         
           console.log("getRegistrationUser - ", data )
-          
           // commit("SET_AUTCH_USER_TOKEN", data.data);
           // commit("SET_IS_AUTCH_USER", true)
         })
@@ -96,6 +103,7 @@ const actions = {
       console.log("ошибка - ", e)
     }
   },
+  // выход с сайта
   async getLogOutUser({ commit, state }) {
     const data = JSON.stringify({"refresh_token":state.refresh_token} )
     
@@ -123,7 +131,7 @@ const actions = {
       }
     }
   },
-
+  // получение данных статистики
   async getAuthAccountDb({dispatch, commit, state }, token) {
     try {
       const config = {
@@ -150,9 +158,12 @@ const actions = {
       
     }
   },
-
-  async getAuthRefresh({dispatch, commit, state }) {
-    const data = JSON.stringify({"refresh_token":state.refresh_token} )
+  // повторное получение токена
+  async getAuthRefresh({dispatch, commit, state }, refresh_token) {
+    let data = ''
+    if (refresh_token) {
+       data = JSON.stringify({"refresh_token":refresh_token})
+    } else { data = JSON.stringify({"refresh_token":state.refresh_token})}
     console.log(data)
     try {
       const config = {
@@ -168,6 +179,7 @@ const actions = {
         .then((data)=>{
           console.log("getAuthRefresh - ", data )
           commit("SET_AUTCH_USER_TOKEN", data.data);
+          commit("SET_IS_AUTCH_USER", true)
         })
     } catch (e) {
       console.log("ошибка - ", e)
@@ -200,6 +212,9 @@ const getters = {
   getAuthAccountResult(state) {
     console.log(state.result)
     return state.result
+  },
+  getLogoutLinkDate(state) {
+    return state.logoutLinkDate
   }
 }
 
@@ -230,10 +245,15 @@ const mutations = {
   [SET_PAGE_NAME] (state, page) {
     console.log("SET_PAGE_NAME", page)
     state.page = page
+    localStorage.setItem('pageLink', page);
   },
   [SET_AUTH_ACCOUNT] (state, result) {
     console.log("SET_AUTH_ACCOUNT", result)
     state.result = result
+  },
+  [SET_LOGOUT_LINK_DATE] (state, result) {
+    console.log("SET_LOGOUT_LINK_DATE", result)
+    state.logoutLinkDate = result
   }
 }
 export default {
