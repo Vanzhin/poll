@@ -3,8 +3,9 @@
 namespace App\Service;
 
 use App\Entity\Question;
-use App\Entity\User;
+use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class QuestionService
 {
@@ -14,142 +15,161 @@ class QuestionService
     {
     }
 
-    public function handle(array $answerData, User $user = null): array
+    public function handle(array $testData, UserInterface $user = null): array
     {
-        try {
+        $response = [];
+
+        foreach ($testData as $answerData) {
+
             $question = $this->entityManager->find(Question::class, $answerData["id"]);
             if ($question) {
-                $response = [
+                $answer = [
                     "id" => $answerData["id"],
                     "title" => $question->getTitle(),
-                    "variant" => $question->getVariant(),
+                    "variant" => $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] ?? [],
                     "result" => [
-                        "score" => $this->getQuestionScore($question, $answerData["answer"])
+                        "score" => $this->getQuestionScore($question, $answerData["answer"]),
                     ],
-                    "type" => $question->getType()
+                    "type" => $question->getType()->getTitle()
                 ];
-                if ($user){
-                    $response["result"] += [
-                        "true_answer" => $this->getShuffledAnswers($question),
+
+                if ($user) {
+                    $answer["result"] += [
+                        "true_answer" => $this->getShuffledTrueAnswers($question, $this->sessionService->get(self::SHUFFLED)[$question->getId()]),
                         "user_answer" => $answerData["answer"],
                     ];
                 }
 
                 if (!empty($question->getSubTitle())) {
-                    $response["subTitle"] = $question->getSubTitle();
+                    $answer["subTitle"] = $this->sessionService->get(self::SHUFFLED)[$question->getId()]['subTitle'] ?? [];
                 }
 
             } else {
-                $response = [
+                $answer = [
                     "id" => $answerData["id"],
                     "error" => "question not found"
                 ];
             }
-
-        } catch (\Exception $e) {
-            $response = ["error" => $e->getTrace()];
-        } finally {
-            $this->sessionService->remove(self::SHUFFLED);
-            return $response;
+            $response[] = $answer;
         }
+        $this->sessionService->remove(self::SHUFFLED);
+
+        return $response;
 
     }
 
-    public function shuffleVariants(array $questions): array
+    public function getPreparedQuestions(array $questions): array
     {
+        $questionsInfo = [];
         foreach ($questions as $question) {
-            if (count($question->getVariant()) > 1) {
-                $variants = $question->getVariant();
-                shuffle($variants);
-                $question->setVariant($variants);
 
-                if (count($question->getSubTitle()) > 1) {
-                    $this->shuffleSubTitle($question);
-                }
-                $this->sessionService->add([$question->getId() => ["variant" => $question->getVariant(), "subTitle" => $question->getSubtitle()]], self::SHUFFLED);
-            }
+            $variants = $this->getVariantsToArray($question);
+            shuffle($variants);
+            $subtitles = $question->getSubTitle();
+            shuffle($subtitles);
 
-
+            $questionsInfo[] = [
+                'id' => $question->getId(),
+                'title' => $question->getTitle(),
+                'type' => $question->getType()->getTitle(),
+                'subTitle' => $subtitles,
+                'variant' => $variants,
+            ];
         }
-        return $questions;
+        return $questionsInfo;
     }
 
-    public function shuffleSubTitle(Question $question): Question
+
+    private function getShuffledUserAnswers(Question $question, array $userAnswer, array $shuffled): array
     {
-        $subTitle = $question->getSubTitle();
-        shuffle($subTitle);
-        $question->setSubTitle($subTitle);
+        $answers = [];
+        if ($question->getVariant()->count() > 0) {
+            foreach ($userAnswer as $answer) {
 
-        return $question;
-    }
-
-    private function getShuffledAnswers(Question $question, string $name = self::SHUFFLED): array
-    {
-//        todo доработать если ответ в виде строки приходит типа input_many
-        if ($this->sessionService->get($name) && array_key_exists($question->getId(), $this->sessionService->get($name))) {
-//        if (array_key_exists($question->getId(), $testSession)) {
-
-            $shuffledVariants = $this->sessionService->get($name)[$question->getId()]['variant'];
-            $shuffledSubTitles = $this->sessionService->get($name)[$question->getId()]['subTitle'];
-
-//            $shuffledVariants = $testSession[$question->getId()];
-
-            $answers = [];
-            foreach ($question->getAnswer() as $answer) {
-                $answers[] = array_search($question->getVariant()[$answer], $shuffledVariants);
-            }
-            if (count($shuffledSubTitles) > 1) {
-                $answersWithSubTitle = [];
-                foreach ($shuffledSubTitles as $subTitle) {
-
-                    $answersWithSubTitle[] = $answers[array_search($subTitle, $question->getSubTitle())];
-
+                $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $shuffled['variant'][$answer]);
+                if (!is_null($variant)) {
+                    $answers[] = $variant->getId();
                 }
-                $answers = $answersWithSubTitle;
 
             }
-
         } else {
-            $answers = $question->getAnswer();
+            $answers = $userAnswer;
+        }
+
+        if (count($question->getSubTitle()) > 1) {
+
+            $shuffledUserAnswer = [];
+            foreach ($question->getSubTitle() as $subTitle) {
+                $shuffledUserAnswer[] = $question->getAnswer()[array_search($subTitle, $shuffled['subTitle'])];
+            }
+
+            $answers = $shuffledUserAnswer;
+
         }
         return $answers;
+
+    }
+
+    private function getShuffledTrueAnswers(Question $question, array $shuffled): array
+    {
+        $trueShufflesAnswers = [];
+        if (count($shuffled['variant']) > 0) {
+            foreach ($question->getAnswer() as $answer) {
+
+                $variant = $this->entityManager->getRepository(Variant::class)->find($answer);
+                if (!is_null($variant)) {
+                    $trueShufflesAnswers[] = array_search($variant->getTitle(), $shuffled['variant']);
+                }
+
+            }
+        } else {
+            $trueShufflesAnswers = $question->getAnswer();
+        }
+
+        if (count($shuffled['subTitle']) > 1) {
+
+            $answers = [];
+            foreach ($shuffled['subTitle'] as $subTitle) {
+                $answers[] = $trueShufflesAnswers[array_search($subTitle, $question->getSubTitle())];
+            }
+
+            $trueShufflesAnswers = $answers;
+
+        }
+
+        return $trueShufflesAnswers;
+
     }
 
     private function getQuestionScore(Question $question, array $answerData): bool
     {
         $score = false;
+
         $userAnswers = $this->answerPrepare($answerData);
-        $questionAnswers = $this->answerPrepare($this->getShuffledAnswers($question));
-        $questionVariants = $this->answerPrepare($question->getVariant());
+        $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, $this->sessionService->get(self::SHUFFLED)[$question->getId()]);
 
         switch ($question->getType()->getTitle()) {
             case 'radio':
-                if (array_key_exists($userAnswers[0], $questionVariants)) {
-                    $score = (int)$userAnswers[0] === (int)$questionAnswers[0];
-                }
-
+            case 'order':
+            case 'input_one':
+                if ($userShuffledAnswers == $question->getAnswer()) {
+                    $score = true;
+                };
+                break;
+            case 'conformity':
+                if ($userShuffledAnswers === $question->getAnswer()) {
+                    $score = true;
+                };
                 break;
             case 'checkbox':
-                if (count(array_diff($questionAnswers, $userAnswers)) === 0) {
-                    $score = true;
-                }
-                break;
             case 'checkbox_picture':
-            case 'input_many':
-            case 'blank':
-            case 'conformity':
-            case 'order':
 
-                if (count(array_diff_assoc($questionAnswers, $userAnswers)) === 0) {
+                if (count(array_diff($userShuffledAnswers, $question->getAnswer())) === 0) {
                     $score = true;
                 }
                 break;
-            case 'input_one':
-
-                if (in_array($userAnswers[0], $questionAnswers)) {
-                    $score = true;
-                }
-                break;
+//            case 'input_many':
+//            case 'blank':
 
         }
         return $score;
@@ -160,6 +180,34 @@ class QuestionService
         return array_map(function ($answer) {
             return mb_strtolower(trim($answer));
         }, $answers);
+    }
+
+    private function getVariantsToArray(Question $question): array
+    {
+
+        if ($question->getVariant()->count() > 0) {
+            return array_map(function ($variant) {
+                return $variant->getTitle();
+            }, $question->getVariant()->toArray());
+        }
+        return [];
+
+    }
+
+    public function prepareForSession(array $questions): array
+    {
+        $response = [];
+
+        if (count($questions) > 0) {
+            foreach ($questions as $question) {
+                $response[$question["id"]] = [
+                    "subTitle" => $question["subTitle"],
+                    "variant" => $question["variant"]
+                ];
+            }
+
+        }
+        return $response;
     }
 
 }

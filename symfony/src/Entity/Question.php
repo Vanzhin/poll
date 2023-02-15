@@ -43,6 +43,7 @@ class Question
     private array $subTitle = [];
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class)]
+    #[Groups(['main'])]
     private Collection $variant;
 
     public function __construct()

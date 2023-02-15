@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\VariantRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VariantRepository::class)]
 class Variant
@@ -15,6 +16,7 @@ class Variant
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['main'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]

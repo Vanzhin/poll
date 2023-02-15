@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Question;
 use App\Entity\Variant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,20 +41,22 @@ class VariantRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Variant[] Returns an array of Variant objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('v.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @param int $questionId
+     * @param string $title
+     * @return Variant|null Returns an array of Variant objects
+     * @throws NonUniqueResultException
+     */
+    public function findOneByQuestionAndTitle(int $questionId, string $title): ?Variant
+    {
+        return $this->createQueryBuilder('v')
+            ->join('v.question', 'q')
+            ->andWhere('v.title = :title')
+            ->andWhere('q.id = :questionId')
+            ->setParameters(['title'=> $title,'questionId'=> $questionId])
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
 //    public function findOneBySomeField($value): ?Variant
 //    {
