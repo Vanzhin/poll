@@ -42,9 +42,16 @@ class TestController extends AbstractController
     public function getRandomQuestion(Test $test, TestRepository $testRepository, QuestionService $questionService, SessionService $sessionService, int $count): JsonResponse
     {
         try {
-            $sessionService->remove($questionService::SHUFFLED);
-            $response = ['test' => $test->getTitle(), 'questions' => $questionService->shuffleVariants($testRepository->getRandomQuestions($test, $count))];
+            $sessionService->remove(QuestionService::SHUFFLED);
+            $questions = $questionService->getPreparedQuestions($testRepository->getRandomQuestions($test, $count));
+            $response = [
+                'test' => $test->getTitle(),
+                'questions' => $questions
+            ];
+            $sessionService->add($questionService->prepareForSession($questions), QuestionService::SHUFFLED);
+
             $status = 200;
+//            $sessionService->show(QuestionService::SHUFFLED);
         } catch (Exception $e) {
             $response = ['error' => $e->getMessage()];
             $status = 422;
@@ -62,16 +69,43 @@ class TestController extends AbstractController
     {
 
         $data = json_decode($request->getContent(), true);
-        $response = [];
-        foreach ($data as $answerData) {
-            $response[] = $questionService->handle($answerData);
-        }
+        try {
+            $response = $questionService->handle($data);
+            $status = 200;
 
-        return $this->json(['questions' => $response],
-            200,
-            ['charset=utf-8'],
-            ['groups' => 'main'],
-        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        } catch (\Exception $e) {
+            $response = ["error" => $e->getTrace()];
+            $status = 422;
+
+        } finally {
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+                ['groups' => 'main'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
     }
 
+    #[Route('/api/auth/test/handle', name: 'app_api_auth_test_handle', methods: ['POST'])]
+    public function handleByUser(Request $request, QuestionService $questionService, SessionService $sessionService): JsonResponse
+    {
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+        try {
+            $response = $questionService->handle($data, $user);
+            $status = 200;
+
+        } catch (\Exception $e) {
+            $response = ["error" => $e->getTrace()];
+            $status = 422;
+
+        } finally {
+            $sessionService->remove(QuestionService::SHUFFLED);
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+                ['groups' => 'main'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+    }
 }

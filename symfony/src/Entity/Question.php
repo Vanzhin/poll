@@ -19,16 +19,11 @@ class Question
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['main'])]
-
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['main'])]
     private ?string $title = null;
-
-    #[ORM\Column]
-    #[Groups(['main'])]
-    private array $variant = [];
 
     #[ORM\Column]
     private array $answer = [];
@@ -47,10 +42,15 @@ class Question
     #[Groups(['main'])]
     private array $subTitle = [];
 
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class)]
+    #[Groups(['main'])]
+    private Collection $variant;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
         $this->answers = new ArrayCollection();
+        $this->variant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,18 +66,6 @@ class Question
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getVariant(): array
-    {
-        return $this->variant;
-    }
-
-    public function setVariant(array $variant): self
-    {
-        $this->variant = $variant;
 
         return $this;
     }
@@ -171,6 +159,36 @@ class Question
     public function setSubTitle(?array $subTitle): self
     {
         $this->subTitle = $subTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Variant>
+     */
+    public function getVariant(): Collection
+    {
+        return $this->variant;
+    }
+
+    public function addVariant(Variant $variant): self
+    {
+        if (!$this->variant->contains($variant)) {
+            $this->variant->add($variant);
+            $variant->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVariant(Variant $variant): self
+    {
+        if ($this->variant->removeElement($variant)) {
+            // set the owning side to null (unless already changed)
+            if ($variant->getQuestion() === $this) {
+                $variant->setQuestion(null);
+            }
+        }
 
         return $this;
     }
