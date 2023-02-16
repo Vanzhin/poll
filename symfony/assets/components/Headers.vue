@@ -1,34 +1,33 @@
 <template>
-  <div class="container"
-    :class="classObject"
-    :scroll="setIsActive()"
-  >
-  <div
-  :class="classObject"> 
-    <div class="wrapper">
-      <div class="block">
-        <div class="logo-block">
-          <RouterLink :to="{ name: 'home'}" class="routerLink"> 
-            <div class="logo">
-              <div class="logo-title">лого</div>
+   <div class="cont">
+    <div class="container">
+      <div
+      :class="classObject"> 
+        <div class="wrapper">
+          <div class="block">
+            <div class="logo-block">
+              <RouterLink :to="{ name: 'home'}" class="routerLink"> 
+                <div class="logo">
+                  <div class="logo-title">лого</div>
+                </div>
+              </RouterLink>
             </div>
-          </RouterLink>
+            <div class="search">
+              <input type="text" value="" name="s" placeholder="Поиск..." class="search-input"/>
+              <button class="search-button bi-search"></button>
+            
+              <!-- <div class="bi-search"></div> -->
+            </div>
+            <!-- <div class="links">
+              <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
+                <h5>   Личный кабинет  </h5>
+              </RouterLink>
+            </div> -->
+            <DropDownItems/>
+          </div> 
         </div>
-        <div class="search">
-          <input type="text" value="" name="s" placeholder="Поиск..." class="search-input"/>
-          <button class="search-button bi-search"></button>
-         
-          <!-- <div class="bi-search"></div> -->
-        </div>
-        <!-- <div class="links">
-          <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
-            <h5>   Личный кабинет  </h5>
-          </RouterLink>
-        </div> -->
-        <DropDownItems/>
-      </div> 
-    </div>
-  </div>
+      </div>
+    </div> 
   </div> 
 </template>
 
@@ -84,9 +83,10 @@ export default {
 
 
 <style lang="scss" scoped>
-.container{
-  position: relative;
- 
+.cont{
+  position: fixed;
+  z-index: 20;
+  width: 100%;
 }
 
 .wrapper{

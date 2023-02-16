@@ -6,7 +6,6 @@
         <ul 
           class="dropdown-menu menu" 
           aria-labelledby="dropdownMenuButton1"
-         
         >
           <div v-if="getIsAutchUser">
             <li><RouterLink class="dropdown-item" :to="{ name: 'statistics'}">Статистика</RouterLink></li>
