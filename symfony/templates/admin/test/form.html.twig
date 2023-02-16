@@ -1,0 +1,13 @@
+<div class="container form-control w-75 my-4">
+    {{ form_start(testForm) }}
+    {{ form_errors(testForm) }}
+    {{ form_row(testForm.title) }}
+    {{ form_row(testForm.section) }}
+    {{ form_row(testForm.ticket) }}
+
+
+    <button class="btn btn-primary" type="submit">{{ buttonText }}</button>
+    {{ form_end(testForm) }}
+
+</div>
+

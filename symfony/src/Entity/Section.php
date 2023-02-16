@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Section
 {
     use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
