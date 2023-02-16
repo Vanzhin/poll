@@ -1,4 +1,9 @@
-import { SET_QUESTIONS, SET_RESULT_QUESTIONS, SET_LOADER_TOGGLE } from './mutation-types.js'
+import { 
+  SET_QUESTIONS, 
+  SET_RESULT_QUESTIONS, 
+  SET_LOADER_TOGGLE,
+  SET_RESULT_TICKET_USER
+} from './mutation-types.js'
 import axios from 'axios';
 
 const state = () => ({
@@ -173,7 +178,8 @@ const state = () => ({
   ],
   questionsDb:[],
   resultQuestions:localStorage.getItem('resultQuestions') ?
-  JSON.parse(localStorage.getItem('resultQuestions')): [
+  JSON.parse(localStorage.getItem('resultQuestions')): 
+  [
     {title:"В каком случае нарушен порядок хранения и выдачи ключей?",
     variant:[], 
     id: 8,
@@ -304,7 +310,9 @@ const state = () => ({
     // },
     
   ],
-  isLoader: false,
+  isLoader: false,//resultTicketUser
+  resultTicketUser:localStorage.getItem('resultTicketUser') ?
+  JSON.parse(localStorage.getItem('resultTicketUser')): [],
   
 })
 
@@ -315,7 +323,7 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, id) {
-     const slag = 'belokuryi-oao-metalzheldorstroi' // опен серв
+     const slag = 'indigo-ooo-transcibobltsentr' // опен серв
     // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
     console.log("id - ",  id)
     let url = ''
@@ -347,19 +355,26 @@ const actions = {
     }
   },
 
-  async setResultDb({ commit }, ticket ){
+  async setResultDb({ commit, state }, {token, userAuth} ){
+    console.log(JSON.stringify(state.resultTicketUser))
     commit("SET_LOADER_TOGGLE")
     try{
       const config = {
         method: 'post',
         url: '/api/test/handle',
+        // url: '/api/auth/test/handle',
         headers: { 
           Accept: 'application/json', 
           'Content-Type': 'application/json'
           // Authorization: `Bearer ${token}`
         },
-        data: ticket
+        data:  JSON.stringify(state.resultTicketUser)
       };
+      if (userAuth) {
+        config.url = '/api/auth/test/handle'
+        config.headers.Authorization = `Bearer ${token}`
+      }
+      console.log(config)
       await axios(config)
         .then(({data})=>{
           console.log("setResultDb - ",  data.questions)
@@ -373,7 +388,10 @@ const actions = {
   setIsLoader({ commit }){
     commit("SET_LOADER_TOGGLE")
   },
-  getQuestion(){}
+  getQuestion(){},
+  saveResultTicketUser({ commit }, ticket){
+    commit("SET_RESULT_TICKET_USER", ticket);
+  }
 };
 
 const getters = {
@@ -399,12 +417,17 @@ const mutations = {
   [SET_RESULT_QUESTIONS] (state, questions) {
     console.log("SET_RESULT_QUESTIONS", questions)
     state.resultQuestions = questions
-    localStorage.setItem('resultQuestions', JSON.stringify(questions));
+    // localStorage.setItem('resultQuestions', JSON.stringify(questions));
   },
   [SET_LOADER_TOGGLE] (state,) {
     console.log("SET_LOADER_TOGGLE", state.isLoader)
     state.isLoader = !state.isLoader
   },
+  [SET_RESULT_TICKET_USER] (state, ticket) {
+    console.log("SET_RESULT_TICKET_USER", )
+    state.resultTicketUser = ticket
+    localStorage.setItem('resultTicketUser', JSON.stringify(ticket));
+  }
 }
 
 export default {

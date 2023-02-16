@@ -155,7 +155,6 @@ const actions = {
         await dispatch('getAuthRefresh')
         await dispatch('getAuthAccountDb')
       }
-      
     }
   },
   // повторное получение токена
@@ -184,9 +183,7 @@ const actions = {
     } catch (e) {
       console.log("ошибка - ", e)
     }
-  
   },
-  
   setPage ({ commit }, page) {
     commit("SET_PAGE_NAME", page);
   },

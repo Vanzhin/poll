@@ -60,6 +60,7 @@
   width: 100%;
   height: 100%;
   background-color: #585858;
+  z-index: 30;
 }
 .login-page {
   max-width: 380px;

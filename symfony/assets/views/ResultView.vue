@@ -21,18 +21,17 @@ export default {
   },
   data() {
     return {
-       
     }
   },
   computed:{
-    ...mapGetters(["getIsAutchUser", ]),
-    
+    ...mapGetters(["getIsAutchUser", "getAutchUserToken"]),
   },
   methods: {
-  
+    ...mapActions(["getQuestionsDb", "setResultDb"]),
   },
-  mounted(){
+  async mounted(){
     window.scroll(0, 0);
+    await this.setResultDb( {token: this.getAutchUserToken, userAuth:this.getIsAutchUser})
   }
   
 } 

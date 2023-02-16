@@ -5,13 +5,12 @@
   <div class="block"
     v-else
   >
-    
     <div class="title">
       <Timer
-      v-if="timeTicket"
-      :time="0.1"
-      @time-end="timerEnd"
-    />
+        v-if="timeTicket"
+        :time="0.1"
+        @time-end="timerEnd"
+      />
       {{ timeEnd }}
       <h2> {{ testName.title }}</h2>
       <div class="test">
@@ -26,27 +25,27 @@
             :key="qestion.id"
           >
             <TestQuestionRadio
-              v-if="qestion.type.title === 'radio'"
+              v-if="qestion.type === 'radio'"
               :qestion="qestion"
               :index="index"
             />
             <TestQuestionCheckbox
-              v-else-if="qestion.type.title === 'checkbox'"
+              v-else-if="qestion.type === 'checkbox'"
               :qestion="qestion"
               :index="index"
             />
             <TestQuestionInputOne
-              v-else-if="qestion.type.title === 'input_one'"
+              v-else-if="qestion.type === 'input_one'"
               :qestion="qestion"
               :index="index"
             />
             <TestQuestionOrdered
-              v-else-if="qestion.type.title === 'order'"
+              v-else-if="qestion.type === 'order'"
               :qestion="qestion"
               :index="index"
             />
             <TestQuestionConformity
-              v-else-if="qestion.type.title === 'conformity'"
+              v-else-if="qestion.type === 'conformity'"
               :qestion="qestion"
               :index="index"
             />
@@ -93,16 +92,15 @@ export default {
     },
   },
    methods: {
-    ...mapActions(["getQuestionsDb", "setResultDb"]),
-    async onSubmit(e){
-      const r = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
+    ...mapActions(["getQuestionsDb", "saveResultTicketUser"]),
+    onSubmit(e){
+      const ticket = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
         .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-      const ticket = JSON.stringify(r)
+      
+      this.saveResultTicketUser(ticket)
       this.$router.push({ path:'/result'})
-      console.log(ticket)
-      await this.setResultDb(ticket)
     },
-    timerEnd(){
+    timerEnd(){ //написать действия при окончании времени таймера
       this.timeEnd = true
     }
   },
