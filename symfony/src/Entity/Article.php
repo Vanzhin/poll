@@ -38,7 +38,7 @@ class Article
     #[Gedmo\Slug(fields: ['title'])]
     private ?string $slug = null;
 
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Section::class)]
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Section::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups(['main'])]
     private Collection $section;
 

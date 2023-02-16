@@ -68,13 +68,14 @@ class TestRepository extends ServiceEntityRepository
         return $this->getEntityManager()->getRepository(Question::class)->findBy(['id'=> $raw]);
     }
 
-    public function findLatsUpdatedQuery(): QueryBuilder
+    public function findLastUpdatedQuery(): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('t');
         return
             $this->lastUpdated($queryBuilder)
                 ->leftJoin('t.ticket', 'ti')
-                ->addSelect('ti');
+                ->addSelect('ti')
+            ;
     }
 
     private function latest(QueryBuilder $queryBuilder = null): QueryBuilder

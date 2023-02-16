@@ -20,7 +20,7 @@ class TestController extends AbstractController
     {
         return $this->render('admin/test/index.html.twig',
             [
-                'pagination' => $paginator->getPagination($repository->findLatsUpdatedQuery(), 10)
+                'pagination' => $paginator->getPagination($repository->findLastUpdatedQuery(), 10)
             ]
 
         );

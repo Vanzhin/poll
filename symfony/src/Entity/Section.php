@@ -34,7 +34,7 @@ class Section
     #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
 
-    #[ORM\OneToMany(mappedBy: 'section', targetEntity: Test::class)]
+    #[ORM\OneToMany(mappedBy: 'section', targetEntity: Test::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $test;
 
     public function __construct()
