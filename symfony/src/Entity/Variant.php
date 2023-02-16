@@ -5,9 +5,17 @@ namespace App\Entity;
 use App\Repository\VariantRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VariantRepository::class)]
+#[UniqueEntity(
+    fields: ['title', 'question'],
+    message: 'Вариант с таким названием уже существует для этого вопроса',
+)]
+#[ORM\UniqueConstraint('variant_question_idx',['title', 'question_id'])]
+// #[ORM\Table(name="ecommerce_products",uniqueConstraints={@UniqueConstraint(name="search_idx", columns={"name", "email"})})]
+
 class Variant
 {
     #[ORM\Id]
@@ -22,7 +30,7 @@ class Variant
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
     private ?int $weight = null;
 
-    #[ORM\ManyToOne(inversedBy: 'varant')]
+    #[ORM\ManyToOne(inversedBy: 'variant')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Question $question = null;
 

@@ -52,7 +52,6 @@ class QuestionService
             }
             $response[] = $answer;
         }
-        $this->sessionService->remove(self::SHUFFLED);
 
         return $response;
 
@@ -164,7 +163,7 @@ class QuestionService
             case 'checkbox':
             case 'checkbox_picture':
 
-                if (count(array_diff($userShuffledAnswers, $question->getAnswer())) === 0) {
+                if (count(array_diff($question->getAnswer(),$userShuffledAnswers)) === 0) {
                     $score = true;
                 }
                 break;

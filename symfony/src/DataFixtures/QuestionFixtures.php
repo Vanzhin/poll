@@ -94,7 +94,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                     $this->createMany(Variant::class, $this->faker->numberBetween(2, 5), function (Variant $variant) use ($manager, $question) {
 
                         $variant
-                            ->setTitle($this->faker->word())
+                            ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
                             ->setWeight(1)
                             ->setQuestion($question);
 
@@ -108,7 +108,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                     $this->createMany(Variant::class, $this->faker->numberBetween(2, 6), function (Variant $variant) use ($manager, $question) {
 
                         $variant
-                            ->setTitle($this->faker->word())
+                            ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
                             ->setWeight(1)
                             ->setQuestion($question);
 
@@ -130,7 +130,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                     $this->createMany(Variant::class, $this->faker->numberBetween(2, 5), function (Variant $variant) use ($manager, $question) {
 //
                         $variant
-                            ->setTitle($this->faker->word())
+                            ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
                             ->setWeight(1)
                             ->setQuestion($question);
 
@@ -151,7 +151,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                     $this->createMany(Variant::class, $this->faker->numberBetween(3, 8), function (Variant $variant) use ($manager, $question) {
 //
                         $variant
-                            ->setTitle($this->faker->word())
+                            ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
                             ->setWeight(1)
                             ->setQuestion($question);
 

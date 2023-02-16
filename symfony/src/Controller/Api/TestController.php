@@ -87,7 +87,7 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/auth/test/handle', name: 'app_api_auth_test_handle', methods: ['POST'])]
-    public function handleByUser(Request $request, QuestionService $questionService): JsonResponse
+    public function handleByUser(Request $request, QuestionService $questionService, SessionService $sessionService): JsonResponse
     {
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
@@ -100,6 +100,7 @@ class TestController extends AbstractController
             $status = 422;
 
         } finally {
+            $sessionService->remove(QuestionService::SHUFFLED);
             return $this->json($response,
                 $status,
                 ['charset=utf-8'],
