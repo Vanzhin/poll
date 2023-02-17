@@ -44,6 +44,16 @@
                 required
               />
             </div>
+            <div>
+               <div class="cont-message"
+                v-if="getMessageLogin"
+              >
+                <div class="cont-message-view">
+                  <p>{{ getMessageLogin.mes }}</p>
+                </div> 
+              </div>
+            </div>
+             
             <div class="text-login">
                   <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
                      <p> Уже есть аккаунт</p>
@@ -59,7 +69,7 @@
 </template>
  
 <script>
-  import { mapGetters, mapActions} from "vuex"
+  import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       
@@ -74,10 +84,14 @@
       }
     },
       computed:{
-        
+        ...mapGetters(["getMessageLogin"])
       },
       methods: {
-        ...mapActions(["setIsAutchUser", "getLogInUser", "getRegistrationUser"]),
+        ...mapActions([
+          "setIsAutchUser", "setLogInUser", 
+          "setRegistrationUser", 
+        ]),
+        ...mapMutations(["SET_MESSAGE_REQUEST"]),
         async submit(){
           const user = {
             confirmPassword: this.confirmPassword,
@@ -86,8 +100,22 @@
             password: this.password, 
           }
           console.log('Регистрация')
-          await this.getRegistrationUser(user)
-          
+          const res = await this.setRegistrationUser(user)
+          console.log('Регистрация res -', res)
+          if (res) {
+            setTimeout(() => this.SET_MESSAGE_REQUEST(null), 5000);
+            
+            return
+          } else {
+            setTimeout(() => this.SET_MESSAGE_REQUEST(null), 5000);
+            this.clearForm()
+          }
+        },
+        clearForm() {
+          this.confirmPassword = '',
+          this.password='',
+          this.email='',
+          this.firstName=''
         }
       }
       // mounted(){
@@ -97,6 +125,54 @@
  
 </script>
 <style lang="scss" scoped>
+  .cont-message{
+    position: relative;
+    width: 100%;
+    
+    &-view{
+      position: absolute;
+      min-height: 50px;
+      min-width: 200px;
+      bottom: -26px;
+      width: 100%;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #9ac7c7;
+      border-radius: 10px;
+      animation: move 5s 1 linear;
+      text-align: center;
+      transform: scaleY(0);
+      padding: 15px;
+      p{
+          color: rgb(217 50 80);
+          margin: 0;
+      }
+    }
+  }
+
+  @keyframes move {
+   0% {
+      transform: scaleY(0.5);
+      opacity:  0.5;
+   }
+   5% {
+      transform: scaleY(1);
+      opacity:  1;
+     }
+   80% {
+      transform: scaleY(1);
+      opacity:  1;
+    
+     }  
+   100% {
+      transform: scaleY(0);
+      opacity:  0;
+   }
+}
+
+
 .login-page {
    max-width: 380px;
    padding: 24px;

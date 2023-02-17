@@ -4,7 +4,8 @@ import {
   SET_PAGE_NAME,
   SET_DELETE_USER_TOKEN,
   SET_AUTH_ACCOUNT,
-  SET_LOGOUT_LINK_DATE
+  SET_LOGOUT_LINK_DATE,
+  SET_MESSAGE_REQUEST
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -20,7 +21,8 @@ const state = () => ({
   email: '',
   password: '',
   result: [],
-  logoutLinkDate: {}
+  logoutLinkDate: {},
+  message: null
 })
 
 const actions = {
@@ -50,7 +52,7 @@ const actions = {
     }
   },
   //вход на сайт с помощью учетной записи
-  async getLogInUser({ commit }, user) {
+  async setLogInUser({ commit }, user) {
     const data = JSON.stringify(user)
     console.log(data)
     try {
@@ -79,7 +81,7 @@ const actions = {
     }
   },
   //регистрация на сайте
-  async getRegistrationUser({ commit }, user) {
+  async setRegistrationUser({ commit }, user) {
     const data = JSON.stringify(user)
     console.log(data)
     try {
@@ -95,12 +97,22 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getRegistrationUser - ", data )
-          // commit("SET_AUTCH_USER_TOKEN", data.data);
+          console.log("getRegistrationUser - ", data.data.message )
+          commit("SET_MESSAGE_REQUEST",{
+            mes:JSON.stringify(data.data.message),
+            err: false
+          });
           // commit("SET_IS_AUTCH_USER", true)
+          
         })
+        return false
     } catch (e) {
-      console.log("ошибка - ", e)
+      console.log("ошибка - ", e.response.data.error)
+      commit("SET_MESSAGE_REQUEST",{
+        mes:JSON.stringify(e.response.data.error[0]),
+        err: true
+      });
+      return true
     }
   },
   // выход с сайта
@@ -212,7 +224,10 @@ const getters = {
   },
   getLogoutLinkDate(state) {
     return state.logoutLinkDate
-  }
+  },
+  getMessageLogin(state) {
+    return state.message
+  },
 }
 
 const mutations = {
@@ -251,7 +266,11 @@ const mutations = {
   [SET_LOGOUT_LINK_DATE] (state, result) {
     console.log("SET_LOGOUT_LINK_DATE", result)
     state.logoutLinkDate = result
-  }
+  },
+  [SET_MESSAGE_REQUEST] (state, message) {
+    console.log("SET_MESSAGE_REQUEST", message)
+    state.message = message
+  },
 }
 export default {
   namespaced: false,
