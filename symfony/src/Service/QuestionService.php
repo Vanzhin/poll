@@ -19,6 +19,7 @@ class QuestionService
     {
         $response = [];
 
+
         foreach ($testData as $answerData) {
 
             $question = $this->entityManager->find(Question::class, $answerData["id"]);
@@ -26,7 +27,7 @@ class QuestionService
                 $answer = [
                     "id" => $answerData["id"],
                     "title" => $question->getTitle(),
-                    "variant" => $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] ?? [],
+                    "variant" => isset($this->sessionService->get(self::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] : $this->getVariantsToArray($question),
                     "result" => [
                         "score" => $this->getQuestionScore($question, $answerData["answer"]),
                     ],
@@ -84,7 +85,6 @@ class QuestionService
         $answers = [];
         if ($question->getVariant()->count() > 0) {
             foreach ($userAnswer as $answer) {
-
                 $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $shuffled['variant'][$answer]);
                 if (!is_null($variant)) {
                     $answers[] = $variant->getId();
@@ -95,7 +95,7 @@ class QuestionService
             $answers = $userAnswer;
         }
 
-        if (count($question->getSubTitle()) > 1) {
+        if (count($question->getSubTitle()) > 1 && isset($shuffled['subTitle'])) {
 
             $shuffledUserAnswer = [];
             foreach ($question->getSubTitle() as $subTitle) {
@@ -145,7 +145,12 @@ class QuestionService
         $score = false;
 
         $userAnswers = $this->answerPrepare($answerData);
-        $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, $this->sessionService->get(self::SHUFFLED)[$question->getId()]);
+        if (isset($this->sessionService->get(self::SHUFFLED)[$question->getId()])) {
+            $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, $this->sessionService->get(self::SHUFFLED)[$question->getId()]);
+
+        } else {
+            $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, ['variant' => $this->getVariantsToArray($question)]);
+        }
 
         switch ($question->getType()->getTitle()) {
             case 'radio':
@@ -163,7 +168,7 @@ class QuestionService
             case 'checkbox':
             case 'checkbox_picture':
 
-                if (count(array_diff($question->getAnswer(),$userShuffledAnswers)) === 0) {
+                if (count(array_diff($question->getAnswer(), $userShuffledAnswers)) === 0) {
                     $score = true;
                 }
                 break;
