@@ -29,10 +29,9 @@ class Ticket
 
     #[ORM\Column(length: 255)]
     #[Groups(['main', 'account'])]
-
     private ?string $title = null;
 
-    #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class)]
+    #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $results;
 
     public function __construct()

@@ -38,7 +38,8 @@ class TestController extends AbstractController
         return $this->render('admin/test/create.html.twig', [
             'testForm' => $form->createView(),
             'buttonText' => 'Создать',
-            'titleText' => 'Создание теста'
+            'titleText' => 'Создание теста',
+            'create' => true,
         ]);
     }
 
@@ -55,7 +56,9 @@ class TestController extends AbstractController
         return $this->render('admin/test/create.html.twig', [
             'testForm' => $form->createView(),
             'buttonText' => 'Обновить',
-            'titleText' => 'Обновление теста'
+            'titleText' => 'Обновление теста',
+            'create' => false,
+
         ]);
     }
 

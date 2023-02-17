@@ -71,4 +71,5 @@ class SectionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
 }

@@ -2,7 +2,12 @@
     {{ form_start(testForm) }}
     {{ form_errors(testForm) }}
     {{ form_row(testForm.title) }}
-    {{ form_row(testForm.section) }}
+    {% if create %}
+        {{ form_row(testForm.section) }}
+    {% else %}
+        {{ form_row(testForm.section, {'attr': {'disabled': 'true'}}) }}
+    {% endif %}
+
     {{ form_row(testForm.ticket) }}
 
 

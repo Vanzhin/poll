@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Article;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

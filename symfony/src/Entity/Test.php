@@ -30,7 +30,8 @@ class Test
     #[Gedmo\Slug(fields: ['title'])]
     private ?string $slug = null;
 
-    #[ORM\ManyToMany(targetEntity: Ticket::class, inversedBy: 'tests', cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Ticket::class, inversedBy: 'tests')]
+//    #[ORM\JoinTable(name: 'test_ticket')]
     #[Groups(['main'])]
     private Collection $ticket;
 

@@ -68,6 +68,20 @@ class TestRepository extends ServiceEntityRepository
         return $this->getEntityManager()->getRepository(Question::class)->findBy(['id'=> $raw]);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function getAllQuestions(Test $test): array
+    {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = "SELECT q.id FROM test t JOIN test_ticket tt on t.id = tt.test_id JOIN ticket_question tq on tt.ticket_id = tq.ticket_id JOIN question q on q.id = tq.question_id WHERE t.id = :testId ORDER BY t.id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':testId', $test->getId(),ParameterType::INTEGER);
+        $raw = $stmt->executeQuery()->fetchFirstColumn();
+        return $this->getEntityManager()->getRepository(Question::class)->findBy(['id'=> $raw]);
+    }
+
     public function findLastUpdatedQuery(): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('t');
