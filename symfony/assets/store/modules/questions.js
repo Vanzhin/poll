@@ -323,7 +323,7 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, id) {
-     const slag = 'indigo-ooo-transcibobltsentr' // опен серв
+     const slag = 'zelionyi-mkk-santekhservisasbotsement-h' // опен серв
     // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
     console.log("id - ",  id)
     let url = ''
