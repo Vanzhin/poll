@@ -3,7 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Question;
+use App\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +41,33 @@ class QuestionRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('qu');
+    }
+
+    public function findLastUpdatedQuery(): QueryBuilder
+    {
+        $queryBuilder = $this->getOrCreateQueryBuilder();
+        return
+            $this->lastUpdated($queryBuilder)
+            ->leftJoin('qu.type', 'ty')
+            ->addSelect('ty')
+            ;
+    }
+
+    private function latest(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('qu.createdAt', 'DESC');
+
+    }
+
+    private function lastUpdated(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('qu.updatedAt', 'DESC');
+
     }
 
 //    /**

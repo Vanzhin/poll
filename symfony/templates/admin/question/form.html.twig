@@ -1,0 +1,15 @@
+<div class="container form-control w-75 my-4">
+    {{ form_start(ticketForm) }}
+    {{ form_errors(ticketForm) }}
+    {{ form_row(ticketForm.title) }}
+    {{ form_row(ticketForm.question) }}
+    {% if create %}
+        {{ form_row(ticketForm.tests) }}
+    {% else %}
+        {{ form_row(ticketForm.tests, {'attr': {'disabled': 'true'}}) }}
+    {% endif %}
+
+    <button class="btn btn-primary" type="submit">{{ buttonText }}</button>
+    {{ form_end(ticketForm) }}
+</div>
+
