@@ -21,7 +21,6 @@ class QuestionService
 
 
         foreach ($testData as $answerData) {
-
             $question = $this->entityManager->find(Question::class, $answerData["id"]);
             if ($question) {
                 $answer = [
@@ -33,10 +32,9 @@ class QuestionService
                     ],
                     "type" => $question->getType()->getTitle()
                 ];
-
                 if ($user) {
                     $answer["result"] += [
-                        "true_answer" => $this->getShuffledTrueAnswers($question, $this->sessionService->get(self::SHUFFLED)[$question->getId()]),
+                        "true_answer" => $this->getShuffledTrueAnswers($question, $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? []),
                         "user_answer" => $answerData["answer"],
                     ];
                 }
@@ -85,25 +83,24 @@ class QuestionService
         $answers = [];
         if ($question->getVariant()->count() > 0) {
             foreach ($userAnswer as $answer) {
-                $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $shuffled['variant'][$answer]);
-                if (!is_null($variant)) {
+                if (isset($answer, $this->getVariantsToArray($question)[$answer])) {
+                    $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $shuffled['variant'][$answer]);
                     $answers[] = $variant->getId();
-                }
 
+                }
             }
         } else {
             $answers = $userAnswer;
         }
-
         if (count($question->getSubTitle()) > 1 && isset($shuffled['subTitle'])) {
-
             $shuffledUserAnswer = [];
             foreach ($question->getSubTitle() as $subTitle) {
-                $shuffledUserAnswer[] = $question->getAnswer()[array_search($subTitle, $shuffled['subTitle'])];
+                if (isset($answers[array_search($subTitle, $shuffled['subTitle'])])) {
+                    $shuffledUserAnswer[] = $answers[array_search($subTitle, $shuffled['subTitle'])];
+
+                }
             }
-
             $answers = $shuffledUserAnswer;
-
         }
         return $answers;
 
@@ -112,7 +109,7 @@ class QuestionService
     private function getShuffledTrueAnswers(Question $question, array $shuffled): array
     {
         $trueShufflesAnswers = [];
-        if (count($shuffled['variant']) > 0) {
+        if (isset($shuffled['variant']) && count($shuffled['variant']) > 0) {
             foreach ($question->getAnswer() as $answer) {
 
                 $variant = $this->entityManager->getRepository(Variant::class)->find($answer);
@@ -121,13 +118,21 @@ class QuestionService
                 }
 
             }
+        } else if ($question->getVariant()->count() > 0) {
+            foreach ($question->getAnswer() as $answer) {
+
+                $variant = $this->entityManager->getRepository(Variant::class)->find($answer);
+                if (!is_null($variant)) {
+                    $trueShufflesAnswers[] = array_search($variant->getTitle(), $this->getVariantsToArray($question));
+                }
+            }
         } else {
             $trueShufflesAnswers = $question->getAnswer();
         }
-
-        if (count($shuffled['subTitle']) > 1) {
+        if (isset($shuffled['subTitle']) && count($shuffled['subTitle']) > 1) {
 
             $answers = [];
+//            dd($shuffled['subTitle']);
             foreach ($shuffled['subTitle'] as $subTitle) {
                 $answers[] = $trueShufflesAnswers[array_search($subTitle, $question->getSubTitle())];
             }
@@ -135,7 +140,6 @@ class QuestionService
             $trueShufflesAnswers = $answers;
 
         }
-
         return $trueShufflesAnswers;
 
     }
@@ -143,7 +147,6 @@ class QuestionService
     private function getQuestionScore(Question $question, array $answerData): bool
     {
         $score = false;
-
         $userAnswers = $this->answerPrepare($answerData);
         if (isset($this->sessionService->get(self::SHUFFLED)[$question->getId()])) {
             $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, $this->sessionService->get(self::SHUFFLED)[$question->getId()]);
@@ -151,7 +154,6 @@ class QuestionService
         } else {
             $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, ['variant' => $this->getVariantsToArray($question)]);
         }
-
         switch ($question->getType()->getTitle()) {
             case 'radio':
             case 'order':
@@ -213,5 +215,4 @@ class QuestionService
         }
         return $response;
     }
-
 }
