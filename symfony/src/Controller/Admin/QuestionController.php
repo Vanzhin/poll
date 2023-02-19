@@ -2,7 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Question;
 use App\Entity\Ticket;
+use App\Form\QuestionFormType;
 use App\Form\TicketFormType;
 use App\Repository\QuestionRepository;
 use App\Service\FormService;
@@ -46,11 +48,11 @@ class QuestionController extends AbstractController
 
 
     #[Route("admin/question/{id}/edit", name: 'app_admin_question_edit')]
-    public function edit(Ticket $ticket, Request $request, EntityManagerInterface $em, FormService $formService): Response
+    public function edit(Question $question, Request $request, EntityManagerInterface $em, FormService $formService): Response
     {
-        $form = $this->createForm(TicketFormType::class, $ticket);
+        $form = $this->createForm(QuestionFormType::class, $question);
         if ($formService->handle($form, $request, $em)) {
-            $this->addFlash('ticket_flash', 'Билет обновлен');
+            $this->addFlash('question_flash', 'Вопрос обновлен');
             return $this->redirectToRoute('app_admin_question');
         }
 

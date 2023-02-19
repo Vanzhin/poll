@@ -10,7 +10,6 @@ class FormService
 {
     public function handle(FormInterface $form, Request $request, EntityManagerInterface $em): ?FormInterface
     {
-        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($form->getData());
             $em->flush();
