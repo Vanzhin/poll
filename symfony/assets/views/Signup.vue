@@ -45,13 +45,12 @@
               />
             </div>
             <div>
-               <div class="cont-message"
+               <MessageView
                 v-if="getMessageLogin"
-              >
-                <div class="cont-message-view">
-                  <p>{{ getMessageLogin.mes }}</p>
-                </div> 
-              </div>
+                :message="getMessageLogin"
+              />
+               
+              
             </div>
              
             <div class="text-login">
@@ -69,10 +68,11 @@
 </template>
  
 <script>
+  import MessageView from "../components/ui/MessageView.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
-      
+      MessageView
     },
     data() {
       return {
@@ -84,7 +84,7 @@
       }
     },
       computed:{
-        ...mapGetters(["getMessageLogin"])
+        ...mapGetters(["getMessageLogin", "getPageName"])
       },
       methods: {
         ...mapActions([
@@ -107,9 +107,12 @@
             
             return
           } else {
-            setTimeout(() => this.SET_MESSAGE_REQUEST(null), 5000);
+            setTimeout(() => this.SET_MESSAGE_REQUEST(null), 7000);
             this.clearForm()
           }
+          await  this.setLogInUser({username:user.email,password: user.password})
+          console.log(this.getPageName)
+          this.$router.push({ path: this.getPageName})
         },
         clearForm() {
           this.confirmPassword = '',
@@ -125,54 +128,7 @@
  
 </script>
 <style lang="scss" scoped>
-  .cont-message{
-    position: relative;
-    width: 100%;
-    
-    &-view{
-      position: absolute;
-      min-height: 50px;
-      min-width: 200px;
-      bottom: -26px;
-      width: 100%;
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #9ac7c7;
-      border-radius: 10px;
-      animation: move 5s 1 linear;
-      text-align: center;
-      transform: scaleY(0);
-      padding: 15px;
-      p{
-          color: rgb(217 50 80);
-          margin: 0;
-      }
-    }
-  }
-
-  @keyframes move {
-   0% {
-      transform: scaleY(0.5);
-      opacity:  0.5;
-   }
-   5% {
-      transform: scaleY(1);
-      opacity:  1;
-     }
-   80% {
-      transform: scaleY(1);
-      opacity:  1;
-    
-     }  
-   100% {
-      transform: scaleY(0);
-      opacity:  0;
-   }
-}
-
-
+  
 .login-page {
    max-width: 380px;
    padding: 24px;

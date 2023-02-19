@@ -377,8 +377,37 @@ const actions = {
       console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("setResultDb - ",  data.questions)
-          commit("SET_RESULT_QUESTIONS", data.questions);
+          console.log("setResultDb - ",  data)
+          commit("SET_RESULT_QUESTIONS", data);
+          commit("SET_LOADER_TOGGLE")
+        })
+    } catch (e) {
+        console.log(e.message);
+    }
+  },
+  async saveQuestionDb({ commit, state }, {token, questionSend} ){
+    console.log(questionSend)
+    commit("SET_LOADER_TOGGLE")
+    try{
+      const data = new FormData();
+      questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
+      const config = {
+        method: 'post',
+        url: '/api/auth/create/question',
+        // url: '/api/auth/test/handle',
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        data:  data
+      };
+      
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("saveQuestionDb - ",  data)
+          commit("SET_RESULT_QUESTIONS", data);
           commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {

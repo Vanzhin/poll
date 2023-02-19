@@ -88,8 +88,13 @@ const router = createRouter({
     {
       path: '/redirection/:rtoken',
       name: 'redirection',
-      
       component: () => import('../views/RedirectionView.vue')
+    },
+    {
+      path: '/create/question',
+      name: 'createQuestion',
+      meta: {autch: true},
+      component: () => import('../views/CreateQuestionView.vue')
     },
   ]
 })

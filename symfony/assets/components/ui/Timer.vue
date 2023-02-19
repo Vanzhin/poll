@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <div class="cont">
-      <div class="container">
-        <div class="row justify-content-md-center">
+  <div class="cont">
+    <div class="cont-fix">
+      
           <div class="item-timer">
             <div class="timer"
               :class="classObject"
@@ -11,8 +10,7 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      
   </div>
 </template>
 <script>
@@ -55,7 +53,6 @@ export default {
       } 
       --this.timeMinut; // Уменьшаем таймер
     }, 1000)},
-    
     setIntervalCler(){clearInterval(this.setIntervalId) }
   },
   mounted(){
@@ -71,9 +68,11 @@ export default {
 <style lang="scss" scoped>
   .cont{
     display: flex;
-    width: 84%;
+    justify-content: center;
+    width: 100%;
+    &-fix{
     position: fixed;
-    z-index: 20;
+    z-index: 20;}
   }
   .item-timer{
     width: 100%;
