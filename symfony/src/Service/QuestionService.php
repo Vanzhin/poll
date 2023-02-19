@@ -3,36 +3,47 @@
 namespace App\Service;
 
 use App\Entity\Question;
+use App\Entity\Result;
+use App\Entity\User;
 use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class QuestionService
 {
     const SHUFFLED = 'shuffled';
 
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly SessionService $sessionService)
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SessionService         $sessionService,
+        private readonly ResultService          $resultService)
     {
     }
 
-    public function handle(array $testData, UserInterface $user = null): array
+    public function handle(array $testData, User $user = null): array
     {
         $response = [];
 
-
+        if ($user) {
+            $result = new Result();
+        }
         foreach ($testData as $answerData) {
             $question = $this->entityManager->find(Question::class, $answerData["id"]);
+            $score = $this->getQuestionScore($question, $answerData["answer"]);
+
+
             if ($question) {
                 $answer = [
                     "id" => $answerData["id"],
                     "title" => $question->getTitle(),
                     "variant" => isset($this->sessionService->get(self::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] : $this->getVariantsToArray($question),
                     "result" => [
-                        "score" => $this->getQuestionScore($question, $answerData["answer"]),
+                        "score" => $score,
                     ],
                     "type" => $question->getType()->getTitle()
                 ];
                 if ($user) {
+
+                    $this->resultService->save($user, $question, $this->getShuffledUserAnswers($question, $answerData["answer"], $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? ['variant' => $this->getVariantsToArray($question)]), $score, $result);
                     $answer["result"] += [
                         "true_answer" => $this->getShuffledTrueAnswers($question, $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? []),
                         "user_answer" => $answerData["answer"],
@@ -103,7 +114,6 @@ class QuestionService
             $answers = $shuffledUserAnswer;
         }
         return $answers;
-
     }
 
     private function getShuffledTrueAnswers(Question $question, array $shuffled): array
@@ -132,7 +142,6 @@ class QuestionService
         if (isset($shuffled['subTitle']) && count($shuffled['subTitle']) > 1) {
 
             $answers = [];
-//            dd($shuffled['subTitle']);
             foreach ($shuffled['subTitle'] as $subTitle) {
                 $answers[] = $trueShufflesAnswers[array_search($subTitle, $question->getSubTitle())];
             }
