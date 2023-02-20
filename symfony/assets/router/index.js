@@ -85,7 +85,17 @@ const router = createRouter({
       meta: {autch: true},
       component: () => import('../views/StatisticsAutchView.vue')
     },
-    
+    {
+      path: '/redirection/:rtoken',
+      name: 'redirection',
+      component: () => import('../views/RedirectionView.vue')
+    },
+    {
+      path: '/create/question',
+      name: 'createQuestion',
+      meta: {autch: true},
+      component: () => import('../views/CreateQuestionView.vue')
+    },
   ]
 })
 router.beforeEach((to, from, next) => {
@@ -94,9 +104,14 @@ router.beforeEach((to, from, next) => {
   // console.log('userAutch', userAutch)
   // console.log(store)
   // console.log(from.name)
-  if (to.name === 'logout') {
-    store.dispatch('setPage' ,from.name)
-  }
+  if ((to.name === 'logout' || to.name === 'logoutlink' || to.name ==='signup')
+    &(from.name !== 'logout' & from.name !== 'logoutlink' & from.name !=='signup')
+  
+  ) {
+    console.log("page true" )
+    store.dispatch('setPage', from.path)
+    
+  } else{ console.log("page false" )}
   // store._actions.setPage(from.name)
   if (requireAuth && !userAutch) {
     next('/logout')

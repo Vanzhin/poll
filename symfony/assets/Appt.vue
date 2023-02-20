@@ -2,6 +2,9 @@
   <Headers/>
   <div class="container">
     <div class="wrapper">
+      <div class="head"></div>
+    </div>
+    <div class="wrapper">
       <RouterView />
     </div>
     
@@ -35,6 +38,8 @@ export default {
 
 
 <style lang="scss">
-
+.head{
+  height: 80px;
+}
 
 </style>

@@ -67,7 +67,7 @@
       ...mapGetters(["getPageName"])
     },
     methods: {
-      ...mapActions(["setIsAutchUser","getLogInUser"]),
+      ...mapActions(["setIsAutchUser","setLogInUser"]),
       async onSubmit(e){
         console.log('авторизация')
         const user = {
@@ -75,8 +75,9 @@
           password: this.password, 
         }
         console.log(user)
-        await  this.getLogInUser(user)
-        this.$router.push({ name: this.getPageName})
+        await  this.setLogInUser(user)
+        console.log(this.getPageName)
+        this.$router.push({ path: this.getPageName})
       }
     }
      // mounted(){

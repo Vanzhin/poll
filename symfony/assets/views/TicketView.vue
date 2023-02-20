@@ -6,14 +6,18 @@
     v-else
   >
     <div class="title">
+      <Timer
+        v-if="timeTicket"
+        :time="0.1"
+        @time-end="timerEnd"
+      />
+      {{ timeEnd }}
       <h2> {{ testName.title }}</h2>
       <div class="test">
         <p>Билет №: {{ $route.params.id }}</p>  
       </div>
     </div>
-    <Timer
-      v-if="timeTicket"
-    />
+    
     <div class="container">
       <div class="row">
         <form @submit.prevent="onSubmit">
@@ -21,27 +25,27 @@
             :key="qestion.id"
           >
             <TestQuestionRadio
-              v-if="qestion.type.title === 'radio'"
+              v-if="qestion.type === 'radio'"
               :qestion="qestion"
               :index="index"
             />
             <TestQuestionCheckbox
-              v-else-if="qestion.type.title === 'checkbox'"
+              v-else-if="qestion.type === 'checkbox'"
               :qestion="qestion"
               :index="index"
             />
             <TestQuestionInputOne
-              v-else-if="qestion.type.title === 'input_one'"
+              v-else-if="qestion.type === 'input_one'"
               :qestion="qestion"
               :index="index"
             />
             <TestQuestionOrdered
-              v-else-if="qestion.type.title === 'order'"
+              v-else-if="qestion.type === 'order'"
               :qestion="qestion"
               :index="index"
             />
             <TestQuestionConformity
-              v-else-if="qestion.type.title === 'conformity'"
+              v-else-if="qestion.type === 'conformity'"
               :qestion="qestion"
               :index="index"
             />
@@ -59,7 +63,7 @@ import TestQuestionCheckbox from '../components/TestQuestionCheckbox.vue'
 import TestQuestionOrdered from '../components/TestQuestionOrdered.vue'
 import TestQuestionInputOne from '../components/TestQuestionInputOne.vue'
 import TestQuestionConformity from '../components/TestQuestionConformity.vue'
-import Timer from '../components/Timer.vue'
+import Timer from '../components/ui/Timer.vue'
 import Loader from '../components/ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
@@ -75,7 +79,8 @@ export default {
   data() {
     return {
       isLoader: true,
-      timeTicket: false
+      timeTicket: false,
+      timeEnd: false,
     }
   },
   computed:{
@@ -87,15 +92,17 @@ export default {
     },
   },
    methods: {
-    ...mapActions(["getQuestionsDb", "setResultDb"]),
-    async onSubmit(e){
-      const r = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
+    ...mapActions(["getQuestionsDb", "saveResultTicketUser"]),
+    onSubmit(e){
+      const ticket = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
         .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-      const ticket = JSON.stringify(r)
+      
+      this.saveResultTicketUser(ticket)
       this.$router.push({ path:'/result'})
-      console.log(ticket)
-      await this.setResultDb(ticket)
-     },
+    },
+    timerEnd(){ //написать действия при окончании времени таймера
+      this.timeEnd = true
+    }
   },
   async mounted(){
     await this.getQuestionsDb(this.$route.params.id)

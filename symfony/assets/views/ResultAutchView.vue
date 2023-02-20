@@ -21,22 +21,22 @@
             <ResultTestQuestionCheckbox
               :qestion="qestion"
               :index="index"
-              v-if="qestion.type.title==='radio' || qestion.type.title==='checkbox'"
+              v-if="qestion.type==='radio' || qestion.type==='checkbox'"
             />
             <ResultTestQuestionOrdered
               :qestion="qestion"
               :index="index"
-              v-else-if="qestion.type.title==='order'"
+              v-else-if="qestion.type==='order'"
             />
             <ResultTestQuestionInputOne
               :qestion="qestion"
               :index="index"
-              v-else-if="qestion.type.title==='input_one'"
+              v-else-if="qestion.type==='input_one'"
             />
             <ResultTestQuestionConformity
               :qestion="qestion"
               :index="index"
-              v-else-if="qestion.type.title==='conformity'"
+              v-else-if="qestion.type==='conformity'"
             />
           </div>
           

@@ -1,4 +1,9 @@
-import { SET_QUESTIONS, SET_RESULT_QUESTIONS, SET_LOADER_TOGGLE } from './mutation-types.js'
+import { 
+  SET_QUESTIONS, 
+  SET_RESULT_QUESTIONS, 
+  SET_LOADER_TOGGLE,
+  SET_RESULT_TICKET_USER
+} from './mutation-types.js'
 import axios from 'axios';
 
 const state = () => ({
@@ -172,7 +177,9 @@ const state = () => ({
        
   ],
   questionsDb:[],
-  resultQuestions:[
+  resultQuestions:localStorage.getItem('resultQuestions') ?
+  JSON.parse(localStorage.getItem('resultQuestions')): 
+  [
     {title:"В каком случае нарушен порядок хранения и выдачи ключей?",
     variant:[], 
     id: 8,
@@ -303,7 +310,9 @@ const state = () => ({
     // },
     
   ],
-  isLoader: false,
+  isLoader: false,//resultTicketUser
+  resultTicketUser:localStorage.getItem('resultTicketUser') ?
+  JSON.parse(localStorage.getItem('resultTicketUser')): [],
   
 })
 
@@ -314,8 +323,8 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, id) {
-    //  const slag = 'belokuryi-oao-metalzheldorstroi' // опен серв
-    const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
+     const slag = 'zelionyi-mkk-santekhservisasbotsement-h' // опен серв
+    // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
     console.log("id - ",  id)
     let url = ''
     if (id === "rnd20" || id === "rnd20t") {
@@ -346,23 +355,59 @@ const actions = {
     }
   },
 
-  async setResultDb({ commit }, ticket ){
+  async setResultDb({ commit, state }, {token, userAuth} ){
+    console.log(JSON.stringify(state.resultTicketUser))
     commit("SET_LOADER_TOGGLE")
     try{
       const config = {
         method: 'post',
         url: '/api/test/handle',
+        // url: '/api/auth/test/handle',
         headers: { 
           Accept: 'application/json', 
           'Content-Type': 'application/json'
           // Authorization: `Bearer ${token}`
         },
-        data: ticket
+        data:  JSON.stringify(state.resultTicketUser)
       };
+      if (userAuth) {
+        config.url = '/api/auth/test/handle'
+        config.headers.Authorization = `Bearer ${token}`
+      }
+      console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("setResultDb - ",  data.questions)
-          commit("SET_RESULT_QUESTIONS", data.questions);
+          console.log("setResultDb - ",  data)
+          commit("SET_RESULT_QUESTIONS", data);
+          commit("SET_LOADER_TOGGLE")
+        })
+    } catch (e) {
+        console.log(e.message);
+    }
+  },
+  async saveQuestionDb({ commit, state }, {token, questionSend} ){
+    console.log(questionSend)
+    commit("SET_LOADER_TOGGLE")
+    try{
+      const data = new FormData();
+      questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
+      const config = {
+        method: 'post',
+        url: '/api/auth/create/question',
+        // url: '/api/auth/test/handle',
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        data:  data
+      };
+      
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("saveQuestionDb - ",  data)
+          commit("SET_RESULT_QUESTIONS", data);
           commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
@@ -372,7 +417,10 @@ const actions = {
   setIsLoader({ commit }){
     commit("SET_LOADER_TOGGLE")
   },
-  getQuestion(){}
+  getQuestion(){},
+  saveResultTicketUser({ commit }, ticket){
+    commit("SET_RESULT_TICKET_USER", ticket);
+  }
 };
 
 const getters = {
@@ -398,11 +446,17 @@ const mutations = {
   [SET_RESULT_QUESTIONS] (state, questions) {
     console.log("SET_RESULT_QUESTIONS", questions)
     state.resultQuestions = questions
+    // localStorage.setItem('resultQuestions', JSON.stringify(questions));
   },
   [SET_LOADER_TOGGLE] (state,) {
     console.log("SET_LOADER_TOGGLE", state.isLoader)
     state.isLoader = !state.isLoader
   },
+  [SET_RESULT_TICKET_USER] (state, ticket) {
+    console.log("SET_RESULT_TICKET_USER", )
+    state.resultTicketUser = ticket
+    localStorage.setItem('resultTicketUser', JSON.stringify(ticket));
+  }
 }
 
 export default {
