@@ -8,7 +8,7 @@
           class="textarea_input" 
         >
         </textarea>
-        <i class="bi bi-x-lg custom-close" title="Очистить поле вопроса."
+        <i class="bi bi-x-lg custom-close" title="Очиститеть поле вопроса."
           @click="questionTitle = ''"
           v-if="questionTitle !== ''"
         ></i>
@@ -53,7 +53,7 @@
         :key="answer"
       >
         <div class="custom-radio" >
-          <input type="radio" 
+          <input type="checkbox" 
             :value= "ind "
             v-model="answerSelect"
             class="custom-control-input"  
@@ -106,7 +106,7 @@ export default {
   data() {
     return {
       count: 0,
-      answerSelect: null,
+      answerSelect: [],
       questionTitle:"",
       questionImgFile:"",
       questionImgUrl:"",

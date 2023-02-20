@@ -386,11 +386,27 @@ const actions = {
     }
   },
   async saveQuestionDb({ commit, state }, {token, questionSend} ){
-    console.log(questionSend)
+    console.dir(questionSend)
     commit("SET_LOADER_TOGGLE")
     try{
-      const data = new FormData();
-      questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
+      // Array.from(questionSend).filter(inp => inp.name !== "")
+      
+      const data = new FormData(questionSend);
+      for(let [name, value] of data) {
+        console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+
+      }
+
+      // questionSend.forEach((element,key) => {
+      //   const regexp = new RegExp('img', 'i');
+      //   if (regexp.test(element.name) ) {
+      //     data.append(`${element.name}`, element.files[0])
+      //   } else {
+      //     data.append(`${element.name}`, element.value)
+      //   }
+       
+      // });
+      // questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
       const config = {
         method: 'post',
         url: '/api/auth/create/question',

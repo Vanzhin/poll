@@ -4,22 +4,29 @@
       <h2>Создание вопроса</h2>
       <div class="test">
         <div class="dropdown">
-          <button class="  dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="dropdown-toggle" 
+            type="button" id="dropdownMenuButton1" 
+            data-bs-toggle="dropdown" aria-expanded="false"
+          >
            Выберите тип вопроса
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            
             <li
               v-for="typeQuestion in typeQuestions"
-            ><p class="dropdown-item" @click="selectTypeQuestion=typeQuestion.type">{{ typeQuestion.title }}</p></li>
-           
+            >
+              <p class="dropdown-item" 
+                @click="selectTypeQuestion=typeQuestion"
+              >
+                {{ typeQuestion.title }}
+              </p>
+            </li>
           </ul>
         </div> 
       </div>
     </div>
    <div class="container">
       <div class="row">
-        h1 --   {{ selectTypeQuestion }}
+        Тип вопроса - {{ selectTypeQuestion.title }}
       </div>
     </div>
   </div>
@@ -31,18 +38,18 @@
       <form @submit.prevent="onSubmit">
         <input type="hidden" 
           name="question_type" 
-          :value="selectTypeQuestion"
+          :value="selectTypeQuestion.type"
         >
           <CreateQuestionRadio
-            v-if="selectTypeQuestion === 'radio'"
+            v-if="selectTypeQuestion.type === 'radio'"
           />
-          <!-- <CreateQuestionCheckbox
-            v-else-if="selectTypeQuestion === 'checkbox'"
+           <CreateQuestionCheckbox
+            v-else-if="selectTypeQuestion.type === 'checkbox'"
           />
           <CreateQuestionInputOne
-            v-else-if="selectTypeQuestion === 'input_one'"
+            v-else-if="selectTypeQuestion.type === 'input_one'"
           />
-          <CreateQuestionOrdered
+          <!--<CreateQuestionOrdered
             v-else-if="selectTypeQuestion === 'order'"
           />
           <CreateQuestionConformity
@@ -63,11 +70,16 @@
  
 <script>
   import MessageView from "../components/ui/MessageView.vue"
+  
+  import CreateQuestionInputOne from '../components/createQuestion/CreateQuestionInputOne.vue'
+  import CreateQuestionCheckbox from '../components/createQuestion/CreateQuestionCheckbox.vue'
   import CreateQuestionRadio from '../components/createQuestion/CreateQuestionRadio.vue'
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
+      CreateQuestionCheckbox,
       CreateQuestionRadio,
+      CreateQuestionInputOne,
       MessageView
     },
     data() {
@@ -110,32 +122,34 @@
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       onSubmit(e){
-        console.dir(e.target)
         const trueAnswer = Array.from(e.target).filter(inp => inp.name === "answer_true")
-        console.dir(trueAnswer[0].value)
         if (!trueAnswer[0].value) {
           this.message = {
             mes: 'Укажите правильный ответ!'
           }
-          setTimeout(()=>this.message=null, 5000)
+          setTimeout(()=>this.message = null, 5000)
           return
         }
-        const questionSend = Array.from(e.target).filter(inp => inp.name !== "")
-      // const ticket = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
-        // .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-      
-       this.saveQuestionDb({questionSend, token:this.getAutchUserToken})
-      // this.$router.push({ path:'/result'})
+        const questionSend = e.target
+        this.saveQuestionDb({questionSend, token: this.getAutchUserToken})
+        // this.$router.push({ path:'/result'})
+      },
     },
-    },
-      async mounted(){
+    async mounted(){
       
-     }
+    }
    
  } 
  
 </script>
 <style lang="scss" scoped>
+  .button{
+    padding: 5px 10px;
+    transition: all 0.1s ease-out;
+    &:hover{
+      background-color: rgb(156, 156, 154);
+    }
+  }
  @media (min-width: 1024px) {
   
  }
