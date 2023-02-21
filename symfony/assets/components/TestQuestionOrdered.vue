@@ -118,6 +118,7 @@ export default {
       align-items: center;
     }
   }
+  
   .f_sm {
       font-size: 0.9rem;
   }

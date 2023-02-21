@@ -3,9 +3,10 @@
     <div class="card flex-shrink-1 shadow">
       <label  >Введите вопрос</label>
       <div class="img_block">
-        <textarea rows="2"  name="question-title"
+        <textarea rows="2"  name="question[title]"
           v-model="questionTitle"
-          class="textarea_input" 
+          class="textarea_input"
+          required 
         >
         </textarea>
         <i class="bi bi-x-lg custom-close" title="Очистить поле вопроса."
@@ -14,8 +15,8 @@
         ></i>
       </div>
       <input type="hidden" 
-        id="trueanswer"
-        name="answer_true" 
+        id="answer_true"
+        name="question[answer]" 
         :value="answerSelect"
       >
       <div class="mb-3 w-100">
@@ -33,7 +34,7 @@
         <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
         <input  class="" type="file" accept="image/*"  
           @change="changeQuestionImg" 
-          name="question_img"
+          name="question[img]"
           :value="questionImgValue"
         >
         
@@ -60,10 +61,11 @@
           >
           <div class="custom-radio img_block">
             <textarea rows="1" 
-              :name="'answer[' + ind +']'"
+              :name="`question[variant][${ind}][title]`"
               :id="'answer' +  (ind) " 
               v-model.lazy= "answer.title"
-              class="textarea_input" 
+              class="textarea_input"
+              required 
             >
             </textarea> 
             <i class="bi bi-x-lg custom-close" title="Удалить ответ"
@@ -87,12 +89,10 @@
           <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
           <input  class="" type="file" accept="image/*"  
             @change="(e)=> changeAnswerImg(e, ind)"
-            :name="'answer_img[' + ind +']'"
+            :name="`variant[${ind}][img]`"
             :value="answer.value"
           >
-          
         </div>
-        
       </div>
       <br>
       

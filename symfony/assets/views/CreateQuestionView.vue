@@ -37,7 +37,7 @@
     <div class="row">
       <form @submit.prevent="onSubmit">
         <input type="hidden" 
-          name="question_type" 
+          name="question[type]" 
           :value="selectTypeQuestion.type"
         >
           <CreateQuestionRadio
@@ -49,11 +49,11 @@
           <CreateQuestionInputOne
             v-else-if="selectTypeQuestion.type === 'input_one'"
           />
-          <!--<CreateQuestionOrdered
-            v-else-if="selectTypeQuestion === 'order'"
+          <CreateQuestionOrdered
+            v-else-if="selectTypeQuestion.type === 'order'"
           />
-          <CreateQuestionConformity
-            v-else-if="selectTypeQuestion === 'conformity'"
+          <!--<CreateQuestionConformity
+            v-else-if="selectTypeQuestion.type === 'conformity'"
           /> -->
           <br> 
           <div style="width: 100%;">
@@ -74,12 +74,14 @@
   import CreateQuestionInputOne from '../components/createQuestion/CreateQuestionInputOne.vue'
   import CreateQuestionCheckbox from '../components/createQuestion/CreateQuestionCheckbox.vue'
   import CreateQuestionRadio from '../components/createQuestion/CreateQuestionRadio.vue'
+  import CreateQuestionOrdered from '../components/createQuestion/CreateQuestionOrdered.vue'
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       CreateQuestionCheckbox,
       CreateQuestionRadio,
       CreateQuestionInputOne,
+      CreateQuestionOrdered,
       MessageView
     },
     data() {
@@ -122,7 +124,7 @@
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       onSubmit(e){
-        const trueAnswer = Array.from(e.target).filter(inp => inp.name === "answer_true")
+        const trueAnswer = Array.from(e.target).filter(inp => inp.name === "question[answer]")
         if (!trueAnswer[0].value) {
           this.message = {
             mes: 'Укажите правильный ответ!'

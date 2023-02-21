@@ -3,9 +3,9 @@
     <div class="card flex-shrink-1 shadow">
       <label  >Введите вопрос</label>
       <div class="img_block">
-        <textarea rows="2"  name="question-title"
+        <textarea rows="2"  name="question[title]" required
           v-model="questionTitle"
-          class="textarea_input" required
+          class="textarea_input" 
         >
         </textarea>
         <i class="bi bi-x-lg custom-close" title="Очистить поле вопроса."
@@ -27,7 +27,7 @@
         <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
         <input  class="" type="file" accept="image/*"  
           @change="changeQuestionImg" 
-          name="question_img"
+          name="question[img]"
           :value="questionImgValue" 
         >
         
@@ -38,7 +38,7 @@
       <div class="custom-control ">
         <div class="custom-radio img_block">
           <input  
-            name="answer_true"
+            name="question[answer]"
             v-model="answers"
             class="custom-control-input" required  
           >
