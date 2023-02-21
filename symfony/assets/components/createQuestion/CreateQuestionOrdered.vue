@@ -39,7 +39,7 @@
         
       </div>
       <hr>
-      <i class="i">Введите варианты ответов.</i>
+      <i class="i">Введите варианты ответов в правильной последовательности.</i>
       <div class="block_number">
         <label for="number" class="label"> Количество ответов</label>
         <input id="number" type="number"
@@ -48,84 +48,105 @@
         >
         {{ answerSelect }}
       </div>
-      <div class="custom-control "
-        v-for="(answer, ind ) in answers" 
-        :key="answer"
+      <div  
+        @drop="onDrop($event)"
+        @dragover.prevent
+        @dragenter.prevent
       >
-        <div class="custom-radio" >
-          <input type="checkbox" 
-            :value= "ind "
-            v-model="answerSelect"
-            class="custom-control-input"  
-          >
-          <div class="custom-radio img_block">
-            <textarea rows="1" required
-              :name="`question[variant][${ind}][title]`"
-              :id="'answer' +  (ind) " 
-              v-model.lazy= "answer.title"
-              class="textarea_input" 
-            >
-            </textarea> 
-            <i class="bi bi-x-lg custom-close" title="Удалить ответ"
-                @click="answerDelete(ind)"
-                v-if="answers.length > 1"
-            ></i>
-          </div>
-        </div>
-        <div class="mb-3 w-100">
-          <div class="img_block">
-            <img :src="answer.url"  width="200"
-              v-if="typeof answer.file === 'object'"
-            /> 
-            <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-              @click="answerImgDelete(ind)"
-            v-if="typeof answer.file === 'object'"
-          ></i>
-          </div> 
-          <label class="label">Прикрепить изображение </label>
+        <div class="custom-control "
+          v-for="(answer, ind ) in qestionVariantSort" 
+          :key="answer"
+          @dragstart="onDragStart($event, ind)"
+          draggable="true"
+          :dataname="answer.sort"
+        >
+          <div :class="{block_drop: drag}"           :dataname="answer.sort"></div>
+            <div class="custom-radio" >
+              <div class="custom-radio img_block">
+                <textarea rows="1" required
+                  :name="`question[variant][${ind}][title]`"
+                  
+                  v-model.lazy= "answer.title"
+                  class="textarea_input" 
+                >
+                </textarea> 
+                <i class="bi bi-x-lg custom-close" title="Удалить ответ"
+                    @click="answerDelete(ind)"
+                    v-if="answers.length > 1"
+                ></i>
+              </div>
+            </div>
+            <div class="mb-3 w-100">
+              <div class="img_block">
+                <img :src="answer.url"  width="200"
+                  v-if="typeof answer.file === 'object'"
+                /> 
+                <i class="bi bi-x-lg custom-close" title="Удалить изображение"
+                  @click="answerImgDelete(ind)"
+                v-if="typeof answer.file === 'object'"
+              ></i>
+              </div> 
+              <label class="label">Прикрепить изображение </label>
+              
+              <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
+              <input  class="" type="file" accept="image/*"  
+                @change="(e)=> changeAnswerImg(e, ind)"
+                :name="`variant[${ind}][img]`"
+                :value="answer.value"
+              >
+            </div>
           
-          <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
-          <input  class="" type="file" accept="image/*"  
-            @change="(e)=> changeAnswerImg(e, ind)"
-            :name="`variant[${ind}][img]`"
-            :value="answer.value"
-          >
         </div>
+        <br>
       </div>
-      <br>
-      
     </div>       
   </div>
 </template>
 <script>
-// v-model="answer"
+
+import { SlickList, SlickItem } from 'vue-slicksort';
 export default {
   props: ['qestion', 'index' ],
+  
   data() {
     return {
       count: 0,
-      answerSelect: [],
-      questionTitle:"",
-      questionImgFile:"",
-      questionImgUrl:"",
-      questionImgValue:"",
+      answerSelect: [1],
+      questionTitle: "",
+      questionImgFile: "",
+      questionImgUrl: "",
+      questionImgValue: "",
       answers: [{
-        title:"",
-        file:"",
-        url:"",
-        value:""
+        title: "",
+        file: "",
+        url: "",
+        value: "",
+        sort: 0,
       }],
       numberAnswers: 1,
-      showPreviewQuestionImg: false
+      showPreviewQuestionImg: false,
+      drag: false,
     }
   },
   computed:{
-    
+    qestionVariantSort(){
+      this.answers.sort((a,b) => a.sort-b.sort)
+      this.answers.forEach((item, index ) => {
+        item.sort = index
+      })
+      return this.answers
+    }
   },
   methods: {
     changeNumberAnswers(){
       if ( this.answers.length < this.numberAnswers) {
-        this.answers.push({title:"",file:"",url:"",value:""})
+        this.answers.push({
+          title: "",
+          file: "",
+          url: "",
+          value: "",
+          sort: this.answers.length 
+        })
       } else {
         this.answers.pop()
       }
@@ -159,9 +180,31 @@ export default {
       this.questionImgFile = ''
       this.questionImgUrl = ''
       this.questionImgValue = ''
+    },
+    onDragStart(e , item) {
+      this.drag = true
+      e.dataTransfer.dropEffect = 'copy'
+      e.dataTransfer.effectAllowed = 'move'
+      e.dataTransfer.setData('item', item.toString())
+      e.dataTransfer.setData('pageY', e.target.offsetTop.toString())
+      console.log('e - ', e)
+      console.log('e.pageY - ', e.pageY, 'item - ', item)
+      console.log('e.clientY - ', e.target.clientY, 'item - ', item)
+      console.log(' высота -',  e.target.offsetTop)
+    },
+    onDrop(e){
+      console.log('e onDrop- ', e)
+      const item = parseInt(e.dataTransfer.getData('item'))
+      const pageY = parseInt(e.dataTransfer.getData('pageY'))
+      const yEl = e.target.offsetParent.offsetTop + e.target.offsetTop + e.target.clientHeight/2 + 170
+      console.log('e.pageY - ', e.pageY, 'yEl - ', yEl, 'item - ', item)
+      // console.log(e.toElement.attributes)
+      console.log(e.toElement.attributes.dataname.value)
+      if (e.pageY > yEl  ) {
+        this.answers[item].sort = parseInt(e.toElement.attributes.dataname.value) + 0.5
+      } else this.answers[item].sort = parseInt(e.toElement.attributes.dataname.value) - 0.5
+      this.drag = false
     }
-     
-    
   } 
 }
 
@@ -182,6 +225,9 @@ export default {
       min-height: 1.5rem;
       padding-left: 1.5rem;
       flex-wrap:wrap;
+      background-color: rgb(158, 155, 151);
+      margin: 2px;
+      border-radius: 10px;
       &-label {
         position: relative;
         margin-bottom: 0;
@@ -197,7 +243,15 @@ export default {
     &-close{
       cursor: pointer;
     }
-}
+  }
+  .block_drop{
+    position: absolute;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+    
+    left: 0;
+  }
   .f_sm {
       font-size: 0.9rem;
   }
