@@ -3,7 +3,7 @@
     <div class="card flex-shrink-1 shadow">
       <label  >Введите вопрос</label>
       <div class="img_block">
-        <textarea rows="2"  name="question-title"
+        <textarea rows="2"  name="question[title]"
           v-model="questionTitle"
           class="textarea_input" 
         >
@@ -14,7 +14,7 @@
         ></i>
       </div>
       <input type="hidden" 
-        id="trueanswer"
+        id="question[answer]"
         name="answer_true" 
         :value="answerSelect"
       >
@@ -33,7 +33,7 @@
         <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
         <input  class="" type="file" accept="image/*"  
           @change="changeQuestionImg" 
-          name="question_img"
+          name="question[img]"
           :value="questionImgValue"
         >
         
