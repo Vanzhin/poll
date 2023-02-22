@@ -382,7 +382,8 @@ const actions = {
           commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-        console.log(e.message);
+        console.log(e);
+        const err = e.response.data.message
     }
   },
   async saveQuestionDb({ commit, state }, {token, questionSend} ){

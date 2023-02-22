@@ -58,11 +58,11 @@
 </template>
 
 <script>
-import TestQuestionRadio from '../components/TestQuestionRadio.vue'
-import TestQuestionCheckbox from '../components/TestQuestionCheckbox.vue'
-import TestQuestionOrdered from '../components/TestQuestionOrdered.vue'
-import TestQuestionInputOne from '../components/TestQuestionInputOne.vue'
-import TestQuestionConformity from '../components/TestQuestionConformity.vue'
+import TestQuestionRadio from '../components/TestQuestion/TestQuestionRadio.vue'
+import TestQuestionCheckbox from '../components/TestQuestion/TestQuestionCheckbox.vue'
+import TestQuestionOrdered from '../components/TestQuestion/TestQuestionOrdered.vue'
+import TestQuestionInputOne from '../components/TestQuestion/TestQuestionInputOne.vue'
+import TestQuestionConformity from '../components/TestQuestion/TestQuestionConformity.vue'
 import Timer from '../components/ui/Timer.vue'
 import Loader from '../components/ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"

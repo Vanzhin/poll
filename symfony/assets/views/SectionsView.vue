@@ -39,7 +39,7 @@
 </template>
  
 <script>
-import TestQuestion from '../components/TestQuestionRadio.vue'
+import TestQuestion from '../components/TestQuestion/TestQuestionRadio.vue'
 import { RouterLink } from 'vue-router'
 export default {
   components: {

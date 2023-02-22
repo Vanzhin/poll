@@ -15,7 +15,7 @@
       </div>
       <input type="hidden" 
         id="trueanswer"
-        name="question[answer]" 
+        name="question[answer][]" 
         :value="answerSelect"
       >
       <div class="mb-3 w-100">

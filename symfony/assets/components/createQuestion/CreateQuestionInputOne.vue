@@ -38,7 +38,7 @@
       <div class="custom-control ">
         <div class="custom-radio img_block">
           <input  
-            name="question[answer]"
+            name="question[answer][]"
             v-model="answers"
             class="custom-control-input" required  
           >

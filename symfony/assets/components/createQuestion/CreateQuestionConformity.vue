@@ -1,7 +1,7 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <label  >Введите вопрос</label>
+      <label>Введите вопрос</label>
       <div class="img_block">
         <textarea rows="2"  name="question[title]" required
           v-model="questionTitle"
@@ -36,17 +36,16 @@
           name="question[img]"
           :value="questionImgValue"
         >
-        
       </div>
       <hr>
-      <i class="i">Введите варианты ответов в правильной последовательности.</i>
+      <i class="i">Введите пары соответсвтвий. Расположите их в нужной последовательности.</i>
       <div class="block_number">
-        <label for="number" class="label"> Количество ответов</label>
+        <label for="number" class="label"> Количество соответсвтвий:</label>
         <input id="number" type="number"
           v-model="numberAnswers"
           @change="changeNumberAnswers"
         >
-        {{ answerSelect }}
+        
       </div>
       <div  
         @drop="onDrop($event)"
@@ -61,20 +60,31 @@
           :dataname="answer.sort"
         >
           <div :class="{block_drop: drag}"           :dataname="answer.sort"></div>
-            <div class="custom-radio" >
-              <div class="custom-radio img_block">
+            <div class="custom-radio row" >
+              <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <textarea rows="1" required
                   :name="`question[variant][${ind}][title]`"
-                  
                   v-model.lazy= "answer.title"
                   class="textarea_input" 
                 >
                 </textarea> 
-                <i class="bi bi-x-lg custom-close" title="Удалить ответ"
-                    @click="answerDelete(ind)"
-                    v-if="answers.length > 1"
-                ></i>
               </div>
+              <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
+                <div class="row d-flex align-items-center">
+                  <input required
+                    :name="`question[subTitle][${ind}]`"
+                    v-model.lazy= "answer.subTitle"
+                    class="input" 
+                  >
+                 
+                    <i class="bi bi-x-lg custom-close" title="Удалить пару"
+                      @click="answerDelete(ind)"
+                      v-if="answers.length > 1"
+                    ></i>
+                 
+                </div>
+              </div>
+              
             </div>
             <div class="mb-3 w-100">
               <div class="img_block">
@@ -84,7 +94,7 @@
                 <i class="bi bi-x-lg custom-close" title="Удалить изображение"
                   @click="answerImgDelete(ind)"
                 v-if="typeof answer.file === 'object'"
-              ></i>
+                ></i>
               </div> 
               <label class="label">Прикрепить изображение </label>
               
@@ -97,16 +107,22 @@
             </div>
           
         </div>
-        <br>
+        <hr>
       </div>
+<!-- /// -->
+     <ConformityRichtAdd
+      :richtVariant="answers.length"
+     />
     </div>       
   </div>
 </template>
 <script>
 
-import { SlickList, SlickItem } from 'vue-slicksort';
+import  ConformityRichtAdd from './ConformityRichtAdd.vue';
 export default {
-  props: ['qestion', 'index' ],
+  components: {
+    ConformityRichtAdd
+  },
   
   data() {
     return {
@@ -121,8 +137,10 @@ export default {
         file: "",
         url: "",
         value: "",
+        subTitle: "",
         sort: 0,
       }],
+      
       numberAnswers: 1,
       showPreviewQuestionImg: false,
       drag: false,
@@ -145,6 +163,7 @@ export default {
           file: "",
           url: "",
           value: "",
+          subTitle: "",
           sort: this.answers.length 
         })
       } else {
@@ -214,7 +233,8 @@ export default {
       display: flex;
       align-items:center;
       min-height: 1.5rem;
-      padding-left: 1.5rem;
+      padding-left:20px;
+      padding-right: 10px;
       flex-wrap:wrap;
       background-color: rgb(158, 155, 151);
       margin: 2px;
@@ -229,11 +249,31 @@ export default {
     &-radio{
       display: flex;
       align-items:center;
+      flex-wrap:wrap;
       width: 100%;
     }
     &-close{
       cursor: pointer;
+      transition: all 0.5s ease-out;
+      width: 20px;
+      &:hover{
+        color: rgb(185, 48, 14);
+        transform: scale(1.25);
+      }
+      &-block{
+        width: 15px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        margin: 5px;
+      }
     }
+  }
+  .colum{
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    min-width: 300px;
   }
   .block_drop{
     position: absolute;
@@ -256,11 +296,16 @@ export default {
     margin: 0 10px;
   }
   .textarea_input{
-    max-width: 50%;
+    width: 100%;
     padding: 0;
     padding-left: 10px;
     margin: 5px;
   }
+  .input{
+    width: 80%;  
+    padding: 0;
+    padding-left: 10px;
+    margin: 5px;}
   .img_block{
     display: flex;
     align-items: flex-start;

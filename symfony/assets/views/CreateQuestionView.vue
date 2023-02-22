@@ -52,9 +52,9 @@
           <CreateQuestionOrdered
             v-else-if="selectTypeQuestion.type === 'order'"
           />
-          <!--<CreateQuestionConformity
+          <CreateQuestionConformity
             v-else-if="selectTypeQuestion.type === 'conformity'"
-          /> -->
+          />
           <br> 
           <div style="width: 100%;">
             <MessageView
@@ -70,7 +70,7 @@
  
 <script>
   import MessageView from "../components/ui/MessageView.vue"
-  
+  import CreateQuestionConformity from '../components/createQuestion/CreateQuestionConformity.vue'
   import CreateQuestionInputOne from '../components/createQuestion/CreateQuestionInputOne.vue'
   import CreateQuestionCheckbox from '../components/createQuestion/CreateQuestionCheckbox.vue'
   import CreateQuestionRadio from '../components/createQuestion/CreateQuestionRadio.vue'
@@ -82,6 +82,7 @@
       CreateQuestionRadio,
       CreateQuestionInputOne,
       CreateQuestionOrdered,
+      CreateQuestionConformity,
       MessageView
     },
     data() {
@@ -124,7 +125,7 @@
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       onSubmit(e){
-        const trueAnswer = Array.from(e.target).filter(inp => inp.name === "question[answer]")
+        const trueAnswer = Array.from(e.target).filter(inp => inp.name === "question[answer][]")
         if (!trueAnswer[0].value) {
           this.message = {
             mes: 'Укажите правильный ответ!'

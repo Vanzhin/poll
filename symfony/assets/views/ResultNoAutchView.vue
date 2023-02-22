@@ -41,7 +41,7 @@
 
 <script>
 
-import ResultTestQuestion from '../components/ResultTestQuestion.vue'
+import ResultTestQuestion from '../components/ResultQuestion/ResultTestQuestion.vue'
 import Loader from '../components/ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {

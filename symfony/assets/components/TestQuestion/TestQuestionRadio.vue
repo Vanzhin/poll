@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-// v-model="answer"
+
 export default {
   props: ['qestion', 'index' ],
   data() {

@@ -48,10 +48,10 @@
 
 <script>
 
-import ResultTestQuestionCheckbox from '../components/ResultTestQuestionCheckbox.vue'
-import ResultTestQuestionInputOne from '../components/ResultTestQuestionInputOne.vue'
-import ResultTestQuestionOrdered from '../components/ResultTestQuestionOrdered.vue'
-import ResultTestQuestionConformity from '../components/ResultTestQuestionConformity.vue'
+import ResultTestQuestionCheckbox from '../components/ResultQuestion/ResultTestQuestionCheckbox.vue'
+import ResultTestQuestionInputOne from '../components/ResultQuestion/ResultTestQuestionInputOne.vue'
+import ResultTestQuestionOrdered from '../components/ResultQuestion/ResultTestQuestionOrdered.vue'
+import ResultTestQuestionConformity from '../components/ResultQuestion/ResultTestQuestionConformity.vue'
 import Loader from '../components/ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
