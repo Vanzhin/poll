@@ -14,7 +14,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
     message: 'Вариант с таким названием уже существует для этого вопроса',
 )]
 #[ORM\UniqueConstraint('variant_question_idx',['title', 'question_id'])]
-// #[ORM\Table(name="ecommerce_products",uniqueConstraints={@UniqueConstraint(name="search_idx", columns={"name", "email"})})]
 
 class Variant
 {
@@ -33,6 +32,9 @@ class Variant
     #[ORM\ManyToOne(inversedBy: 'variant')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Question $question = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
 
     public function getId(): ?int
     {
@@ -71,6 +73,18 @@ class Variant
     public function setQuestion(?Question $question): self
     {
         $this->question = $question;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

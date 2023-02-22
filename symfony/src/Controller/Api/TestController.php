@@ -4,7 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Test;
 use App\Repository\TestRepository;
-use App\Service\QuestionService;
+use App\Service\QuestionHandler;
 use App\Service\SessionService;
 use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,19 +39,19 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_question', methods: ['GET'])]
-    public function getRandomQuestion(Test $test, TestRepository $testRepository, QuestionService $questionService, SessionService $sessionService, int $count): JsonResponse
+    public function getRandomQuestion(Test $test, TestRepository $testRepository, QuestionHandler $questionService, SessionService $sessionService, int $count): JsonResponse
     {
         try {
-            $sessionService->remove(QuestionService::SHUFFLED);
+            $sessionService->remove(QuestionHandler::SHUFFLED);
             $questions = $questionService->getPreparedQuestions($testRepository->getRandomQuestions($test, $count));
             $response = [
                 'test' => $test->getTitle(),
                 'questions' => $questions
             ];
-            $sessionService->add($questionService->prepareForSession($questions), QuestionService::SHUFFLED);
+            $sessionService->add($questionService->prepareForSession($questions), QuestionHandler::SHUFFLED);
 
             $status = 200;
-//            $sessionService->show(QuestionService::SHUFFLED);
+//            $sessionService->show(QuestionHandler::SHUFFLED);
         } catch (Exception $e) {
             $response = ['error' => $e->getMessage()];
             $status = 422;
@@ -65,7 +65,7 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/handle', name: 'app_api_test_handle', methods: ['POST'])]
-    public function handle(Request $request, QuestionService $questionService): JsonResponse
+    public function handle(Request $request, QuestionHandler $questionService): JsonResponse
     {
 
         $data = json_decode($request->getContent(), true);
@@ -87,7 +87,7 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/auth/test/handle', name: 'app_api_auth_test_handle', methods: ['POST'])]
-    public function handleByUser(Request $request, QuestionService $questionService, SessionService $sessionService): JsonResponse
+    public function handleByUser(Request $request, QuestionHandler $questionService, SessionService $sessionService): JsonResponse
     {
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
@@ -100,7 +100,7 @@ class TestController extends AbstractController
             $status = 422;
 
         } finally {
-            $sessionService->remove(QuestionService::SHUFFLED);
+            $sessionService->remove(QuestionHandler::SHUFFLED);
             return $this->json($response,
                 $status,
                 ['charset=utf-8'],

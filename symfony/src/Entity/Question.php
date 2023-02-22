@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
 {
@@ -45,6 +46,9 @@ class Question
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class)]
     #[Groups(['main'])]
     private Collection $variant;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
 
     public function __construct()
     {
@@ -189,6 +193,18 @@ class Question
                 $variant->setQuestion(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

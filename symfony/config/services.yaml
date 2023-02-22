@@ -12,11 +12,29 @@ parameters:
     app.default_from_email: '%env(DEFAULT_FROM_ADDR)%'
     app.default_from_name: '%env(DEFAULT_FROM_NAME)%'
 
+    question_upload: 'uploads/question'
+    question_upload_url: '%env(SITE_URL)%/%question_upload%'
+    question_upload_dir: '%kernel.project_dir%/public/%question_upload%'
+
+    variant_upload: 'uploads/variant'
+    variant_upload_url: '%env(SITE_URL)%/%variant_upload%'
+    variant_upload_dir: '%kernel.project_dir%/public/%variant_upload%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+        bind:
+
+            # при создании экземпляра App\Service\FileUploader с именем переменной $questionImageUploader выполняется тот или иной сервис (описан ниже)
+
+            App\Service\FileUploader $questionImageUploader: '@image_uploader.question'
+            App\Service\FileUploader $variantImageUploader: '@image_uploader.variant'
+        #      League\Flysystem\Filesystem $articleFileSystem: '@oneup_flysystem.upload_articles_filesystem'
+        #      League\Flysystem\Filesystem $avatarFileSystem: '@oneup_flysystem.upload_avatar_filesystem'
+
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -29,7 +47,16 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    image_uploader.question:
+        class: App\Service\FileUploader
+        arguments:
+            $fileSystem: '@oneup_flysystem.upload_question_filesystem'
 
+
+    image_uploader.variant:
+        class: App\Service\FileUploader
+        arguments:
+            $fileSystem: '@oneup_flysystem.upload_variant_filesystem'
     App\Service\Mailer:
         arguments:
             $appName: '%app.name%'
