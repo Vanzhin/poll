@@ -19,35 +19,38 @@ class Question
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?string $title = null;
 
     #[ORM\Column]
+    #[Groups(['main', 'admin'])]
     private array $answer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
+    #[Groups(['main', 'admin'])]
     private Collection $tickets;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private array $subTitle = [];
 
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class)]
-    #[Groups(['main'])]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
+    #[Groups(['main', 'admin'])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['main', 'admin'])]
     private ?string $image = null;
 
     public function __construct()

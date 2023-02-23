@@ -2,13 +2,17 @@
 
 namespace App\Service;
 
+use App\Entity\Question;
 use App\Entity\Type;
+use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\IsFalse;
+use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -82,7 +86,7 @@ class ValidationService
 
     }
 
-    public function questionValidate(array $data, FileBag $files = null): ?array
+    public function questionValidate(array $data, File $image = null): ?array
     {
         $errors = [];
         foreach ($data as $key => $value) {
@@ -93,6 +97,7 @@ class ValidationService
                     ]),
 
                 ]);
+
                 foreach ($violations as $violation) {
                     $errors[] = $violation->getMessage();
                 }
@@ -111,24 +116,19 @@ class ValidationService
                 continue;
 
             }
-            if ($key === 'variant') {
-                if (!is_null($this->variantValidate($value))) {
-                    $errors[] = implode(',', $this->variantValidate($value));
-                }
-            }
+//            if ($key === 'variant') {
+//                if (!is_null($this->variantValidate($value))) {
+//                    $errors[] = implode(',', $this->variantValidate($value));
+//                }
+//            }
 
         }
-        if($files && $files->keys()){
-            foreach ($files->keys() as $key){
-                if ($files->has($key)) {
-                    foreach ($files->get($key)['img'] ?? [] as $image) {
-                        if (!is_null($this->imageValidate($image))) {
-                            $errors[] = implode(',', $this->imageValidate($image)) ;
-                        };
-                    };
-                }
-            }
-        }
+        if ($image) {
+
+            if (!is_null($this->imageValidate($image))) {
+                $errors[] = implode(',', $this->imageValidate($image));
+            };
+        };
 
 
         if (count($errors) === 0) {
@@ -156,30 +156,79 @@ class ValidationService
         return $errors;
     }
 
-    public function variantValidate(array $data): ?array
+    public function variantValidate(array $data, File $image = null): ?array
     {
-        $errors = [];
+        $question = isset($data['questionId']) ? $this->em->find(Question::class, $data['questionId']) : null;
+        if (!$question) {
+            return ['Соответствующий вопрос не найден'];
+        } else {
+            $errors = [];
+            foreach ($data as $key => $value) {
+                if ($key === 'title') {
+                    $violations = $this->validator->validate($value, [
+                        new NotBlank([
+                            'message' => 'variant.title.not_blank'
+                        ]),
 
-        $variants = [];
-        foreach ($data as $item) {
-            $variants[] = $item['title'];
+                    ]);
+                    $isUnique = !$question->getVariant()->contains($this->em->getRepository(Variant::class)->findOneBy(['title' => $value, 'question' => $question]));
+                    $unique = $this->validator->validate($isUnique, [
+                        new IsTrue([
+                            'message' => 'question.variants.unique'
+                        ]),
+
+                    ]);
+                    foreach ($unique as $violation) {
+                        $errors[] = $violation->getMessage();
+                    }
+
+                    foreach ($violations as $violation) {
+                        $errors[] = $violation->getMessage();
+                    }
+                    continue;
+                }
+                if ($key === 'weight') {
+                    $violations = $this->validator->validate($value, [
+                        new LessThanOrEqual([
+                            'value' => 100,
+                            'message' => "variant.weight.greater_than"
+                        ]),
+
+                    ]);
+                    foreach ($violations as $violation) {
+                        $errors[] = $violation->getMessage();
+                    }
+                    continue;
+
+                }
+                if ($key === 'correct') {
+                    $violations = $this->validator->validate($value === 'true' || $value === 'false', [
+                        new IsTrue([
+                            'message' => 'variant.correct'
+                        ]),
+
+                    ]);
+                    foreach ($violations as $violation) {
+                        $errors[] = $violation->getMessage();
+                    }
+                    continue;
+
+                }
+            }
+            if ($image) {
+
+                if (!is_null($this->imageValidate($image))) {
+                    $errors[] = implode(',', $this->imageValidate($image));
+                };
+            };
+
+            if (count($errors) === 0) {
+                return null;
+            }
+
+            return $errors;
         }
 
-        $variantsWithoutNull = array_filter($variants, fn($value) => !is_null($value) && $value !== '');
-        $violations = $this->validator->validate((count(array_unique($variants)) < count($variants) || count($variantsWithoutNull) < count($variants)), [
-            new IsFalse([
-                'message' => 'question.variants.unique'
-            ]),
 
-        ]);
-        foreach ($violations as $violation) {
-            $errors[] = $violation->getMessage();
-        }
-
-        if (count($errors) === 0) {
-            return null;
-        }
-
-        return $errors;
     }
 }

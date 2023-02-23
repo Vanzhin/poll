@@ -2,9 +2,9 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Question;
-use App\Service\QuestionService;
+use App\Entity\Variant;
 use App\Service\ValidationService;
+use App\Service\VariantService;
 use League\Flysystem\FilesystemException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,34 +12,27 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class QuestionController extends AbstractController
+class VariantController extends AbstractController
 {
-    #[Route('/api/question', name: 'app_api_question')]
-    public function index(): Response
-    {
-        return $this->render('api/question/index.html.twig', [
-            'controller_name' => 'QuestionController',
-        ]);
-    }
-    #[Route('/api/question/{id}', name: 'app_api_question_show', methods: ['GET'])]
-    public function show(Question $question): JsonResponse
+    #[Route('/api/variant/{id}', name: 'app_api_variant_show', methods: ['GET'])]
+    public function show(Variant $variant): JsonResponse
     {
 
         return $this->json(
-            $question,
+            $variant,
             200,
             ['charset=utf-8'],
             ['groups' => 'admin'],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    #[Route('/api/question/create', name: 'app_api_question_create', methods: 'POST')]
-    public function create(Request $request, QuestionService $questionService, ValidationService $validation): JsonResponse
+    #[Route('/api/variant/create', name: 'app_api_variant_create', methods: 'POST')]
+    public function create(Request $request, VariantService $variantService, ValidationService $validation): JsonResponse
     {
         $data = $request->request->all();
-        $image = $request->files->get('questionImage');
+        $image = $request->files->get('variantImage');
 
-        $errors = $validation->questionValidate($data['question'] ?? [], $image);
+        $errors = $validation->variantValidate($data['variant'] ?? [], $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -50,10 +43,10 @@ class QuestionController extends AbstractController
         }
 
         try {
-            $question = $questionService->save(new Question(), $data['question'] ?? [], $image);
+            $variant = $variantService->save(new Variant(), $data['variant'] ?? [], $image);
             $response = [
-                'message' => 'Вопрос создан',
-                'questionId' => $question->getId()
+                'message' => 'Вариант создан',
+                'variantId' => $variant->getId()
             ];
             $status = 200;
         } catch (\Exception $e) {
@@ -70,13 +63,14 @@ class QuestionController extends AbstractController
         }
 
     }
-    #[Route('/api/question/{id}/edit', name: 'app_api_question_edit', methods: 'POST')]
-    public function edit(Question $question, Request $request, QuestionService $questionService, ValidationService $validation): JsonResponse
+
+    #[Route('/api/variant/{id}/edit', name: 'app_api_variant_edit', methods: 'POST')]
+    public function edit(Variant $variant, Request $request, VariantService $variantService, ValidationService $validation): JsonResponse
     {
         $data = $request->request->all();
-        $image = $request->files->get('questionImage');
+        $image = $request->files->get('variantImage');
 
-        $errors = $validation->questionValidate($data['question'] ?? [], $image);
+        $errors = $validation->variantValidate($data['variant'] ?? [], $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -87,10 +81,10 @@ class QuestionController extends AbstractController
         }
 
         try {
-            $updated = $questionService->save($question, $data['question'] ?? [], $image);
+            $variant = $variantService->save($variant, $data['variant'] ?? [], $image);
             $response = [
-                'message' => 'Вопрос обновлен',
-                'questionId' => $updated->getId()
+                'message' => 'Вариант обновлен',
+                'variantId' => $variant->getId()
             ];
             $status = 200;
         } catch (\Exception $e) {
@@ -107,14 +101,14 @@ class QuestionController extends AbstractController
         }
 
     }
-    #[Route("api/question/{id}/delete", name: 'app_api_question_delete')]
-    public function delete(Question $question, QuestionService $questionService): Response
+
+    #[Route("api/variant/{id}/delete", name: 'app_api_variant_delete')]
+    public function delete(Variant $variant, VariantService $variantService): Response
     {
         try {
-            $questionService->delete($question);
-
+            $variantService->delete($variant);
             $response = [
-                'message' => 'Вопрос удален',
+                'message' => 'Вариант удален',
             ];
             $status = 200;
         } catch (\Exception $e) {

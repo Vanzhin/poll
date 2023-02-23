@@ -6,7 +6,7 @@ use App\Entity\Question;
 use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
-use Symfony\Component\HttpFoundation\FileBag;
+use Symfony\Component\HttpFoundation\File\File;
 
 class VariantService
 {
@@ -17,11 +17,37 @@ class VariantService
     /**
      * @throws FilesystemException
      */
-    public function save(Variant $variant, array $data, Question $question = null, FileBag $files = null): Variant
+    public function save(Variant $variant, array $data, File $image = null): Variant
     {
+        $question = $this->em->find(Question::class, $data['questionId']);
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $variant->setTitle($item);
+                continue;
+            };
+            if ($key === 'correct') {
+                switch ($question->getType()->getTitle()) {
+                    case 'radio':
+                        if ($item === 'true') {
+                            $question->setAnswer([$variant->getId()]);
+                        }
+                        break;
+                    case 'order':
+                    case 'input_one':
+
+                        break;
+                    case 'conformity':
+
+                        break;
+                    case 'checkbox':
+                    case 'checkbox_picture':
+
+                        break;
+//            case 'input_many':
+//            case 'blank':
+
+                }
+
                 continue;
             };
 
@@ -35,20 +61,28 @@ class VariantService
         if ($question) {
             $variant->setQuestion($question);
         }
-        if($files && $files->keys()){
-            foreach ($files->keys() as $key){
-                if ($key ==='variant') {
-                    foreach ($files->get($key)['img'] ?? [] as $image) {
-                        $variant->setImage($this->variantImageUploader->uploadImage($image));
-                    };
-                }
-            }
-        }
 
-
+        if ($image) {
+            $variant->setImage($this->variantImageUploader->uploadImage($image, $variant->getImage()));
+        };
 
         $this->em->persist($variant);
         $this->em->flush();
         return $variant;
+    }
+
+    public function delete(Variant $variant): void
+    {
+        $answers = $variant->getQuestion()->getAnswer();
+        $keys = array_keys($answers, $variant->getId());
+        foreach ($keys as $key) {
+            unset($answers[$key]);
+        }
+
+        $question = $variant->getQuestion()->setAnswer($answers);
+        $this->variantImageUploader->delete($variant->getImage());
+        $this->em->persist($question);
+        $this->em->remove($variant);
+        $this->em->flush();
     }
 }

@@ -8,19 +8,23 @@ use App\Entity\Type;
 use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
-use Symfony\Component\HttpFoundation\FileBag;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class QuestionService
 {
 
-    public function __construct(private readonly EntityManagerInterface $em, private readonly FileUploader $questionImageUploader)
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly FileUploader $questionImageUploader,
+        private readonly FileUploader $variantImageUploader
+    )
     {
     }
 
     /**
      * @throws FilesystemException
      */
-    public function save(Question $question, array $data, FileBag $files = null): Question
+    public function save(Question $question, array $data, UploadedFile $image = null): Question
     {
         foreach ($data as $key => $item) {
             if ($key === 'title') {
@@ -33,21 +37,16 @@ class QuestionService
 
             };
             if ($key === 'answer') {
-                if ($question->getVariant()->count() > 0) {
-                    $answers = [];
-                    foreach ($item as $variantId) {
-                        $answer = $this->em->getRepository(Variant::class)->find($variantId);
-                        if ($answer) {
-                            $answers[] += $variantId;
-
-                        }
-                    }
-                    $question->setAnswer($answers);
+                if(in_array($question->getType()->getTitle(),['input_one', 'input_many'])){
+                    $question->setAnswer($item);
                 }
                 continue;
 
             };
             if ($key === 'ticket') {
+                foreach ($question->getTickets() as $ticket){
+                    $question->removeTicket($ticket);
+                }
                 foreach ($item as $ticketId) {
                     $ticket = $this->em->getRepository(Ticket::class)->find($ticketId);
                     if ($ticket) {
@@ -64,15 +63,9 @@ class QuestionService
             }
         }
 
-        if ($files && $files->keys()) {
-            foreach ($files->keys() as $key) {
-                if ($key === 'question') {
-                    foreach ($files->get($key)['img'] ?? [] as $image) {
-                        $question->setImage($this->questionImageUploader->uploadImage($image));
-                    };
-                }
-            }
-        }
+        if ($image) {
+            $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
+        };
 
 
         $this->em->persist($question);
@@ -92,5 +85,15 @@ class QuestionService
         }
 
         return $answers;
+    }
+    public function delete(Question $question): void
+    {
+        foreach($question->getVariant() as $variant){
+            $this->variantImageUploader->delete($variant->getImage());
+        };
+
+        $this->questionImageUploader->delete($question->getImage());
+        $this->em->remove($question);
+        $this->em->flush();
     }
 }

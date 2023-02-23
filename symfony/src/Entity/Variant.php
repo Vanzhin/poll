@@ -20,10 +20,11 @@ class Variant
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['main', 'admin'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
@@ -34,6 +35,7 @@ class Variant
     private ?Question $question = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['main', 'admin'])]
     private ?string $image = null;
 
     public function getId(): ?int

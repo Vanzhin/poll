@@ -9,3 +9,8 @@ question.title.not_blank: Содержание вопроса не может б
 question.type.invalid: Типа вопроса с таким названием не существует
 question.variants.unique: Вопрос не может содержать одинаковых вариантов/ вариантов без названия
 question.image.size: Размер изображения больше
+
+variant.title.not_blank: Содержание варианта не может быть пустым
+variant.weight.greater_than: Вес вопроса не может быть больше 100
+variant.correct: Не верный формат ответа
+
