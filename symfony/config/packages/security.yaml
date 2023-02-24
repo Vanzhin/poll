@@ -16,6 +16,10 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js|uploads)/
             security: false
 
+        image_resolver:
+            pattern: ^/media/cache/resolve
+            security: false
+
         login:
             provider: app_user_provider
             pattern: ^/api/login

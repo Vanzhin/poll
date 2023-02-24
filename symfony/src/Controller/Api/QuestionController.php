@@ -5,7 +5,10 @@ namespace App\Controller\Api;
 use App\Entity\Question;
 use App\Service\QuestionService;
 use App\Service\ValidationService;
+use App\Twig\Extension\AppUpLoadedAsset;
 use League\Flysystem\FilesystemException;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
+use Liip\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,9 +26,13 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/question/{id}', name: 'app_api_question_show', methods: ['GET'])]
-    public function show(Question $question): JsonResponse
+    public function show(Question $question, AppUpLoadedAsset $upLoadedAsset, CacheManager $imagineCacheManager): JsonResponse
     {
 
+//        dd($upLoadedAsset->asset('question_upload',$question->getImage()));
+        $resolvedPath = $imagineCacheManager->getBrowserPath($question->getImage(), 'question_thumb');
+
+        dd($resolvedPath);
         return $this->json(
             $question,
             200,
