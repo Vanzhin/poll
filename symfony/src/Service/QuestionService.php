@@ -15,8 +15,8 @@ class QuestionService
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly FileUploader $questionImageUploader,
-        private readonly FileUploader $variantImageUploader
+        private readonly FileUploader           $questionImageUploader,
+        private readonly FileUploader           $variantImageUploader
     )
     {
     }
@@ -37,14 +37,14 @@ class QuestionService
 
             };
             if ($key === 'answer') {
-                if(in_array($question->getType()->getTitle(),['input_one', 'input_many'])){
+                if (in_array($question->getType()->getTitle(), ['input_one', 'input_many'])) {
                     $question->setAnswer($item);
                 }
                 continue;
 
             };
             if ($key === 'ticket') {
-                foreach ($question->getTickets() as $ticket){
+                foreach ($question->getTickets() as $ticket) {
                     $question->removeTicket($ticket);
                 }
                 foreach ($item as $ticketId) {
@@ -86,9 +86,10 @@ class QuestionService
 
         return $answers;
     }
+
     public function delete(Question $question): void
     {
-        foreach($question->getVariant() as $variant){
+        foreach ($question->getVariant() as $variant) {
             $this->variantImageUploader->delete($variant->getImage());
         };
 

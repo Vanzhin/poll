@@ -25,31 +25,6 @@ class VariantService
                 $variant->setTitle($item);
                 continue;
             };
-            if ($key === 'correct') {
-                switch ($question->getType()->getTitle()) {
-                    case 'radio':
-                        if ($item === 'true') {
-                            $question->setAnswer([$variant->getId()]);
-                        }
-                        break;
-                    case 'order':
-                    case 'input_one':
-
-                        break;
-                    case 'conformity':
-
-                        break;
-                    case 'checkbox':
-                    case 'checkbox_picture':
-
-                        break;
-//            case 'input_many':
-//            case 'blank':
-
-                }
-
-                continue;
-            };
 
         }
         if (isset($data['weight'])) {
@@ -57,7 +32,6 @@ class VariantService
         } else {
             $variant->setWeight(1);
         }
-
         if ($question) {
             $variant->setQuestion($question);
         }
@@ -66,18 +40,57 @@ class VariantService
             $variant->setImage($this->variantImageUploader->uploadImage($image, $variant->getImage()));
         };
 
+        if (!$variant->getId()) {
+            $this->em->persist($variant);
+            $this->em->flush();
+        }
+
+        switch ($question->getType()->getTitle()) {
+            case 'radio':
+                if (isset($data['correct']) && $data['correct'] === 'true') {
+                    $answers = [$variant->getId()];
+                    $question->setAnswer($answers);
+
+                }
+
+                break;
+            case 'order':
+//            case 'conformity':
+
+                $answers = $question->getAnswer();
+                $answers[] = $variant->getId();
+                $question->setAnswer($answers);
+
+                break;
+            case 'checkbox':
+            case 'checkbox_picture':
+                $answers = $question->getAnswer();
+                if (isset($data['correct']) && $data['correct'] === 'true') {
+                    $answers[] = $variant->getId();
+                } else {
+                    $answers = array_filter($answers, function ($variantId) use ($variant) {
+                        return $variantId !== $variant->getId();
+                    });
+
+                }
+                $question->setAnswer($answers);
+
+                break;
+
+        }
+
+
         $this->em->persist($variant);
         $this->em->flush();
         return $variant;
+
     }
 
     public function delete(Variant $variant): void
     {
-        $answers = $variant->getQuestion()->getAnswer();
-        $keys = array_keys($answers, $variant->getId());
-        foreach ($keys as $key) {
-            unset($answers[$key]);
-        }
+        $answers = array_filter($variant->getQuestion()->getAnswer(), function ($variantId) use ($variant) {
+            return $variantId !== $variant->getId();
+        });
 
         $question = $variant->getQuestion()->setAnswer($answers);
         $this->variantImageUploader->delete($variant->getImage());

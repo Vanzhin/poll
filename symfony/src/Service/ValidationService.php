@@ -9,16 +9,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Constraints\IsFalse;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Unique;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\HttpFoundation\FileBag;
 
 class ValidationService
 {
@@ -116,12 +113,6 @@ class ValidationService
                 continue;
 
             }
-//            if ($key === 'variant') {
-//                if (!is_null($this->variantValidate($value))) {
-//                    $errors[] = implode(',', $this->variantValidate($value));
-//                }
-//            }
-
         }
         if ($image) {
 
@@ -229,6 +220,29 @@ class ValidationService
             return $errors;
         }
 
+    }
 
+    public function manyVariantsValidate(array $data, array $images = null): ?array
+    {
+        $errors = [];
+        $variantTitles = [];
+        foreach ($data['variant'] ?? [] as $key => $variantData) {
+            $image = $images[$key] ?? null;
+            $variantData['questionId'] = $data['questionId'];
+            $variantTitles[] = $variantData['title'];
+            if ($this->variantValidate($variantData ?? [], $image)) {
+                $errors[] = implode(',', $this->variantValidate($variantData ?? [], $image));
+            }
+        }
+
+        if (array_unique($variantTitles) !== $variantTitles) {
+            $errors[] = 'Название вариантов не может быть одинаковым';
+        }
+
+        if (count($errors) === 0) {
+            return null;
+        }
+
+        return $errors;
     }
 }

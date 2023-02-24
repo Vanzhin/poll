@@ -21,6 +21,7 @@ class QuestionController extends AbstractController
             'controller_name' => 'QuestionController',
         ]);
     }
+
     #[Route('/api/question/{id}', name: 'app_api_question_show', methods: ['GET'])]
     public function show(Question $question): JsonResponse
     {
@@ -70,6 +71,7 @@ class QuestionController extends AbstractController
         }
 
     }
+
     #[Route('/api/question/{id}/edit', name: 'app_api_question_edit', methods: 'POST')]
     public function edit(Question $question, Request $request, QuestionService $questionService, ValidationService $validation): JsonResponse
     {
@@ -107,6 +109,7 @@ class QuestionController extends AbstractController
         }
 
     }
+
     #[Route("api/question/{id}/delete", name: 'app_api_question_delete')]
     public function delete(Question $question, QuestionService $questionService): Response
     {
@@ -118,9 +121,6 @@ class QuestionController extends AbstractController
             ];
             $status = 200;
         } catch (\Exception $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } catch (FilesystemException $e) {
             $response = ['error' => $e->getMessage()];
             $status = 501;
         } finally {
