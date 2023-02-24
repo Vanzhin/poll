@@ -84,6 +84,7 @@ export default {
       cursor: pointer;
       transition: all 0.5s ease-out;
       margin-left: 5px;
+      transform: scale(1);
       &:hover{
         color: rgb(185, 48, 14);
         transform: scale(1.25);

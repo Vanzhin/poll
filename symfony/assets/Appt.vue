@@ -1,45 +1,33 @@
 <template>
-  <Headers/>
-  <div class="container">
-    <div class="wrapper">
-      <div class="head"></div>
-    </div>
-    <div class="wrapper">
+  
+    <component :is="layout" >
       <RouterView />
-    </div>
+    </component>
     
-  </div>
+ 
   
 
   
 </template>
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import Headers from './components/Headers.vue'
-
+import EmptyLayout from './layouts/EmptyLayout.vue'
+import PageLayout from './layouts/PageLayout.vue'
 export default {
   data() {
     return {
-      count: 0
+      
     }
   },
   computed:{
-    questions () {
-      return this.$store.getters.setQuestions
-    },
+    layout(){
+      return (this.$route.meta.loyout || 'page') + '-layout'
+    }
   },
   components: {
-    Headers,
+    EmptyLayout, PageLayout
   },
   
 } 
 </script>
 
-
-
-<style lang="scss">
-.head{
-  height: 80px;
-}
-
-</style>

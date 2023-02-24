@@ -1,6 +1,7 @@
 <template>
      <section class="wrapper">
       <div class="login-page">
+        <CloseView/>
         <form @submit.prevent="submit">
           <div class="login-page-text">Регистрация</div>
           <div class="form">
@@ -45,22 +46,22 @@
               />
             </div>
             <div>
-               <MessageView
+              <MessageView
                 v-if="getMessageLogin"
                 :message="getMessageLogin"
               />
-               
-              
             </div>
-             
             <div class="text-login">
-                  <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
-                     <p> Уже есть аккаунт</p>
-                  </RouterLink>
-               </div>
+              <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
+                <p> Войти по ссылке</p>
+              </RouterLink>
+            </div>
+            <div class="text-login">
+              <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
+                <p> Уже есть аккаунт</p>
+              </RouterLink>
+            </div>
             <input class="btn" type="submit" value="Зерегистрироваться"/> 
-           
-           
           </div>
         </form>
       </div>
@@ -69,10 +70,11 @@
  
 <script>
   import MessageView from "../components/ui/MessageView.vue"
+  import CloseView from "../components/ui/CloseView.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
-      MessageView
+      MessageView, CloseView
     },
     data() {
       return {
@@ -104,7 +106,6 @@
           console.log('Регистрация res -', res)
           if (res) {
             setTimeout(() => this.SET_MESSAGE_REQUEST(null), 5000);
-            
             return
           } else {
             setTimeout(() => this.SET_MESSAGE_REQUEST(null), 7000);

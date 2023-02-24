@@ -72,12 +72,21 @@ const actions = {
           //   return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
           // }).join(''));
           const base64 = atob(base64Url)
-          console.log("getLogInUser - ", JSON.parse(base64) )
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)
+          commit("SET_MESSAGE_REQUEST",{
+            mes: "Вы успешно авторизовались",
+            err: false
+          });
         })
+        return false
     } catch (e) {
-      console.log("ошибка - ", e)
+      // console.log("ошибка - ", e)
+      commit("SET_MESSAGE_REQUEST",{
+        mes:JSON.stringify(e.response.data.message),
+        err: true
+      });
+      return true
     }
   },
   //регистрация на сайте
@@ -103,7 +112,6 @@ const actions = {
             err: false
           });
           // commit("SET_IS_AUTCH_USER", true)
-          
         })
         return false
     } catch (e) {

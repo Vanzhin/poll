@@ -356,7 +356,7 @@ const actions = {
     }
   },
 
-  async setResultDb({ commit, state }, {token, userAuth} ){
+  async setResultDb({dispatch, commit, state }, {token, userAuth} ){
     console.log(JSON.stringify(state.resultTicketUser))
     commit("SET_LOADER_STATUS", true)
     try{
@@ -382,14 +382,12 @@ const actions = {
           console.log("setResultDb - ",  data)
           commit("SET_RESULT_QUESTIONS", data);
           commit("SET_LOADER_STATUS", false)
-          
         })
         const err = {
           errPrizn: false
         }
        return err
     } catch (e) {
-        console.log(e);
         const err = {
           mes: e.response.data.message,
           errPrizn: true
