@@ -170,7 +170,7 @@ const actions = {
     }
   },
   // повторное получение токена
-  async getAuthRefresh({dispatch, commit, state }, refresh_token) {
+  async getAuthRefresh({commit, state }, refresh_token) {
     let data = ''
     if (refresh_token) {
        data = JSON.stringify({"refresh_token":refresh_token})

@@ -1,42 +1,13 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <label>Введите вопрос</label>
-      <div class="img_block">
-        <textarea rows="2"  name="question[title]" required
-          v-model="questionTitle"
-          class="textarea_input" 
-        >
-        </textarea>
-        <i class="bi bi-x-lg custom-close" title="Очиститеть поле вопроса."
-          @click="questionTitle = ''"
-          v-if="questionTitle !== ''"
-        ></i>
-      </div>
+      <QuestionHeaderQuestion/>
+
       <input type="hidden" 
         id="trueanswer"
         name="question[answer][]" 
         :value="answerSelect"
       >
-      <div class="mb-3 w-100">
-        <div class="img_block">
-          <img :src="questionImgUrl" width="200" 
-            v-if="typeof questionImgFile === 'object'"
-          />  
-          <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-                @click="questionImgDelete()"
-              v-if="typeof questionImgFile === 'object'"
-          ></i>
-        </div>
-        <label class="label">Прикрепить изображение </label>
-        
-        <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
-        <input  class="" type="file" accept="image/*"  
-          @change="changeQuestionImg" 
-          name="question[img]"
-          :value="questionImgValue"
-        >
-      </div>
       <hr>
       <i class="i">Введите пары соответсвтвий. Расположите их в нужной последовательности.</i>
       <div class="block_number">
@@ -45,7 +16,6 @@
           v-model="numberAnswers"
           @change="changeNumberAnswers"
         >
-        
       </div>
       <div  
         @drop="onDrop($event)"
@@ -119,19 +89,16 @@
 <script>
 
 import  ConformityRichtAdd from './ConformityRichtAdd.vue';
+import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
 export default {
   components: {
-    ConformityRichtAdd
+    ConformityRichtAdd,
+    QuestionHeaderQuestion
   },
-  
   data() {
     return {
       count: 0,
       answerSelect: [1],
-      questionTitle: "",
-      questionImgFile: "",
-      questionImgUrl: "",
-      questionImgValue: "",
       answers: [{
         title: "",
         file: "",
@@ -140,7 +107,6 @@ export default {
         subTitle: "",
         sort: 0,
       }],
-      
       numberAnswers: 1,
       showPreviewQuestionImg: false,
       drag: false,
@@ -157,6 +123,10 @@ export default {
   },
   methods: {
     changeNumberAnswers(){
+      if (this.numberAnswers < 1) {
+        this.numberAnswers = 1
+        return
+      }
       if ( this.answers.length < this.numberAnswers) {
         this.answers.push({
           title: "",
@@ -168,13 +138,6 @@ export default {
         })
       } else {
         this.answers.pop()
-      }
-    },
-    changeQuestionImg(e){
-      if (typeof e.target.files[0] === 'object'){
-        this.questionImgFile = e.target.files[0]
-        this.questionImgUrl = URL.createObjectURL(e.target.files[0])
-        this.questionImgValue = e.target.value
       }
     },
     changeAnswerImg(e, ind){
@@ -194,11 +157,6 @@ export default {
       this.answers[ind].file = ''
       this.answers[ind].url = ''
       this.answers[ind].value = ''
-    },
-    questionImgDelete(){
-      this.questionImgFile = ''
-      this.questionImgUrl = ''
-      this.questionImgValue = ''
     },
     onDragStart(e , item) {
       this.drag = true
@@ -236,7 +194,7 @@ export default {
       padding-left:20px;
       padding-right: 10px;
       flex-wrap:wrap;
-      background-color: rgb(158, 155, 151);
+      background-color: rgb(162 177 174);
       margin: 2px;
       border-radius: 10px;
       &-label {

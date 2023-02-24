@@ -1,43 +1,13 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <label  >Введите вопрос</label>
-      <div class="img_block">
-        <textarea rows="2"  name="question[title]" required
-          v-model="questionTitle"
-          class="textarea_input" 
-        >
-        </textarea>
-        <i class="bi bi-x-lg custom-close" title="Очиститеть поле вопроса."
-          @click="questionTitle = ''"
-          v-if="questionTitle !== ''"
-        ></i>
-      </div>
+      <QuestionHeaderQuestion/>
+      
       <input type="hidden" 
-        id="trueanswer"
+        id="answer_true"
         name="question[answer][]" 
         :value="answerSelect"
       >
-      <div class="mb-3 w-100">
-        <div class="img_block">
-          <img :src="questionImgUrl" width="200" 
-            v-if="typeof questionImgFile === 'object'"
-          />  
-          <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-                @click="questionImgDelete()"
-              v-if="typeof questionImgFile === 'object'"
-          ></i>
-        </div>
-        <label class="label">Прикрепить изображение </label>
-        
-        <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
-        <input  class="" type="file" accept="image/*"  
-          @change="changeQuestionImg" 
-          name="question[img]"
-          :value="questionImgValue"
-        >
-        
-      </div>
       <hr>
       <i class="i">Введите варианты ответов.</i>
       <div class="block_number">
@@ -46,7 +16,7 @@
           v-model="numberAnswers"
           @change="changeNumberAnswers"
         >
-        {{ answerSelect }}
+        правильные ответы: {{ answerSelect }}
       </div>
       <div class="custom-control "
         v-for="(answer, ind ) in answers" 
@@ -62,10 +32,14 @@
             <textarea rows="1" required
               :name="`question[variant][${ind}][title]`"
               :id="'answer' +  (ind) " 
-              v-model.lazy= "answer.title"
+              v-model= "answer.title"
               class="textarea_input" 
             >
             </textarea> 
+            <i class="bi bi-eraser custom-close" title="Очиститеть поле ответа."
+              @click="answer.title = ''"
+              v-if="answer.title !== ''"
+            ></i>
             <i class="bi bi-x-lg custom-close" title="Удалить ответ"
                 @click="answerDelete(ind)"
                 v-if="answers.length > 1"
@@ -98,17 +72,16 @@
   </div>
 </template>
 <script>
-// v-model="answer"
+import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
 export default {
   props: ['qestion', 'index' ],
+  components: {
+    QuestionHeaderQuestion
+  },
   data() {
     return {
       count: 0,
       answerSelect: [],
-      questionTitle:"",
-      questionImgFile:"",
-      questionImgUrl:"",
-      questionImgValue:"",
       answers: [{
         title:"",
         file:"",
@@ -124,17 +97,14 @@ export default {
   },
   methods: {
     changeNumberAnswers(){
+      if (this.numberAnswers < 1) {
+        this.numberAnswers = 1
+        return
+      }
       if ( this.answers.length < this.numberAnswers) {
         this.answers.push({title:"",file:"",url:"",value:""})
       } else {
         this.answers.pop()
-      }
-    },
-    changeQuestionImg(e){
-      if (typeof e.target.files[0] === 'object'){
-        this.questionImgFile = e.target.files[0]
-        this.questionImgUrl = URL.createObjectURL(e.target.files[0])
-        this.questionImgValue = e.target.value
       }
     },
     changeAnswerImg(e, ind){
@@ -155,18 +125,9 @@ export default {
       this.answers[ind].url = ''
       this.answers[ind].value = ''
     },
-    questionImgDelete(){
-      this.questionImgFile = ''
-      this.questionImgUrl = ''
-      this.questionImgValue = ''
-    }
-     
-    
   } 
 }
-
 </script>
-
 <style lang="scss" scoped>
   .block_number{
     display: flex;
