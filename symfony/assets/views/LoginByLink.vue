@@ -1,5 +1,6 @@
 <template>
   <section class="wrapper">
+    
     <div 
       class="login-page"
       v-if="emailSend"
@@ -13,6 +14,7 @@
       class="login-page"
       v-else
       >
+        <CloseView/>
         <form @submit.prevent="onSubmit">
           <div class="login-page-text">Вход на сайт</div>
           <p>Введите действующий email </p>
@@ -28,6 +30,16 @@
                 required
               />
             </div>
+            <div class="text-login">
+                <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
+                    <p> Войти с паролем</p>
+                </RouterLink>
+              </div>
+            <div class="text-login">
+                <RouterLink :to="{ name: 'signup'}" class="routerLink"> 
+                    <p> Пройти регистрацию</p>
+                </RouterLink>
+              </div>
             <input class="btn" type="submit" value="получить ссылку"/>
           </div>
           <div
@@ -43,9 +55,11 @@
  
 <script>
   import { mapGetters, mapActions} from "vuex"
+  import CloseView from "../components/ui/CloseView.vue"
   import { RouterLink } from 'vue-router'
   export default {
     components: {
+      CloseView
     },
     data() {
       return {
@@ -93,6 +107,9 @@
     line-height: 26px;
     text-align: center;
   }
+}
+p{
+  margin: 0;
 }
 @media (min-width: 1024px) {
   

@@ -1,59 +1,63 @@
 <template>
-   <section class="wrapper">
-      <div class="login-page">
-         <form @submit.prevent="onSubmit">
-            <div class="login-page-text">Вход на сайт</div>
-            <div class="form">
-               <div class="text-field">
-                  <label class="text-field__label" >Email</label>
-                  <input class="text-field__input"
-                    type="email" 
-                    placeholder="Введите email"
-                    name="email"
-                    v-model="email"
-                    required
-                  />
-               </div>
-               <div class="text-field">
-                  <label class="text-field__label" >Пароль</label>
-                  <input class="text-field__input"
-                    type="password" 
-                    name="password"
-                    placeholder="Введите пароль"
-                    v-model="password"
-                    required
-                  />
-               </div>
-               <div>
-                <label class="checkbox__container" >
-                  
-                  <input type="checkbox"  class="checkbox__highload"
-                    v-model = "checkbox"
-                    name="checkbox"  
-                  />
-                  <span class="checkbox__highload2"></span>
-                  запомнить меня
-                </label>
-               </div>
-               <div class="text-login">
-                  <RouterLink :to="{ name: 'signup'}" class="routerLink"> 
-                     <p> Пройти регистрацию</p>
-                  </RouterLink>
-               </div>
-                  <input class="btn" type="submit" value="Войти"/>
-                  
-            </div>
-         </form>
-      </div>
-    </section>
+  <section class="wrapper">
+    <div class="login-page">
+      <CloseView/>
+      <form @submit.prevent="onSubmit">
+          <div class="login-page-text">Вход на сайт</div>
+          <div class="form">
+              <div class="text-field">
+                <label class="text-field__label" >Email</label>
+                <input class="text-field__input"
+                  type="email" 
+                  placeholder="Введите email"
+                  name="email"
+                  v-model="email"
+                  required
+                />
+              </div>
+              <div class="text-field">
+                <label class="text-field__label" >Пароль</label>
+                <input class="text-field__input"
+                  type="password" 
+                  name="password"
+                  placeholder="Введите пароль"
+                  v-model="password"
+                  required
+                />
+              </div>
+         
+              <div>
+               <MessageView
+                v-if="getMessageLogin"
+                :message="getMessageLogin"
+                />
+              </div>
+              <div class="text-login">
+                <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
+                  <p> Войти по ссылке</p>
+                </RouterLink>
+              </div>
+              <div class="text-login">
+                <RouterLink :to="{ name: 'signup'}" class="routerLink"> 
+                  <p> Пройти регистрацию</p>
+                </RouterLink>
+              </div>
+              <input class="btn" type="submit" value="Войти"/>
+                
+          </div>
+      </form>
+    </div>
+  </section>
 </template>
  
 <script>
   import { RouterLink } from 'vue-router'
-  import { mapGetters, mapActions} from "vuex"
+  import MessageView from "../components/ui/MessageView.vue"
+  import CloseView from "../components/ui/CloseView.vue"
+  import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
-      
+      MessageView, CloseView
     },
     data() {
       return {
@@ -64,10 +68,11 @@
       }
     },
     computed:{
-      ...mapGetters(["getPageName"])
+      ...mapGetters(["getPageName", "getMessageLogin"])
     },
     methods: {
       ...mapActions(["setIsAutchUser","setLogInUser"]),
+      ...mapMutations(["SET_MESSAGE_REQUEST"]),
       async onSubmit(e){
         console.log('авторизация')
         const user = {
@@ -75,9 +80,20 @@
           password: this.password, 
         }
         console.log(user)
-        await  this.setLogInUser(user)
-        console.log(this.getPageName)
-        this.$router.push({ path: this.getPageName})
+        const res = await this.setLogInUser(user)
+        if (res) {
+          setTimeout(() => this.SET_MESSAGE_REQUEST(null), 5000);
+          return
+        } else {
+          setTimeout(() => 
+            {
+              this.SET_MESSAGE_REQUEST(null)
+              this.$router.push({ path: this.getPageName})
+            }, 5000);
+          
+        }
+
+       
       }
     }
      // mounted(){
@@ -99,6 +115,9 @@
     line-height: 26px;
     text-align: center;
   }
+}
+p{
+  margin: 0;
 }
 @media (min-width: 1024px) {
   

@@ -8,6 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/SectionsView.vue')
       // component: () => import('../views/TicketView.vue'),
       // component: () => import('../views/ResultView.vue'),
@@ -15,74 +16,84 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/AboutView.vue')
     },
     {
       path: '/question/:id',
       name: 'question',
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/Question.vue')
     },
     {
       path: '/questions',
       name: 'questions',
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/QuestionsView.vue')
     },
     {
       path: '/area/:id',
       name: 'area',
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/TestsView.vue')
     },
     {
       path: '/test/:id',
       name: 'test',
-      meta: {autch: false},
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/TicketsView.vue'),
       props: true,
     },
     {
       path: '/ticket/:id',
       name: 'ticket',
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/TicketView.vue'),
       props: true,
     },
     {
       path: '/logout',
       name: 'logout',
+      meta: {loyout: 'empty', autch: false},
       component: () => import('../views/Logout.vue'),
       props: true,
     },
     {
       path: '/logoutlink',
       name: 'logoutlink',
+      meta: {loyout: 'empty', autch: false},
       component: () => import('../views/LoginByLink.vue'),
       props: true,
     },
     {
       path: '/signup',
       name: 'signup',
+      meta: {loyout: 'empty', autch: false},
       component: () => import('../views/Signup.vue'),
       props: true,
     },
     {
       path: '/chapter/:id',
       name: 'chapter',
-      meta: {autch: false},
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/AreasView.vue')
     },
     {
       path: '/result',
       name: 'result',
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/ResultView.vue')
     },
     {
       path: '/result/autch',
       name: 'resultAutch',
+      meta: {loyout: 'page', autch: false},
       component: () => import('../views/ResultAutchView.vue')
     },
     {
       path: '/statistics',
       name: 'statistics',
-      meta: {autch: true},
+      meta: {loyout: 'page', autch: true},
       component: () => import('../views/StatisticsAutchView.vue')
     },
     {
@@ -93,7 +104,7 @@ const router = createRouter({
     {
       path: '/create/question',
       name: 'createQuestion',
-      meta: {autch: true},
+      meta: {loyout: 'page', autch: true},
       component: () => import('../views/CreateQuestionView.vue')
     },
   ]

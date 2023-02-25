@@ -2,7 +2,8 @@ import {
   SET_QUESTIONS, 
   SET_RESULT_QUESTIONS, 
   SET_LOADER_TOGGLE,
-  SET_RESULT_TICKET_USER
+  SET_RESULT_TICKET_USER,
+  SET_LOADER_STATUS
 } from './mutation-types.js'
 import axios from 'axios';
 
@@ -355,9 +356,9 @@ const actions = {
     }
   },
 
-  async setResultDb({ commit, state }, {token, userAuth} ){
+  async setResultDb({dispatch, commit, state }, {token, userAuth} ){
     console.log(JSON.stringify(state.resultTicketUser))
-    commit("SET_LOADER_TOGGLE")
+    commit("SET_LOADER_STATUS", true)
     try{
       const config = {
         method: 'post',
@@ -375,14 +376,23 @@ const actions = {
         config.headers.Authorization = `Bearer ${token}`
       }
       console.log(config)
+     
       await axios(config)
         .then(({data})=>{
           console.log("setResultDb - ",  data)
           commit("SET_RESULT_QUESTIONS", data);
-          commit("SET_LOADER_TOGGLE")
+          commit("SET_LOADER_STATUS", false)
         })
+        const err = {
+          errPrizn: false
+        }
+       return err
     } catch (e) {
-        console.log(e.message);
+        const err = {
+          mes: e.response.data.message,
+          errPrizn: true
+        }
+       return err
     }
   },
   async saveQuestionDb({ commit, state }, {token, questionSend} ){
@@ -464,9 +474,13 @@ const mutations = {
     state.resultQuestions = questions
     // localStorage.setItem('resultQuestions', JSON.stringify(questions));
   },
-  [SET_LOADER_TOGGLE] (state,) {
+  [SET_LOADER_TOGGLE] (state, ) {
     console.log("SET_LOADER_TOGGLE", state.isLoader)
     state.isLoader = !state.isLoader
+  },
+  [SET_LOADER_STATUS] (state, status) {
+    console.log("SET_LOADER_TOGGLE", state.isLoader)
+    state.isLoader = status
   },
   [SET_RESULT_TICKET_USER] (state, ticket) {
     console.log("SET_RESULT_TICKET_USER", )

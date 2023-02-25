@@ -1,11 +1,11 @@
 <template>
   <Loader
-    v-if="getIsLoaderQuestions"
+    v-if="loader"
   />
   <div
     v-else
   >
-     <ResultAutchView
+    <ResultAutchView
       v-if="getIsAutchUser"
     />
     <ResultNoAutchView
@@ -37,11 +37,18 @@ export default {
     ...mapGetters(["getIsAutchUser", "getAutchUserToken"]),
   },
   methods: {
-    ...mapActions(["getQuestionsDb", "setResultDb"]),
+    ...mapActions(["getQuestionsDb", "setResultDb", "getAuthRefresh"]),
   },
   async mounted(){
+    this.loader = true
     window.scroll(0, 0);
-    await this.setResultDb( {token: this.getAutchUserToken, userAuth:this.getIsAutchUser})
+    const res = await this.setResultDb( {token: this.getAutchUserToken, userAuth:this.getIsAutchUser})
+    if (res.errPrizn) {
+      if (res.mes === "Expired JWT Token"){
+        await this.getAuthRefresh()
+        await this.setResultDb( {token: this.getAutchUserToken, userAuth:this.getIsAutchUser})
+      }
+    }
     this.loader = false
   }
   

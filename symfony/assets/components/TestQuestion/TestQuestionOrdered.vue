@@ -20,7 +20,7 @@
           draggable="true"
           :dataname="answer.sort"
         >
-        
+        <div class="block_drop"  :dataname="answer.sort"></div>
         
           <label 
             v-if="answer!==''"
@@ -72,7 +72,7 @@ export default {
     
     onDrop(e){
       const item = parseInt(e.dataTransfer.getData('item'))
-      const yEl = e.toElement.offsetParent.offsetTop + e.toElement.offsetTop + e.toElement.clientHeight/2
+      const yEl = e.toElement.offsetParent.offsetTop + e.toElement.offsetParent.offsetParent.offsetTop+ e.toElement.clientHeight/2
       if (e.pageY > yEl  ) {
         this.qestionVariant[item].sort = parseInt(e.toElement.attributes.dataname.value) + 0.5
       } else this.qestionVariant[item].sort = parseInt(e.toElement.attributes.dataname.value) - 0.5
@@ -112,13 +112,18 @@ export default {
     &-number{
       width: 30px;
       height: 20px;
-      
       display: flex;
       justify-content: flex-end;
       align-items: center;
     }
   }
-  
+  .block_drop{
+    position: absolute;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+    left: 0;
+  }
   .f_sm {
       font-size: 0.9rem;
   }

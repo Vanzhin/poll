@@ -2,21 +2,20 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <QuestionHeaderQuestion/>
-      
+
       <input type="hidden" 
-        id="answer_true"
+        id="trueanswer"
         name="question[answer][]" 
         :value="answerSelect"
       >
       <hr>
-      <i class="i">Введите варианты ответов в правильной последовательности.</i>
+      <i class="i">Введите пары соответсвтвий. Расположите их в нужной последовательности.</i>
       <div class="block_number">
-        <label for="number" class="label"> Количество ответов</label>
+        <label for="number" class="label"> Количество соответсвтвий:</label>
         <input id="number" type="number"
           v-model="numberAnswers"
           @change="changeNumberAnswers"
         >
-        {{ answerSelect }}
       </div>
       <div  
         @drop="onDrop($event)"
@@ -31,20 +30,31 @@
           :dataname="answer.sort"
         >
           <div :class="{block_drop: drag}"           :dataname="answer.sort"></div>
-            <div class="custom-radio" >
-              <div class="custom-radio img_block">
+            <div class="custom-radio row" >
+              <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <textarea rows="1" required
                   :name="`question[variant][${ind}][title]`"
-                  
                   v-model.lazy= "answer.title"
                   class="textarea_input" 
                 >
                 </textarea> 
-                <i class="bi bi-x-lg custom-close" title="Удалить ответ"
-                    @click="answerDelete(ind)"
-                    v-if="answers.length > 1"
-                ></i>
               </div>
+              <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
+                <div class="row d-flex align-items-center">
+                  <input required
+                    :name="`question[subTitle][${ind}]`"
+                    v-model.lazy= "answer.subTitle"
+                    class="input" 
+                  >
+                 
+                    <i class="bi bi-x-lg custom-close" title="Удалить пару"
+                      @click="answerDelete(ind)"
+                      v-if="answers.length > 1"
+                    ></i>
+                 
+                </div>
+              </div>
+              
             </div>
             <div class="mb-3 w-100">
               <div class="img_block">
@@ -54,7 +64,7 @@
                 <i class="bi bi-x-lg custom-close" title="Удалить изображение"
                   @click="answerImgDelete(ind)"
                 v-if="typeof answer.file === 'object'"
-              ></i>
+                ></i>
               </div> 
               <label class="label">Прикрепить изображение </label>
               
@@ -67,32 +77,34 @@
             </div>
           
         </div>
-        <br>
+        <hr>
       </div>
+<!-- /// -->
+     <ConformityRichtAdd
+      :richtVariant="answers.length"
+     />
     </div>       
   </div>
 </template>
 <script>
+
+import  ConformityRichtAdd from './ConformityRichtAdd.vue';
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
-import { SlickList, SlickItem } from 'vue-slicksort';
 export default {
-  props: ['qestion', 'index' ],
   components: {
+    ConformityRichtAdd,
     QuestionHeaderQuestion
   },
   data() {
     return {
       count: 0,
       answerSelect: [1],
-      questionTitle: "",
-      questionImgFile: "",
-      questionImgUrl: "",
-      questionImgValue: "",
       answers: [{
         title: "",
         file: "",
         url: "",
         value: "",
+        subTitle: "",
         sort: 0,
       }],
       numberAnswers: 1,
@@ -121,17 +133,11 @@ export default {
           file: "",
           url: "",
           value: "",
+          subTitle: "",
           sort: this.answers.length 
         })
       } else {
         this.answers.pop()
-      }
-    },
-    changeQuestionImg(e){
-      if (typeof e.target.files[0] === 'object'){
-        this.questionImgFile = e.target.files[0]
-        this.questionImgUrl = URL.createObjectURL(e.target.files[0])
-        this.questionImgValue = e.target.value
       }
     },
     changeAnswerImg(e, ind){
@@ -151,11 +157,6 @@ export default {
       this.answers[ind].file = ''
       this.answers[ind].url = ''
       this.answers[ind].value = ''
-    },
-    questionImgDelete(){
-      this.questionImgFile = ''
-      this.questionImgUrl = ''
-      this.questionImgValue = ''
     },
     onDragStart(e , item) {
       this.drag = true
@@ -190,9 +191,10 @@ export default {
       display: flex;
       align-items:center;
       min-height: 1.5rem;
-      padding-left: 1.5rem;
+      padding-left:20px;
+      padding-right: 10px;
       flex-wrap:wrap;
-      background-color: rgb(158, 155, 151);
+      background-color: rgb(162 177 174);
       margin: 2px;
       border-radius: 10px;
       &-label {
@@ -205,11 +207,31 @@ export default {
     &-radio{
       display: flex;
       align-items:center;
+      flex-wrap:wrap;
       width: 100%;
     }
     &-close{
       cursor: pointer;
+      transition: all 0.5s ease-out;
+      width: 20px;
+      &:hover{
+        color: rgb(185, 48, 14);
+        transform: scale(1.25);
+      }
+      &-block{
+        width: 15px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        margin: 5px;
+      }
     }
+  }
+  .colum{
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    min-width: 300px;
   }
   .block_drop{
     position: absolute;
@@ -232,11 +254,16 @@ export default {
     margin: 0 10px;
   }
   .textarea_input{
-    max-width: 50%;
+    width: 100%;
     padding: 0;
     padding-left: 10px;
     margin: 5px;
   }
+  .input{
+    width: 80%;  
+    padding: 0;
+    padding-left: 10px;
+    margin: 5px;}
   .img_block{
     display: flex;
     align-items: flex-start;

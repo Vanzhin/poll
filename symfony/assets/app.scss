@@ -2,7 +2,6 @@
   --unit: 1rem; /* 1rem = 16px */
   --radius: 5px;
   --border: 1.8px;
-
   --color-primary: #f0bd66;
   --color-secondary: #f5f2ed;
   --color-dark: #002033;
@@ -231,10 +230,6 @@ textarea:hover,
       transform: rotate(45deg);
     
     }}
-  // display: flex;
-  // align-items: center;
-  // color:#002033
-
 }
 .routerLink{
   text-decoration: none;
