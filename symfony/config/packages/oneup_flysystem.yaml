@@ -8,6 +8,9 @@ oneup_flysystem:
         upload_variant_adapter:
             local:
                 location: '%kernel.project_dir%/public/%variant_upload%'
+        upload_category_adapter:
+            local:
+                location: '%kernel.project_dir%/public/%category_upload%'
 
     filesystems:
         upload_question:
@@ -15,3 +18,6 @@ oneup_flysystem:
 
         upload_variant:
             adapter: upload_variant_adapter
+
+        upload_category:
+            adapter: upload_category_adapter

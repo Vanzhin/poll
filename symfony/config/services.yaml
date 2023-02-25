@@ -20,6 +20,10 @@ parameters:
     variant_upload_url: '%env(SITE_URL)%/%variant_upload%'
     variant_upload_dir: '%kernel.project_dir%/public/%variant_upload%'
 
+    category_upload: 'uploads/category'
+    category_upload_url: '%env(SITE_URL)%/%category_upload%'
+    category_upload_dir: '%kernel.project_dir%/public/%category_upload%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -32,9 +36,11 @@ services:
 
             App\Service\FileUploader $questionImageUploader: '@image_uploader.question'
             App\Service\FileUploader $variantImageUploader: '@image_uploader.variant'
+            App\Service\FileUploader $categoryImageUploader: '@image_uploader.category'
 
 
-#            League\Flysystem\Filesystem $questionFileSystem: '@oneup_flysystem.upload_question_filesystem'
+
+    #            League\Flysystem\Filesystem $questionFileSystem: '@oneup_flysystem.upload_question_filesystem'
 #            League\Flysystem\Filesystem $variantFileSystem: '@oneup_flysystem.upload_variant_filesystem'
 
 
@@ -49,10 +55,7 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    image_uploader.question:
-        class: App\Service\FileUploader
-        arguments:
-            $fileSystem: '@oneup_flysystem.upload_question_filesystem'
+
 
 
     Gedmo\Tree\TreeListener:
@@ -62,11 +65,21 @@ services:
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
+    image_uploader.question:
+        class: App\Service\FileUploader
+        arguments:
+            $fileSystem: '@oneup_flysystem.upload_question_filesystem'
 
     image_uploader.variant:
         class: App\Service\FileUploader
         arguments:
             $fileSystem: '@oneup_flysystem.upload_variant_filesystem'
+
+    image_uploader.category:
+        class: App\Service\FileUploader
+        arguments:
+            $fileSystem: '@oneup_flysystem.upload_category_filesystem'
+
     App\Service\Mailer:
         arguments:
             $appName: '%app.name%'

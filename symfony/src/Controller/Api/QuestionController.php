@@ -170,7 +170,7 @@ class QuestionController extends AbstractController
         $variantImages = $request->files->get('variantImage');
         $variantErrors = $validation->manyVariantsValidate($data ?? [], $variantImages) ?? [];
         $errors = array_merge($errors, $variantErrors);
-//
+
         if (count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',

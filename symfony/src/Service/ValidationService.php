@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\Category;
 use App\Entity\Question;
-use App\Entity\Type;
 use App\Entity\Variant;
+use App\Entity\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints\Email;
@@ -125,7 +126,6 @@ class ValidationService
         if (count($errors) === 0) {
             return null;
         }
-
         return $errors;
     }
 
@@ -162,7 +162,7 @@ class ValidationService
                         ]),
 
                     ]);
-                    if ($question){
+                    if ($question) {
                         $isUnique = !$question->getVariant()->contains($this->em->getRepository(Variant::class)->findOneBy(['title' => $value, 'question' => $question]));
                         $unique = $this->validator->validate($isUnique, [
                             new IsTrue([
@@ -231,7 +231,7 @@ class ValidationService
         $variantTitles = [];
         foreach ($data['variant'] ?? [] as $key => $variantData) {
             $image = $images[$key] ?? null;
-            if (isset($data['questionId'])){
+            if (isset($data['questionId'])) {
                 $variantData['questionId'] = $data['questionId'];
 
             }
@@ -243,6 +243,70 @@ class ValidationService
 
         if (array_unique($variantTitles) !== $variantTitles) {
             $errors[] = 'Название вариантов не может быть одинаковым';
+        }
+
+        if (count($errors) === 0) {
+            return null;
+        }
+
+        return $errors;
+    }
+
+    public function categoryValidate(array $data, File $image = null): ?array
+    {
+        $errors=[];
+        foreach ($data as $key => $value) {
+            if ($key === 'title') {
+                $violations = $this->validator->validate($value, [
+                    new NotBlank([
+                        'message' => 'category.title.not_blank'
+                    ]),
+                    new Length([
+                        'min' => 5,
+                        'max' => 255,
+//
+                    ]),
+
+                ]);
+                foreach ($violations as $violation) {
+                    $errors[] = $violation->getMessage();
+                }
+                continue;
+
+            }
+            if (isset($data['parentId']) && $key === 'parentId') {
+                $violations = $this->validator->validate($this->em->getRepository(Category::class)->find($value) instanceof Category, [
+                    new IsTrue([
+                        'message' => "category.parent.exist"
+                    ]),
+
+                ]);
+                foreach ($violations as $violation) {
+                    $errors[] = $violation->getMessage();
+                }
+                dd($data['title'], $value);
+                dd($this->em->getRepository(Category::class)->findOneBy(['title'=>$data['title'], 'id'=>$value]));
+                if ($this->em->getRepository(Category::class)->findOneBy(['title'=>$data['title'], 'id'=>$value])) {
+                    $errors[] = 'Такое название уже существует в данном разделе';
+                }
+                continue;
+
+            }
+
+        }
+        if ($image) {
+
+            if (!is_null($this->imageValidate($image))) {
+                $errors[] = implode(',', $this->imageValidate($image));
+            };
+        };
+
+        if(!isset($data['parentId'])){
+            foreach($this->em->getRepository(Category::class)->findBy(['parent'=>null]) as $category){
+                if($category->gettitle() === $data['title']){
+                    $errors[]= 'Такое название уже существует в данном разделе';
+                }
+            };
         }
 
         if (count($errors) === 0) {

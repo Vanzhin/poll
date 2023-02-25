@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[Gedmo\Tree(type: 'nested')]
 #[ORM\Table(name: 'categories')]
@@ -23,10 +24,11 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['main', 'admin'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?string $title = null;
 
     #[Gedmo\TreeLeft]
@@ -58,10 +60,19 @@ class Category
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Category::class)]
     #[ORM\OrderBy(['lft' => 'ASC'])]
+    #[Groups(['main', 'admin'])]
+    #[MaxDepth(1)]
     private Collection $children;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['main', 'admin'])]
+
     private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['main', 'admin'])]
+
+    private ?string $image = null;
 
     public function getId(): ?int
     {
@@ -121,6 +132,18 @@ class Category
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }
