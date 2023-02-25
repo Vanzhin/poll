@@ -150,7 +150,7 @@ class ValidationService
     public function variantValidate(array $data, File $image = null): ?array
     {
         $question = isset($data['questionId']) ? $this->em->find(Question::class, $data['questionId']) : null;
-        if (!$question) {
+        if (isset($data['questionId']) && is_null($question)) {
             return ['Соответствующий вопрос не найден'];
         } else {
             $errors = [];
@@ -162,16 +162,19 @@ class ValidationService
                         ]),
 
                     ]);
-                    $isUnique = !$question->getVariant()->contains($this->em->getRepository(Variant::class)->findOneBy(['title' => $value, 'question' => $question]));
-                    $unique = $this->validator->validate($isUnique, [
-                        new IsTrue([
-                            'message' => 'question.variants.unique'
-                        ]),
+                    if ($question){
+                        $isUnique = !$question->getVariant()->contains($this->em->getRepository(Variant::class)->findOneBy(['title' => $value, 'question' => $question]));
+                        $unique = $this->validator->validate($isUnique, [
+                            new IsTrue([
+                                'message' => 'question.variants.unique'
+                            ]),
 
-                    ]);
-                    foreach ($unique as $violation) {
-                        $errors[] = $violation->getMessage();
+                        ]);
+                        foreach ($unique as $violation) {
+                            $errors[] = $violation->getMessage();
+                        }
                     }
+
 
                     foreach ($violations as $violation) {
                         $errors[] = $violation->getMessage();
@@ -228,7 +231,10 @@ class ValidationService
         $variantTitles = [];
         foreach ($data['variant'] ?? [] as $key => $variantData) {
             $image = $images[$key] ?? null;
-            $variantData['questionId'] = $data['questionId'];
+            if (isset($data['questionId'])){
+                $variantData['questionId'] = $data['questionId'];
+
+            }
             $variantTitles[] = $variantData['title'];
             if ($this->variantValidate($variantData ?? [], $image)) {
                 $errors[] = implode(',', $this->variantValidate($variantData ?? [], $image));

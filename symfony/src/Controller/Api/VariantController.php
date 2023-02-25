@@ -71,7 +71,6 @@ class VariantController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage');
-
         $errors = $validation->variantValidate($data['variant'] ?? [], $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([

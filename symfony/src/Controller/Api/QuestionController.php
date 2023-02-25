@@ -3,9 +3,12 @@
 namespace App\Controller\Api;
 
 use App\Entity\Question;
+use App\Entity\Variant;
 use App\Service\QuestionService;
 use App\Service\ValidationService;
+use App\Service\VariantService;
 use App\Twig\Extension\AppUpLoadedAsset;
+use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Liip\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface;
@@ -29,10 +32,9 @@ class QuestionController extends AbstractController
     public function show(Question $question, AppUpLoadedAsset $upLoadedAsset, CacheManager $imagineCacheManager): JsonResponse
     {
 
-//        dd($upLoadedAsset->asset('question_upload',$question->getImage()));
         $resolvedPath = $imagineCacheManager->getBrowserPath($question->getImage(), 'question_thumb');
-
-        dd($resolvedPath);
+//
+//        dd($resolvedPath);
         return $this->json(
             $question,
             200,
@@ -128,6 +130,66 @@ class QuestionController extends AbstractController
             ];
             $status = 200;
         } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+
+    }
+
+    #[Route('/api/question/create_with_variant', name: 'app_api_question_create_with_variant', methods: 'POST')]
+    public function createWithVariant(Request $request, QuestionService $questionService, ValidationService $validation, VariantService $variantService, EntityManagerInterface $em): JsonResponse
+    {
+        $data = $request->request->all();
+        $questionImage = $request->files->get('questionImage');
+
+
+        $questionErrors = $validation->questionValidate($data['question'] ?? [], $questionImage) ?? [];
+        $errors = $questionErrors;
+        $variantImages = $request->files->get('variantImage');
+        $variantErrors = $validation->manyVariantsValidate($data ?? [], $variantImages) ?? [];
+        $errors = array_merge($errors, $variantErrors);
+//
+        if (count($errors) > 0) {
+            return $this->json([
+                'message' => 'Ошибка при вводе данных',
+                'error' => $errors],
+                422,
+                ['charset=utf-8'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+
+        try {
+            $question = $questionService->save(new Question(), $data['question'] ?? [], $questionImage);
+            $variantIds = [];
+            foreach ($data['variant'] as $key => $variantData) {
+                $image = $variantImages[$key] ?? null;
+                $variantData['questionId'] = $question->getId();
+                $variant = $variantService->save(new Variant(), $variantData ?? [], $image);
+                $variantIds[] = $variant->getId();
+                if ($question->getType()->getTitle() === 'order') {
+                    $answers[] = $variant->getId();
+                }
+            }
+            if ($question->getType()->getTitle() === 'order') {
+                $question->setAnswer($answers);
+                $em->persist($question);
+                $em->flush();
+            }
+            $response = [
+                'message' => 'Вопрос создан',
+                'questionId' => $question->getId(),
+                'variantId' =>$variantIds,
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } catch (FilesystemException $e) {
             $response = ['error' => $e->getMessage()];
             $status = 501;
         } finally {
