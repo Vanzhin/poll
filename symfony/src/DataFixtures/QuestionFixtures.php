@@ -95,7 +95,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
                         $variant
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
-                            ->setWeight(1)
+                            ->setWeight(100)
                             ->setQuestion($question);
 
                         $question->addVariant($variant);
@@ -109,7 +109,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
                         $variant
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
-                            ->setWeight(1)
+                            ->setWeight(100)
                             ->setQuestion($question);
 
                         $question->addVariant($variant);
@@ -131,7 +131,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 //
                         $variant
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
-                            ->setWeight(1)
+                            ->setWeight(100)
                             ->setQuestion($question);
 
                         $question->addVariant($variant);
@@ -152,7 +152,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 //
                         $variant
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
-                            ->setWeight(1)
+                            ->setWeight(100)
                             ->setQuestion($question);
 
                         $question->addVariant($variant);

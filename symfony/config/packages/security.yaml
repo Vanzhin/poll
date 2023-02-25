@@ -13,7 +13,11 @@ security:
                 property: email
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/(_(profiler|wdt)|css|images|js|uploads)/
+            security: false
+
+        image_resolver:
+            pattern: ^/media/cache/resolve
             security: false
 
         login:
