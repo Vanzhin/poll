@@ -419,8 +419,8 @@ const actions = {
       // questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
       const config = {
         method: 'post',
-        url: '/api/auth/create/question',
-        // url: '/api/auth/test/handle',
+        // url: '/api/auth/create/question',
+        url: '/api/question/create_with_variant',
         headers: { 
           Accept: 'application/json', 
           'Content-Type': 'application/json',
@@ -437,7 +437,7 @@ const actions = {
           commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-        console.log(e.message);
+        console.log(e);
     }
   },
   setIsLoader({ commit }){

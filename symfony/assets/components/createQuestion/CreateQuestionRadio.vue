@@ -30,13 +30,17 @@
           >
           <div class="custom-radio img_block">
             <textarea rows="1" 
-              :name="`question[variant][${ind}][title]`"
+              :name="`variant[${ind}][title]`"
               :id="'answer' +  (ind) " 
               v-model= "answer.title"
               class="textarea_input"
               required 
             >
             </textarea> 
+            <input type="hidden" 
+              :name="`variant[${ind}][correct]`" 
+              :value="ind === answerSelect"
+            >
             <i class="bi bi-eraser custom-close" title="Очиститеть поле ответа."
               @click="answer.title = ''"
               v-if="answer.title !== ''"
@@ -62,7 +66,7 @@
           <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
           <input  class="" type="file" accept="image/*"  
             @change="(e)=> changeAnswerImg(e, ind)"
-            :name="`variant[${ind}][img]`"
+            :name="`variantImage[${ind}]`"
             :value="answer.value"
           >
         </div>

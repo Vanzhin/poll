@@ -15,7 +15,6 @@
             <div class="search">
               <input type="text" value="" name="s" placeholder="Поиск..." class="search-input"/>
               <button class="search-button bi-search"></button>
-            
               <!-- <div class="bi-search"></div> -->
             </div>
             <!-- <div class="links">
@@ -37,10 +36,7 @@ import DropDownItems from './ui/DropDownItems.vue';
 export default {
   data() {
     return {
-      
-        isActive: false
-    
-      
+      isActive: false
     }
   },
   components:{
@@ -50,10 +46,9 @@ export default {
     classObject() {
       console.log(this.isActive)
       return {
-      fixeds: this.isActive
-     
+        fixeds: this.isActive
+      }
     }
-  }
   },
   methods: {
     setIsActive(){
@@ -61,14 +56,11 @@ export default {
       console.log(scrollY)
       // this.isActive = ind
     },
-    
   }, 
   mounted() {
     // window.addEventListener('scroll', function (){
-        
     //   let scrollY = window.pageYOffset;
     //   console.log(scrollY)
-     
     //     if(scrollY > 68) {
     //       this.setIsActive(true);
     //     } else {
@@ -76,7 +68,6 @@ export default {
     //     }
     // })
   }
-  
 } 
 
 </script>

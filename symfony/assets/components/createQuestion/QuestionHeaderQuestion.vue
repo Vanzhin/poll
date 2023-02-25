@@ -25,7 +25,7 @@
     <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
     <input  class="" type="file" accept="image/*"  
       @change="changeQuestionImg" 
-      name="question[img]"
+      name="questionImage"
       :value="questionImgValue"
     >
   </div>
