@@ -27,7 +27,8 @@ liip_imagine:
             flysystem:
                 filesystem_service: oneup_flysystem.upload_variant_filesystem
     # your filter sets are defined here
-
+    twig:
+        mode: lazy
     filter_sets:
         cache: ~
         question_thumb:
