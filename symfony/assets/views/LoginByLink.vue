@@ -1,31 +1,49 @@
 <template>
-   <section class="wrapper">
-      <div class="login-page">
-         <form @submit.prevent="onSubmit">
-            <div class="login-page-text">Вход на сайт</div>
-            <p>Введите действующий email </p>
-            <div class="form">
-               <div class="text-field">
-                  <label class="text-field__label" >Email</label>
-                  <input class="text-field__input"
-                    type="email" 
-                    placeholder="Введите email"
-                    name="email"
-                    v-model="email"
-                    required
-                  />
-               </div>
-               <p>Вам на почту придет ссылка для авторизации </p>
-               <input class="btn" type="submit" value="получить ссылку"/>
-                  
+  <section class="wrapper">
+    <div 
+      class="login-page"
+      v-if="emailSend"
+      
+    >
+      <p>{{resMessage}} </p>
+      <a :href="link"> переход </a>
+    </div>
+      
+    <div 
+      class="login-page"
+      v-else
+      >
+        <form @submit.prevent="onSubmit">
+          <div class="login-page-text">Вход на сайт</div>
+          <p>Введите действующий email </p>
+          <p>Вам на почту придет ссылка для авторизации </p>
+          <div class="form">
+            <div class="text-field">
+              <label class="text-field__label" >Email</label>
+              <input class="text-field__input"
+                type="email" 
+                placeholder="Введите email"
+                name="email"
+                v-model="email"
+                required
+              />
             </div>
-         </form>
-      </div>
-    </section>
+            <input class="btn" type="submit" value="получить ссылку"/>
+          </div>
+          <div
+            v-if="resMessage!==''"
+          >
+            {{ resMessage }}
+          </div>
+        </form>
+    </div>
+     
+  </section>
 </template>
  
 <script>
   import { mapGetters, mapActions} from "vuex"
+  import { RouterLink } from 'vue-router'
   export default {
     components: {
     },
@@ -33,21 +51,27 @@
       return {
         count: 0,
         email:'',
-        password:'',
-        checkbox:'false'
+        emailSend: false,
+        resMessage: '',
+        link: ''
       }
     },
     computed:{
-      ...mapGetters(["getPageName"])
+      ...mapGetters(["getPageName", "getLogoutLinkDate"])
     },
     methods: {
       ...mapActions(["setIsAutchUser","getLoginByLinkUser"]),
       async onSubmit(e){
+        
         console.log('авторизация')
-      
         console.log(this.email)
-        await  this.getLoginByLinkUser(this.email)
-        this.$router.push({ name: this.getPageName})
+        
+        console.log(await this.getLoginByLinkUser(this.email))
+        this.emailSend = this.getLogoutLinkDate.send,
+        this.resMessage = this.getLogoutLinkDate.message,
+        this.link = this.getLogoutLinkDate.url
+       
+        // this.$router.push({ name: this.getPageName})
       }
     }
      // mounted(){

@@ -1,0 +1,17 @@
+# Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle
+oneup_flysystem:
+    adapters:
+        upload_question_adapter:
+            local:
+                location: '%kernel.project_dir%/public/%question_upload%'
+
+        upload_variant_adapter:
+            local:
+                location: '%kernel.project_dir%/public/%variant_upload%'
+
+    filesystems:
+        upload_question:
+            adapter: upload_question_adapter
+
+        upload_variant:
+            adapter: upload_variant_adapter

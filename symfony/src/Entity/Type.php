@@ -17,7 +17,7 @@ class Type
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'type', targetEntity: Question::class)]

@@ -27,7 +27,7 @@
           <div class="card flex-shrink-1 shadow">
             <h5>Для просмотра более подробной информации </h5>
             <div class="links">
-              <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
+              <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
                 <h5>   /авторизуйтесь/  </h5>
               </RouterLink>
             </div>

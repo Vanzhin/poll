@@ -44,6 +44,15 @@
                 required
               />
             </div>
+            <div>
+               <MessageView
+                v-if="getMessageLogin"
+                :message="getMessageLogin"
+              />
+               
+              
+            </div>
+             
             <div class="text-login">
                   <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
                      <p> Уже есть аккаунт</p>
@@ -59,10 +68,11 @@
 </template>
  
 <script>
-  import { mapGetters, mapActions} from "vuex"
+  import MessageView from "../components/ui/MessageView.vue"
+  import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
-      
+      MessageView
     },
     data() {
       return {
@@ -74,10 +84,14 @@
       }
     },
       computed:{
-        
+        ...mapGetters(["getMessageLogin", "getPageName"])
       },
       methods: {
-        ...mapActions(["setIsAutchUser", "getLogInUser", "getRegistrationUser"]),
+        ...mapActions([
+          "setIsAutchUser", "setLogInUser", 
+          "setRegistrationUser", 
+        ]),
+        ...mapMutations(["SET_MESSAGE_REQUEST"]),
         async submit(){
           const user = {
             confirmPassword: this.confirmPassword,
@@ -86,8 +100,25 @@
             password: this.password, 
           }
           console.log('Регистрация')
-          await this.getRegistrationUser(user)
-          
+          const res = await this.setRegistrationUser(user)
+          console.log('Регистрация res -', res)
+          if (res) {
+            setTimeout(() => this.SET_MESSAGE_REQUEST(null), 5000);
+            
+            return
+          } else {
+            setTimeout(() => this.SET_MESSAGE_REQUEST(null), 7000);
+            this.clearForm()
+          }
+          await  this.setLogInUser({username:user.email,password: user.password})
+          console.log(this.getPageName)
+          this.$router.push({ path: this.getPageName})
+        },
+        clearForm() {
+          this.confirmPassword = '',
+          this.password='',
+          this.email='',
+          this.firstName=''
         }
       }
       // mounted(){
@@ -97,6 +128,7 @@
  
 </script>
 <style lang="scss" scoped>
+  
 .login-page {
    max-width: 380px;
    padding: 24px;
