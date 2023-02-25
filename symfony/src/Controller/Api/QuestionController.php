@@ -10,13 +10,13 @@ use App\Service\VariantService;
 use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
-use Liip\ImagineBundle\Imagine\Cache\CacheManager;
-use Liip\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class QuestionController extends AbstractController
 {
@@ -29,17 +29,34 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/question/{id}', name: 'app_api_question_show', methods: ['GET'])]
-    public function show(Question $question, AppUpLoadedAsset $upLoadedAsset, CacheManager $imagineCacheManager): JsonResponse
+    public function show(Question $question, AppUpLoadedAsset $upLoadedAsset): JsonResponse
     {
 
-        $resolvedPath = $imagineCacheManager->getBrowserPath($question->getImage(), 'question_thumb');
-//
-//        dd($resolvedPath);
+//todo убрать в сервис
+        $dateCallback = function ($key, $innerObject, string $attributeName) use ($upLoadedAsset) {
+            if ($attributeName === 'image' && !is_null($key)) {
+                if ($innerObject instanceof Question) {
+                    return $upLoadedAsset->asset('question_upload_url', $key);
+
+                }
+                if ($innerObject instanceof Variant) {
+                    return $upLoadedAsset->asset('variant_upload_url', $key);
+
+                }
+            };
+        };
+
         return $this->json(
             $question,
             200,
             ['charset=utf-8'],
-            ['groups' => 'admin'],
+            [
+                'groups' => 'admin',
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractNormalizer::CALLBACKS => [
+                    'image' => $dateCallback,
+                ]
+            ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
@@ -183,7 +200,7 @@ class QuestionController extends AbstractController
             $response = [
                 'message' => 'Вопрос создан',
                 'questionId' => $question->getId(),
-                'variantId' =>$variantIds,
+                'variantId' => $variantIds,
             ];
             $status = 200;
         } catch (\Exception $e) {
