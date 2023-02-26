@@ -60,18 +60,16 @@ class Category
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Category::class)]
     #[ORM\OrderBy(['lft' => 'ASC'])]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['admin'])]
     #[MaxDepth(1)]
     private Collection $children;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['main', 'admin'])]
-
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['main', 'admin'])]
-
     private ?string $image = null;
 
     public function getId(): ?int

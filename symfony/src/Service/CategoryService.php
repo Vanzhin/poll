@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Category;
-use App\Entity\Question;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

@@ -254,7 +254,7 @@ class ValidationService
 
     public function categoryValidate(array $data, File $image = null): ?array
     {
-        $errors=[];
+        $errors = [];
         foreach ($data as $key => $value) {
             if ($key === 'title') {
                 $violations = $this->validator->validate($value, [
@@ -284,10 +284,12 @@ class ValidationService
                 foreach ($violations as $violation) {
                     $errors[] = $violation->getMessage();
                 }
-                dd($data['title'], $value);
-                dd($this->em->getRepository(Category::class)->findOneBy(['title'=>$data['title'], 'id'=>$value]));
-                if ($this->em->getRepository(Category::class)->findOneBy(['title'=>$data['title'], 'id'=>$value])) {
-                    $errors[] = 'Такое название уже существует в данном разделе';
+                $parent = $this->em->find(Category::class, $value);
+                if ($parent) {
+                    $notUniq = $parent->getChildren()->contains($this->em->getRepository(Category::class)->findOneBy(['title' => $data['title'], 'parent' => $parent->getId()]));
+                    if ($notUniq) {
+                        $errors[] = 'Такое название уже существует в данном разделе';
+                    }
                 }
                 continue;
 
@@ -301,10 +303,10 @@ class ValidationService
             };
         };
 
-        if(!isset($data['parentId'])){
-            foreach($this->em->getRepository(Category::class)->findBy(['parent'=>null]) as $category){
-                if($category->gettitle() === $data['title']){
-                    $errors[]= 'Такое название уже существует в данном разделе';
+        if (!isset($data['parentId'])) {
+            foreach ($this->em->getRepository(Category::class)->findBy(['parent' => null]) as $category) {
+                if ($category->gettitle() === $data['title']) {
+                    $errors[] = 'Такое название уже существует в данном разделе';
                 }
             };
         }
