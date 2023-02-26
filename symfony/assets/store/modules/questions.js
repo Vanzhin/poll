@@ -324,7 +324,7 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, id) {
-     const slag = 'zelionyi-mkk-santekhservisasbotsement-h' // опен серв
+     const slag = 'mindal-kraiola-ooo-kompaniia-rybvektorzheldorprof' // опен серв
     // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
     console.log("id - ",  id)
     let url = ''
@@ -395,7 +395,7 @@ const actions = {
        return err
     }
   },
-  async saveQuestionDb({ commit, state }, {token, questionSend} ){
+  async saveQuestionDb({ dispatch, commit, state }, {token, questionSend} ){
     console.dir(questionSend)
     commit("SET_LOADER_TOGGLE")
     try{
@@ -406,7 +406,6 @@ const actions = {
         console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
 
       }
-
       // questionSend.forEach((element,key) => {
       //   const regexp = new RegExp('img', 'i');
       //   if (regexp.test(element.name) ) {
@@ -419,25 +418,30 @@ const actions = {
       // questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
       const config = {
         method: 'post',
-        url: '/api/auth/create/question',
-        // url: '/api/auth/test/handle',
+        // url: '/api/auth/create/question',
+        url: '/api/question/create_with_variant',
         headers: { 
           Accept: 'application/json', 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          // Authorization: `Bearer ${token}`
         },
         data:  data
       };
       
       console.log(config)
+      
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
-          commit("SET_RESULT_QUESTIONS", data);
+          dispatch('setMessage', {err: false, mes: data.message})
           commit("SET_LOADER_TOGGLE")
         })
+         
+      
     } catch (e) {
-        console.log(e.message);
+      console.log(e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}  ${e.response.data.error[0]}`
+      })
     }
   },
   setIsLoader({ commit }){

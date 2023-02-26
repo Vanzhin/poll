@@ -52,7 +52,7 @@ const actions = {
     }
   },
   //вход на сайт с помощью учетной записи
-  async setLogInUser({ commit }, user) {
+  async setLogInUser({ dispatch, commit }, user) {
     const data = JSON.stringify(user)
     console.log(data)
     try {
@@ -74,15 +74,15 @@ const actions = {
           const base64 = atob(base64Url)
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)
-          commit("SET_MESSAGE_REQUEST",{
+          dispatch('setMessage',{
             mes: "Вы успешно авторизовались",
             err: false
           });
         })
         return false
     } catch (e) {
-      // console.log("ошибка - ", e)
-      commit("SET_MESSAGE_REQUEST",{
+      console.log("ошибка - ", e)
+      dispatch('setMessage',{
         mes:JSON.stringify(e.response.data.message),
         err: true
       });
@@ -90,7 +90,7 @@ const actions = {
     }
   },
   //регистрация на сайте
-  async setRegistrationUser({ commit }, user) {
+  async setRegistrationUser({ dispatch, commit }, user) {
     const data = JSON.stringify(user)
     console.log(data)
     try {
@@ -107,16 +107,16 @@ const actions = {
       await axios(config)
         .then((data)=>{
           console.log("getRegistrationUser - ", data.data.message )
-          commit("SET_MESSAGE_REQUEST",{
+          dispatch('setMessage', {
             mes:JSON.stringify(data.data.message),
             err: false
-          });
+          })
           // commit("SET_IS_AUTCH_USER", true)
         })
         return false
     } catch (e) {
       console.log("ошибка - ", e.response.data.error)
-      commit("SET_MESSAGE_REQUEST",{
+      dispatch('setMessage',{
         mes:JSON.stringify(e.response.data.error[0]),
         err: true
       });
@@ -170,7 +170,7 @@ const actions = {
         })
     } catch (e) {
       const err = e.response.data.message
-      console.log("ошибка - ", err)
+      console.log("ошибка - ",e)
       if (err === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getAuthAccountDb')

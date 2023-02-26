@@ -1,5 +1,5 @@
 import { SET_QUESTION, SET_TEST_TITLE } from './mutation-types.js'
-
+import axios from 'axios';
 
 const state = () => ({
   tests: [
@@ -60,7 +60,41 @@ const actions = {
   getQuestion(){},
   setTestTitle ({dispatch, commit}, {id}) {
     commit("SET_TEST_TITLE", id );
-  }
+  },
+  async importFileTestDb({ dispatch, commit, state }, {token, testFile} ){
+    console.dir(testFile)
+    commit("SET_LOADER_TOGGLE")
+    try{
+      // Array.from(questionSend).filter(inp => inp.name !== "")
+      const data = new FormData(testFile);
+      for(let [name, value] of data) {
+        console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+      }
+      const config = {
+        method: 'post',
+        url: '/api/test/import_with_file',
+        headers: { 
+          Accept: 'application/json', 
+          // Authorization: `Bearer ${token}`
+        },
+        data:  data
+      };
+      console.log("importFileTestDb - ",  config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("importFileTestDb - ",  data)
+          // dispatch('setMessage', {err: false, mes: data.message})
+          // commit("SET_LOADER_TOGGLE")
+        })
+         
+      
+    } catch (e) {
+      console.log("importFileTestDb err- ", e);
+      // dispatch('setMessage', {err: true, 
+      //   mes: `${e.response.data.message}  ${e.response.data.error[0]}`
+      // })
+    }
+  },
 };
 
 const getters = {

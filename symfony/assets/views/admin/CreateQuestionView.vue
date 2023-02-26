@@ -57,10 +57,7 @@
           />
           <br> 
           <div style="width: 100%;">
-            <MessageView
-              v-if="message"
-              :message="message"
-            />
+            <MessageView/>
           </div>
         <button type="submit" class="button">Сохранить</button>
       </form>
@@ -69,12 +66,12 @@
 </template>
  
 <script>
-  import MessageView from "../components/ui/MessageView.vue"
-  import CreateQuestionConformity from '../components/createQuestion/CreateQuestionConformity.vue'
-  import CreateQuestionInputOne from '../components/createQuestion/CreateQuestionInputOne.vue'
-  import CreateQuestionCheckbox from '../components/createQuestion/CreateQuestionCheckbox.vue'
-  import CreateQuestionRadio from '../components/createQuestion/CreateQuestionRadio.vue'
-  import CreateQuestionOrdered from '../components/createQuestion/CreateQuestionOrdered.vue'
+  import MessageView from "../../components/ui/MessageView.vue"
+  import CreateQuestionConformity from '../../components/createQuestion/CreateQuestionConformity.vue'
+  import CreateQuestionInputOne from '../../components/createQuestion/CreateQuestionInputOne.vue'
+  import CreateQuestionCheckbox from '../../components/createQuestion/CreateQuestionCheckbox.vue'
+  import CreateQuestionRadio from '../../components/createQuestion/CreateQuestionRadio.vue'
+  import CreateQuestionOrdered from '../../components/createQuestion/CreateQuestionOrdered.vue'
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
@@ -116,24 +113,25 @@
       }
     },
     computed:{ 
-      ...mapGetters(["getAutchUserToken"]),
-    
+      ...mapGetters(["getAutchUserToken", "getMessage"]),
     },
    
     methods: { 
-      ...mapActions(["saveQuestionDb"]),
+      ...mapActions(["saveQuestionDb", "setMessage"]),
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       onSubmit(e){
-        const trueAnswer = Array.from(e.target).filter(inp => inp.name === "question[answer][]")
+        const trueAnswer = Array.from(e.target).filter(inp => inp.id === "answer_true")
         if (!trueAnswer[0].value) {
-          this.message = {
+          const message = {
+            err: true, 
             mes: 'Укажите правильный ответ!'
           }
-          setTimeout(()=>this.message = null, 5000)
+          this.setMessage(message)
           return
         }
         const questionSend = e.target
+        // this.setMessage({rrr:"dfgdfg"})
         this.saveQuestionDb({questionSend, token: this.getAutchUserToken})
         // this.$router.push({ path:'/result'})
       },

@@ -1,39 +1,40 @@
 <template>
    <div class="cont-message"
-      v-if="message"
+      v-if="getMessage"
     >
     <div class="cont-message-view">
       <p 
         :class="classObject"
       >
-        {{ message.mes }}
+      
+      {{ getMessage.mes }}
       </p>
     </div> 
   </div>
 </template>
 <script>
-
+import { mapGetters } from "vuex"
 export default {
   props: ['message'],
   data() {
     return {
-      classObject: {
-        error: this.message.err,
-        message: !this.message.err,
-      }
     }
   },
-  computed: {
-    
+  computed:{ 
+    classObject() {
+      const errClass = {
+        error:  !this.getMessage ? false: this.getMessage.err,
+        // message: !this.getMessage.err,
+      }
+      return errClass
+    },
+    ...mapGetters(["getMessage"]),
   },
   methods: {
-   
   },
   mounted(){
-    
   },
   unmounted(){
-   
   }
 }
 
@@ -48,9 +49,9 @@ export default {
   &-view{
     position: absolute;
     min-height: 50px;
-    min-width: 200px;
+    min-width: 300px;
     bottom: -26px;
-    max-width: 200px;
+    max-width: 300px;
     z-index: 10;
     display: flex;
     justify-content: center;

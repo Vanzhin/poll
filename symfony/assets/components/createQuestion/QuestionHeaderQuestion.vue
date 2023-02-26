@@ -6,7 +6,7 @@
       class="textarea_input" 
     >
     </textarea>
-    <i class="bi bi-eraser custom-close" title="Очиститеть поле вопроса."
+    <i class="bi bi-eraser custom-close" title="Очистить поле вопроса"
       @click="questionTitle = ''"
       v-if="questionTitle !== ''"
     ></i>
@@ -25,7 +25,7 @@
     <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
     <input  class="" type="file" accept="image/*"  
       @change="changeQuestionImg" 
-      name="question[img]"
+      name="questionImage"
       :value="questionImgValue"
     >
   </div>

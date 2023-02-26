@@ -105,7 +105,49 @@ const router = createRouter({
       path: '/create/question',
       name: 'createQuestion',
       meta: {loyout: 'page', autch: true},
-      component: () => import('../views/CreateQuestionView.vue')
+      component: () => import('../views/admin/CreateQuestionView.vue')
+    },
+    {
+      path: '/admins',
+      name: 'admins',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminHomeView.vue')
+    },
+    {
+      path: '/admins/сhapter',
+      name: 'adminsChapter',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminChapterView.vue')
+    },
+    {
+      path: '/admins/section',
+      name: 'adminsSection',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminSectionView.vue')
+    },
+    {
+      path: '/admins/test',
+      name: 'adminsTest',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminTestView.vue')
+    },
+    {
+      path: '/admins/questions',
+      name: 'adminsQuestions',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateQuestionView.vue')
+    },
+    {
+      path: '/admins/import',
+      name: 'adminsImport',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/ImportQuestionView.vue')
+    },
+    {
+      path: '/admins/user',
+      name: 'adminsUser',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminUsersView.vue')
     },
   ]
 })

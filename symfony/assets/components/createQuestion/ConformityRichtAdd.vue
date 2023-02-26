@@ -22,6 +22,12 @@
           v-model= "subTitle.title"
           class="sub-item-input" 
         >
+        <div class="sub-block">
+          <i class="bi bi-eraser sub-close" title="Очиститеть поле соответствия."
+            @click="subTitle.title = ''"
+            v-if="subTitle.title !== ''"
+          ></i>
+        </div> 
         <i class="bi bi-x-lg sub-close" title="Удалить"
           @click="subTitleDelete(ind)"
         ></i>
@@ -79,7 +85,13 @@ export default {
       align-items:flex-start;
       min-width: 310px;
     }
-    
+    &-block{
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     &-close{
       cursor: pointer;
       transition: all 0.5s ease-out;

@@ -2,17 +2,20 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <QuestionHeaderQuestion/>
-      
+      <input type="hidden" 
+        id="answer_true"
+        :value="answers"
+      >
       <hr>
       <i class="i">Введите правильный ответ.</i>
       <div class="custom-control ">
         <div class="custom-radio img_block">
           <input  
-            name="question[answer][]"
+            name="variant[0][title]"
             v-model="answers"
             class="custom-control-input" required  
           >
-          <i class="bi bi-x-lg custom-close" title="Очистить поле ответа."
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
             @click="answers = ''"
             v-if="answers !== ''"
           ></i>
