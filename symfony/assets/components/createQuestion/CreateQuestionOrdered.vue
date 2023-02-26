@@ -5,11 +5,10 @@
       
       <input type="hidden" 
         id="answer_true"
-        name="question[answer][]" 
         :value="answerSelect"
       >
       <hr>
-      <i class="i">Введите варианты ответов в правильной последовательности.</i>
+      <i class="i">Введите варианты ответов и расположите в правильной последовательности.</i>
       <div class="block_number">
         <label for="number" class="label"> Количество ответов</label>
         <input id="number" type="number"
@@ -23,23 +22,28 @@
         @dragover.prevent
         @dragenter.prevent
       >
-        <div class="custom-control "
+        <div class="custom-control"
           v-for="(answer, ind ) in qestionVariantSort" 
           :key="answer"
           @dragstart="onDragStart($event, ind)"
           draggable="true"
           :dataname="answer.sort"
         >
-          <div :class="{block_drop: drag}"           :dataname="answer.sort"></div>
+          <div :class="{block_drop: drag}" :dataname="answer.sort"></div>
             <div class="custom-radio" >
-              <div class="custom-radio img_block">
+              <div class="custom-radio img_block align-items-center">
                 <textarea rows="1" required
-                  :name="`question[variant][${ind}][title]`"
-                  
-                  v-model.lazy= "answer.title"
+                  :name="`variant[${ind}][title]`"
+                  v-model = "answer.title"
                   class="textarea_input" 
                 >
                 </textarea> 
+                <div class="custom-block">
+                  <i class="bi bi-eraser custom-close" title="Очистить поле"
+                    @click="answer.title = ''"
+                    v-if="answer.title !== ''"
+                  ></i>
+                </div>
                 <i class="bi bi-x-lg custom-close" title="Удалить ответ"
                     @click="answerDelete(ind)"
                     v-if="answers.length > 1"
@@ -195,6 +199,7 @@ export default {
       background-color: rgb(158, 155, 151);
       margin: 2px;
       border-radius: 10px;
+      max-width: 70%;
       &-label {
         position: relative;
         margin-bottom: 0;
@@ -202,6 +207,13 @@ export default {
       }
      
     };
+    &-block{
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     &-radio{
       display: flex;
       align-items:center;
@@ -232,7 +244,7 @@ export default {
     margin: 0 10px;
   }
   .textarea_input{
-    max-width: 50%;
+    max-width: 85%;
     padding: 0;
     padding-left: 10px;
     margin: 5px;

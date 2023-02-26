@@ -32,18 +32,22 @@
   &-page{
     padding:2rem;
     background-color: rgb(237 237 237);
-    height: 91%;
+    min-height: 91%;
+    z-index: 19;
   };
   &-content{
     padding-top:80px;
     padding-left:250px;
     transition:padding-left .3s;
     position:relative;
-    
+    @media (max-width: 768px) {
+      padding-left:60px;
+    }
   };
   &-main-layout{
     position:relative;
-    min-height:100vh
+    min-height:100vh;
+    overflow-y:auto;
   };
 
 }

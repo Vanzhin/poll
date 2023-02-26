@@ -1,5 +1,5 @@
 <template>
-   <div class="cont">
+  <div class="cont">
     <div class="container">
       <div
       :class="classObject"> 
@@ -78,6 +78,7 @@ export default {
   position: fixed;
   z-index: 20;
   width: 100%;
+  background-color: #ffffff;
 }
 
 .wrapper{

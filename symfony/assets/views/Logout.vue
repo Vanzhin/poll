@@ -27,10 +27,7 @@
               </div>
          
               <div>
-               <MessageView
-                v-if="getMessageLogin"
-                :message="getMessageLogin"
-                />
+               <MessageView/>
               </div>
               <div class="text-login">
                 <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
@@ -81,19 +78,12 @@
         }
         console.log(user)
         const res = await this.setLogInUser(user)
-        if (res) {
-          setTimeout(() => this.SET_MESSAGE_REQUEST(null), 5000);
-          return
-        } else {
+        if (!res) {
           setTimeout(() => 
             {
-              this.SET_MESSAGE_REQUEST(null)
               this.$router.push({ path: this.getPageName})
             }, 5000);
-          
         }
-
-       
       }
     }
      // mounted(){

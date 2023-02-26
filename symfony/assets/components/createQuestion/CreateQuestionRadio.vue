@@ -5,7 +5,6 @@
       
       <input type="hidden" 
         id="answer_true"
-        name="question[answer][]" 
         :value="answerSelect"
       >
       <hr>
@@ -29,9 +28,9 @@
             class="custom-control-input"  
           >
           <div class="custom-radio img_block">
-            <textarea rows="1" 
+            <textarea rows="1"
               :name="`variant[${ind}][title]`"
-              :id="'answer' +  (ind) " 
+              :id="'answer' + (ind)" 
               v-model= "answer.title"
               class="textarea_input"
               required 
@@ -41,7 +40,7 @@
               :name="`variant[${ind}][correct]`" 
               :value="ind === answerSelect"
             >
-            <i class="bi bi-eraser custom-close" title="Очиститеть поле ответа."
+            <i class="bi bi-eraser custom-close" title="Очистить поле"
               @click="answer.title = ''"
               v-if="answer.title !== ''"
             ></i>
@@ -62,8 +61,6 @@
           ></i>
           </div> 
           <label class="label">Прикрепить изображение </label>
-          
-          <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
           <input  class="" type="file" accept="image/*"  
             @change="(e)=> changeAnswerImg(e, ind)"
             :name="`variantImage[${ind}]`"

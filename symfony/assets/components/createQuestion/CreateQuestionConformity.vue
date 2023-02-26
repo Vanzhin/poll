@@ -4,12 +4,11 @@
       <QuestionHeaderQuestion/>
 
       <input type="hidden" 
-        id="trueanswer"
-        name="question[answer][]" 
+        id="answer_true"
         :value="answerSelect"
       >
       <hr>
-      <i class="i">Введите пары соответсвтвий. Расположите их в нужной последовательности.</i>
+      <i class="i">Введите пары соответствий. Расположите их в нужной последовательности.</i>
       <div class="block_number">
         <label for="number" class="label"> Количество соответсвтвий:</label>
         <input id="number" type="number"
@@ -32,26 +31,40 @@
           <div :class="{block_drop: drag}"           :dataname="answer.sort"></div>
             <div class="custom-radio row" >
               <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
-                <textarea rows="1" required
-                  :name="`question[variant][${ind}][title]`"
-                  v-model.lazy= "answer.title"
-                  class="textarea_input" 
-                >
-                </textarea> 
+                <div class="d-flex align-items-center">
+                  <textarea rows="1" required
+                    :name="`variant[${ind}][title]`"
+                    v-model= "answer.title"
+                    class="textarea_input" 
+                  >
+                  </textarea> 
+                  <div class="custom-block">
+                    <i class="bi bi-eraser custom-close" title="Очистить поле"
+                      @click="answer.title = ''"
+                      v-if="answer.title !== ''"
+                    ></i>
+                  </div>
+                </div>
               </div>
               <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <div class="row d-flex align-items-center">
                   <input required
                     :name="`question[subTitle][${ind}]`"
-                    v-model.lazy= "answer.subTitle"
+                    v-model= "answer.subTitle"
                     class="input" 
                   >
-                 
+                  <div class="custom-block">
+                    <i class="bi bi-eraser custom-close" title="Очистить поле"
+                      @click="answer.title = ''"
+                      v-if="answer.subTitle !== ''"
+                    ></i>
+                  </div> 
+                  <div class="custom-block">
                     <i class="bi bi-x-lg custom-close" title="Удалить пару"
                       @click="answerDelete(ind)"
                       v-if="answers.length > 1"
                     ></i>
-                 
+                  </div>
                 </div>
               </div>
               
@@ -61,17 +74,19 @@
                 <img :src="answer.url"  width="200"
                   v-if="typeof answer.file === 'object'"
                 /> 
-                <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-                  @click="answerImgDelete(ind)"
-                v-if="typeof answer.file === 'object'"
-                ></i>
+                <div class="custom-block">
+                  <i class="bi bi-x-lg custom-close" title="Удалить изображение"
+                    @click="answerImgDelete(ind)"
+                  v-if="typeof answer.file === 'object'"
+                  ></i>
+                </div>
               </div> 
               <label class="label">Прикрепить изображение </label>
               
               <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
               <input  class="" type="file" accept="image/*"  
                 @change="(e)=> changeAnswerImg(e, ind)"
-                :name="`variant[${ind}][img]`"
+                :name="`variantImage[${ind}]`"
                 :value="answer.value"
               >
             </div>
@@ -210,6 +225,13 @@ export default {
       flex-wrap:wrap;
       width: 100%;
     }
+    &-block{
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     &-close{
       cursor: pointer;
       transition: all 0.5s ease-out;
@@ -217,6 +239,7 @@ export default {
       &:hover{
         color: rgb(185, 48, 14);
         transform: scale(1.25);
+
       }
       &-block{
         width: 15px;

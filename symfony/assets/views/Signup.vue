@@ -46,10 +46,7 @@
               />
             </div>
             <div>
-              <MessageView
-                v-if="getMessageLogin"
-                :message="getMessageLogin"
-              />
+              <MessageView/>
             </div>
             <div class="text-login">
               <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
@@ -105,10 +102,8 @@
           const res = await this.setRegistrationUser(user)
           console.log('Регистрация res -', res)
           if (res) {
-            setTimeout(() => this.SET_MESSAGE_REQUEST(null), 5000);
             return
           } else {
-            setTimeout(() => this.SET_MESSAGE_REQUEST(null), 7000);
             this.clearForm()
           }
           await  this.setLogInUser({username:user.email,password: user.password})

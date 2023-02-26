@@ -6,7 +6,7 @@
       class="textarea_input" 
     >
     </textarea>
-    <i class="bi bi-eraser custom-close" title="Очиститеть поле вопроса."
+    <i class="bi bi-eraser custom-close" title="Очистить поле вопроса"
       @click="questionTitle = ''"
       v-if="questionTitle !== ''"
     ></i>
