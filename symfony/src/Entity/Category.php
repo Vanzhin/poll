@@ -7,12 +7,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[Gedmo\Tree(type: 'nested')]
-#[ORM\Table(name: 'categories')]
+#[ORM\Table(name: 'category')]
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[UniqueEntity(
     fields: ['title', 'lvl'],
@@ -21,6 +22,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 #[ORM\UniqueConstraint('title_lvl_idx', ['title', 'lvl'])]
 class Category
 {
+    use TimestampableEntity;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

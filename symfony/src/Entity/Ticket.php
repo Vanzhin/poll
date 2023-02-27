@@ -24,9 +24,6 @@ class Ticket
 //    #[Groups(['main'])]
     private Collection $question;
 
-    #[ORM\ManyToMany(targetEntity: Test::class, mappedBy: 'ticket')]
-    private Collection $tests;
-
     #[ORM\Column(length: 255)]
     #[Groups(['main', 'account', 'admin'])]
     private ?string $title = null;
@@ -37,7 +34,6 @@ class Ticket
     public function __construct()
     {
         $this->question = new ArrayCollection();
-        $this->tests = new ArrayCollection();
         $this->results = new ArrayCollection();
     }
 
@@ -66,33 +62,6 @@ class Ticket
     public function removeQuestion(Question $question): self
     {
         $this->question->removeElement($question);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Test>
-     */
-    public function getTests(): Collection
-    {
-        return $this->tests;
-    }
-
-    public function addTest(Test $test): self
-    {
-        if (!$this->tests->contains($test)) {
-            $this->tests->add($test);
-            $test->addTicket($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTest(Test $test): self
-    {
-        if ($this->tests->removeElement($test)) {
-            $test->removeTicket($this);
-        }
 
         return $this;
     }
