@@ -20,12 +20,12 @@ class Section
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\ManyToOne(inversedBy: 'section')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category = null;
-
     #[ORM\OneToMany(mappedBy: 'section', targetEntity: Question::class)]
     private Collection $questions;
+
+    #[ORM\ManyToOne(inversedBy: 'section')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Test $test = null;
 
     public function __construct()
     {
@@ -45,18 +45,6 @@ class Section
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): self
-    {
-        $this->category = $category;
 
         return $this;
     }
@@ -87,6 +75,18 @@ class Section
                 $question->setSection(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTest(): ?Test
+    {
+        return $this->test;
+    }
+
+    public function setTest(?Test $test): self
+    {
+        $this->test = $test;
 
         return $this;
     }

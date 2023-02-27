@@ -2,18 +2,9 @@
 
 namespace App\Repository;
 
-use App\Entity\Question;
 use App\Entity\Test;
-use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\ParameterType;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\ResultSetMapping;
-
 
 /**
  * @extends ServiceEntityRepository<Test>
@@ -48,46 +39,28 @@ class TestRepository extends ServiceEntityRepository
         }
     }
 
-    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
-    {
-        return $queryBuilder ?? $this->createQueryBuilder('t');
-    }
+//    /**
+//     * @return Test[] Returns an array of Test objects
+//     */
+//    public function findByExampleField($value): array
+//    {
+//        return $this->createQueryBuilder('t')
+//            ->andWhere('t.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->orderBy('t.id', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
 
-    /**
-     * @throws Exception
-     */
-    public function getRandomQuestions(Test $test, int $limit = 20): array
-    {
-        $conn = $this->getEntityManager()
-            ->getConnection();
-        $sql = "SELECT q.id FROM test t JOIN test_ticket tt on t.id = tt.test_id JOIN ticket_question tq on tt.ticket_id = tq.ticket_id JOIN question q on q.id = tq.question_id WHERE t.id = :testId ORDER BY RAND() LIMIT :limit";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindValue(':testId', $test->getId(),ParameterType::INTEGER);
-        $stmt->bindValue(':limit', $limit, ParameterType::INTEGER);
-        $raw = $stmt->executeQuery()->fetchFirstColumn();
-        return $this->getEntityManager()->getRepository(Question::class)->findBy(['id'=> $raw]);
-    }
-
-    public function findLastUpdatedQuery(): QueryBuilder
-    {
-        $queryBuilder = $this->createQueryBuilder('t');
-        return
-            $this->lastUpdated($queryBuilder)
-                ->leftJoin('t.ticket', 'ti')
-                ->addSelect('ti')
-            ;
-    }
-
-    private function latest(QueryBuilder $queryBuilder = null): QueryBuilder
-    {
-        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('t.createdAt', 'DESC');
-
-    }
-
-    private function lastUpdated(QueryBuilder $queryBuilder = null): QueryBuilder
-    {
-        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('t.updatedAt', 'DESC');
-
-    }
-
+//    public function findOneBySomeField($value): ?Test
+//    {
+//        return $this->createQueryBuilder('t')
+//            ->andWhere('t.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->getQuery()
+//            ->getOneOrNullResult()
+//        ;
+//    }
 }

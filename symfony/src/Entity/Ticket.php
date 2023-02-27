@@ -31,6 +31,9 @@ class Ticket
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class)]
     private Collection $results;
 
+    #[ORM\ManyToOne(inversedBy: 'ticket')]
+    private ?Test $test = null;
+
     public function __construct()
     {
         $this->question = new ArrayCollection();
@@ -104,6 +107,18 @@ class Ticket
                 $result->setTicket(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTest(): ?Test
+    {
+        return $this->test;
+    }
+
+    public function setTest(?Test $test): self
+    {
+        $this->test = $test;
 
         return $this;
     }
