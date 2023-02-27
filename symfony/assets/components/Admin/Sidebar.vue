@@ -1,22 +1,19 @@
 <template>
   <ul class="sidenav app-sidenav" :class="{open: value}">
-    
-    <li class="list"
+    <RouterLink
+      tag="li"
+      active-class="list-active"
+      :to="link.url"
+      :exact="link.exact"
+      class="list-link"
       v-for="link in links"
       :key="link.url"
-    > 
-      
-      <RouterLink
-        tag="li"
-        active-class="list-active"
-        :to="link.url"
-        :exact="link.exact"
-        class="list-link"
-      >
-      <span v-html="link.icon"  class="list-icon" :title="link.title"></span>
+    >    
+      <li class="list"> 
+        <span v-html="link.icon"  class="list-icon" :title="link.title"></span>
         {{link.title}}
-      </RouterLink>
-    </li>
+      </li>
+    </RouterLink>
   </ul>
 </template>
 
@@ -61,53 +58,49 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .app-sidenav{
-    padding-top:15px;
-    position:absolute;
-    top:80px;
-    width:250px;
-    transition:transform .3s;
-    transition:transform .3s,-webkit-transform .3s;
-    bottom:0!important;
-    height:auto!important;
-    z-index: 18;
+.app-sidenav{
+  padding-top:15px;
+  position:absolute;
+  top:80px;
+  width:250px;
+  transition:transform .3s;
+  transition:transform .3s,-webkit-transform .3s;
+  bottom:0!important;
+  height:auto!important;
+  z-index: 18;
+}
+.app-sidenav.open{
+  -webkit-transform:translateX(0);
+  transform:translateX(0)
+}
+.list{
+  list-style-type:none;
+  padding: 5px;
+  @media (max-width: 768px) {
+    width: 28px;
+    overflow:hidden;
+    height: 32px;
+    }
+  &-icon{
+    margin-right: 15px;
   }
-  .app-sidenav.open{
-    -webkit-transform:translateX(0);
-    transform:translateX(0)
+  &-link{
+    color: rgb(94, 93, 92);
+    text-decoration: none;
   }
-
-  .list{
-    list-style-type:none;
-    padding: 5px;
-    @media (max-width: 768px) {
-        width: 28px;
-        overflow:hidden;
-        height: 32px;
-
-      }
-    &-icon{
-     margin-right: 15px;
+  &-active{
+    color: rgb(12, 137, 187);
+  }
+  &:hover{
+    cursor: pointer;
+    background-color: rgb(186, 217, 245);
+    .list-icon{
+      color: rgb(19, 19, 19);
     }
-    &-link{
-      color: rgb(94, 93, 92);
-      text-decoration: none;
-     
+    .list-link{
+      color: rgb(19, 19, 19);
     }
-    &-active{
-      color: rgb(30, 74, 92);
-    }
-    &:hover{
-      cursor: pointer;
-      background-color: rgb(186, 217, 245);
-      .list-icon{
-        color: rgb(19, 19, 19);
-      }
-      .list-link{
-        color: rgb(19, 19, 19);
-      }
-    }
-     
+  }
 }
 </style>
 

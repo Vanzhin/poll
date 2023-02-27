@@ -21,11 +21,13 @@
 <script>
   import MessageView from "../../components/ui/MessageView.vue"
   import Loader from '../../components/ui/Loader.vue'
+  import ItemEdit from "../../components/Admin/ItemEdit.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      MessageView
+      MessageView,
+      ItemEdit
     },
     data() {
       return {

@@ -18,7 +18,7 @@
             {{ area.id }} - {{ area.title }}
           </RouterLink>
         </div>
-        <div class="test__card-limitation "
+        <div class="test__card-limitation"
           v-else
           title="У Вас ограниченный доступ. Подпишитесь на группу."
         >
