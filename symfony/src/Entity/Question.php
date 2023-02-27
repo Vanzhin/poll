@@ -53,11 +53,18 @@ class Question
     #[Groups(['main', 'admin'])]
     private ?string $image = null;
 
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'question')]
+    private Collection $categories;
+
+    #[ORM\ManyToOne(inversedBy: 'questions')]
+    private ?Section $section = null;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->variant = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -208,6 +215,45 @@ class Question
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->removeElement($category)) {
+            $category->removeQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function getSection(): ?Section
+    {
+        return $this->section;
+    }
+
+    public function setSection(?Section $section): self
+    {
+        $this->section = $section;
 
         return $this;
     }

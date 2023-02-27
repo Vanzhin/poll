@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
@@ -74,6 +75,18 @@ class Category
     #[Groups(['main', 'admin'])]
     private ?string $image = null;
 
+    #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'categories')]
+    private Collection $question;
+
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Section::class, orphanRemoval: true)]
+    private Collection $section;
+
+    public function __construct()
+    {
+        $this->question = new ArrayCollection();
+        $this->section = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -144,6 +157,60 @@ class Category
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestion(): Collection
+    {
+        return $this->question;
+    }
+
+    public function addQuestion(Question $question): self
+    {
+        if (!$this->question->contains($question)) {
+            $this->question->add($question);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): self
+    {
+        $this->question->removeElement($question);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Section>
+     */
+    public function getSection(): Collection
+    {
+        return $this->section;
+    }
+
+    public function addSection(Section $section): self
+    {
+        if (!$this->section->contains($section)) {
+            $this->section->add($section);
+            $section->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSection(Section $section): self
+    {
+        if ($this->section->removeElement($section)) {
+            // set the owning side to null (unless already changed)
+            if ($section->getCategory() === $this) {
+                $section->setCategory(null);
+            }
+        }
 
         return $this;
     }
