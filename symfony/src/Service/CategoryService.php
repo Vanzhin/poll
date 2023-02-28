@@ -39,6 +39,7 @@ class CategoryService
             $category->setImage($this->categoryImageUploader->uploadImage($image, $category->getImage()));
         };
 
+
         $this->em->persist($category);
         $this->em->flush();
         return $category;

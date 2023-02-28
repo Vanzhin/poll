@@ -254,6 +254,7 @@ class ValidationService
 
     public function categoryValidate(array $data, File $image = null): ?array
     {
+
         $errors = [];
         foreach ($data as $key => $value) {
             if ($key === 'title') {
@@ -305,9 +306,12 @@ class ValidationService
 
         if (!isset($data['parentId'])) {
             foreach ($this->em->getRepository(Category::class)->findBy(['parent' => null]) as $category) {
-                if ($category->gettitle() === $data['title']) {
-                    $errors[] = 'Такое название уже существует в данном разделе';
+                if (array_key_exists('title', $data)) {
+                    if ($category->gettitle() === $data['title']) {
+                        $errors[] = 'Такое название уже существует в данном разделе';
+                    }
                 }
+
             };
         }
 

@@ -4,9 +4,9 @@ namespace App\Controller\Api;
 
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
+use App\Service\NormalizerService;
 use App\Service\Paginator;
 use App\Twig\Extension\AppUpLoadedAsset;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,18 +17,9 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 class CategoryController extends AbstractController
 {
     #[Route('/api/category', name: 'app_api_category_index')]
-    public function index(Request $request, AppUpLoadedAsset $upLoadedAsset, Paginator $paginator, CategoryRepository $repository): JsonResponse
+    public function index(Request $request, AppUpLoadedAsset $upLoadedAsset, Paginator $paginator, CategoryRepository $repository, NormalizerService $normalizerService): JsonResponse
     {
         $parentId = $request->query->get('parent');
-
-        $dateCallback = function ($key, $innerObject, string $attributeName) use ($upLoadedAsset) {
-            if ($attributeName === 'image' && !is_null($key)) {
-                if ($innerObject instanceof Category) {
-                    return $upLoadedAsset->asset('category_upload_url', $key);
-
-                }
-            };
-        };
         $pagination = $paginator->getPagination($repository->findAllChildrenQuery(!is_null($parentId) && !is_null($repository->find($parentId)) ? $parentId : null));
         if ($pagination->count() > 0) {
             $response['category'] = $pagination;
@@ -52,23 +43,15 @@ class CategoryController extends AbstractController
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,
                 AbstractNormalizer::CALLBACKS => [
-                    'image' => $dateCallback,
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
                 ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
     #[Route('/api/category/{id}/children', name: 'app_api_category_children')]
-    public function getChildren(Category $category, AppUpLoadedAsset $upLoadedAsset, EntityManagerInterface $em): JsonResponse
+    public function getChildren(Category $category, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
-        $dateCallback = function ($key, $innerObject, string $attributeName) use ($upLoadedAsset) {
-            if ($attributeName === 'image' && !is_null($key)) {
-                if ($innerObject instanceof Category) {
-                    return $upLoadedAsset->asset('category_upload_url', $key);
-
-                }
-            };
-        };
         return $this->json(
             $category->getChildren(),
             200,
@@ -78,7 +61,7 @@ class CategoryController extends AbstractController
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,
                 AbstractNormalizer::CALLBACKS => [
-                    'image' => $dateCallback,
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
                 ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);

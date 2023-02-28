@@ -24,6 +24,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 class Category
 {
     use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
