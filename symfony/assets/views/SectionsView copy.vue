@@ -12,10 +12,9 @@
           v-for="section in sections" 
           :key="section.id"
         >
-          <div
+          <RouterLink :to="{ name: 'chapter', params: { id: section.id , num:1} }"
             class="link"
-            @click="categoryUpdate({id: section.id, title: section.title})"
-          ><!-- @click="categoryUpdate(section.id)" -->
+          >
             <div class="card-header flex-shrink-1">
                 <h5 class="my-0 font-weight-normal">{{ section.title }}</h5>
             </div>
@@ -31,7 +30,7 @@
             <div class="card-body">
               <h6>{{ section.information }}</h6>
             </div> 
-          </div>
+          </RouterLink>
         </div>
       </div>
       <Pagination/>
@@ -63,19 +62,14 @@ export default {
     sections () {
       return this.$store.getters.getCategorys
     },
-  },
-  methods: {
-    ...mapActions(["getCategorysDB", "setCategoryTitle"]),
-    async categoryUpdate({id, title}){
-      this.setCategoryTitle(title)
-      await this.getCategorysDB({page:null, parentId: id})
-      this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
+    },
+    methods: {
+      ...mapActions(["getCategorysDB"]),
+    },
+    async mounted(){
+      await this.getCategorysDB({page:null})
+      this.isLoader = false
     }
-  },
-  async mounted(){
-    await this.getCategorysDB({page:null})
-    this.isLoader = false
-  }
   
 } 
  
@@ -126,7 +120,6 @@ export default {
   &:hover{
     text-decoration:underline;
     color: cadetblue;
-    cursor: pointer;
   }
 }
  @media (min-width: 1024px) {

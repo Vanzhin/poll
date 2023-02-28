@@ -1,34 +1,38 @@
 <template>
-   <div class="block">
-      <div class="block-pagination">
-        <div class="block-pagination-element"
-          @click = "paginate('-1')"
-        >
-          <span>
-            &laquo; Предыдущая
-          </span>
-        </div>
-        
-        <div 
-          v-for="(item, key) in paginationArray"
-          :key = "item.label" 
-          class="block-pagination-element" 
-          :class="{active:item.active}"
-          @click =" paginate(parseInt(item.label))"
-        >
-          <span>
-            {{item.label}}
-          </span>
-        </div>
-        
-        <div class="block-pagination-element"
-          @click = "paginate('+1')"
-        >
-          <span>
-            Следующая &raquo;
-          </span>
-        </div>
+   
+  <div class="block" 
+    v-if="getPagination.length > 1"
+  >
+ 
+    <div class="block-pagination">
+      <div class="block-pagination-element"
+        @click = "paginate('-1')"
+      >
+        <span>
+          &laquo; Предыдущая
+        </span>
       </div>
+
+      <div 
+        v-for="(item, key) in getPagination"
+        :key = "item.label" 
+        class="block-pagination-element" 
+        :class="{active:item.active}"
+        @click =" paginate(parseInt(item.label))"
+      >
+        <span>
+          {{item.label}}
+        </span>
+      </div>
+      
+      <div class="block-pagination-element"
+        @click = "paginate('+1')"
+      >
+        <span>
+          Следующая &raquo;
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,44 +44,28 @@ export default {
     return {
       isActive: false,
       currentPage: 1,
-      paginationArray: [
-        {active: true,
-          label: 1
-        },
-        {active: false,
-          label: 2
-        },
-        {active: false,
-          label: 3
-        },
-        {active: false,
-          label: 4
-        },
-      ]
     }
   },
   components:{
    
   },
   computed:{
-    // return this.$store.getters.getTestTitleActive
-   
+    ...mapGetters(["getPagination", "getPageActive"]),
   },
   methods: {
-    paginate (page){
-      this.paginationArray[this.currentPage-1].active = false
-      console.log(this.paginationArray[this.currentPage-1].active)
+    ...mapActions(["getCategorysDB"]),
+    async paginate (page){
+      // this.paginationArray[this.currentPage-1].active = false
+      // console.log(this.paginationArray[this.currentPage-1].active)
       switch (page) {
         case '-1' : {
           if (this.currentPage > 1) {
-            
             --this.currentPage
           }
         break;
         }
         case '+1' : {
-          if  (this.currentPage < this.paginationArray.length) {
-
+          if  (this.currentPage < this.getPagination.length) {
             ++this.currentPage
           }
         break;
@@ -86,13 +74,13 @@ export default {
           this.currentPage = page 
         }
       }
-      this.paginationArray[this.currentPage-1].active = true
-      console.log(this.paginationArray[this.currentPage-1].active)
-      //  dispatch(getDbArticlesPage({param, page: curent, token}))
+      // this.paginationArray[this.currentPage-1].active = true
+      // console.log(this.paginationArray[this.currentPage-1].active)
+      await this.getCategorysDB({page: this.currentPage })
     }
   }, 
   mounted() {
-    
+    // this.currentPage = getPageActive
   }
 } 
 
@@ -101,6 +89,8 @@ export default {
 
 <style lang="scss" scoped>
 .block{
+  margin-top: 20px;
+  margin-bottom: 20px;
   &-pagination{
       display: flex;
       justify-content: center;

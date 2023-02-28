@@ -45,12 +45,6 @@ export default {
   },
   computed:{
     ...mapGetters(["getIsAutchUser"]),
-    areaTitle () {
-        console.log(this.$route.params.id)
-        console.log(this.$store.getters.getAreaTitle(this.$route.params.id))
-        return this.$store.getters.getAreaTitle(this.$route.params.id)
-      },
-    
   },
   methods:{
     childToggle(){
@@ -61,7 +55,6 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  
   .item{
     &__block{
     margin: 10px 10px;}

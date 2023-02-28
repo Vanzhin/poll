@@ -1,5 +1,8 @@
-import { SET_QUESTION } from './mutation-types.js'
-
+import { 
+  SET_QUESTION,
+  SET_TICKETS
+ } from './mutation-types.js'
+ import axios from 'axios';
 
 const state = () => ({
   tickets: [
@@ -48,7 +51,10 @@ const actions = {
         console.log(err);
       });
   },
-  getQuestion(){}
+  getQuestion(){},
+  setTickets ({dispatch, commit}, tickets) {
+    commit("SET_TICKETS", tickets)
+  }
 };
 
 const getters = {
@@ -60,15 +66,17 @@ const getters = {
 
 const mutations = {
   GET_COURCES(state, cources) {
-    return state.cources = {
+    state.cources = {
       active: 0, list: cources, isLoaded: true
     }
   },
   [SET_QUESTION] (state, id) {
     if (state.cources.list.hasOwnProperty(id)) {
-      return state.cources.active = id;
+      state.cources.active = id;
     }
-    return;
+  },
+  [SET_TICKETS] (state, tickets){
+     state.tickets = tickets
   },
 }
 export default {

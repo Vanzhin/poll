@@ -1,7 +1,7 @@
 <template>
   <div class="block">
     <div class="title">
-      <h2> {{ testName.title }}</h2>
+      <h2> {{ testName }}</h2>
       <div class="test">
         <p>При выборе случайного билета система сама сделает выбор. Случайный набор сгенерирует билет с произвольным составом вопросов. Выбор набора с пометкой "Таймер" ограничит время на прохождение теста.</p>  
       </div>
@@ -46,7 +46,7 @@
         > 
           <div class="card flex-shrink-1 shadow">
             <RouterLink :to="{ name: 'ticket', params: { id: ticket.id } }" class="py-2 link">
-              Билет №{{ ind + 1 }}
+              {{ ticket.title }}
             </RouterLink>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default {
      
     },
     mounted(){
-      this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
+      // this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
     }
   
 } 

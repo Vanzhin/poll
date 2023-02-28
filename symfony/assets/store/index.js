@@ -10,6 +10,7 @@ import user from './modules/user'
 import sections from './modules/sections'
 import areas from './modules/areas'
 import tickets from './modules/tickets'
+import category from './modules/category';
 
 export default createStore({
   state,
@@ -23,6 +24,7 @@ export default createStore({
     user,
     sections,
     areas,
-    tickets
+    tickets,
+    category
   },
 })

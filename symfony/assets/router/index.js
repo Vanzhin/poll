@@ -73,7 +73,8 @@ const router = createRouter({
       props: true,
     },
     {
-      path: '/chapter/:id',
+      // path: '/iter/:num/group/:id',
+      // path: '/?iter=1/group/:id',
       name: 'chapter',
       meta: {loyout: 'page', autch: false},
       component: () => import('../views/AreasView.vue')

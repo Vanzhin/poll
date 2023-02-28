@@ -14,33 +14,30 @@
     </div>
     <div class="container">
       <div class="row">
-       
-          <div v-for="(qestion, index ) in getResultQuestions" 
-            :key="qestion.id"
-          >
-            <ResultTestQuestionCheckbox
-              :qestion="qestion"
-              :index="index"
-              v-if="qestion.type==='radio' || qestion.type==='checkbox'"
-            />
-            <ResultTestQuestionOrdered
-              :qestion="qestion"
-              :index="index"
-              v-else-if="qestion.type==='order'"
-            />
-            <ResultTestQuestionInputOne
-              :qestion="qestion"
-              :index="index"
-              v-else-if="qestion.type==='input_one'"
-            />
-            <ResultTestQuestionConformity
-              :qestion="qestion"
-              :index="index"
-              v-else-if="qestion.type==='conformity'"
-            />
-          </div>
-          
-       
+        <div v-for="(qestion, index ) in getResultQuestions" 
+          :key="qestion.id"
+        >
+          <ResultTestQuestionCheckbox
+            :qestion="qestion"
+            :index="index"
+            v-if="qestion.type==='radio' || qestion.type==='checkbox'"
+          />
+          <ResultTestQuestionOrdered
+            :qestion="qestion"
+            :index="index"
+            v-else-if="qestion.type==='order'"
+          />
+          <ResultTestQuestionInputOne
+            :qestion="qestion"
+            :index="index"
+            v-else-if="qestion.type==='input_one'"
+          />
+          <ResultTestQuestionConformity
+            :qestion="qestion"
+            :index="index"
+            v-else-if="qestion.type==='conformity'"
+          />
+        </div>
       </div>
   </div>
 </div>
