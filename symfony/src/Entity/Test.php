@@ -9,6 +9,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test
@@ -28,6 +30,10 @@ class Test
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['main'])]
     private ?string $description = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['title'])]
+    private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class)]
     private Collection $question;

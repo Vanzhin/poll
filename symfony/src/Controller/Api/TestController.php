@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Test;
+use App\Repository\QuestionRepository;
 use App\Repository\TestRepository;
 use App\Service\QuestionHandler;
 use App\Service\SessionService;
@@ -39,11 +40,11 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_question', methods: ['GET'])]
-    public function getRandomQuestion(Test $test, TestRepository $testRepository, QuestionHandler $questionService, SessionService $sessionService, int $count): JsonResponse
+    public function getRandomQuestion(Test $test,QuestionRepository $questionRepository, QuestionHandler $questionService, SessionService $sessionService, int $count): JsonResponse
     {
         try {
             $sessionService->remove(QuestionHandler::SHUFFLED);
-            $questions = $questionService->getPreparedQuestions($testRepository->getRandomQuestions($test, $count));
+            $questions = $questionService->getPreparedQuestions($questionRepository->getRandomQByTest($test, $count));
             $response = [
                 'test' => $test->getTitle(),
                 'questions' => $questions

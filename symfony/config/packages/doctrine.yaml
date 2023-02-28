@@ -16,6 +16,10 @@ doctrine:
                 prefix: 'App\Entity'
                 alias: App
 
+        dql:
+            numeric_functions:
+                rand: App\DoctrineFunction\Rand
+
 when@test:
     doctrine:
         dbal:
