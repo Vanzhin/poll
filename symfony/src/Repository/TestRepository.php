@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Question;
 use App\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -38,6 +40,9 @@ class TestRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+
+
 
 //    /**
 //     * @return Test[] Returns an array of Test objects
