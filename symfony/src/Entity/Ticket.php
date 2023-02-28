@@ -18,14 +18,12 @@ class Ticket
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['main'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets')]
 //    #[Groups(['main'])]
     private Collection $question;
-
-    #[ORM\ManyToMany(targetEntity: Test::class, mappedBy: 'ticket')]
-    private Collection $tests;
 
     #[ORM\Column(length: 255)]
     #[Groups(['main', 'account', 'admin'])]
@@ -34,10 +32,12 @@ class Ticket
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class)]
     private Collection $results;
 
+    #[ORM\ManyToOne(inversedBy: 'ticket')]
+    private ?Test $test = null;
+
     public function __construct()
     {
         $this->question = new ArrayCollection();
-        $this->tests = new ArrayCollection();
         $this->results = new ArrayCollection();
     }
 
@@ -66,33 +66,6 @@ class Ticket
     public function removeQuestion(Question $question): self
     {
         $this->question->removeElement($question);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Test>
-     */
-    public function getTests(): Collection
-    {
-        return $this->tests;
-    }
-
-    public function addTest(Test $test): self
-    {
-        if (!$this->tests->contains($test)) {
-            $this->tests->add($test);
-            $test->addTicket($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTest(Test $test): self
-    {
-        if ($this->tests->removeElement($test)) {
-            $test->removeTicket($this);
-        }
 
         return $this;
     }
@@ -135,6 +108,18 @@ class Ticket
                 $result->setTicket(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTest(): ?Test
+    {
+        return $this->test;
+    }
+
+    public function setTest(?Test $test): self
+    {
+        $this->test = $test;
 
         return $this;
     }

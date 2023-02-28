@@ -8,9 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
-
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test
@@ -20,25 +18,34 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['main', 'category'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     #[Groups(['main'])]
     private ?string $title = null;
 
-    #[ORM\Column(length: 100, unique: true)]
-    #[Gedmo\Slug(fields: ['title'])]
-    private ?string $slug = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['main'])]
+    private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: Ticket::class, inversedBy: 'tests', cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class)]
+    private Collection $question;
+
+    #[ORM\OneToOne(mappedBy: 'test', cascade: ['persist', 'remove'])]
+    private ?Category $category = null;
+
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Section::class, orphanRemoval: true)]
+    private Collection $section;
+
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class)]
     #[Groups(['main'])]
     private Collection $ticket;
 
-    #[ORM\ManyToOne(inversedBy: 'test')]
-    private ?Section $section = null;
-
     public function __construct()
     {
+        $this->question = new ArrayCollection();
+        $this->section = new ArrayCollection();
         $this->ticket = new ArrayCollection();
     }
 
@@ -59,6 +66,100 @@ class Test
         return $this;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestion(): Collection
+    {
+        return $this->question;
+    }
+
+    public function addQuestion(Question $question): self
+    {
+        if (!$this->question->contains($question)) {
+            $this->question->add($question);
+            $question->setTest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): self
+    {
+        if ($this->question->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getTest() === $this) {
+                $question->setTest(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($category === null && $this->category !== null) {
+            $this->category->setTest(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($category !== null && $category->getTest() !== $this) {
+            $category->setTest($this);
+        }
+
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Section>
+     */
+    public function getSection(): Collection
+    {
+        return $this->section;
+    }
+
+    public function addSection(Section $section): self
+    {
+        if (!$this->section->contains($section)) {
+            $this->section->add($section);
+            $section->setTest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSection(Section $section): self
+    {
+        if ($this->section->removeElement($section)) {
+            // set the owning side to null (unless already changed)
+            if ($section->getTest() === $this) {
+                $section->setTest(null);
+            }
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Ticket>
      */
@@ -71,6 +172,7 @@ class Test
     {
         if (!$this->ticket->contains($ticket)) {
             $this->ticket->add($ticket);
+            $ticket->setTest($this);
         }
 
         return $this;
@@ -78,19 +180,12 @@ class Test
 
     public function removeTicket(Ticket $ticket): self
     {
-        $this->ticket->removeElement($ticket);
-
-        return $this;
-    }
-
-    public function getSection(): ?Section
-    {
-        return $this->section;
-    }
-
-    public function setSection(?Section $section): self
-    {
-        $this->section = $section;
+        if ($this->ticket->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getTest() === $this) {
+                $ticket->setTest(null);
+            }
+        }
 
         return $this;
     }

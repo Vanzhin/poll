@@ -53,6 +53,12 @@ class Question
     #[Groups(['main', 'admin'])]
     private ?string $image = null;
 
+    #[ORM\ManyToOne(inversedBy: 'questions')]
+    private ?Section $section = null;
+
+    #[ORM\ManyToOne(inversedBy: 'question')]
+    private ?Test $test = null;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -208,6 +214,30 @@ class Question
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getSection(): ?Section
+    {
+        return $this->section;
+    }
+
+    public function setSection(?Section $section): self
+    {
+        $this->section = $section;
+
+        return $this;
+    }
+
+    public function getTest(): ?Test
+    {
+        return $this->test;
+    }
+
+    public function setTest(?Test $test): self
+    {
+        $this->test = $test;
 
         return $this;
     }

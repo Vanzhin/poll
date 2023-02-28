@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Question;
 use App\Entity\Variant;
+use App\Service\NormalizerService;
 use App\Service\QuestionService;
 use App\Service\ValidationService;
 use App\Service\VariantService;
@@ -29,23 +30,8 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/question/{id}', name: 'app_api_question_show', methods: ['GET'])]
-    public function show(Question $question, AppUpLoadedAsset $upLoadedAsset): JsonResponse
+    public function show(Question $question, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
-
-//todo убрать в сервис
-        $dateCallback = function ($key, $innerObject, string $attributeName) use ($upLoadedAsset) {
-            if ($attributeName === 'image' && !is_null($key)) {
-                if ($innerObject instanceof Question) {
-                    return $upLoadedAsset->asset('question_upload_url', $key);
-
-                }
-                if ($innerObject instanceof Variant) {
-                    return $upLoadedAsset->asset('variant_upload_url', $key);
-
-                }
-            };
-        };
-
         return $this->json(
             $question,
             200,
@@ -54,7 +40,7 @@ class QuestionController extends AbstractController
                 'groups' => 'admin',
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractNormalizer::CALLBACKS => [
-                    'image' => $dateCallback,
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
                 ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
@@ -170,7 +156,7 @@ class QuestionController extends AbstractController
         $variantImages = $request->files->get('variantImage');
         $variantErrors = $validation->manyVariantsValidate($data ?? [], $variantImages) ?? [];
         $errors = array_merge($errors, $variantErrors);
-//
+
         if (count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',

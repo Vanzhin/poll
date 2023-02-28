@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Question;
+use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Entity\Type;
 use App\Entity\Variant;
@@ -17,7 +18,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
     function loadData(ObjectManager $manager)
     {
-        $this->createMany(Question::class, 2000, function (Question $question) use ($manager) {
+        $this->createMany(Question::class, 1000, function (Question $question) use ($manager) {
 
             $question
                 ->setType($this->getRandomReference(Type::class));
@@ -26,18 +27,18 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
             switch ($question->getType()->getTitle()) {
                 case 'radio':
                     $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
-                        ->addTicket($this->getRandomReference(Ticket::class));
+                        ->setTest($this->getRandomReference(Test::class));
                     break;
                 case 'checkbox':
                     $question->setTitle($this->faker->realTextBetween(30, 255) . '?');
 
                     $question
-                        ->addTicket($this->getRandomReference(Ticket::class));
+                        ->setTest($this->getRandomReference(Test::class));
                     break;
                 case 'input_one':
-                    $question->setTitle($this->faker->realTextBetween(10, 15) . static::BLANK_FIELD . $this->faker->realTextBetween(10, 15) . '?')
+                    $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
                         ->setAnswer([$this->faker->word()])
-                        ->addTicket($this->getRandomReference(Ticket::class));
+                        ->setTest($this->getRandomReference(Test::class));
                     break;
                 case 'input_many':
                 case 'blank':
@@ -50,7 +51,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
                     $question->setTitle($title . implode('', $inputs))
                         ->setAnswer($answers)
-                        ->addTicket($this->getRandomReference(Ticket::class));
+                        ->setTest($this->getRandomReference(Test::class));
                     break;
                 case 'conformity':
                     $subTitles = [];
@@ -61,12 +62,12 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                     $question->setTitle($title)
                         ->setSubTitle($subTitles);
                     $question
-                        ->addTicket($this->getRandomReference(Ticket::class));
+                        ->setTest($this->getRandomReference(Test::class));
                     break;
                 case 'order':
                     $title = $this->faker->realTextBetween(10, 50);
                     $question->setTitle($title)
-                        ->addTicket($this->getRandomReference(Ticket::class));
+                        ->setTest($this->getRandomReference(Test::class));
                     break;
                 case 'checkbox_picture':
                     $variants = $this->faker->words($this->faker->numberBetween(2, 5));
@@ -75,11 +76,11 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                         $pictures[] = static::PICTURE_MARK . 'picture' . $this->faker->numberBetween(1, 10) . '.jpeg' . static::PICTURE_MARK;
                     }
                     $question->setTitle($this->faker->realTextBetween(30, 255) . '?' . static::QUESTION_SEPARATOR . implode('', $pictures))
-                        ->addTicket($this->getRandomReference(Ticket::class));
+                        ->setTest($this->getRandomReference(Test::class));
                     break;
                 case 'textarea':
                     $question->setTitle($this->faker->realTextBetween(10, 50) . '?')
-                        ->addTicket($this->getRandomReference(Ticket::class));
+                        ->setTest($this->getRandomReference(Test::class));
                     break;
             }
         });
@@ -176,7 +177,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
     {
         return [
             TypeFixtures::class,
-            TicketFixtures::class,
+            TestFixtures::class,
         ];
     }
 }

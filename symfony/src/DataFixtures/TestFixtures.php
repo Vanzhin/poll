@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Section;
 use App\Entity\Test;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -12,17 +13,30 @@ class TestFixtures extends BaseFixtures implements DependentFixtureInterface
 
     function loadData(ObjectManager $manager)
     {
-        $this->createMany(Test::class, 50, function (Test $test) use ($manager) {
+        $parents = $this->referenceRepository->getReferencesByClass()[Category::class];
+        $parentsLevel2=[];
+        foreach ($parents as $parent){
+            if($parent->getParent() && $parent->getLevel()===2){
+                $parentsLevel2[]=$parent;
+            }
+        }
+
+        $this->createMany(Test::class, 250, function (Test $test) use ($manager, $parentsLevel2) {
+            $parentLevel2 = $parentsLevel2[array_rand($parentsLevel2)];
+            $category = $this->manager->find(Category::class,$parentLevel2->getId());
+
             $test
                 ->setTitle($this->faker->colorName() . '-' . $this->faker->company())
-                ->setSection($this->getRandomReference(Section::class));
+                ->setCategory($category)
+                ->setDescription($this->faker->sentence());
+
         });
     }
 
     public function getDependencies(): array
     {
         return [
-            SectionFixtures::class,
+            CategoryFixtures::class,
         ];
     }
 }
