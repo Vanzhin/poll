@@ -76,6 +76,7 @@ class Category
     private ?string $image = null;
 
     #[ORM\OneToOne(inversedBy: 'category', cascade: ['persist', 'remove'])]
+    #[Groups(['category'])]
     private ?Test $test = null;
 
 

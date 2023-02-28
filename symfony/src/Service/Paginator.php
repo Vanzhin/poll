@@ -21,13 +21,25 @@ class Paginator
         $this->requestStack = $requestStack;
     }
 
-    public function getPagination(QueryBuilder $query, int $limit, string $itemName = 'page', $default = 1): PaginationInterface
+    public function getPagination(QueryBuilder $query, int $limit = 5, string $itemName = 'page', $default = 1): PaginationInterface
     {
+
         return $this->paginator->paginate(
             $query, /* query NOT result */
             $this->requestStack->getCurrentRequest()->query->getInt($itemName, $default)/*page number*/,
             $limit/*limit per page*/
         );
+
+    }
+
+    public function getInfo(PaginationInterface $pagination): array
+    {
+
+        $response['currentPage'] = $pagination->getCurrentPageNumber();
+        $response['totalPages'] = round($pagination->getTotalItemCount()/$pagination->getItemNumberPerPage());
+        $response['totalItem'] = $pagination->getTotalItemCount();
+        $response['totalItemsPerPage'] = $pagination->count();
+        return $response;
 
     }
 }

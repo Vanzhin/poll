@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
 class Test
@@ -16,12 +17,15 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['main', 'category'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['main'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['main'])]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class)]
@@ -34,6 +38,7 @@ class Test
     private Collection $section;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class)]
+    #[Groups(['main'])]
     private Collection $ticket;
 
     public function __construct()
