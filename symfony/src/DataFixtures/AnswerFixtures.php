@@ -58,6 +58,7 @@ class AnswerFixtures extends BaseFixtures implements DependentFixtureInterface
         return [
             QuestionFixtures::class,
             ResultFixtures::class,
+            CategoryFixtures::class
         ];
     }
 }
