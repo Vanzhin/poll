@@ -6,11 +6,18 @@
     v-else
   >
     <div class="title">
-      <h2>Область аттестации</h2>
+      <h2>Области аттестации</h2>
     </div>
    <div class="container">
       <div class="row">
-        В настоящее время ведется разработка функционала.
+        <div class="tests__block">
+          <ItemEdit
+            v-for="(item, index) in arrayForDraw" 
+            :key="item.id"
+            :item="item"
+            :index="index"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -35,7 +42,10 @@
       }
     },
     computed:{ 
-      ...mapGetters(["getAutchUserToken", "getMessage"]),
+      ...mapGetters(["getAutchUserToken", "getMessage", "getTests"]),
+      arrayForDraw () {
+        return this.$store.getters.getTests
+      },
     },
    
     methods: { 
@@ -50,15 +60,6 @@
  } 
  
 </script>
-<style lang="scss" scoped>
-  .button{
-    padding: 5px 10px;
-    transition: all 0.1s ease-out;
-    &:hover{
-      background-color: rgb(156, 156, 154);
-    }
-  }
- @media (min-width: 1024px) {
-  
- }
+<style lang="scss">
+ 
 </style>

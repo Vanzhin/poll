@@ -1,41 +1,45 @@
 <template>
-  <div class="">
-    <div class="tests__block">
-      <h4>{{ areaTitle.title }}</h4>
-      <h5>Выберите тест:</h5>
-    </div>
-    <div class="tests__block">
-      <div
-        v-for="(test, index) in tests" 
-        :key="test.id"
-        class="test__block"
+  <div
+    class="item__block"
+  >
+    <div class="">
+      <div class="item__card__parend"
+        v-if="childVisible"
+        @click.stop="childToggle"
       >
-        <div class="test__card"
-          v-if="getIsAutchUser || index < 3"
-        >
-          <RouterLink :to="{ name: 'test', params: { id: test.id } }">
-            {{ test.id }} - {{ test.title }}
-          </RouterLink>
-        </div>
-        <div class="test__card-limitation "
-          v-else
-          title="У Вас ограниченный доступ. Подпишитесь на группу."
-        >
-          {{ test.id }} - {{ test.title }}
-        </div>
-        
+        Входит в:
       </div>
-    </div> 
-         
-     
+      <div class="item__card">
+        <div 
+          @click="childToggle"
+        >
+          {{ item.id }} - {{ item.title }}
+        </div>
+        <div class="btn-group" >
+          <a href=""
+            class="btn btn-outline-primary"><i class="bi bi-pencil"></i></a>
+          <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#deleteModal"
+          
+          ><i class="bi bi-trash3"></i></a>
+        </div>
+      </div>
+      <div class="item__card__child"
+        v-if="childVisible"
+        @click.stop="childToggle"
+      >
+        Включает:
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
+  props:['item', 'index'],
   data() {
     return {
+      childVisible: false,
       count: 0
     }
   },
@@ -46,37 +50,42 @@ export default {
         console.log(this.$store.getters.getAreaTitle(this.$route.params.id))
         return this.$store.getters.getAreaTitle(this.$route.params.id)
       },
-    tests () {
-      return this.$store.getters.getTests
-    },
+    
   },
+  methods:{
+    childToggle(){
+      this.childVisible = !this.childVisible
+    }
+  }
 } 
 
 </script>
-<style lang="scss">
-  .tests__block{
-    width: 100%;
-    padding: 10px;
-  }
-  .test{
+<style lang="scss" scoped>
+  
+  .item{
     &__block{
     margin: 10px 10px;}
   }
-  .test__card, .test__card-limitation{
+  .item__card{
     background-color: #e2e5fc;
     padding: 5px;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     min-width: 0;
     word-wrap: break-word;
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: 0.25rem;
+    &__child{
+      height: 100px;
+      background-color: rgb(219 216 227);
+    }
+    &__parend{
+      height: 50px;
+      background-color: rgb(213, 204, 238);
+    }
   }
-  .test__card-limitation{
-    color: rgb(134, 134, 132);
-  }
-  .test__card:hover{
+ .item__card:hover{
     background-color: aliceblue;
   }
     
