@@ -34,11 +34,17 @@ class Paginator
 
     public function getInfo(PaginationInterface $pagination): array
     {
+        if ($pagination->count() <= 0) {
+            $response['error'] = 'Такой страницы нет';
 
-        $response['currentPage'] = $pagination->getCurrentPageNumber();
-        $response['totalPages'] = round($pagination->getTotalItemCount()/$pagination->getItemNumberPerPage());
-        $response['totalItem'] = $pagination->getTotalItemCount();
-        $response['totalItemsPerPage'] = $pagination->count();
+        } else {
+            $response['currentPage'] = $pagination->getCurrentPageNumber();
+            $response['totalPages'] = ceil($pagination->getTotalItemCount() / $pagination->getItemNumberPerPage());
+            $response['totalItem'] = $pagination->getTotalItemCount();
+            $response['totalItemsPerPage'] = $pagination->count();
+        };
+
+
         return $response;
 
     }
