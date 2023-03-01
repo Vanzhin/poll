@@ -8,6 +8,7 @@ use App\Entity\Variant;
 use App\Entity\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints\File as FileConstraint;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -319,6 +320,34 @@ class ValidationService
             return null;
         }
 
+        return $errors;
+    }
+
+    public function fileValidate(File $file, string $maxSize = '512k'): ?array
+    {
+        $errors = [];
+        $violations = $this->validator->validate($file, [
+            new FileConstraint([
+                'extensions' => [
+                    'txt' => 'text/plain',
+                ],
+
+                'maxSize' => $maxSize,
+                'extensionsMessage'=>'file.extension',
+
+            ]),
+
+        ]);
+        if($file->guessExtension()!=='txt'){
+            $errors[] = 'Кажется, этот не текстовый файл';
+
+        }
+        foreach ($violations as $violation) {
+            $errors[] = $violation->getMessage();
+        }
+        if (count($errors) === 0) {
+            return null;
+        }
         return $errors;
     }
 }
