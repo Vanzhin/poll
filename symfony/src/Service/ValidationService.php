@@ -230,6 +230,7 @@ class ValidationService
     {
         $errors = [];
         $variantTitles = [];
+
         foreach ($data['variant'] ?? [] as $key => $variantData) {
             $image = $images[$key] ?? null;
             if (isset($data['questionId'])) {

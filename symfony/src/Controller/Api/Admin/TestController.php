@@ -33,19 +33,28 @@ class TestController extends AbstractController
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
+
         $response = $handler->getQuestion($file);
-////        dd(mb_convert_encoding($file->getContent(), 'utf8'));
-////        dd($file->getContent());
-//        $array=['1. „“ќ ќ«Ќј„ј≈“ “≈–ћ»Ќ ЂЅ≈«ќѕј—Ќџ≈ ”—Ћќ¬»я “–”ƒјї?
-//1. ”слови€ труда, при которых работник не должен пользоватьс€ спецодеждой, спецобувью и средствами индивидуальной защиты.
-//*2. ”слови€ труда, при которых воздействие на работающих вредных и (или) опасных производственных факторов исключено либо уровни их воздействи€ не превышают установленных нормативов.
-//3. —овокупность факторов производственной среды и трудового процесса, оказывающих вли€ние на работоспособность и здоровье работника.'];
-////        dd(json_encode($array, JSON_UNESCAPED_UNICODE));
+//        $total = [];
+//        foreach ($response as $key =>$question){
+//
+//            if($validation->manyVariantsValidate($question)){
+//                $total[$key] = $validation->manyVariantsValidate($question);
+//                $total[$key]['question'] = $question;
+//            }
+//
+//        }
+//        if($total){
+//            return $this->json(
+//                $total,
+//                200,
+//                ['charset'=>'utf8'],
+//            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+//        }
         return $this->json(
             $response,
             200,
             ['charset'=>'utf8'],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-////        $handler->getQuestion($file);
     }
 }

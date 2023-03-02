@@ -148,6 +148,10 @@ class QuestionController extends AbstractController
     public function createWithVariant(Request $request, QuestionService $questionService, ValidationService $validation, VariantService $variantService, EntityManagerInterface $em): JsonResponse
     {
         $data = $request->request->all();
+        return $this->json($data,
+            200,
+            ['charset=utf-8'],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         $questionImage = $request->files->get('questionImage');
 
 

@@ -9,37 +9,43 @@ class FileHandler
 
     public function getQuestion(File $file)
     {
+
         $response = [];
+        $encoding = $this->detectEncoding($file);
         static $section = null;
         static $string = 'question';
         static $questionKey = 0;
         static $variantKey = 0;
-
         $handle = fopen($file->getPathname(), "r");
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
                 // process the line read.
 
                 if (strlen(trim($line)) > 0) {
-                    $lower = mb_strtolower($line, 'utf8');
+                    if($encoding !== 'utf8'){
+                        $line = mb_convert_encoding($line, 'utf8', $encoding);
+                    }
+                    $lower = mb_strtolower($line);
                     if (str_contains($lower, 'секция')) {
-                        $t = str_replace(['секция', 'Секция', 'СЕКЦИЯ'], '', $line);
-                        $section = trim(preg_replace("/[^a-zа-я0-9\s]/iu", "", $t));
-//                        $response[] = 'section';
+                        $t = str_replace(['секция', 'Секция', 'СЕКЦИЯ', '«', '»'], '', $line);
+                        $section = trim(preg_replace("/^([(|.]?([[:alnum:]])+(?)[)|.]+)|((([.:;]|[[:space:]])*)$)/iu", "", $t));
                         continue;
                     }
                     if ($string === 'question') {
                         //
-                        $response[$questionKey]['title'] = trim(preg_replace("/[^a-zа-я0-9-?,:\s]/iu", "", $line));
-                        $response[$questionKey]['section'] = $section;
+                        $response[$questionKey]['title'] = trim(preg_replace("/^[(|.]?([[:alnum:]])+(?)[).]+/iu", "", $line));
+                        if ($section) {
+                            $response[$questionKey]['section'] = $section;
+
+                        }
                         $string = 'variant';
                     } else {
                         //
                         if (str_contains($line, '*')) {
-                            $response[$questionKey]['variant'][$variantKey]['correct'] = true;
-
+                            $response[$questionKey]['variant'][$variantKey]['correct'] = "true";
+                            $line = str_replace('*', '', $line);
                         }
-                        $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/[^a-zа-я0-9\s]/iu", "", $line));
+                        $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/^[(|.]?([[:alnum:]])+(?)[)|.]|((([.:;]|[[:space:]])*)$)/iu", "", $line));
 //                        $response[] = 'variant';
                         $variantKey++;
 
@@ -59,7 +65,7 @@ class FileHandler
         foreach ($response as $key => $question) {
             $correctCount = 0;
             foreach ($question['variant'] as $variant) {
-                if (isset($variant['correct']) && $variant['correct'] === true) {
+                if (isset($variant['correct']) && $variant['correct'] === "true") {
                     $correctCount++;
                 }
             }
@@ -84,7 +90,7 @@ class FileHandler
                 continue;
 
             }
-            if (count($question['variant'])>1 && $correctCount===0) {
+            if (count($question['variant']) > 1 && $correctCount === 0) {
                 $question['type'] = 'order';
 
                 $response[$key] = $question;
@@ -96,5 +102,11 @@ class FileHandler
 
         return $response;
     }
+
+    private function detectEncoding(File $file, array $encoding = ['utf8','windows-1251']): string
+    {
+        return mb_detect_encoding($file->getContent(), $encoding);
+    }
+
 
 }
