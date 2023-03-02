@@ -22,12 +22,15 @@ class CategoryController extends AbstractController
         $parentId = $request->query->get('parent');
         $pagination = $paginator->getPagination($repository->findAllChildrenQuery(!is_null($parentId) && !is_null($repository->find($parentId)) ? $parentId : null));
         if ($pagination->count() > 0) {
-            $response['category'] = $pagination;
+            $response['children'] = $pagination;
 
         }
         $response['pagination'] = $paginator->getInfo($pagination);
         $parent = !is_null($parentId) ? $repository->find($parentId) : null;
         if (isset($parent)) {
+            $category = $repository->find($parent);
+            $response['parent'] = $category;
+
             $test = $parent->getTest();
             if ($test) {
                 $response['test'] = $test;

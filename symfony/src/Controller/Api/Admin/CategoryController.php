@@ -4,6 +4,7 @@ namespace App\Controller\Api\Admin;
 
 use App\Entity\Category;
 use App\Service\CategoryService;
+use App\Service\NormalizerService;
 use App\Service\ValidationService;
 use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,17 +20,9 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 class CategoryController extends AbstractController
 {
     #[Route('/api/admin/category', name: 'app_api_admin_category_index')]
-    public function index(AppUpLoadedAsset $upLoadedAsset, EntityManagerInterface $em): JsonResponse
+    public function index(AppUpLoadedAsset $upLoadedAsset, EntityManagerInterface $em, NormalizerService $normalizerService): JsonResponse
     {
         $categories = $em->getRepository(Category::class)->findBy(['parent' => null]);
-        $dateCallback = function ($key, $innerObject, string $attributeName) use ($upLoadedAsset) {
-            if ($attributeName === 'image' && !is_null($key)) {
-                if ($innerObject instanceof Category) {
-                    return $upLoadedAsset->asset('category_upload_url', $key);
-
-                }
-            };
-        };
 
         return $this->json(
             $categories,
@@ -40,7 +33,7 @@ class CategoryController extends AbstractController
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,
                 AbstractNormalizer::CALLBACKS => [
-                    'image' => $dateCallback,
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
                 ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
