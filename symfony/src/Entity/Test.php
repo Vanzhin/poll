@@ -33,6 +33,7 @@ class Test
 
     #[ORM\Column(length: 255, unique: true)]
     #[Gedmo\Slug(fields: ['title'])]
+    #[Groups(['main', 'category'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class)]
@@ -194,5 +195,10 @@ class Test
         }
 
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 }
