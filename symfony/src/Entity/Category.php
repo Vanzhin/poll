@@ -76,9 +76,13 @@ class Category
     #[Groups(['main', 'admin'])]
     private ?string $image = null;
 
-    #[ORM\OneToOne(inversedBy: 'category', cascade: ['persist', 'remove'])]
-//    #[Groups(['category'])]
-    private ?Test $test = null;
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Test::class)]
+    private Collection $test;
+
+    public function __construct()
+    {
+        $this->test = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -155,14 +159,32 @@ class Category
         return $this;
     }
 
-    public function getTest(): ?Test
+    /**
+     * @return Collection<int, Test>
+     */
+    public function getTest(): Collection
     {
         return $this->test;
     }
 
-    public function setTest(?Test $test): self
+    public function addTest(Test $test): self
     {
-        $this->test = $test;
+        if (!$this->test->contains($test)) {
+            $this->test->add($test);
+            $test->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTest(Test $test): self
+    {
+        if ($this->test->removeElement($test)) {
+            // set the owning side to null (unless already changed)
+            if ($test->getCategory() === $this) {
+                $test->setCategory(null);
+            }
+        }
 
         return $this;
     }
