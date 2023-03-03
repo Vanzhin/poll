@@ -39,15 +39,15 @@ class Test
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class)]
     private Collection $question;
 
-    #[ORM\OneToOne(mappedBy: 'test', cascade: ['persist', 'remove'])]
-    private ?Category $category = null;
-
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Section::class, orphanRemoval: true)]
     private Collection $section;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class)]
     #[Groups(['main'])]
     private Collection $ticket;
+
+    #[ORM\ManyToOne(inversedBy: 'test')]
+    private ?Category $category = null;
 
     public function __construct()
     {
@@ -115,28 +115,6 @@ class Test
         return $this;
     }
 
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($category === null && $this->category !== null) {
-            $this->category->setTest(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($category !== null && $category->getTest() !== $this) {
-            $category->setTest($this);
-        }
-
-        $this->category = $category;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Section>
      */
@@ -200,5 +178,17 @@ class Test
     public function getSlug(): ?string
     {
         return $this->slug;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
     }
 }
