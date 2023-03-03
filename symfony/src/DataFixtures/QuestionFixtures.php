@@ -21,7 +21,8 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
         $this->createMany(Question::class, 2000, function (Question $question) use ($manager) {
 
             $question
-                ->setType($this->getRandomReference(Type::class));
+                ->setType($this->getRandomReference(Type::class))
+            ->addTicket($this->getRandomReference(Ticket::class));
 
 
             switch ($question->getType()->getTitle()) {

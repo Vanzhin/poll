@@ -22,7 +22,7 @@ class Ticket
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets')]
-//    #[Groups(['main'])]
+    #[Groups(['main'])]
     private Collection $question;
 
     #[ORM\Column(length: 255)]
