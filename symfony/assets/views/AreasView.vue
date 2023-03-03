@@ -34,7 +34,9 @@
     </div> 
     <div class="tests__block"
       v-else
-    > В данная категория в разработке.</div> 
+    > 
+      Данная категория в разработке.
+    </div> 
     <Pagination/>  
      
   </div>
@@ -52,7 +54,8 @@
     data() {
       return {
         isLoader: true,
-        iter:1,
+        iter: this.$route.params.num,
+        parentId: this.$route.params.id,
         activity: [
           "",
           "Выберите область аттестации:",
@@ -74,32 +77,48 @@
         return this.$store.getters.getCategorys || []
       },
     },
+    // watch:{
+    //   parentId(newParentId){
+    //     console.log("newParentId -", newParentId)
+    //     this.categoryUpdate({id:newParentId, title:''})
+    //   }
+    // },
+    watch:{
+      $route(newParentId){
+        console.log("newParentId -", newParentId)
+        this.categoryUpdateStory(newParentId.params.id)
+      }
+    },
     methods: {
       ...mapActions(["getCategorysDB", "setCategoryTitle"]),
       async categoryUpdate({id, title}){
         this.isLoader = true
-        this.setCategoryTitle(title)
-        this.iter = this.$route.query.iter
+        // this.setCategoryTitle(title)
+        this.iter = this.$route.params.num
         console.log(this.iter)
-        
         await this.getCategorysDB({page:null, parentId: id})
         console.log('this.getTest - ', this.getTest)
-        if (this.getTest) {
-          this.$router.push({name: 'test', params: {id: id } })
-        } else if (this.areas.length > 0 ) {
-          ++this.iter 
-          this.$router.push({name: 'chapter', query: { iter: this.iter, group: id } })
-        }
+        ++this.iter
         
+        if (this.getTest) {
+          this.$router.push({name: 'test', params: {id } })
+          return
+        } 
+        this.$router.push({name: 'iter', params: { num: this.iter, id }})
+        this.isLoader = false
+      },
+      async categoryUpdateStory(parentId) {
+        this.isLoader = true
+        console.log('categoryUpdateStory - ', parentId)
+        await this.getCategorysDB({page: null, parentId})
         this.isLoader = false
       }
     },
-    async mounted(){
-      // this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
-      await this.getCategorysDB({page:null, parentId: this.$route.query.group})
+    async mounted() {},
+    async created() {
+      await this.getCategorysDB({page: null, parentId: this.parentId})
       this.isLoader = false
     }
-   
   } 
  
 </script>

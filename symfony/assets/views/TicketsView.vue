@@ -5,7 +5,6 @@
       <div class="test">
         <p>При выборе случайного билета система сама сделает выбор. Случайный набор сгенерирует билет с произвольным составом вопросов. Выбор набора с пометкой "Таймер" ограничит время на прохождение теста.</p>  
       </div>
-      
     </div>
     <div class="container">
       <div class="row text-center">
@@ -38,8 +37,6 @@
             </RouterLink>
           </div>
         </div>
-      
-
         <div class="col-6 col-sm-6 col-md-3 col-lg-2"
           v-for="(ticket, ind) in tickets"
           :key="ticket.id"
@@ -50,8 +47,6 @@
             </RouterLink>
           </div>
         </div>
-       
-         
       </div>
     </div>
   </div>
@@ -61,7 +56,7 @@
 import { RouterLink } from 'vue-router'
 export default {
   components: {
-   
+    RouterLink
   },
   data() {
     return {

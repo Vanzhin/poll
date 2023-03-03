@@ -73,6 +73,7 @@ export default {
   },
   mounted(){
     window.scroll(0, 0);
+    console.log("монтирую результат для авторихзованного")
   }
   
 } 

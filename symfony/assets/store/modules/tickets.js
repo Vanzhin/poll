@@ -5,39 +5,8 @@ import {
  import axios from 'axios';
 
 const state = () => ({
-  tickets: [
-    { 
-      id: 1,
-      title: "dfgdfgdfg",
-    },
-    { 
-      id: 2,
-      title: "nfffffff",
-    },
-    { 
-      id: 3,
-      title: "ertert",
-    },
-    { 
-      id: 4,
-      title: "ertert",
-    },
-    { 
-      id: 5,
-      title: "ertert",
-    },
-    { 
-      id: 6,
-      title: "ertert",
-    },
-    { 
-      id: 7,
-      title: "ertert",
-    },
-  ],
+  tickets: [],
   question:{},
-  
-  
 })
 
 const actions = {
@@ -61,7 +30,6 @@ const getters = {
   getTickets(state) {
     return state.tickets
   },
-  
 }
 
 const mutations = {

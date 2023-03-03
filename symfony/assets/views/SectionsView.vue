@@ -67,13 +67,14 @@ export default {
   methods: {
     ...mapActions(["getCategorysDB", "setCategoryTitle"]),
     async categoryUpdate({id, title}){
-      this.setCategoryTitle(title)
+      // this.setCategoryTitle(title)
       await this.getCategorysDB({page:null, parentId: id})
-      this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
+      this.$router.push({name: 'iter', params: { num: 1, id:id } })
+      // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
     }
   },
-  async mounted(){
-    await this.getCategorysDB({page:null})
+  async created(){
+    await this.getCategorysDB({})
     this.isLoader = false
   }
   
@@ -111,8 +112,7 @@ export default {
   .font-weight-normal {
     font-weight: 300;
     text-align: center;
-    
-}
+  }
 .img{
   
   width: 100%;

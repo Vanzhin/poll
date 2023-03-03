@@ -3,6 +3,7 @@ import {
   SET_PAGINATION, 
   SET_CATEGORY_TITLE, 
   SET_CATEGORY_DESCRIPTION,
+  SET_CATEGORYS_PARENT,
   SET_TEST,
  } from './mutation-types.js'
 import axios from 'axios';
@@ -12,8 +13,7 @@ const state = () => ({
   pagination:[],
   question:{},
   iter: 1,
-  title: "",
-  description: ""
+  parent:{}
 })
 
 const actions = {
@@ -30,16 +30,19 @@ const actions = {
       config.url = config.url + `?parent=${parentId}`
     }
     if (page) {
-      config.url = config.url + `?page=${page}`
+      config.url = config.url + `${parentId ? "&" : "?"}` + `page=${page}`
     }
     
   try{
     await axios(config)
       .then(({data})=>{
         console.log("getCategoryDB - ",  data)
-        if (data.test) dispatch('setTest', data.test)
-        commit("SET_CATEGORYS", data.category);
+        if (data.test) {dispatch('setTest', data.test)}
+        else dispatch('setTest', null)
+        commit("SET_CATEGORYS", data.children);
+        commit("SET_CATEGORYS_PARENT", data.parent);
         if (data.pagination) commit("SET_PAGINATION", data.pagination);
+        // if (data.pagination) commit("SET_PAGINATION", data.pagination);
       })
   } catch (e) {
     console.log(e);
@@ -64,7 +67,7 @@ const getters = {
     return state.pageActive
   },
   getCategoryTitle(state) {
-    return state.title
+    return state.parent.title
   },
   getCategoryDescription(state) {
     return state.description
@@ -90,7 +93,9 @@ const mutations = {
   [SET_CATEGORY_DESCRIPTION] (state, description){
     state.description = description
   },
- 
+  [SET_CATEGORYS_PARENT] (state, parent){
+    state.parent = parent
+  },
 }
 export default {
   namespaced: false,

@@ -21,8 +21,6 @@
       </div>
     </div>
   </div>
-
-  
 </template>
  
 <script>
@@ -47,14 +45,14 @@
         return this.$store.getters.getTests
       },
     },
-   
     methods: { 
       ...mapActions(["saveQuestionDb", "setMessage"]),
-      ...mapMutations([]),
-    },
-    async mounted(){
-      setTimeout(()=>this.isLoader = false, 1000 )
       
+    },
+    async created(){
+      // await this.getCategorysDB({})
+      // this.isLoader = false
+      setTimeout(()=>this.isLoader = false, 1000 )
     }
    
  } 

@@ -61,8 +61,8 @@ const actions = {
       });
   },
   getQuestion(){},
-  setTestTitle ({dispatch, commit}, {id}) {
-    commit("SET_TEST_TITLE", id );
+  setTestTitle ({dispatch, commit}, {title}) {
+    commit("SET_TEST_TITLE", title );
   },
   async importFileTestDb({ dispatch, commit, state }, {token, testFile} ){
     console.dir(testFile)
@@ -97,7 +97,7 @@ const actions = {
     }
   },
   setTest({dispatch ,commit}, test) {
-    dispatch("setTickets", test.ticket)
+    if (test) dispatch("setTickets", test.ticket)
     commit("SET_TEST", test)
   },
 };
@@ -106,16 +106,19 @@ const getters = {
   getTests(state) {
     return state.tests
   },
-  getTestTitle:(state)=>(id) =>{
-    return state.tests.find(test => {
-      return +test.id === +id}) 
+  getTestTitle(state) {
+    return state.test.title
   },
-  getTestTitleActive:(state)=>{
+  getTestTitleActive(state) {
     console.log(state.test)
-    return state.test.title 
+    
+    return state.test ? state.test.title : ''
   },
   getTest(state) {
     return state.test
+  },
+  getSlug(state) {
+    return state.test.slug
   },
 }
 

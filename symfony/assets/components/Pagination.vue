@@ -3,7 +3,6 @@
   <div class="block" 
     v-if="getPagination.length > 1"
   >
- 
     <div class="block-pagination">
       <div class="block-pagination-element"
         @click = "paginate('-1')"
@@ -35,9 +34,7 @@
     </div>
   </div>
 </template>
-
 <script>
-import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   data() {
@@ -46,17 +43,12 @@ export default {
       currentPage: 1,
     }
   },
-  components:{
-   
-  },
   computed:{
     ...mapGetters(["getPagination", "getPageActive"]),
   },
   methods: {
     ...mapActions(["getCategorysDB"]),
     async paginate (page){
-      // this.paginationArray[this.currentPage-1].active = false
-      // console.log(this.paginationArray[this.currentPage-1].active)
       switch (page) {
         case '-1' : {
           if (this.currentPage > 1) {
@@ -74,19 +66,11 @@ export default {
           this.currentPage = page 
         }
       }
-      // this.paginationArray[this.currentPage-1].active = true
-      // console.log(this.paginationArray[this.currentPage-1].active)
-      await this.getCategorysDB({page: this.currentPage })
+      await this.getCategorysDB({page: this.currentPage, parentId: this.$route.params.id||null })
     }
   }, 
-  mounted() {
-    // this.currentPage = getPageActive
-  }
 } 
-
 </script>
-
-
 <style lang="scss" scoped>
 .block{
   margin-top: 20px;
