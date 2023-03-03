@@ -17,3 +17,6 @@ variant.correct: Не верный формат ответа
 category.title.not_blank: Название раздела не может быть пустым
 category.parent.exist: Такого раздела нет
 
+
+file.extension: Расширение загружаемого файла не {{ extensions }}
+
