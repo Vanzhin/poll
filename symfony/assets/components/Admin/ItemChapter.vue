@@ -6,7 +6,7 @@
       <div class="item__card" @click="childToggle">
         <div class="item__card-block">
           <div class="item__card__img">
-            <img :src="img(item.image)" alt="" class="item__card__img"
+            <img :src="item.image" alt="" class="item__card__img"
               v-if="item.image"
             >
           </div>

@@ -20,14 +20,11 @@
                 <h5 class="my-0 font-weight-normal">{{ section.title }}</h5>
             </div>
             <div  class="img">
-            
+              <img :src="section.image" alt="" class="img"
+                v-if="section.image"
+              >
             </div>
-            <!-- <picture>
-              <source media="(min-width: 601px)" srcset="/card/_prom.jpg">   
-              <img class="tableimg card-img-top" 
-                :src="(url+section.image)" 
-                :alt="section.title">
-            </picture> -->
+           
             <div class="card-body">
               <h6>{{ section.information }}</h6>
             </div> 
@@ -63,6 +60,7 @@ export default {
     sections () {
       return this.$store.getters.getCategorys
     },
+    
   },
   methods: {
     ...mapActions(["getCategorysDB", "setCategoryTitle"]),
@@ -71,7 +69,13 @@ export default {
       await this.getCategorysDB({page:null, parentId: id})
       this.$router.push({name: 'iter', params: { num: 1, id:id } })
       // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
-    }
+    },
+    img(item){
+      console.log(item)
+
+      const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
+       return img
+    },
   },
   async created(){
     await this.getCategorysDB({})
@@ -90,24 +94,24 @@ export default {
     margin-bottom: 5px;
     padding: 5px;
     height: 250px;
-    &:nth-child(1) .img{
-    background-image: url(../img/_prom.jpg);
-    }
-    &:nth-child(2) .img{
-      background-image: url(../img/_electro5.jpg);
-    }
-    &:nth-child(3) .img{
-      background-image: url(../img/_pb.jpg);
-    }
-    &:nth-child(4) .img{
-      background-image: url(../img/_energo1.jpg);
-    }
-    &:nth-child(5) .img{
-      background-image: url(../img/_naks.jpg);
-    }
-    &:nth-child(6) .img{
-      background-image: url(../img/_ot.jpg);
-    }
+    // &:nth-child(1) .img{
+    // background-image: url(../img/_prom.jpg);
+    // }
+    // &:nth-child(2) .img{
+    //   background-image: url(../img/_electro5.jpg);
+    // }
+    // &:nth-child(3) .img{
+    //   background-image: url(../img/_pb.jpg);
+    // }
+    // &:nth-child(4) .img{
+    //   background-image: url(../img/_energo1.jpg);
+    // }
+    // &:nth-child(5) .img{
+    //   background-image: url(../img/_naks.jpg);
+    // }
+    // &:nth-child(6) .img{
+    //   background-image: url(../img/_ot.jpg);
+    // }
   }
   .font-weight-normal {
     font-weight: 300;
@@ -117,7 +121,7 @@ export default {
   
   width: 100%;
   height: 150px;
-  background-size: cover;
+  
  
 }
 .link{

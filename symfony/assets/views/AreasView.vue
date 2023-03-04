@@ -84,9 +84,9 @@
     //   }
     // },
     watch:{
-      $route(newParentId){
-        console.log("newParentId -", newParentId)
-        this.categoryUpdateStory(newParentId.params.id)
+      $route(newRout){
+        console.log("newParentId -", newRout)
+        this.categoryUpdateStory(newRout.params.id)
       }
     },
     methods: {

@@ -53,6 +53,25 @@ const actions = {
   },
   setCategoryDescription({commit}, description){
     commit("SET_CATEGORY_DESCRIPTION", description);
+  },
+  async deletCategoryDb({dispatch, commit}, {id, token}){
+    const config = {
+      method: 'get',
+      url: `/api/admin/category/${id}/delete`,
+      headers: { 
+        Accept: 'application/json', 
+        // Authorization: `Bearer ${token}`
+      }
+    };
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log("deletCategoryDb - ",  data)
+          
+        })
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 
