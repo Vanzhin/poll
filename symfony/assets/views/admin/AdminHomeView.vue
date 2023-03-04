@@ -11,6 +11,7 @@
         
       </div>
     </div>
+    <PaginationComponent/> 
   </div>
 
   
@@ -19,11 +20,13 @@
 <script>
   import MessageView from "../../components/ui/MessageView.vue"
   import Loader from '../../components/ui/Loader.vue'
+  import PaginationComponent from "../../components/Pagination.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      MessageView
+      MessageView,
+      PaginationComponent
     },
     data() {
       return {
@@ -40,7 +43,6 @@
     },
     async mounted(){
       setTimeout(()=>this.isLoader = false, 2000 )
-      
     }
    
  } 

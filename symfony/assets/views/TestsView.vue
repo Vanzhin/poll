@@ -10,7 +10,6 @@
         :key="test.id"
         class="test__block"
       >
-        
         <div class="test__card"
           v-if="getIsAutchUser || index < 3"
         >
@@ -65,7 +64,6 @@ export default {
   }
   .test__card, .test__card-limitation{
     background-color: #e2e5fc;
-   
     padding: 5px;
     display: flex;
     flex-direction: column;
@@ -78,7 +76,6 @@ export default {
   .test__card-limitation{
     color: rgb(134, 134, 132);
   }
-
   .test__card:hover{
     background-color: aliceblue;
   }
