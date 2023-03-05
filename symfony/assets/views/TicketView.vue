@@ -12,7 +12,7 @@
         @time-end="timerEnd"
       />
       {{ timeEnd }}
-      <h2> {{ testName.title }}</h2>
+      <h2> {{ testName }}</h2>
       <div class="test">
         <p>Билет №: {{ $route.params.id }}</p>  
       </div>
@@ -84,6 +84,7 @@ export default {
     }
   },
   computed:{
+    ...mapGetters(["getSlug"]),
     testName () {
       return this.$store.getters.getTestTitleActive
     },
@@ -105,7 +106,7 @@ export default {
     }
   },
   async mounted(){
-    await this.getQuestionsDb(this.$route.params.id)
+    await this.getQuestionsDb({id:this.$route.params.id, slug: this.getSlug})
     if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
     this.isLoader = false
   }

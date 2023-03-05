@@ -9,7 +9,7 @@
         <label v-if="getUserAnswer"
           class="custom-control-label f_sm " 
           :class="classAnswer()"
-        >{{ qestion.result.user_answer[0] }}
+        >{{  qestion.result.user_answer[0] }}
         </label>
         <label v-if="getUserAnswer && !qestion.result.score"
           class="custom-control-label f_sm answer-true" 
@@ -31,7 +31,8 @@ export default {
   },
   computed:{
     getUserAnswer(){
-      return  this.qestion.result.user_answer.length > 0 && this.qestion.result.user_answer[0] !==''
+      
+      return this.qestion.result.user_answer ?  this.qestion.result.user_answer.length > 0 && this.qestion.result.user_answer[0] !=='' : false
     },
   },
   methods: {
