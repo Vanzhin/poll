@@ -22,4 +22,8 @@ category.parent.exist: Такого раздела нет
 file.extension: Расширение загружаемого файла не {{ extensions }}
 file.is.null: Файл не найден
 
+test.title.not_blank: Название теста не может быть пустым
+test.title.max_length: Название теста не может быть длиннее {{ limit }} символов
+test.category.exist: Такого раздела нет
+test.title.exist_in_category: Тест с таким названием уже существует в указанном разделе
 

@@ -8,11 +8,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: TestRepository::class)]
+#[UniqueEntity(['title', 'category'], 'test.title.exist_in_category')]
 class Test
 {
     use TimestampableEntity;
@@ -20,15 +23,23 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'category'])]
+    #[Groups(['main', 'category', 'admin'])]
     private ?int $id = null;
 
+    #[Assert\NotBlank(
+        message: 'test.title.not_blank'
+    )]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'test.title.max_length',
+    )]
     #[ORM\Column(length: 255)]
-    #[Groups(['main', 'category'])]
+    #[Groups(['main', 'category', 'admin'])]
     private ?string $title = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'admin'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, unique: true)]
@@ -43,9 +54,12 @@ class Test
     private Collection $section;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class, cascade: ['persist', 'remove'])]
-    #[Groups(['main', 'category'])]
+    #[Groups(['main', 'category', 'admin'])]
     private Collection $ticket;
 
+    #[Assert\NotNull(
+        message: 'test.category.exist'
+    )]
     #[ORM\ManyToOne(inversedBy: 'test')]
     private ?Category $category = null;
 
