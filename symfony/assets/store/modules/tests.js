@@ -1,8 +1,13 @@
-import { SET_QUESTION, SET_TEST_TITLE } from './mutation-types.js'
+import { 
+  SET_QUESTION, 
+  SET_TEST_TITLE, 
+  SET_TEST,
+  SET_TESTS
+} from './mutation-types.js'
 import axios from 'axios';
 
 const state = () => ({
-  tests: [
+  testsTest: [
     { 
       id: 1,
       title: "ЭБ 1344.2. Проверка знаний электротехнического персонала организаций, осуществляющего эксплуатацию оборудования кабельных линий электросетевого хозяйства потребителей (III группа по электробезопасности до 1000 В)",
@@ -40,8 +45,8 @@ const state = () => ({
       image: null
     },
   ],
-  testsTitle:'q',
-  
+  tests:null,
+  test: null,
  
 
 })
@@ -58,8 +63,8 @@ const actions = {
       });
   },
   getQuestion(){},
-  setTestTitle ({dispatch, commit}, {id}) {
-    commit("SET_TEST_TITLE", id );
+  setTestTitle ({dispatch, commit}, {title}) {
+    commit("SET_TEST_TITLE", title );
   },
   async importFileTestDb({ dispatch, commit, state }, {token, testFile} ){
     console.dir(testFile)
@@ -86,8 +91,6 @@ const actions = {
           // dispatch('setMessage', {err: false, mes: data.message})
           // commit("SET_LOADER_TOGGLE")
         })
-         
-      
     } catch (e) {
       console.log("importFileTestDb err- ", e);
       // dispatch('setMessage', {err: true, 
@@ -95,19 +98,33 @@ const actions = {
       // })
     }
   },
+  setTest({dispatch ,commit}, test) {
+    if (test) dispatch("setTickets", test.ticket)
+    commit("SET_TEST", test)
+  },
+  setTests({dispatch ,commit}, tests) {
+   
+    commit("SET_TESTS", tests)
+  },
 };
 
 const getters = {
   getTests(state) {
     return state.tests
   },
-  getTestTitle:(state)=>(id) =>{
-    return state.tests.find(test => {
-      return +test.id === +id}) 
+  getTestTitle(state) {
+    return state.test.title
   },
-  getTestTitleActive:(state)=>{
-    return state.testsTitle 
-  }
+  getTestTitleActive(state) {
+    console.log(state.test)
+    return state.test ? state.test.title : ''
+  },
+  getTest(state) {
+    return state.test
+  },
+  getSlug(state) {
+    return state.test.slug
+  },
 }
 
 const mutations = {
@@ -123,8 +140,14 @@ const mutations = {
     return;
   },
   [SET_TEST_TITLE] (state, id) {
-    return state.testsTitle = state.tests.find(test => {
+    return state.testTitle = state.tests.find(test => {
       return +test.id === +id}) ;
+  },
+  [SET_TEST] (state, test){
+    return state.test = test
+  },
+  [SET_TESTS] (state, tests){
+    return state.tests = tests
   },
 }
 
