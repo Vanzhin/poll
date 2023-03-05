@@ -73,7 +73,7 @@ class Category
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'category'])]
     private ?string $image = null;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Test::class, cascade: ['persist', 'remove'])]
