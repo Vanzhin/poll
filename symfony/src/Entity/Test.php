@@ -8,13 +8,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-
 #[ORM\Entity(repositoryClass: TestRepository::class)]
+#[UniqueEntity(['title', 'category'], 'test.title.exist_in_category')]
 class Test
 {
     use TimestampableEntity;
@@ -29,10 +30,9 @@ class Test
         message: 'test.title.not_blank'
     )]
     #[Assert\Length(
-        max: 50,
-        minMessage: 'test.title.max_length',
+        max: 255,
+        maxMessage: 'test.title.max_length',
     )]
-
     #[ORM\Column(length: 255)]
     #[Groups(['main', 'category', 'admin'])]
     private ?string $title = null;
@@ -57,7 +57,9 @@ class Test
     #[Groups(['main', 'category', 'admin'])]
     private Collection $ticket;
 
-
+    #[Assert\NotNull(
+        message: 'test.category.exist'
+    )]
     #[ORM\ManyToOne(inversedBy: 'test')]
     private ?Category $category = null;
 

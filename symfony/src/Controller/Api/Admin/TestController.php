@@ -2,17 +2,15 @@
 
 namespace App\Controller\Api\Admin;
 
-use App\Entity\Category;
 use App\Entity\Question;
 use App\Entity\Test;
 use App\Repository\TestRepository;
-use App\Service\CategoryService;
 use App\Service\FileHandler;
 use App\Service\Paginator;
 use App\Service\QuestionService;
 use App\Service\SectionService;
+use App\Service\TestService;
 use App\Service\ValidationService;
-use App\Service\VariantService;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +23,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 class TestController extends AbstractController
 {
     #[Route('/api/admin/test', name: 'app_api_admin_test')]
-    public function index(EntityManagerInterface $em, Paginator $paginator, TestRepository $repository): JsonResponse
+    public function index(Paginator $paginator, TestRepository $repository): JsonResponse
     {
         $pagination = $paginator->getPagination($repository->findLastUpdatedQuery(), 10);
         if ($pagination->count() > 0) {
@@ -43,10 +41,10 @@ class TestController extends AbstractController
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
+
     #[Route('/api/admin/test/{id}', name: 'app_api_admin_test_show', methods: 'GET')]
     public function show(Test $test): JsonResponse
     {
-
         return $this->json(
             $test,
             200,
@@ -57,39 +55,31 @@ class TestController extends AbstractController
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
+
     #[Route('/api/admin/test/create', name: 'app_api_admin_test_create', methods: 'POST')]
-    public function create(Request $request, ValidationService $validation, CategoryService $categoryService, EntityManagerInterface $em): JsonResponse
+    public function create(Request $request, ValidationService $validation, EntityManagerInterface $em, TestService $testService): JsonResponse
     {
         $data = $request->request->all();
 
-        $test = new Test();
-        $test->setTitle($data['title']?? null)
-        ->setDescription($data['description']?? null)
-        ;
-        if($em->find(Category::class,$data['category'])){
-            $test->setCategory($em->find(Category::class,$data['category']));
-        }
-        dd($validation->validate($test));
-        if (!is_null($errors) && count($errors) > 0) {
+        $test = $testService->save(new Test(), $data);
+        if (count($validation->validate($test)) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
-                'error' => $errors],
+                'error' => $validation->validate($test)],
                 422,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
 
         try {
-            $category = $categoryService->save(new Category(), $data ?? [], $image);
+            $em->persist($test);
+            $em->flush();
             $response = [
-                'message' => 'Раздел создан',
-                'categoryId' => $category->getId()
+                'message' => 'Тест создан',
+                'testId' => $test->getId()
             ];
             $status = 200;
         } catch (\Exception $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } catch (FilesystemException $e) {
             $response = ['error' => $e->getMessage()];
             $status = 501;
         } finally {
@@ -100,6 +90,62 @@ class TestController extends AbstractController
         }
     }
 
+    #[Route('/api/admin/test/{id}/edit', name: 'app_api_admin_test_edit', methods: 'POST')]
+    public function edit(Test $test, Request $request, ValidationService $validation, EntityManagerInterface $em, TestService $testService): JsonResponse
+    {
+        $data = $request->request->all();
+
+        $test = $testService->save($test, $data);
+
+        if (count($validation->validate($test)) > 0) {
+            return $this->json([
+                'message' => 'Ошибка при вводе данных',
+                'error' => $validation->validate($test)],
+                422,
+                ['charset=utf-8'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+
+        try {
+            $em->persist($test);
+            $em->flush();
+            $response = [
+                'message' => 'Тест обновлен',
+                'testId' => $test->getId()
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    #[Route('/api/admin/test/{id}/delete', name: 'app_api_admin_test_delete')]
+    public function delete(Test $test, EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $em->remove($test);
+            $em->flush();
+
+            $response = [
+                'message' => 'Тест удален',
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+    }
 
 
     #[Route('/api/admin/test/{id}/upload', name: 'app_api_admin_test_upload', methods: 'POST')]
