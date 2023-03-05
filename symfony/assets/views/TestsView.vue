@@ -58,7 +58,9 @@ export default {
   }
   .test{
     &__block{
-    margin: 10px 10px;}
+    margin: 10px 10px;
+     
+  }
   }
   .test__card, .test__card-limitation{
     background-color: #e2e5fc;
@@ -76,6 +78,7 @@ export default {
   }
   .test__card:hover{
     background-color: aliceblue;
+    cursor: pointer;
   }
     
 

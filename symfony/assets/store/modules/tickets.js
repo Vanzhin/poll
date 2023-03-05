@@ -30,6 +30,16 @@ const getters = {
   getTickets(state) {
     return state.tickets
   },
+  getRandomTicket(state) {
+    console.log(state.tickets.length)
+    const num = Math.floor(Math.random() * (state.tickets.length ) )
+    console.log(num)
+    return state.tickets[num].id
+  },
+  getSelectTicket:(state)=>(id) =>{
+    return state.tickets.find(ticket => {
+      return +ticket.id === +id}) 
+  }
 }
 
 const mutations = {

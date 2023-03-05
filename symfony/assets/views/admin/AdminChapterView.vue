@@ -12,23 +12,23 @@
           title="Добавить новую категорию"
           @click.stop="createCategory"
         >
-          <i class="bi bi-plus create-plus" ></i>
+          <i class="bi bi-plus create-plus"></i>
         </div>
       </div>
     </div>
     <MessageView/>
     <div class="container">
-        <div class="row">
-          <div class="tests__block">
-            <ItemChapter
-              v-for="(item, index) in getCategorys" 
-              :key="item.id"
-              :item="item"
-              :index="index"
-              @click.stop="categoryRoute({id:item.id})"
-            />
-          </div>
-          <Pagination/>
+      <div class="row">
+        <div class="tests__block">
+          <ItemChapter
+            v-for="(item, index) in getCategorys" 
+            :key="item.id"
+            :item="item"
+            :index="index"
+            @click.stop="categoryRoute({id:item.id})"
+          />
+        </div>
+        <Pagination/>
       </div>
     </div>
   </div>
@@ -57,24 +57,25 @@
     },
    
     methods: { 
-      ...mapActions(["getCategorysDB","saveQuestionDb", "setMessage"]),
+      ...mapActions(["getCategorysDB", "setMessage"]),
       ...mapMutations([]),
       createCategory(){
         this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id:0  } })
       },
       async categoryRoute({id}){
-      this.isLoader = true
-      await this.getCategorysDB({parentId: id})
-      if (this.getTests) {
-        console.log('переход к списку тестов - ', this.getTests)
-          //this.$router.push({name: 'area', params: {id } })
+        this.isLoader = true
+        await this.getCategorysDB({parentId: id})
+        if (this.getTests) {
+          console.log('переход к списку тестов - ', this.getTests)
+            //this.$router.push({name: 'area', params: {id } })
           this.isLoader = false
           return
         } 
-      this.$router.push({name: 'adminIter', params: { num: 1, id: id } })
-      this.isLoader = false
-      // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
-    },
+        console.log('переход к списку категорий - ', this.getTests)
+        this.$router.push({name: 'adminIter', params: { num: 1, id: id } })
+        this.isLoader = false
+        // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
+      },
     },
     async created(){
       await this.getCategorysDB({})
@@ -89,6 +90,7 @@
   .title{
     display: flex;
     justify-content: space-between;
+   
   }
   .create{
     display: flex;

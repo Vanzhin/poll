@@ -77,7 +77,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getIsAutchUser"]),
+    ...mapGetters(["getIsAutchUser", "getCategoryParendId"]),
   },
   methods:{
     ...mapActions(["deleteCategoryDb"]),
@@ -91,16 +91,16 @@ export default {
     editCategory(id){
       this.$router.push({name: 'adminsCategoryCreate', params: {operation:"edit" , id:id } })
     },
-    async deleteCategoty(){
-      console.log('Удаляю категорию № - ', this.id)
-      this.deleteCategoryDb({id: this.id})
+    async deleteCategoty(id){
+      console.log('Удаляю категорию № - ',id)
+      this.deleteCategoryDb({id: id, parentId: this.getCategoryParendId})
       this.confirmVisible = false
     },
     deleteVisibleConfirm(id){
       this.confirmMessage = "При удалении раздела, так же будут удалены все его внутренние области. Вы, действительно хотите это сделать?"
       this.confirmVisible = true
       this.id = id
-      this.confirmYes = this.deleteCategoty
+      this.confirmYes = this.deleteCategoty(id)
     },
    
   }

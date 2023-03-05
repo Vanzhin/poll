@@ -54,13 +54,14 @@
 
 <script>
 import { RouterLink } from 'vue-router'
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
     RouterLink
   },
   data() {
     return {
-      count: 0,
+     
     }
   },
    computed:{
@@ -72,10 +73,14 @@ export default {
       },
     },
     methods: {
-     
+     ...mapActions(["selectTestId"])
     },
     mounted(){
       // this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
+    },
+    async created() {
+      await this.selectTestId({id : this.$route.params.id})
+      this.isLoader = false
     }
   
 } 

@@ -1,7 +1,7 @@
 <template>
   <div class="block">
     <div class="title">
-      <h2>Форма редактирования категорий</h2>
+      <h2>Форма редактирования тестов</h2>
     </div>
   </div>
 
@@ -9,11 +9,10 @@
     <div class="row">
       <form @submit.prevent="onSubmit">
         <input type="hidden" 
-          name="parentId" 
+          name="category" 
           :value="parentId"
-          v-if="parentId"
         >
-        <p class="label"><b>Категория: </b></p>
+        <p class="label"><b>Тест: </b></p>
         <div class="custom-radio img_block">
           <textarea rows="2" required
             name="title"
@@ -25,7 +24,7 @@
             v-if="title !== ''"
           ></i>
         </div>
-        <label class="label"><b>Описание действий:</b> </label>
+        <label class="label"><b>Описание:</b> </label>
         <div class="custom-radio img_block">  
           <textarea rows="1" required
             name="description"
@@ -36,35 +35,6 @@
             @click="description = ''"
             v-if="description !== ''"
           ></i>
-        </div>
-        <div class="mb-3 w-100">
-          <div class="img_block"
-            v-if="typeof imageFile === 'object'"
-          >
-            <img :src="imageUrl"  width="200"/> 
-            <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-              @click.stop="imgDelete(ind)"
-            ></i>
-          </div> 
-          <div class="img_block"
-            v-else-if="image"
-          >
-            <img :src="image"  width="200"/> 
-            <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-              @click.stop="image = null"
-            ></i>
-          </div> 
-          <label class="label"
-            v-if="typeof imageFile === 'object' || image"
-          >Изменить изображение </label>
-          <label class="label"
-            v-else
-          >Прикрепить изображение </label>
-          <input  class="" type="file" accept="image/*"  
-            @change="(e)=> changeImg(e)"
-            name="categoryImage"
-            :value="imageValue"
-          >
         </div>
         <br> 
           <div style="width: 100%;">
@@ -98,34 +68,30 @@
         parentId: undefined,
         title: "",
         description: "",
-        image: "",
-        imageFile: "",
-        imageUrl: "",
-        imageValue: "",
         message: null
       }
     },
     computed:{ 
       ...mapGetters(["getAutchUserToken", "getMessage", "getCategoryParendId"]),
-      getCategory () {
-        const category = this.$store.getters.getCategory( +this.$route.params.id)
-        console.log(category)
-        return category
+      getTest () {
+        const test = this.$store.getters.getTest( +this.$route.params.id)
+        console.log(test)
+        return test
       },
     },
    
     methods: { 
-      ...mapActions(["editCategory", "createCategory" ,"setMessage"]),
+      ...mapActions(["editTest", "createTest" ,"setMessage"]),
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       async onSubmit(e){
         const questionSend = e.target
         
         if ( this.$route.params.operation === 'edit'){
-          await this.editCategory({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
+          await this.editTest({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
           
         } else if ( this.$route.params.operation === 'create'){
-          await this.createCategory({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
+          await this.createTest({questionSend, token: this.getAutchUserToken, })
          
         }
         let timerId = setInterval(() => {
@@ -134,23 +100,7 @@
             this.$router.go(-1)
           }
         }, 200);
-          
-          
-       
-        // this.$router.push({ path:'/result'})
-      },
       
-      changeImg(e){
-        if (typeof e.target.files[0] === 'object'){
-          this.imageFile = e.target.files[0]
-          this.imageUrl = URL.createObjectURL(e.target.files[0])
-          this.imageValue = e.target.value
-        }
-      },
-      imgDelete(ind){
-        this.imageFile = ''
-        this.imageUrl = ''
-        this.imageValue = ''
       },
     },
     async mounted(){
@@ -159,12 +109,12 @@
     async created() {
       if ( this.$route.params.operation === 'create'){
         this.parentId = this.$route.params.id
-      }
+      } 
+      
+      
       if ( this.$route.params.operation === 'edit'){
-        // this.parentId = this.$route.params.id
-        this.title = this.getCategory.title
-        this.description = this.getCategory.description
-        this.image = this.getCategory.image
+        this.title = this.getTest.title
+        this.description = this.getTest.description
       }
       
       

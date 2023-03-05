@@ -9,7 +9,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       // meta: {loyout: 'page', autch: false},
-      //component: () => import('../views/SectionsView.vue')
+      // component: () => import('../views/SectionsView.vue')
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminChapterView.vue')
       
@@ -164,6 +164,12 @@ const router = createRouter({
       name: 'adminIter',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminIterView.vue')
+    },
+    {
+      path: '/admins/test/:id/:operation',
+      name: 'adminsTestCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateTestView.vue')
     },
   ]
 })

@@ -5,7 +5,7 @@
   <div class="" v-else>
     <div class="tests__block">
       <h4>{{getCategoryTitle }}</h4>
-      <h5>{{activity[iter]}}</h5>
+      <h5>{{getCategoryDescription}}</h5>
     </div>
     <div class="tests__block"
       v-if="areas.length > 0"
@@ -56,18 +56,10 @@
         isLoader: true,
         iter: this.$route.params.num,
         parentId: this.$route.params.id,
-        activity: [
-          "",
-          "Выберите область аттестации:",
-          "Выберите тест:",
-          "Выбери уже что-то:",
-          "Ткни куда-нибудь:",
-          "Еще не насчелкался?"
-        ]
       }
     },
     computed:{
-      ...mapGetters(["getIsAutchUser", "getCategoryTitle", "getTests", "getCategorys"]),
+      ...mapGetters(["getIsAutchUser", "getCategoryTitle", "getTests", "getCategorys", "getCategoryDescription"]),
       sectionTitle () {
         console.log(this.$route.params.id)
         console.log(this.$store.getters.getSectionTitle(this.$route.params.id))
@@ -97,7 +89,7 @@
         this.iter = this.$route.params.num
         console.log(this.iter)
         await this.getCategorysDB({page:null, parentId: id})
-        console.log('this.getTest - ', this.getTests)
+        console.log('this.getTests - ', this.getTests)
         ++this.iter
         
         if (this.getTests) {

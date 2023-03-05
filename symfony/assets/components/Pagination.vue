@@ -1,5 +1,4 @@
 <template>
-   
   <div class="block" 
     v-if="getPagination.length > 1"
   >

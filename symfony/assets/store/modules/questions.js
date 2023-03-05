@@ -324,18 +324,20 @@ const state = () => ({
 
 const actions = {
   async getQuestionsDb({ commit }, {id, slug}) {
-     const slag = 'mindal-kraiola-ooo-kompaniia-rybvektorzheldorprof' // опен серв
+    //  const slag = 'mindal-kraiola-ooo-kompaniia-rybvektorzheldorprof' // опен серв
     // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
     console.log("id - ",  id)
     let url = ''
     if (id === "rnd20" || id === "rnd20t") {
       url = `/api/test/${slug}/question/10`
     } else if (id === "rnd"){
-      const i = Math.floor(Math.random() * (30 - 1) + 1)
+      const i = Math.floor(Math.random() * (30 - 1) )
       console.log("i - ",  i)
       url = `/api/test/${slug}/question/${i}`
-    } 
-    else { return }
+    } else {
+      url = `/api/ticket/${id}/question`
+    }
+    
     
     try{
       const config = {

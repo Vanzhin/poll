@@ -51,13 +51,13 @@ const actions = {
     dispatch("setPagination", null);
   }
   },
-   setCategoryTitle({commit}, title){
+  setCategoryTitle({commit}, title){
     commit("SET_CATEGORY_TITLE", title);
   },
   setCategoryDescription({commit}, description){
     commit("SET_CATEGORY_DESCRIPTION", description);
   },
-  async deleteCategoryDb({dispatch, commit}, {id, token}){
+  async deleteCategoryDb({dispatch, commit}, {id, parentId, token, page}){
     const config = {
       method: 'get',
       url: `/api/admin/category/${id}/delete`,
@@ -70,7 +70,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("deletCategoryDb - удалено",  data)
-          dispatch("getCategorysDB",  { page: null , parentId: id });
+          dispatch("getCategorysDB",  { page: null , parentId: parentId });
           dispatch('setMessage', {err: false, mes: data.message})
         })
     } catch (e) {
@@ -98,9 +98,9 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("deletCategoryDb - создано",  data)
+          console.log("createCategory - создано",  data)
           dispatch('setMessage', {err: false, mes: data.message})
-          dispatch("getCategorysDB",  { page: null , parentId: id });
+          // dispatch("getCategorysDB",  { page: null , parentId: id });
         })
     } catch (e) {
       console.log("Ошибка при создании",e);
@@ -149,7 +149,10 @@ const getters = {
     return state.parent.title
   },
   getCategoryDescription(state) {
-    return state.description
+    return state.parent.description
+  },
+  getCategoryParendId(state) {
+    return state.parent ? state.parent.id : null
   },
   getCategory:(state) => (id)=> {
     return state.categorys.find(item => item.id === id) 

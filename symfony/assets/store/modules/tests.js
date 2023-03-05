@@ -45,7 +45,7 @@ const state = () => ({
       image: null
     },
   ],
-  tests:null,
+  tests: null,
   test: null,
  
 
@@ -103,8 +103,96 @@ const actions = {
     commit("SET_TEST", test)
   },
   setTests({dispatch ,commit}, tests) {
-   
     commit("SET_TESTS", tests)
+  },
+  selectTestId({dispatch ,commit, state}, {id}) {
+    console.log("id - ",  id);
+    console.log("выбранный тест - ",  state);
+    const test = state.tests.find(test => test.id === +id)
+    console.log("выбранный тест - ",  test);
+    dispatch("setTest", test)
+  },
+  async deleteTestDb({dispatch, commit}, {id, parentId, token, page}){
+    const config = {
+      method: 'get',
+      url: `/api/admin/test/${id}/delete`,
+      headers: { 
+        Accept: 'application/json', 
+        // Authorization: `Bearer ${token}`
+      }
+    };
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log("deleteTestDb - удалено",  data)
+          // dispatch("getCategorysDB",  { page: null , parentId: parentId });
+          dispatch('setMessage', {err: false, mes: data.message})
+        })
+    } catch (e) {
+      console.log("Ошибка при удалении", e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}!  
+        ${e.response.data.error[0]}.`
+      })
+    }
+  },
+  async createTest ({dispatch, commit}, {questionSend, token}){
+    const data = new FormData(questionSend);
+    for(let [name, value] of data) {
+      console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+    }
+    const config = {
+      method: 'post',
+      url: `/api/admin/test/create`,
+      headers: { 
+        Accept: 'application/json', 
+        // Authorization: `Bearer ${token}`
+      },
+      data: data
+    };
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log("createTest - создано",  data)
+          dispatch('setMessage', {err: false, mes: data.message})
+          // dispatch("getCategorysDB",  { page: null , parentId: id });
+        })
+    } catch (e) {
+      console.log("Ошибка при создании",e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}!  
+        ${e.response.data.error[0]}.`
+      })
+    }
+  },
+  async editTest ({dispatch, commit}, {id, questionSend, token}){
+    const data = new FormData(questionSend);
+    for(let [name, value] of data) {
+      console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+    }
+    const config = {
+      method: 'post',
+      url: `/api/admin/test/${id}/edit`,
+      headers: { 
+        Accept: 'application/json', 
+        // Authorization: `Bearer ${token}`
+      },
+      data: data
+    };
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log("editTest - изменено",  data)
+          dispatch('setMessage', {err: false, mes: data.message})
+          // dispatch("getCategorysDB", { page: null , parentId: id });
+        })
+    } catch (e) {
+      console.log("Ошибка при изменении:", e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}!  
+        ${e.response.data.error[0]}.`
+      })
+    }
   },
 };
 
