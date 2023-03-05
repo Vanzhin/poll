@@ -29,7 +29,7 @@ class Ticket
     #[Groups(['main', 'account', 'admin', 'category'])]
     private ?string $title = null;
 
-    #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class)]
+    #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class, cascade: ['persist', 'remove'])]
     private Collection $results;
 
     #[ORM\ManyToOne(inversedBy: 'ticket')]

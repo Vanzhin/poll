@@ -32,7 +32,7 @@ class CategoryController extends AbstractController
             $response['parent'] = $category;
 
             $test = $parent->getTest();
-            if ($test) {
+            if (count($test) > 0) {
                 $response['test'] = $test;
                 unset($response['pagination']);
             }

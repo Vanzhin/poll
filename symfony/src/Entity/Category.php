@@ -76,7 +76,7 @@ class Category
     #[Groups(['main', 'admin'])]
     private ?string $image = null;
 
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Test::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Test::class, cascade: ['persist', 'remove'])]
     private Collection $test;
 
     public function __construct()
