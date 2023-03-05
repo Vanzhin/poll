@@ -18,7 +18,7 @@ class Ticket
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main'])]
+    #[Groups(['main', 'category'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets')]
@@ -26,7 +26,7 @@ class Ticket
     private Collection $question;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['main', 'account', 'admin'])]
+    #[Groups(['main', 'account', 'admin', 'category'])]
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class)]

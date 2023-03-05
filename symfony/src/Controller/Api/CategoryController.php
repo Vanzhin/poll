@@ -42,7 +42,7 @@ class CategoryController extends AbstractController
             200,
             ['charset=utf-8'],
             [
-                'groups' => ['main', 'category'],
+                'groups' => ['category'],
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,
                 AbstractNormalizer::CALLBACKS => [

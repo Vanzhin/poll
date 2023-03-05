@@ -28,11 +28,11 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'category'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['main', 'admin'])]
+    #[ORM\Column(length: 500)]
+    #[Groups(['main', 'admin', 'category'])]
     private ?string $title = null;
 
     #[Gedmo\TreeLeft]
@@ -69,7 +69,7 @@ class Category
     private Collection $children;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'category'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]

@@ -23,7 +23,7 @@ class Variant
     #[Groups(['main', 'admin'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 700)]
     #[Groups(['main', 'admin'])]
     private ?string $title = null;
 

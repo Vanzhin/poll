@@ -7,7 +7,6 @@ use App\Repository\QuestionRepository;
 use App\Repository\TestRepository;
 use App\Service\QuestionHandler;
 use App\Service\SessionService;
-use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +39,7 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_question', methods: ['GET'])]
-    public function getRandomQuestion(Test $test,QuestionRepository $questionRepository, QuestionHandler $questionService, SessionService $sessionService, int $count): JsonResponse
+    public function getRandomQuestion(Test $test, QuestionRepository $questionRepository, QuestionHandler $questionService, SessionService $sessionService, int $count): JsonResponse
     {
         try {
             $sessionService->remove(QuestionHandler::SHUFFLED);
@@ -52,8 +51,7 @@ class TestController extends AbstractController
             $sessionService->add($questionService->prepareForSession($questions), QuestionHandler::SHUFFLED);
 
             $status = 200;
-//            $sessionService->show(QuestionHandler::SHUFFLED);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $response = ['error' => $e->getMessage()];
             $status = 422;
         } finally {
