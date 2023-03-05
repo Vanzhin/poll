@@ -11,7 +11,7 @@ import sections from './modules/sections'
 import areas from './modules/areas'
 import tickets from './modules/tickets'
 import category from './modules/category';
-
+import pagination from './modules/pagination'
 export default createStore({
   state,
   mutations,
@@ -25,6 +25,7 @@ export default createStore({
     sections,
     areas,
     tickets,
-    category
+    category,
+    pagination
   },
 })

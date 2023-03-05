@@ -14,7 +14,7 @@
         >
           <div
             class="link"
-            @click="categoryUpdate({id: section.id, title: section.title})"
+            @click="categoryUpdate({id: section.id})"
           ><!-- @click="categoryUpdate(section.id)" -->
             <div class="card-header flex-shrink-1">
                 <h5 class="my-0 font-weight-normal">{{ section.title }}</h5>
@@ -64,8 +64,7 @@ export default {
   },
   methods: {
     ...mapActions(["getCategorysDB", "setCategoryTitle"]),
-    async categoryUpdate({id, title}){
-      // this.setCategoryTitle(title)
+    async categoryUpdate({id}){
       await this.getCategorysDB({page:null, parentId: id})
       this.$router.push({name: 'iter', params: { num: 1, id:id } })
       // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })

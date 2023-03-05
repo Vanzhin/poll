@@ -6,8 +6,17 @@
     v-else
   >
     <div class="title">
-      <h2>Раздел</h2>
+      <h2>Разделы</h2>
+      <div class="btn-group " >
+        <div class="btn btn-outline-primary create"
+          title="Добавить новую категорию"
+          @click.stop="createCategory"
+        >
+          <i class="bi bi-plus create-plus" ></i>
+        </div>
+      </div>
     </div>
+    <MessageView/>
     <div class="container">
         <div class="row">
           <div class="tests__block">
@@ -16,6 +25,7 @@
               :key="item.id"
               :item="item"
               :index="index"
+              @click.stop="categoryRoute({id:item.id})"
             />
           </div>
           <Pagination/>
@@ -43,22 +53,50 @@
       }
     },
     computed:{ 
-      ...mapGetters(["getCategorys","getAutchUserToken", "getMessage"]),
+      ...mapGetters(["getCategorys","getAutchUserToken", "getMessage", "getTests"]),
     },
    
     methods: { 
       ...mapActions(["getCategorysDB","saveQuestionDb", "setMessage"]),
       ...mapMutations([]),
+      createCategory(){
+        this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id:0  } })
+      },
+      async categoryRoute({id}){
+      this.isLoader = true
+      await this.getCategorysDB({parentId: id})
+      if (this.getTests) {
+        console.log('переход к списку тестов - ', this.getTests)
+          //this.$router.push({name: 'area', params: {id } })
+          this.isLoader = false
+          return
+        } 
+      this.$router.push({name: 'adminIter', params: { num: 1, id: id } })
+      this.isLoader = false
+      // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
+    },
     },
     async created(){
       await this.getCategorysDB({})
       this.isLoader = false
-    }
+    },
+    
    
  } 
  
 </script>
 <style lang="scss" scoped>
+  .title{
+    display: flex;
+    justify-content: space-between;
+  }
+  .create{
+    display: flex;
+    align-items: center;
+    &-plus{
+      transform: scaleY(1.3);
+    }
+  }
   .button{
     padding: 5px 10px;
     transition: all 0.1s ease-out;

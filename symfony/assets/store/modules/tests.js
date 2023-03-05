@@ -1,12 +1,13 @@
 import { 
   SET_QUESTION, 
   SET_TEST_TITLE, 
-  SET_TEST 
+  SET_TEST,
+  SET_TESTS
 } from './mutation-types.js'
 import axios from 'axios';
 
 const state = () => ({
-  tests: [
+  testsTest: [
     { 
       id: 1,
       title: "ЭБ 1344.2. Проверка знаний электротехнического персонала организаций, осуществляющего эксплуатацию оборудования кабельных линий электросетевого хозяйства потребителей (III группа по электробезопасности до 1000 В)",
@@ -44,6 +45,7 @@ const state = () => ({
       image: null
     },
   ],
+  tests:null,
   test: null,
  
 
@@ -100,6 +102,10 @@ const actions = {
     if (test) dispatch("setTickets", test.ticket)
     commit("SET_TEST", test)
   },
+  setTests({dispatch ,commit}, tests) {
+   
+    commit("SET_TESTS", tests)
+  },
 };
 
 const getters = {
@@ -111,7 +117,6 @@ const getters = {
   },
   getTestTitleActive(state) {
     console.log(state.test)
-    
     return state.test ? state.test.title : ''
   },
   getTest(state) {
@@ -140,6 +145,9 @@ const mutations = {
   },
   [SET_TEST] (state, test){
     return state.test = test
+  },
+  [SET_TESTS] (state, tests){
+    return state.tests = tests
   },
 }
 

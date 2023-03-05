@@ -32,7 +32,7 @@ export default {
                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>`
       },
-      {title: 'Раздел', url: '/admins/сhapters',
+      {title: 'Разделы', url: '/admins/сhapters',
         icon:`<svg  width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                  stroke-linejoin="round" class="feather feather-file align-text-bottom"
@@ -41,7 +41,7 @@ export default {
                                 <polyline points="13 2 13 9 20 9"></polyline>
                             </svg>`
       },
-      {title: 'Область аттестации', url: '/admins/sections',
+      {title: 'Области аттестации', url: '/admins/sections',
         icon:`<i class="bi bi-box"></i>`},
       {title: 'Тесты', url: '/admins/tests',
         icon:`<i class="bi bi-archive"></i>`},

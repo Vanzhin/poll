@@ -67,7 +67,7 @@
       }
     },
     computed:{
-      ...mapGetters(["getIsAutchUser", "getCategoryTitle", "getTest", "getCategorys"]),
+      ...mapGetters(["getIsAutchUser", "getCategoryTitle", "getTests", "getCategorys"]),
       sectionTitle () {
         console.log(this.$route.params.id)
         console.log(this.$store.getters.getSectionTitle(this.$route.params.id))
@@ -91,17 +91,17 @@
     },
     methods: {
       ...mapActions(["getCategorysDB", "setCategoryTitle"]),
-      async categoryUpdate({id, title}){
+      async categoryUpdate({id}){
         this.isLoader = true
-        // this.setCategoryTitle(title)
+        
         this.iter = this.$route.params.num
         console.log(this.iter)
         await this.getCategorysDB({page:null, parentId: id})
-        console.log('this.getTest - ', this.getTest)
+        console.log('this.getTest - ', this.getTests)
         ++this.iter
         
-        if (this.getTest) {
-          this.$router.push({name: 'test', params: {id } })
+        if (this.getTests) {
+          this.$router.push({name: 'area', params: {id } })
           return
         } 
         this.$router.push({name: 'iter', params: { num: this.iter, id }})

@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="tests__block">
-      <h4>{{ areaTitle.title }}</h4>
+      <h4>{{ areaTitle }}</h4>
       <h5>Выберите тест:</h5>
     </div>
     <div class="tests__block">
@@ -42,9 +42,7 @@ export default {
   computed:{
     ...mapGetters(["getIsAutchUser"]),
     areaTitle () {
-        console.log(this.$route.params.id)
-        console.log(this.$store.getters.getAreaTitle(this.$route.params.id))
-        return this.$store.getters.getAreaTitle(this.$route.params.id)
+       return this.$store.getters.getCategoryTitle
       },
     tests () {
       return this.$store.getters.getTests

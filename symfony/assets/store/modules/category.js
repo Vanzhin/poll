@@ -10,7 +10,6 @@ import axios from 'axios';
 
 const state = () => ({
   categorys: [],
-  pagination:[],
   question:{},
   iter: 1,
   parent:{}
@@ -37,24 +36,28 @@ const actions = {
     await axios(config)
       .then(({data})=>{
         console.log("getCategoryDB - ",  data)
-        if (data.test) {dispatch('setTest', data.test)}
-        else dispatch('setTest', null)
+        if (data.test) {dispatch("setTests", data.test)}
+        else dispatch("setTests", null)
         commit("SET_CATEGORYS", data.children);
         commit("SET_CATEGORYS_PARENT", data.parent);
-        if (data.pagination) commit("SET_PAGINATION", data.pagination);
+        dispatch("setPagination", data.pagination);
         // if (data.pagination) commit("SET_PAGINATION", data.pagination);
       })
   } catch (e) {
     console.log(e);
+    dispatch("setTests", null)
+    commit("SET_CATEGORYS", null);
+    commit("SET_CATEGORYS_PARENT", null);
+    dispatch("setPagination", null);
   }
   },
-  setCategoryTitle({commit}, title){
+   setCategoryTitle({commit}, title){
     commit("SET_CATEGORY_TITLE", title);
   },
   setCategoryDescription({commit}, description){
     commit("SET_CATEGORY_DESCRIPTION", description);
   },
-  async deletCategoryDb({dispatch, commit}, {id, token}){
+  async deleteCategoryDb({dispatch, commit}, {id, token}){
     const config = {
       method: 'get',
       url: `/api/admin/category/${id}/delete`,
@@ -66,24 +69,81 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("deletCategoryDb - ",  data)
-          
+          console.log("deletCategoryDb - удалено",  data)
+          dispatch("getCategorysDB",  { page: null , parentId: id });
+          dispatch('setMessage', {err: false, mes: data.message})
         })
     } catch (e) {
-      console.log(e);
+      console.log("Ошибка при удалении", e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}!  
+        ${e.response.data.error[0]}.`
+      })
     }
-  }
+  },
+  async createCategory ({dispatch, commit}, {id, questionSend, token}){
+    const data = new FormData(questionSend);
+    for(let [name, value] of data) {
+      console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+    }
+    const config = {
+      method: 'post',
+      url: `/api/admin/category/create`,
+      headers: { 
+        Accept: 'application/json', 
+        // Authorization: `Bearer ${token}`
+      },
+      data: data
+    };
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log("deletCategoryDb - создано",  data)
+          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch("getCategorysDB",  { page: null , parentId: id });
+        })
+    } catch (e) {
+      console.log("Ошибка при создании",e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}!  
+        ${e.response.data.error[0]}.`
+      })
+    }
+  },
+  async editCategory ({dispatch, commit}, {id, questionSend, token}){
+    const data = new FormData(questionSend);
+    for(let [name, value] of data) {
+      console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+    }
+    const config = {
+      method: 'post',
+      url: `/api/admin/category/${id}/edit`,
+      headers: { 
+        Accept: 'application/json', 
+        // Authorization: `Bearer ${token}`
+      },
+      data: data
+    };
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log("createCategory - изменено",  data)
+          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch("getCategorysDB", { page: null , parentId: id });
+        })
+    } catch (e) {
+      console.log("Ошибка при изменении:", e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}!  
+        ${e.response.data.error[0]}.`
+      })
+    }
+  },
 };
 
 const getters = {
   getCategorys(state) {
     return state.categorys 
-  },
-  getPagination(state) {
-    return state.pagination 
-  },
-  getPageActive(state) {
-    return state.pageActive
   },
   getCategoryTitle(state) {
     return state.parent.title
@@ -91,20 +151,14 @@ const getters = {
   getCategoryDescription(state) {
     return state.description
   },
-  
+  getCategory:(state) => (id)=> {
+    return state.categorys.find(item => item.id === id) 
+  },
 }
 
 const mutations = {
   [SET_CATEGORYS] (state, categorys) {
     state.categorys = categorys
-  },
-  [SET_PAGINATION] (state, pagination) {
-    const pagin = Array.from({length:pagination.totalPages}).map((inp, index) => { 
-      return {label: index + 1, active: index + 1 === pagination.currentPage
-      }})
-      console.log(pagin)
-    state.pagination = pagin
-    state.pageActive = pagination.currentPage
   },
   [SET_CATEGORY_TITLE] (state, title){
     state.title = title

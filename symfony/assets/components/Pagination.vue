@@ -44,7 +44,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getPagination", "getPageActive"]),
+    ...mapGetters(["getPagination",]),
   },
   methods: {
     ...mapActions(["getCategorysDB"]),

@@ -76,7 +76,7 @@ export default {
     animation: vizible 0.1s linear;
   }
    &__cont-button{
-      margin-top: 10px;
+     
       display: flex;
    }
    &__children{

@@ -3,7 +3,7 @@
     class="item__block"
   >
     <div class="">
-      <div class="item__card" @click="childToggle">
+      <div class="item__card" @click="">
         <div class="item__card-block">
           <div class="item__card__img">
             <img :src="item.image" alt="" class="item__card__img"
@@ -15,17 +15,29 @@
           </div>
         </div>
         <div class="btn-group" >
-          <div class="btn btn-outline-primary"
+          <div class="btn btn-outline-primary btn-center"
             title="Редактировать"
             @click.stop="editCategory(item.id)"
           >
             <i class="bi bi-pencil"></i>
           </div>
-          <div class="btn btn-outline-primary" 
+          <div class="btn btn-outline-primary btn-center" 
           title="Удалить"
             @click.stop="deleteVisibleConfirm(item.id)"
           >
             <i class="bi bi-trash3"></i>
+          </div>
+          <div class="btn btn-outline-primary btn-center"
+            title="Добавить вложенную категорию"
+            @click.stop=""
+          >
+            <i class="bi bi-file-earmark"></i>
+          </div>
+          <div class="btn btn-outline-primary btn-center"
+            title="Добавить тест"
+            @click.stop=""
+          >
+            <i class="bi bi-archive"></i>
           </div>
         </div>
         <MyConfirm
@@ -66,9 +78,9 @@ export default {
   },
   computed:{
     ...mapGetters(["getIsAutchUser"]),
-
   },
   methods:{
+    ...mapActions(["deleteCategoryDb"]),
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
       return img
@@ -77,10 +89,11 @@ export default {
       this.childVisible = !this.childVisible
     },
     editCategory(id){
-      
+      this.$router.push({name: 'adminsCategoryCreate', params: {operation:"edit" , id:id } })
     },
-    deleteCategoty(){
-      console.log('удаляю сообщение. № - ', this.id)
+    async deleteCategoty(){
+      console.log('Удаляю категорию № - ', this.id)
+      this.deleteCategoryDb({id: this.id})
       this.confirmVisible = false
     },
     deleteVisibleConfirm(id){
@@ -89,7 +102,7 @@ export default {
       this.id = id
       this.confirmYes = this.deleteCategoty
     },
-
+   
   }
 } 
 
@@ -139,6 +152,9 @@ export default {
     background-color: aliceblue;
     cursor: pointer;
   }
-    
+  .btn-center{
+    display: flex;
+    align-items: center;
+  }  
 
 </style>
