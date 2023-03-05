@@ -24,7 +24,7 @@ class Test
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'category'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -43,7 +43,7 @@ class Test
     private Collection $section;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class)]
-    #[Groups(['main'])]
+    #[Groups(['main', 'category'])]
     private Collection $ticket;
 
     #[ORM\ManyToOne(inversedBy: 'test')]

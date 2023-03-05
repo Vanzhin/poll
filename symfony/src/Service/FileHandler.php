@@ -7,9 +7,8 @@ use Symfony\Component\HttpFoundation\File\File;
 class FileHandler
 {
 
-    public function getQuestion(File $file)
+    public function getQuestion(File $file): array
     {
-
         $response = [];
         $encoding = $this->detectEncoding($file);
         static $section = null;
@@ -22,12 +21,12 @@ class FileHandler
                 // process the line read.
 
                 if (strlen(trim($line)) > 0) {
-                    if($encoding !== 'utf8'){
+                    if ($encoding !== 'utf8') {
                         $line = mb_convert_encoding($line, 'utf8', $encoding);
                     }
-                    $lower = mb_strtolower($line);
-                    if (str_contains($lower, 'секция')) {
-                        $t = str_replace(['секция', 'Секция', 'СЕКЦИЯ', '«', '»'], '', $line);
+                    $lower = trim(mb_strtolower($line));
+                    if (str_starts_with($lower, 'секция')) {
+                        $t = str_replace(['секция', 'Секция', 'СЕКЦИЯ', '«', '»', '"'], '', $line);
                         $section = trim(preg_replace("/^([(|.]?([[:alnum:]])+(?)[)|.]+)|((([.:;]|[[:space:]])*)$)/iu", "", $t));
                         continue;
                     }
@@ -45,8 +44,7 @@ class FileHandler
                             $response[$questionKey]['variant'][$variantKey]['correct'] = "true";
                             $line = str_replace('*', '', $line);
                         }
-                        $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/^[(|.]?([[:alnum:]])+(?)[)|.]|((([.:;]|[[:space:]])*)$)/iu", "", $line));
-//                        $response[] = 'variant';
+                        $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/((([.:;]|[[:space:]])*)$)/iu", "", $line));
                         $variantKey++;
 
                     }
@@ -99,11 +97,10 @@ class FileHandler
             }
         }
 
-
         return $response;
     }
 
-    private function detectEncoding(File $file, array $encoding = ['utf8','windows-1251']): string
+    private function detectEncoding(File $file, array $encoding = ['utf8', 'windows-1251']): string
     {
         return mb_detect_encoding($file->getContent(), $encoding);
     }

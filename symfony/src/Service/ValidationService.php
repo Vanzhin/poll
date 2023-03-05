@@ -161,6 +161,10 @@ class ValidationService
                         new NotBlank([
                             'message' => 'variant.title.not_blank'
                         ]),
+                        new Length([
+                            'max' => 700,
+                            'maxMessage' => 'variant.title.max_length'
+                        ])
 
                     ]);
                     if ($question) {
@@ -324,7 +328,7 @@ class ValidationService
         return $errors;
     }
 
-    public function fileValidate(File $file, string $maxSize = '512k'): ?array
+    public function fileValidate(?File $file, string $maxSize = '512k'): ?array
     {
         $errors = [];
         $violations = $this->validator->validate($file, [
@@ -334,12 +338,16 @@ class ValidationService
                 ],
 
                 'maxSize' => $maxSize,
-                'extensionsMessage'=>'file.extension',
+                'extensionsMessage' => 'file.extension',
 
             ]),
+            new NotNull([
+                'message' => 'file.is.null'
+            ])
 
         ]);
-        if($file->guessExtension()!=='txt'){
+
+        if (!is_null($file) && $file->guessExtension() !== 'txt') {
             $errors[] = 'Кажется, этот не текстовый файл';
 
         }

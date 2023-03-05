@@ -11,6 +11,7 @@ question.variants.unique: Вопрос не может содержать оди
 question.image.size: Размер изображения больше
 
 variant.title.not_blank: Содержание варианта не может быть пустым
+variant.title.max_length: Содержание варианта не может быть длиннее {{ limit }} символов
 variant.weight.greater_than: Вес вопроса не может быть больше 100
 variant.correct: Не верный формат ответа
 
@@ -19,4 +20,6 @@ category.parent.exist: Такого раздела нет
 
 
 file.extension: Расширение загружаемого файла не {{ extensions }}
+file.is.null: Файл не найден
+
 

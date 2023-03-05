@@ -3,11 +3,14 @@
 namespace App\Service;
 
 use App\Entity\Question;
+use App\Entity\Section;
+use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Entity\Type;
 use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class QuestionService
@@ -16,7 +19,8 @@ class QuestionService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly FileUploader           $questionImageUploader,
-        private readonly FileUploader           $variantImageUploader
+        private readonly FileUploader           $variantImageUploader,
+        private readonly VariantService         $variantService
     )
     {
     }
@@ -59,6 +63,17 @@ class QuestionService
             }
             if ($key === 'subTitle') {
                 $question->setSubTitle($item);
+                continue;
+
+            }
+            if ($key === 'section') {
+                $question->setSection($this->em->getRepository(Section::class)->find($item));
+                continue;
+
+            }
+            if ($key === 'test') {
+                $question->setTest($this->em->getRepository(Test::class)->find($item));
+                continue;
 
             }
         }
@@ -67,24 +82,9 @@ class QuestionService
             $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
         };
 
-
         $this->em->persist($question);
         $this->em->flush();
         return $question;
-    }
-
-    public function getAnswerIds(Question $question, array $data): array
-    {
-        $answers = [];
-        foreach ($data['answer'] ?? [] as $key) {
-            $answer = $this->em->getRepository(Variant::class)->findOneBy(['title' => $data['variant'][$key]['title'], 'question' => $question->getId()]);
-            if ($answer) {
-                $answers[] += $answer->getId();
-
-            }
-        }
-
-        return $answers;
     }
 
     public function delete(Question $question): void
@@ -97,4 +97,76 @@ class QuestionService
         $this->em->remove($question);
         $this->em->flush();
     }
+
+    public function saveResponse(Question $question, array $data, ?UploadedFile $image): array
+    {
+        try {
+            if ($question->getId()) {
+                $message = 'Вопрос обновлен';
+            } else {
+                $message = 'Вопрос создан';
+
+            }
+            $question = $this->save($question, $data ?? [], $image);
+            $response = [
+                'message' => $message,
+                'questionId' => $question->getId()
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } catch (FilesystemException $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return ['response' => $response, 'status' => $status];
+        }
+
+    }
+
+    public function saveWithVariant(Question $question, ?array $questionData, ?array $variantData, UploadedFile $questionImage = null, array $variantImages = []): Question
+    {
+        $question = $this->save($question, $questionData ?? [], $questionImage);
+        foreach ($variantData as $key => $variantItem) {
+            $image = $variantImages[$key] ?? null;
+            $variantItem['questionId'] = $question->getId();
+            $variant = $this->variantService->save(new Variant(), $variantItem ?? [], $image);
+            if ($question->getType()->getTitle() === 'order') {
+                $answers[] = $variant->getId();
+            }
+        }
+        if ($question->getType()->getTitle() === 'order') {
+            $question->setAnswer($answers);
+            $this->em->persist($question);
+            $this->em->flush();
+        }
+        return $question;
+    }
+
+    public function getUploadedQuestionsSummary(array $questions): array
+    {
+        $info = [];
+        $info['message'] = 'Загружено ' . count($questions) . ' вопросов';
+//        $sectionTitle = '';
+//        foreach ($questions as $key => $question){
+//
+//            dd(is_null($question->getSection())    , $question->getSection());
+//            if(is_null(!$question->getSection())?? $question->getSection()->getTitle() !== $sectionTitle){
+//                $sectionTitle = $question->getSection()->getTitle();
+//                $info['section'][]['title'] = $sectionTitle;
+//                $info['section'][]['question'] = 1;
+//                dd($info);
+//
+//            }else{
+//                $info['section'][]['question']++;
+//
+//            }
+//        }
+        return $info;
+
+    }
+
+
+
 }
