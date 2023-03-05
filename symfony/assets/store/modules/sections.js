@@ -52,7 +52,7 @@ const state = () => ({
 })
 
 const actions = {
-  getCour({ commit }) {
+  getCategoriDB({ commit }) {
     axios
       .get("/api/cources")
       .then((res) => {
@@ -70,9 +70,7 @@ const getters = {
     return state.sections 
   },
   getSectionTitle:(state)=>(id) =>{
-    console.log(id)
     return state.sections.find(section => {
-      console.log(+section.id === +id)
       return +section.id === +id}) 
   }
 }

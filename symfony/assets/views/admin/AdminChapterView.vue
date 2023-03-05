@@ -1,31 +1,51 @@
 <template>
-   <Loader
+  <Loader
     v-if="isLoader"
   />
   <div class="block"
     v-else
   >
     <div class="title">
-      <h2>Раздел</h2>
+      <h2>Разделы</h2>
+      <div class="btn-group " >
+        <div class="btn btn-outline-primary create"
+          title="Добавить новую категорию"
+          @click.stop="createCategory"
+        >
+          <i class="bi bi-plus create-plus"></i>
+        </div>
+      </div>
     </div>
-   <div class="container">
+    <MessageView/>
+    <div class="container">
       <div class="row">
-        В настоящее время ведется разработка функционала.
+        <div class="tests__block">
+          <ItemChapter
+            v-for="(item, index) in getCategorys" 
+            :key="item.id"
+            :item="item"
+            :index="index"
+            @click.stop="categoryRoute({id:item.id})"
+          />
+        </div>
+        <Pagination/>
       </div>
     </div>
   </div>
-
-  
 </template>
  
 <script>
   import MessageView from "../../components/ui/MessageView.vue"
+  import ItemChapter from "../../components/Admin/ItemChapter.vue"
   import Loader from '../../components/ui/Loader.vue'
+  import Pagination from "../../components/Pagination.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      MessageView
+      MessageView,
+      ItemChapter,
+      Pagination
     },
     data() {
       return {
@@ -33,22 +53,52 @@
       }
     },
     computed:{ 
-      ...mapGetters(["getAutchUserToken", "getMessage"]),
+      ...mapGetters(["getCategorys","getAutchUserToken", "getMessage", "getTests"]),
     },
    
     methods: { 
-      ...mapActions(["saveQuestionDb", "setMessage"]),
+      ...mapActions(["getCategorysDB", "setMessage"]),
       ...mapMutations([]),
+      createCategory(){
+        this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id:0  } })
+      },
+      async categoryRoute({id}){
+        this.isLoader = true
+        await this.getCategorysDB({parentId: id})
+        if (this.getTests) {
+          console.log('переход к списку тестов - ', this.getTests)
+            //this.$router.push({name: 'area', params: {id } })
+          this.isLoader = false
+          return
+        } 
+        console.log('переход к списку категорий - ', this.getTests)
+        this.$router.push({name: 'adminIter', params: { num: 1, id: id } })
+        this.isLoader = false
+        // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
+      },
     },
-    async mounted(){
-      setTimeout(()=>this.isLoader = false, 1000 )
-      
-    }
+    async created(){
+      await this.getCategorysDB({})
+      this.isLoader = false
+    },
+    
    
  } 
  
 </script>
 <style lang="scss" scoped>
+  .title{
+    display: flex;
+    justify-content: space-between;
+   
+  }
+  .create{
+    display: flex;
+    align-items: center;
+    &-plus{
+      transform: scaleY(1.3);
+    }
+  }
   .button{
     padding: 5px 10px;
     transition: all 0.1s ease-out;

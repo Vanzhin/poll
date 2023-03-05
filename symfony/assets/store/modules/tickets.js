@@ -1,40 +1,12 @@
-import { SET_QUESTION } from './mutation-types.js'
-
+import { 
+  SET_QUESTION,
+  SET_TICKETS
+ } from './mutation-types.js'
+ import axios from 'axios';
 
 const state = () => ({
-  tickets: [
-    { 
-      id: 1,
-      title: "dfgdfgdfg",
-    },
-    { 
-      id: 2,
-      title: "nfffffff",
-    },
-    { 
-      id: 3,
-      title: "ertert",
-    },
-    { 
-      id: 4,
-      title: "ertert",
-    },
-    { 
-      id: 5,
-      title: "ertert",
-    },
-    { 
-      id: 6,
-      title: "ertert",
-    },
-    { 
-      id: 7,
-      title: "ertert",
-    },
-  ],
+  tickets: [],
   question:{},
-  
-  
 })
 
 const actions = {
@@ -48,27 +20,41 @@ const actions = {
         console.log(err);
       });
   },
-  getQuestion(){}
+  getQuestion(){},
+  setTickets ({dispatch, commit}, tickets) {
+    commit("SET_TICKETS", tickets)
+  }
 };
 
 const getters = {
   getTickets(state) {
     return state.tickets
   },
-  
+  getRandomTicket(state) {
+    console.log(state.tickets.length)
+    const num = Math.floor(Math.random() * (state.tickets.length ) )
+    console.log(num)
+    return state.tickets[num].id
+  },
+  getSelectTicket:(state)=>(id) =>{
+    return state.tickets.find(ticket => {
+      return +ticket.id === +id}) 
+  }
 }
 
 const mutations = {
   GET_COURCES(state, cources) {
-    return state.cources = {
+    state.cources = {
       active: 0, list: cources, isLoaded: true
     }
   },
   [SET_QUESTION] (state, id) {
     if (state.cources.list.hasOwnProperty(id)) {
-      return state.cources.active = id;
+      state.cources.active = id;
     }
-    return;
+  },
+  [SET_TICKETS] (state, tickets){
+     state.tickets = tickets
   },
 }
 export default {
