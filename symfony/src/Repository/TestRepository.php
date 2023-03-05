@@ -6,6 +6,7 @@ use App\Entity\Question;
 use App\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,6 +40,30 @@ class TestRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findLastUpdatedQuery(): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('te');
+        return
+            $this->lastUpdated($queryBuilder);
+    }
+
+    private function latest(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('te.createdAt', 'DESC');
+
+    }
+
+    private function lastUpdated(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('te.updatedAt', 'DESC');
+
+    }
+
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('te');
     }
 
 
