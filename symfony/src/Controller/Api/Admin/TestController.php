@@ -175,13 +175,6 @@ class TestController extends AbstractController
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
-        $questionData = $handler->getQuestion($file);
-        return $this->json($questionData,
-            200,
-            ['charset=utf-8'],
-            ['groups' => 'create']
-        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-
         try {
             $questionData = $handler->getQuestion($file);
             $status = 200;

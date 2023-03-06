@@ -53,9 +53,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['account'])]
     private Collection $results;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Question::class)]
+    private Collection $questions;
+
     public function __construct()
     {
         $this->results = new ArrayCollection();
+        $this->questions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,6 +185,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($result->getUser() === $this) {
                 $result->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(Question $question): self
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): self
+    {
+        if ($this->questions->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getAuthor() === $this) {
+                $question->setAuthor(null);
             }
         }
 
