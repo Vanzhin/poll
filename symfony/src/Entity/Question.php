@@ -59,6 +59,12 @@ class Question
     #[ORM\ManyToOne(inversedBy: 'question')]
     private ?Test $test = null;
 
+    #[ORM\ManyToOne(inversedBy: 'questions')]
+    private ?User $author = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $publishedAt = null;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -238,6 +244,30 @@ class Question
     public function setTest(?Test $test): self
     {
         $this->test = $test;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeInterface $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }
