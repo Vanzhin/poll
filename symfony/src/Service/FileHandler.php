@@ -40,11 +40,11 @@ class FileHandler
                         $string = 'variant';
                     } else {
                         //
-                        if (str_contains($line, '*')) {
+                        if (str_starts_with($lower, '*')) {
                             $response[$questionKey]['variant'][$variantKey]['correct'] = "true";
                             $line = str_replace('*', '', $line);
                         }
-                        $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/((([.:;]|[[:space:]])*)$)/iu", "", $line));
+                        $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/(^([[:digit:]])?(?)[).]+)|((([.:;]|[[:space:]])*)$)/iu", "", $line));
                         $variantKey++;
 
                     }
