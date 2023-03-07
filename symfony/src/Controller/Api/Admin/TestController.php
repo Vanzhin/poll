@@ -63,9 +63,11 @@ class TestController extends AbstractController
 
         $test = $testService->save(new Test(), $data);
         if (count($validation->validate($test)) > 0) {
-            return $this->json([
-                'message' => 'Ошибка при вводе данных',
-                'error' => $validation->validate($test)],
+            return $this->json(
+                [
+                    'message' => 'Ошибка при вводе данных',
+                    'error' => $validation->validate($test)
+                ],
                 422,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);

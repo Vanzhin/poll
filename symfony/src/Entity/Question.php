@@ -8,10 +8,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
+#[UniqueEntity(['title', 'test'], 'question.title.already_exist')]
 class Question
 {
     use TimestampableEntity;
@@ -24,6 +27,9 @@ class Question
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['main', 'admin'])]
+    #[Assert\NotBlank(
+        message: 'question.title.not_blank'
+    )]
     private ?string $title = null;
 
     #[ORM\Column]
@@ -32,6 +38,9 @@ class Question
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[Groups(['main', 'admin'])]
+    #[Assert\NotNull(
+        message: 'question.type.invalid'
+    )]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
@@ -57,6 +66,9 @@ class Question
     private ?Section $section = null;
 
     #[ORM\ManyToOne(inversedBy: 'question')]
+    #[Assert\NotNull(
+        message: 'question.test.not_blank'
+    )]
     private ?Test $test = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]

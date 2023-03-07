@@ -25,22 +25,19 @@ class QuestionService
     {
     }
 
-    /**
-     * @throws FilesystemException
-     */
-    public function save(Question $question, array $data, UploadedFile $image = null): Question
+    public function save(Question $question, array $data): Question
     {
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $question->setTitle($item);
                 continue;
             };
-            if ($key === 'type') {
+            if ($key === 'type' && $this->em->getRepository(Type::class)->findOneBy(['title' => $item])) {
                 $question->setType($this->em->getRepository(Type::class)->findOneBy(['title' => $item]));
                 continue;
 
             };
-            if ($key === 'answer') {
+            if ($key === 'answer' && $question->getType()) {
                 if (in_array($question->getType()->getTitle(), ['input_one', 'input_many'])) {
                     $question->setAnswer($item);
                 }
@@ -77,13 +74,6 @@ class QuestionService
 
             }
         }
-
-        if ($image) {
-            $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
-        };
-
-        $this->em->persist($question);
-        $this->em->flush();
         return $question;
     }
 
@@ -98,7 +88,7 @@ class QuestionService
         $this->em->flush();
     }
 
-    public function saveResponse(Question $question, array $data, ?UploadedFile $image): array
+    public function saveResponse(Question $question, ?UploadedFile $image): array
     {
         try {
             if ($question->getId()) {
@@ -107,7 +97,13 @@ class QuestionService
                 $message = 'Вопрос создан';
 
             }
-            $question = $this->save($question, $data ?? [], $image);
+
+            if ($image) {
+                $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
+            };
+
+            $this->em->persist($question);
+            $this->em->flush();
             $response = [
                 'message' => $message,
                 'questionId' => $question->getId()
@@ -166,7 +162,6 @@ class QuestionService
         return $info;
 
     }
-
 
 
 }

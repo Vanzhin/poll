@@ -85,44 +85,15 @@ class ValidationService
 
     }
 
-    public function questionValidate(array $data, File $image = null): ?array
+    public function entityWithImageValidate(Object $entity, File $image = null, string $imageSize = '1M'): ?array
     {
-        $errors = [];
-        foreach ($data as $key => $value) {
-            if ($key === 'title') {
-                $violations = $this->validator->validate($value, [
-                    new NotBlank([
-                        'message' => 'question.title.not_blank'
-                    ]),
-
-                ]);
-
-                foreach ($violations as $violation) {
-                    $errors[] = $violation->getMessage();
-                }
-                continue;
-            }
-            if ($key === 'type') {
-                $violations = $this->validator->validate($this->em->getRepository(Type::class)->findOneBy(['title' => $value]), [
-                    new NotNull([
-                        'message' => 'question.type.invalid'
-                    ]),
-
-                ]);
-                foreach ($violations as $violation) {
-                    $errors[] = $violation->getMessage();
-                }
-                continue;
-
-            }
-        }
+        $errors = $this->validate($entity);
         if ($image) {
 
-            if (!is_null($this->imageValidate($image))) {
+            if (!is_null($this->imageValidate($image, $imageSize))) {
                 $errors[] = implode(',', $this->imageValidate($image));
             };
         };
-
 
         if (count($errors) === 0) {
             return null;

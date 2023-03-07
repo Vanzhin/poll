@@ -4,16 +4,19 @@ user.password.not_blank: Пароль не может быть пустым.
 user.password.length: Пароль должен быть не менее 6 символов.
 user.password.regex: Не верный формат пароля. Пароль может содержать латинские буквы в разных регистрах, цифры и нижнее подчеркивание.
 user.unique: Пользователь с указанным адресом почты уже существует
-question.title.unique: Вопрос с таким содержанием уже существует
+question.title.already_exist: Вопрос с таким содержанием уже существует
 question.title.not_blank: Содержание вопроса не может быть пустым
 question.type.invalid: Типа вопроса с таким названием не существует
 question.variants.unique: Вопрос не может содержать одинаковых вариантов/ вариантов без названия
 question.image.size: Размер изображения больше
+question.test.not_blank: Теста с таким идентификатором не найдено
 
 variant.title.not_blank: Содержание варианта не может быть пустым
 variant.title.max_length: Содержание варианта не может быть длиннее {{ limit }} символов
 variant.weight.greater_than: Вес вопроса не может быть больше 100
 variant.correct: Не верный формат ответа
+variant.title.unique: Вариант с таким названием уже существует для этого вопроса
+variant.test.not_null: Вопрос с таким идентификатором не найден
 
 category.title.not_blank: Название раздела не может быть пустым
 category.parent.exist: Такого раздела нет

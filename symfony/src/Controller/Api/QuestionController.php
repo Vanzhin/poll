@@ -50,8 +50,8 @@ class QuestionController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('questionImage');
-
-        $errors = $validation->questionValidate($data['question'] ?? [], $image);
+        $question = $questionService->save(new Question(), $data['question'] ?? []);
+        $errors = $validation->entityWithImageValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -60,7 +60,7 @@ class QuestionController extends AbstractController
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
-        $response = $questionService->saveResponse(new Question(), $data['question'] ?? [], $image);
+        $response = $questionService->saveResponse($question, $image);
         return $this->json($response['response'],
             $response['status'],
             ['charset=utf-8'],
@@ -72,8 +72,8 @@ class QuestionController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('questionImage');
-
-        $errors = $validation->questionValidate($data['question'] ?? [], $image);
+        $question = $questionService->save($question, $data['question'] ?? []);
+        $errors = $validation->questionValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -82,8 +82,7 @@ class QuestionController extends AbstractController
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
-
-        $response = $questionService->saveResponse($question, $data['question'] ?? [], $image);
+        $response = $questionService->saveResponse($question, $image);
         return $this->json($response['response'],
             $response['status'],
             ['charset=utf-8'],
@@ -96,7 +95,6 @@ class QuestionController extends AbstractController
     {
         try {
             $questionService->delete($question);
-
             $response = [
                 'message' => 'Вопрос удален',
             ];
@@ -118,9 +116,10 @@ class QuestionController extends AbstractController
     {
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage');
-
-        $questionErrors = $validation->questionValidate($data['question'] ?? [], $questionImage) ?? [];
+        $question = $questionService->save(new Question(), $data['question'] ?? []);
+        $questionErrors = $validation->questionValidate($question, $questionImage);
         $errors = $questionErrors;
+
         $variantImages = $request->files->get('variantImage');
         $variantErrors = $validation->manyVariantsValidate($data ?? [], $variantImages) ?? [];
         $errors = array_merge($errors, $variantErrors);
