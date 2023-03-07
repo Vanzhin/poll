@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Section;
+use App\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,29 @@ class SectionRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    private function latest(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('ti.createdAt', 'DESC');
+
+    }
+
+    private function lastUpdated(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('se.updatedAt', 'DESC');
+
+    }
+
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('se');
+    }
+
+    public function findLastUpdatedByTestQuery(Test $test): QueryBuilder
+    {
+        return $this->lastUpdated()->andWhere('se.test = :testId')
+            ->setParameters(['testId' => $test->getId()]);
     }
 
 //    /**

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Section;
+use App\Entity\Test;
 use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -74,6 +75,11 @@ class TicketRepository extends ServiceEntityRepository
         return $queryBuilder ?? $this->createQueryBuilder('ti');
     }
 
+    public function findLastUpdatedByTestQuery(Test $test): QueryBuilder
+    {
+        return $this->lastUpdated()->andWhere('ti.test = :testId')
+            ->setParameters(['testId' => $test->getId()]);
+    }
 
 //    /**
 //     * @return Ticket[] Returns an array of Ticket objects

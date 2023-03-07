@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Question;
 use App\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -64,6 +65,13 @@ class TestRepository extends ServiceEntityRepository
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('te');
+    }
+
+    public function findLastUpdatedByCategoryQuery(Category $category):QueryBuilder
+    {
+        return $this->findLastUpdatedQuery()
+            ->andWhere('te.category = :categoryId')
+            ->setParameters(['categoryId' => $category->getId()]);
     }
 
 

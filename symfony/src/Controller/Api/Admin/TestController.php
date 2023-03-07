@@ -4,7 +4,10 @@ namespace App\Controller\Api\Admin;
 
 use App\Entity\Question;
 use App\Entity\Test;
+use App\Repository\QuestionRepository;
+use App\Repository\SectionRepository;
 use App\Repository\TestRepository;
+use App\Repository\TicketRepository;
 use App\Service\FileHandler;
 use App\Service\Paginator;
 use App\Service\QuestionService;
@@ -157,14 +160,6 @@ class TestController extends AbstractController
                            SectionService    $sectionService
     ): Response
     {
-//        $questions = $test->getQuestion()->toArray();
-//        $response = $questionService->getUploadedQuestionsSummary($questions);
-//        return $this->json($response,
-//                200,
-//                ['charset=utf-8'],
-//                ['groups'=> 'create']
-//            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-
         $file = $request->files->get('file');
         $errors = $validation->fileValidate($file);
         if (!is_null($errors) && count($errors) > 0) {
@@ -220,5 +215,65 @@ class TestController extends AbstractController
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
 
+    }
+
+    #[Route('/api/admin/test/{id}/question', name: 'app_api_admin_test_question', methods: 'GET')]
+    public function getQuestion(Test $test, Paginator $paginator, QuestionRepository $repository): JsonResponse
+    {
+        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test), 5);
+        if ($pagination->count() > 0) {
+            $response['question'] = $pagination;
+
+        }
+        $response['pagination'] = $paginator->getInfo($pagination);
+        return $this->json(
+            $response,
+            200,
+            ['charset=utf-8'],
+            [
+                'groups' => 'admin',
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+            ],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
+
+    #[Route('/api/admin/test/{id}/ticket', name: 'app_api_admin_test_ticket', methods: 'GET')]
+    public function getTicket(Test $test, Paginator $paginator, TicketRepository $repository): JsonResponse
+    {
+        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test), 5);
+        if ($pagination->count() > 0) {
+            $response['ticket'] = $pagination;
+
+        }
+        $response['pagination'] = $paginator->getInfo($pagination);
+        return $this->json(
+            $response,
+            200,
+            ['charset=utf-8'],
+            [
+                'groups' => 'admin_ticket',
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+            ],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
+
+    #[Route('/api/admin/test/{id}/section', name: 'app_api_admin_test_section', methods: 'GET')]
+    public function getSection(Test $test, Paginator $paginator, SectionRepository $repository): JsonResponse
+    {
+        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test), 5);
+        if ($pagination->count() > 0) {
+            $response['section'] = $pagination;
+
+        }
+        $response['pagination'] = $paginator->getInfo($pagination);
+        return $this->json(
+            $response,
+            200,
+            ['charset=utf-8'],
+            [
+                'groups' => 'admin_section',
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+            ],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 }

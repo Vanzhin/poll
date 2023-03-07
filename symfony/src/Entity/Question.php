@@ -19,23 +19,23 @@ class Question
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'create'])]
+    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket'])]
     private ?string $title = null;
 
     #[ORM\Column]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main'])]
     private array $answer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'admin_section'])]
     private Collection $tickets;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, orphanRemoval: true)]
@@ -46,7 +46,7 @@ class Question
     private array $subTitle = [];
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main'])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -54,6 +54,7 @@ class Question
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[Groups(['admin', 'admin_ticket'])]
     private ?Section $section = null;
 
     #[ORM\ManyToOne(inversedBy: 'question')]

@@ -72,6 +72,12 @@ class QuestionRepository extends ServiceEntityRepository
         return $queryBuilder ?? $this->createQueryBuilder('qu');
     }
 
+    public function findLastUpdatedByTestQuery(Test $test): QueryBuilder
+    {
+        return $this->lastUpdated()->andWhere('qu.test = :testId')
+            ->setParameters(['testId' => $test->getId()]);
+    }
+
 //    /**
 //     * @return Question[] Returns an array of Question objects
 //     */

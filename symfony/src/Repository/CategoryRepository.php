@@ -50,14 +50,19 @@ final class CategoryRepository extends NestedTreeRepository
     {
 
         $queryBuilder = $this->getOrCreateQueryBuilder();
-        if($parentId){
+        if ($parentId) {
             return $queryBuilder
                 ->andWhere('c.parent = :parentId')
-                ->setParameters(['parentId'=> $parentId]);
-        }else{
+                ->setParameters(['parentId' => $parentId]);
+        } else {
             return $queryBuilder
                 ->andWhere('c.parent is NULL');
         }
 
+    }
+
+    public function findAllLatestChildrenQuery(int $parentId = null): QueryBuilder
+    {
+        return $this->findAllChildrenQuery($parentId)->orderBy('c.updatedAt', 'DESC');
     }
 }

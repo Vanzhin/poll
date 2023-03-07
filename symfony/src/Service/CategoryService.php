@@ -52,4 +52,13 @@ class CategoryService
         $this->em->remove($category);
         $this->em->flush();
     }
+
+    public function imageDelete(Category $category): void
+    {
+
+        $this->categoryImageUploader->delete($category->getImage());
+        $category->setImage(null);
+        $this->em->persist($category);
+        $this->em->flush();
+    }
 }
