@@ -64,7 +64,7 @@ class Category
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Category::class)]
     #[ORM\OrderBy(['lft' => 'ASC'])]
-    #[Groups(['admin'])]
+    #[Groups(['admin', 'category'])]
     #[MaxDepth(1)]
     private Collection $children;
 
@@ -77,6 +77,7 @@ class Category
     private ?string $image = null;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Test::class, cascade: ['persist', 'remove'])]
+    #[Groups(['category'])]
     private Collection $test;
 
     public function __construct()
