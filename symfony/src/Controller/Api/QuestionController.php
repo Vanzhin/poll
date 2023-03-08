@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Question;
+use App\Entity\Variant;
 use App\Service\NormalizerService;
 use App\Service\QuestionService;
 use App\Service\ValidationService;
@@ -116,10 +117,26 @@ class QuestionController extends AbstractController
     {
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage');
+        $variantImages = $request->files->get('variantImage');
+
         $question = $questionService->save(new Question(), $data['question'] ?? []);
         $questionErrors = $validation->entityWithImageValidate($question, $questionImage);
         $errors = $questionErrors;
+        $em->beginTransaction();
+        $em->persist($question);
+        $em->flush();
+        foreach ($data['variant'] as $key => $variantData){
+            $variantData['questionId'] = 
+            $variant = $variantService->save(new Variant(), $variantData);
+            $image = $variantImages[$key];
+            $errors[] = $validation->entityWithImageValidate($variant, $image);
 
+        }
+        try {
+            $em->commit();
+        } catch (\Exception $e) {
+            $em->rollback();
+        }
         $variantImages = $request->files->get('variantImage');
         $variantErrors = $validation->manyVariantsValidate($data ?? [], $variantImages) ?? [];
         $errors = array_merge($errors, $variantErrors);

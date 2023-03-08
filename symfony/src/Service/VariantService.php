@@ -19,7 +19,6 @@ class VariantService
     {
         if (!$variant->getQuestion() && isset($data['questionId'])) {
             $question = $this->em->find(Question::class, $data['questionId']);
-
         } else {
             $question = $variant->getQuestion();
         }
