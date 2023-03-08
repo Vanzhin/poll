@@ -73,7 +73,7 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $image = $request->files->get('questionImage');
         $question = $questionService->save($question, $data['question'] ?? []);
-        $errors = $validation->questionValidate($question, $image);
+        $errors = $validation->entityWithImageValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -117,7 +117,7 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage');
         $question = $questionService->save(new Question(), $data['question'] ?? []);
-        $questionErrors = $validation->questionValidate($question, $questionImage);
+        $questionErrors = $validation->entityWithImageValidate($question, $questionImage);
         $errors = $questionErrors;
 
         $variantImages = $request->files->get('variantImage');

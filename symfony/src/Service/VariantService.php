@@ -17,7 +17,7 @@ class VariantService
 
     public function save(Variant $variant, array $data): Variant
     {
-        if (!$variant->getQuestion()) {
+        if (!$variant->getQuestion() && isset($data['questionId'])) {
             $question = $this->em->find(Question::class, $data['questionId']);
 
         } else {
@@ -58,7 +58,6 @@ class VariantService
                     if (in_array($variant->getId(), $question->getAnswer())) {
                         $question->setAnswer([]);
                     }
-
                 }
 
                 break;
