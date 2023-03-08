@@ -17,7 +17,7 @@
         <div class="btn-group" >
           <div class="btn btn-outline-primary btn-center"
             title="Редактировать"
-            @click.stop="editCategory"
+            @click.stop="editTest"
           >
             <i class="bi bi-pencil"></i>
           </div>
@@ -28,16 +28,16 @@
             <i class="bi bi-trash3"></i>
           </div>
           <div class="btn btn-outline-primary btn-center"
-            title="Добавить вложенную категорию"
-            @click.stop=""
+            title="Добавить вопрос"
+            @click.stop="addQuestion"
           >
-            <i class="bi bi-file-earmark"></i>
+            <i class="bi bi-question-square"></i>
           </div>
           <div class="btn btn-outline-primary btn-center"
-            title="Добавить тест"
-            @click.stop=""
+            title="Импортировать вопросы из файла"
+            @click.stop="importQuestionsFile"
           >
-            <i class="bi bi-archive"></i>
+            <i class="bi bi-cloud-arrow-down"></i>
           </div>
         </div>
         <MyConfirm
@@ -77,10 +77,10 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getIsAutchUser", "getCategoryParendId"]),
+    ...mapGetters(["getIsAutchUser", "getCategoryParendId", "getMessage", "getTests"]),
   },
   methods:{
-    ...mapActions(["deleteCategoryDb"]),
+    ...mapActions(["deleteTestDb"]),
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
       return img
@@ -88,21 +88,27 @@ export default {
     childToggle(){
       this.childVisible = !this.childVisible
     },
-    editCategory(){
-      this.$router.push({name: 'adminsCategoryCreate', params: {operation:"edit" , id: item.id } })
+    editTest(){
+      console.log()
+      this.$router.push({name: 'adminsTestCreate', params: {operation:"edit" , id: this.item.id } })
     },
-    async deleteCategoty(){
-      console.log('Удаляю категорию № - ',this.item.id)
-      this.deleteCategoryDb({id: this.item.id, parentId: this.getCategoryParendId})
+    async deleteTest(){
+      console.log('Удаляю тест № - ', this.item.id)
+      await this.deleteTestDb({id: this.item.id, parentId: this.getCategoryParendId})
       this.confirmVisible = false
       this.confirmYes = null
     },
     deleteVisibleConfirm(){
-      this.confirmMessage = "При удалении раздела, так же будут удалены все его внутренние области. Вы, действительно хотите это сделать?"
+      this.confirmMessage = "При удалении теста, так же будут удалены все его вопросы. Вы, действительно хотите это сделать?"
       this.confirmVisible = true
-      this.confirmYes = this.deleteCategoty
+      this.confirmYes = this.deleteTest
     },
-   
+    importQuestionsFile(){
+      this.$router.push({path: '/admins/import',  })
+    },
+    addQuestion( ){
+      this.$router.push({path: '/admins/questions',  })
+    }
   }
 } 
 

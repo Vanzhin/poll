@@ -36,6 +36,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
+  props: ['type'],
   data() {
     return {
       isActive: false,
@@ -46,7 +47,7 @@ export default {
     ...mapGetters(["getPagination",]),
   },
   methods: {
-    ...mapActions(["getCategorysDB"]),
+    ...mapActions(["getCategorysDB", "getTestsDB"]),
     async paginate (page){
       switch (page) {
         case '-1' : {
@@ -65,7 +66,8 @@ export default {
           this.currentPage = page 
         }
       }
-      await this.getCategorysDB({page: this.currentPage, parentId: this.$route.params.id||null })
+      console.log(this.type)
+      await this[this.type]({page: this.currentPage, parentId: this.$route.params.id||null })
     }
   }, 
 } 

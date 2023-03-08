@@ -28,7 +28,9 @@
             @click.stop="categoryRoute({id:item.id})"
           />
         </div>
-        <Pagination/>
+        <Pagination
+          type="getCategorysDB"
+        />
       </div>
     </div>
   </div>
@@ -60,20 +62,20 @@
       ...mapActions(["getCategorysDB", "setMessage"]),
       ...mapMutations([]),
       createCategory(){
-        this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id:0  } })
+        this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id: 0  } })
       },
       async categoryRoute({id}){
         this.isLoader = true
         await this.getCategorysDB({parentId: id})
         if (this.getTests) {
           console.log('переход к списку тестов - ', this.getTests)
-            //this.$router.push({name: 'area', params: {id } })
-          this.isLoader = false
+            this.$router.push({name: 'adminsTests', params: {id } })
+            setTimeout(() => this.isLoader = false, 200)
           return
         } 
         console.log('переход к списку категорий - ', this.getTests)
         this.$router.push({name: 'adminIter', params: { num: 1, id: id } })
-        this.isLoader = false
+        setTimeout(() => this.isLoader = false, 200)
         // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
       },
     },

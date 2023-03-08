@@ -123,15 +123,16 @@
         
         if ( this.$route.params.operation === 'edit'){
           await this.editCategory({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
-          
+         
         } else if ( this.$route.params.operation === 'create'){
           await this.createCategory({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
          
         }
+        this.message = !this.getMessage.err
         let timerId = setInterval(() => {
-          if ( !this.getMessage) {
+          if ( !this.getMessage ) {
             clearInterval(timerId)
-            this.$router.go(-1)
+            if (this.message ){this.$router.go(-1)}
           }
         }, 200);
           
@@ -158,7 +159,9 @@
     },
     async created() {
       if ( this.$route.params.operation === 'create'){
-        this.parentId = this.$route.params.id
+        if (this.$route.params.id > 0) {
+          this.parentId = this.$route.params.id 
+        }
       }
       if ( this.$route.params.operation === 'edit'){
         // this.parentId = this.$route.params.id

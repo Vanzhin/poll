@@ -37,7 +37,9 @@
     > 
       Данная категория в разработке.
     </div> 
-    <Pagination/>  
+    <Pagination
+      type="getCategorysDB"
+    />  
      
   </div>
 </template>

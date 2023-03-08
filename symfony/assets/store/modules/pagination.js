@@ -25,9 +25,12 @@ const mutations = {
   let  pagin = []
   console.log("pagination -", pagination)
   if (pagination) {
-    pagin = Array.from({length:pagination.totalPages}).map((inp, index) => { 
-      return {label: index + 1, active: index + 1 === pagination.currentPage
-    }})
+    const len =  10 > pagination.totalPages ?
+    pagination.totalPages : 10
+    pagin = Array.from({length: len}).map((inp, index) => { 
+      return {label: pagination.currentPage + index , active: index === 0 ? true : false,
+        
+      }})
   }
   console.log(pagin)
   state.pagination = pagin

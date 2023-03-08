@@ -52,17 +52,34 @@ const state = () => ({
 })
 
 const actions = {
-  getCources({ commit }) {
-    axios
-      .get("/api/cources")
-      .then((res) => {
-        commit("GET_COURCES", res.data.raw);
+  async getTestsDB({dispatch ,commit}, {page = null, token = null}){
+    const config = {
+      method: 'get',
+      url: `/api/admin/test`,
+      headers: { 
+        Accept: 'application/json', 
+        // Authorization: `Bearer ${token}`
+      }
+    }
+
+    if (page) {
+      config.url = config.url + `?page=${page}`
+    }
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log("getTestsDb - ",  data)
+          dispatch("setTests", data.test)
+          dispatch("setPagination", data.pagination);
+        })
+    } catch (e) {
+      console.log("Ошибка при получении теста", e)
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}!  
+        ${e.response.data.error[0]}.`
       })
-      .catch((err) => {
-        console.log(err);
-      });
+    }
   },
-  getQuestion(){},
   setTestTitle ({dispatch, commit}, {title}) {
     commit("SET_TEST_TITLE", title );
   },
@@ -106,11 +123,35 @@ const actions = {
     commit("SET_TESTS", tests)
   },
   selectTestId({dispatch ,commit, state}, {id}) {
-    console.log("id - ",  id);
-    console.log("выбранный тест - ",  state);
+    console.log("id - ",  id)
+    console.log("выбранный тест - ",  state)
     const test = state.tests.find(test => test.id === +id)
-    console.log("выбранный тест - ",  test);
+    console.log("выбранный тест - ",  test)
     dispatch("setTest", test)
+  },
+  async getTestIdDb({dispatch ,commit}, {id}){
+    const config = {
+      method: 'get',
+      url: `/api/admin/test/${id}`,
+      headers: { 
+        Accept: 'application/json', 
+        // Authorization: `Bearer ${token}`
+      }
+    }
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log("getTestDb - ",  data)
+          dispatch("setTest", data)
+          
+        })
+    } catch (e) {
+      console.log("Ошибка при получении теста", e)
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}!  
+        ${e.response.data.error[0]}.`
+      })
+    }
   },
   async deleteTestDb({dispatch, commit}, {id, parentId, token, page}){
     const config = {
@@ -125,7 +166,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("deleteTestDb - удалено",  data)
-          // dispatch("getCategorysDB",  { page: null , parentId: parentId });
+          dispatch("getCategorysDB",  { page: null , parentId});
           dispatch('setMessage', {err: false, mes: data.message})
         })
     } catch (e) {

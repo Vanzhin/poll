@@ -12,11 +12,11 @@ const state = () => ({
   categorys: [],
   question:{},
   iter: 1,
-  parent:{}
+  parent: null
 })
 
 const actions = {
-  async getCategorysDB({ dispatch, commit }, { page = null , parentId = null }) {
+  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null }) {
     const config = {
       method: 'get',
       url: "/api/category",
@@ -146,7 +146,7 @@ const getters = {
     return state.categorys 
   },
   getCategoryTitle(state) {
-    return state.parent.title
+    return state.parent ? state.parent.title : null
   },
   getCategoryDescription(state) {
     return state.parent.description

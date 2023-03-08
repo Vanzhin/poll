@@ -58,7 +58,7 @@ export default {
     align-items: center;
     background-color: #9ac7c7;
     border-radius: 10px;
-    animation: move 5s 1 linear;
+    animation: move 3s 1 linear;
     text-align: center;
     transform: scaleY(0);
     padding: 15px;

@@ -46,7 +46,9 @@
             В данной категории еще нет вложенных секций. Воспользуйтесь кнопкой 
             чтобы создать подкатегорию или прикрепить тест.
           </div> 
-          <Pagination/>
+          <Pagination
+            type="getCategorysDB"
+          />
       </div>
     </div>
   </div>
@@ -82,51 +84,48 @@
         "getCategoryDescription"
       ]),
       areas() {
-        console.log("ar -", this.getCategorys)
         const ar = this.getCategorys || []
-        console.log("ar2 -", ar)
         return ar
       },
     },
     watch:{
       $route(newRout){
         console.log("newParentId -", newRout)
-        this.categoryUpdateStory(newRout.params.id)
+        this.categoryRoute({id: newRout.params.id})
       }
     },
     methods: { 
       ...mapActions(["getCategorysDB", "saveQuestionDb", "setMessage"]),
       createCategory(){
-        this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id: this.parentId  } })
+        this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id:  this.$route.params.id  } })
       },
       createTest(){
-        this.$router.push({name: 'adminsTestCreate', params: {operation:"create", id: this.parentId  } })
+        this.$router.push({name: 'adminsTestCreate', params: {operation:"create", id:  this.$route.params.id  } })
       },
       async categoryRoute({id}){
         this.isLoader = true
         await this.getCategorysDB({parentId: id})
         if (this.getTests) {
           console.log('переход к списку тестов - ', this.getTests)
-            //this.$router.push({name: 'area', params: {id } })
-          this.isLoader = false
+            this.$router.push({name: 'adminsTests', params: {id } })
+            setTimeout(() => this.isLoader = false, 200)
           return
         } 
         console.log('переход к списку категорий - ', this.getTests)
         this.$router.push({name: 'adminIter', params: { num: 1, id: id } })
-        this.isLoader = false
+        setTimeout(() => this.isLoader = false, 200)
         // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
       },
-      async categoryUpdateStory(parentId) {
-        this.isLoader = true
-        console.log('categoryUpdateStory - ', parentId)
-        await this.getCategorysDB({page: null, parentId})
-        this.isLoader = false
-      }
+      // async categoryUpdateStory(parentId) {
+      //   this.isLoader = true
+      //   console.log('categoryUpdateStory - ', parentId)
+      //   await this.getCategorysDB({page: null, parentId})
+      //   this.isLoader = false
+      // }
     },
     
-    async created(){
-      await this.getCategorysDB({page: null, parentId: this.parentId})
-      this.isLoader = false
+    created(){
+      this.categoryRoute({id: this.parentId})
     }
    
  } 

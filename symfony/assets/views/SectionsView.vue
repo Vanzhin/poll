@@ -31,7 +31,9 @@
           </div>
         </div>
       </div>
-      <Pagination/>
+      <Pagination
+        type="getCategorysDB"
+      />
     </div> 
   </div>
 </template>

@@ -1,8 +1,5 @@
 <template>
-   <div class="cont-message"
-      v-if="visible"
-      @click.stop=""
-    >
+   <div class="cont-message">
     <div class="confirm__window" >
       <div  class="confirm__children">
          {{message}}
@@ -10,13 +7,10 @@
       
       <div class="confirm__cont-button">
           <div class="confirm__button"
-          @click.stop="() => {
-            
-            $emit('yesConfirm')  
-          }"
+          @click.stop="$emit('yesConfirm')"
           >Да</div> 
           <div class="confirm__button"
-              @click.stop="$emit('noConfirm') "
+              @click.stop="$emit('noConfirm')"
           >Нет</div> 
       </div>
     </div>
@@ -26,7 +20,7 @@
 <script>
 import { mapGetters } from "vuex"
 export default {
-  props: ['message', 'visible',],
+  props: ['message',],
   data() {
     return {
     }
