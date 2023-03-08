@@ -10,6 +10,9 @@ const router = createRouter({
       name: 'home',
       meta: {loyout: 'page', autch: false},
       component: () => import('../views/SectionsView.vue')
+      // meta: {loyout: 'admin', autch: true, admin: true},
+      // component: () => import('../views/admin/AdminChapterView.vue')
+      
       // component: () => import('../views/TicketView.vue'),
       // component: () => import('../views/ResultView.vue'),
     },
@@ -73,8 +76,9 @@ const router = createRouter({
       props: true,
     },
     {
-      path: '/chapter/:id',
-      name: 'chapter',
+      path: '/iter/:num/group/:id',
+      // path: '/?iter=1/group/:id',
+      name: 'iter',
       meta: {loyout: 'page', autch: false},
       component: () => import('../views/AreasView.vue')
     },
@@ -114,22 +118,28 @@ const router = createRouter({
       component: () => import('../views/admin/AdminHomeView.vue')
     },
     {
-      path: '/admins/сhapter',
-      name: 'adminsChapter',
+      path: '/admins/chapters',
+      name: 'adminsChapters',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminChapterView.vue')
     },
     {
-      path: '/admins/section',
-      name: 'adminsSection',
+      path: '/admins/sections',
+      name: 'adminsSections',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminSectionView.vue')
     },
     {
-      path: '/admins/test',
-      name: 'adminsTest',
+      path: '/admins/tests',
+      name: 'adminsTestsList',
       meta: {loyout: 'admin', autch: true, admin: true},
-      component: () => import('../views/admin/AdminTestView.vue')
+      component: () => import('../views/admin/AdminTestsListView.vue')
+    },
+    {
+      path: '/admins/category/:id/tests',
+      name: 'adminsTests',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminTestsView.vue')
     },
     {
       path: '/admins/questions',
@@ -144,10 +154,28 @@ const router = createRouter({
       component: () => import('../views/admin/ImportQuestionView.vue')
     },
     {
-      path: '/admins/user',
-      name: 'adminsUser',
+      path: '/admins/users',
+      name: 'adminsUsers',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminUsersView.vue')
+    },
+    {
+      path: '/admins/category/:id/:operation',
+      name: 'adminsCategoryCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateCategoryView.vue')
+    },
+    {
+      path: '/admins/iter/:num/group/:id',
+      name: 'adminIter',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminIterView.vue')
+    },
+    {
+      path: '/admins/test/:id/:operation',
+      name: 'adminsTestCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateTestView.vue')
     },
   ]
 })

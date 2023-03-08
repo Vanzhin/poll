@@ -8,13 +8,13 @@
     <div class="title">
       <Timer
         v-if="timeTicket"
-        :time="0.1"
+        :time="20" 
         @time-end="timerEnd"
       />
-      {{ timeEnd }}
-      <h2> {{ testName.title }}</h2>
+      
+      <h2> {{ testName }}</h2>
       <div class="test">
-        <p>Билет №: {{ $route.params.id }}</p>  
+        <p> {{ ticketTitle }}</p>  
       </div>
     </div>
     
@@ -81,15 +81,24 @@ export default {
       isLoader: true,
       timeTicket: false,
       timeEnd: false,
+      ticketId: this.$route.params.id,
+      ticketTitle:"",
+      rnd: {
+        rnd:"Случайный набор вопросов",
+        rnd20:"Случайный набор из 20 вопросов",
+        rnd20t:"Случайный набор из 20 вопросов на время"
+      },
     }
   },
   computed:{
+    ...mapGetters(["getSlug", "getRandomTicket", "getSelectTicket"]),
     testName () {
       return this.$store.getters.getTestTitleActive
     },
     qestions () {
       return this.$store.getters.getQuestions
     },
+   
   },
    methods: {
     ...mapActions(["getQuestionsDb", "saveResultTicketUser"]),
@@ -104,8 +113,24 @@ export default {
       this.timeEnd = true
     }
   },
-  async mounted(){
-    await this.getQuestionsDb(this.$route.params.id)
+  async created(){
+    if (this.ticketId === "rndb" ) { 
+      
+      this.ticketId = await this.getRandomTicket
+      console.log("запрос случайного билета ", this.ticketId)
+    }
+    console.log("this.ticketId - ", this.ticketId)
+    
+    const regexp = new RegExp("rnd", 'i');
+                
+               
+    console.log(" regexp.test(this.ticketId) - ",  regexp.test(this.ticketId))
+    if ( regexp.test(this.ticketId)){
+        this.ticketTitle = this.rnd[this.ticketId]
+      } else {
+        this.ticketTitle = this.getSelectTicket(+this.ticketId).title
+      }
+    await this.getQuestionsDb({id: this.ticketId, slug: this.getSlug})
     if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
     this.isLoader = false
   }

@@ -1,11 +1,10 @@
 <template>
   <div class="block">
     <div class="title">
-      <h2> {{ testName.title }}</h2>
+      <h2> {{ testName }}</h2>
       <div class="test">
         <p>При выборе случайного билета система сама сделает выбор. Случайный набор сгенерирует билет с произвольным составом вопросов. Выбор набора с пометкой "Таймер" ограничит время на прохождение теста.</p>  
       </div>
-      
     </div>
     <div class="container">
       <div class="row text-center">
@@ -38,20 +37,16 @@
             </RouterLink>
           </div>
         </div>
-      
-
         <div class="col-6 col-sm-6 col-md-3 col-lg-2"
           v-for="(ticket, ind) in tickets"
           :key="ticket.id"
         > 
           <div class="card flex-shrink-1 shadow">
             <RouterLink :to="{ name: 'ticket', params: { id: ticket.id } }" class="py-2 link">
-              Билет №{{ ind + 1 }}
+              {{ ticket.title }}
             </RouterLink>
           </div>
         </div>
-       
-         
       </div>
     </div>
   </div>
@@ -59,13 +54,14 @@
 
 <script>
 import { RouterLink } from 'vue-router'
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
-   
+    RouterLink
   },
   data() {
     return {
-      count: 0,
+     
     }
   },
    computed:{
@@ -77,10 +73,14 @@ export default {
       },
     },
     methods: {
-     
+     ...mapActions(["selectTestId"])
     },
     mounted(){
-      this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
+      // this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
+    },
+    async created() {
+      await this.selectTestId({id : this.$route.params.id})
+      this.isLoader = false
     }
   
 } 

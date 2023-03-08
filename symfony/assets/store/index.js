@@ -10,7 +10,8 @@ import user from './modules/user'
 import sections from './modules/sections'
 import areas from './modules/areas'
 import tickets from './modules/tickets'
-
+import category from './modules/category';
+import pagination from './modules/pagination'
 export default createStore({
   state,
   mutations,
@@ -23,6 +24,8 @@ export default createStore({
     user,
     sections,
     areas,
-    tickets
+    tickets,
+    category,
+    pagination
   },
 })

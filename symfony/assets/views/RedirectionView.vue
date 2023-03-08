@@ -45,9 +45,7 @@
         setTimeout(() => {
           this.$router.push( this.getPageName===""? "/": this.getPageName)
         },15000);
-        
       }
-
     }
   } 
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="tests__block">
-      <h4>{{ areaTitle.title }}</h4>
+      <h4>{{ areaTitle }}</h4>
       <h5>Выберите тест:</h5>
     </div>
     <div class="tests__block">
@@ -10,7 +10,6 @@
         :key="test.id"
         class="test__block"
       >
-        
         <div class="test__card"
           v-if="getIsAutchUser || index < 3"
         >
@@ -43,9 +42,7 @@ export default {
   computed:{
     ...mapGetters(["getIsAutchUser"]),
     areaTitle () {
-        console.log(this.$route.params.id)
-        console.log(this.$store.getters.getAreaTitle(this.$route.params.id))
-        return this.$store.getters.getAreaTitle(this.$route.params.id)
+       return this.$store.getters.getCategoryTitle
       },
     tests () {
       return this.$store.getters.getTests
@@ -61,11 +58,12 @@ export default {
   }
   .test{
     &__block{
-    margin: 10px 10px;}
+    margin: 10px 10px;
+     
+  }
   }
   .test__card, .test__card-limitation{
     background-color: #e2e5fc;
-   
     padding: 5px;
     display: flex;
     flex-direction: column;
@@ -78,9 +76,9 @@ export default {
   .test__card-limitation{
     color: rgb(134, 134, 132);
   }
-
   .test__card:hover{
     background-color: aliceblue;
+    cursor: pointer;
   }
     
 
