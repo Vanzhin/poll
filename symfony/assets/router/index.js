@@ -132,7 +132,7 @@ const router = createRouter({
     {
       path: '/admins/tests',
       name: 'adminsTestsList',
-      meta: {loyout: 'admin', autch: true, admin: true},
+      meta: {loyout: 'admin', autch: true, admin: true, type: "test"},
       component: () => import('../views/admin/AdminTestsListView.vue')
     },
     {
@@ -151,7 +151,14 @@ const router = createRouter({
       path: '/admins/import',
       name: 'adminsImport',
       meta: {loyout: 'admin', autch: true, admin: true},
-      component: () => import('../views/admin/ImportQuestionView.vue')
+      component: () => import('../views/admin/ImportQuestionView.vue'),
+      children: [{ 
+        path: ':id', 
+        name: 'adminsImportId', 
+        meta: {loyout: 'admin', autch: true, admin: true},
+        component: () => import('../views/admin/ImportQuestionView.vue') 
+      }],
+
     },
     {
       path: '/admins/users',
@@ -168,15 +175,22 @@ const router = createRouter({
     {
       path: '/admins/iter/:num/group/:id',
       name: 'adminIter',
-      meta: {loyout: 'admin', autch: true, admin: true},
+      meta: {loyout: 'admin', autch: true, admin: true,  type: "category"},
       component: () => import('../views/admin/AdminIterView.vue')
     },
     {
+      path: '/admins/test/:id',
+      name: 'adminsTest',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminTestView.vue'),
+      children: []
+    },
+    { 
       path: '/admins/test/:id/:operation',
       name: 'adminsTestCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateTestView.vue')
-    },
+    }
   ]
 })
 router.beforeEach((to, from, next) => {

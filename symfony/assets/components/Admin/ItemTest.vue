@@ -77,7 +77,13 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getIsAutchUser", "getCategoryParendId", "getMessage", "getTests"]),
+    ...mapGetters([
+      "getIsAutchUser", 
+      "getCategoryParendId", 
+      "getMessage", 
+      "getTests",
+      "getActivePage"
+  ]),
   },
   methods:{
     ...mapActions(["deleteTestDb"]),
@@ -94,7 +100,13 @@ export default {
     },
     async deleteTest(){
       console.log('Удаляю тест № - ', this.item.id)
-      await this.deleteTestDb({id: this.item.id, parentId: this.getCategoryParendId})
+      console.log('Удаляю тест № - ', this.$route)
+      await this.deleteTestDb({
+        id: this.item.id, 
+        parentId: this.getCategoryParendId, 
+        activePage: this.getActivePage,
+        type: this.$route.meta.type,
+      })
       this.confirmVisible = false
       this.confirmYes = null
     },
@@ -104,7 +116,7 @@ export default {
       this.confirmYes = this.deleteTest
     },
     importQuestionsFile(){
-      this.$router.push({path: '/admins/import',  })
+      this.$router.push({name: 'adminsImportId',  params: {id: this.item.id }})
     },
     addQuestion( ){
       this.$router.push({path: '/admins/questions',  })

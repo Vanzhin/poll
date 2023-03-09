@@ -46,11 +46,12 @@ export default {
   display: flex;
   justify-content: center;
   
+  
   &-view{
     position: absolute;
     min-height: 50px;
     min-width: 300px;
-    bottom: -26px;
+    bottom: -40vh;
     max-width: 300px;
     z-index: 10;
     display: flex;

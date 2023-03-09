@@ -59,23 +59,30 @@ export default {
     }
   },
   computed:{
+    ...mapGetters(["getTests",]),
     sections () {
       return this.$store.getters.getCategorys
     },
     
   },
+  
   methods: {
     ...mapActions(["getCategorysDB", "setCategoryTitle"]),
     async categoryUpdate({id}){
       await this.getCategorysDB({page:null, parentId: id})
+      if (this.getTests) {
+        this.$router.push({name: 'area', params: {id } })
+        return
+      } 
       this.$router.push({name: 'iter', params: { num: 1, id:id } })
       // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
+      
+    
+    
     },
     img(item){
-      console.log(item)
-
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
-       return img
+      return img
     },
   },
   async created(){

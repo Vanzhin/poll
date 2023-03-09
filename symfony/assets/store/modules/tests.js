@@ -83,7 +83,7 @@ const actions = {
   setTestTitle ({dispatch, commit}, {title}) {
     commit("SET_TEST_TITLE", title );
   },
-  async importFileTestDb({ dispatch, commit, state }, {token, testFile} ){
+  async importFileTestDb({ dispatch, commit, state }, {id, token, testFile} ){
     console.dir(testFile)
     commit("SET_LOADER_TOGGLE")
     try{
@@ -94,7 +94,7 @@ const actions = {
       }
       const config = {
         method: 'post',
-        url: '/api/test/import_with_file',
+        url: `/api/admin/test/${id}/upload`,
         headers: { 
           Accept: 'application/json', 
           // Authorization: `Bearer ${token}`
@@ -105,14 +105,14 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("importFileTestDb - ",  data)
-          // dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', {err: false, mes: data.message})
           // commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
       console.log("importFileTestDb err- ", e);
-      // dispatch('setMessage', {err: true, 
-      //   mes: `${e.response.data.message}  ${e.response.data.error[0]}`
-      // })
+      dispatch('setMessage', {err: true, 
+         mes: `${e.response.data.message}  ${e.response.data.error[0]}`
+      })
     }
   },
   setTest({dispatch ,commit}, test) {
@@ -153,7 +153,7 @@ const actions = {
       })
     }
   },
-  async deleteTestDb({dispatch, commit}, {id, parentId, token, page}){
+  async deleteTestDb({dispatch, commit}, {id, parentId, token, page, type}){
     const config = {
       method: 'get',
       url: `/api/admin/test/${id}/delete`,
@@ -166,9 +166,16 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("deleteTestDb - удалено",  data)
-          dispatch("getCategorysDB",  { page: null , parentId});
-          dispatch('setMessage', {err: false, mes: data.message})
-        })
+          if (type === "test") {
+            dispatch("getTestsDB",  { page })
+          } else {
+            if ( type === "test") {
+              dispatch("getTestsDB",  { page })
+              
+            } else {
+            dispatch("getCategorysDB",  { page: null , parentId})}}
+            dispatch('setMessage', {err: false, mes: data.message})
+          })
     } catch (e) {
       console.log("Ошибка при удалении", e);
       dispatch('setMessage', {err: true, 

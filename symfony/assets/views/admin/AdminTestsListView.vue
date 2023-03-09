@@ -1,5 +1,4 @@
 <template>
-  {{ getPagination.length }}
   <div class="block">
     <div class="title">
       <h2>Тесты</h2>
@@ -30,15 +29,11 @@
     computed:{ 
       ...mapGetters(["getAutchUserToken", "getMessage", "getPagination"]),
     },
-   
     methods: { 
       ...mapActions(["saveQuestionDb", "setMessage"]),
       ...mapMutations([]),
     },
-    async mounted(){
-      
-      
-    }
+    async mounted(){}
    
  } 
  

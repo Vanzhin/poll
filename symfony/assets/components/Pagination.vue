@@ -47,7 +47,7 @@ export default {
     ...mapGetters(["getPagination",]),
   },
   methods: {
-    ...mapActions(["getCategorysDB", "getTestsDB"]),
+    ...mapActions(["getCategorysDB", "getTestsDB", "getQuestionsTestIdDb"]),
     async paginate (page){
       switch (page) {
         case '-1' : {
@@ -67,7 +67,12 @@ export default {
         }
       }
       console.log(this.type)
-      await this[this.type]({page: this.currentPage, parentId: this.$route.params.id||null })
+     
+      await this[this.type]({
+        page: this.currentPage, 
+        parentId: this.$route.params.id||null,
+        id: this.$route.params.id||null
+      })
     }
   }, 
 } 

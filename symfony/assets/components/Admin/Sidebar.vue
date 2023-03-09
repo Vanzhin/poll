@@ -60,7 +60,7 @@ export default {
 <style lang="scss" scoped>
 .app-sidenav{
   padding-top:15px;
-  position:absolute;
+  position:fixed;
   top:80px;
   width:250px;
   transition:transform .3s;

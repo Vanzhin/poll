@@ -5,11 +5,10 @@
   <div class="block"
     v-else
   >
-    <div class="title">
-      
-      <div class="tests__block"
-        v-if="parentId"
-      >
+    <div class="title"
+    v-if="parentId"
+    >
+      <div class="tests__block">
         <h3>{{getCategoryTitle }}</h3>
         <h6>Тесты</h6>
       </div>
@@ -22,7 +21,7 @@
           </div>
       </div>
     </div>
-    <MessageView/>
+    
     <div class="container">
       <div class="row">
         <div class="tests__block"
@@ -33,6 +32,7 @@
               :key="item.id"
               :item="item"
               :index="index"
+              @click.stop="testRoute({id: item.id})"
             />
           </div>
       </div>
@@ -45,7 +45,7 @@
 </template>
  
 <script>
-  import MessageView from "../../components/ui/MessageView.vue"
+ 
   import Loader from '../../components/ui/Loader.vue'
   import Pagination from "../../components/Pagination.vue"
   import ItemTest from "../../components/Admin/ItemTest.vue"
@@ -53,7 +53,6 @@
   export default {
     components: {
       Loader,
-      MessageView,
       Pagination,
       ItemTest
     },
@@ -85,10 +84,12 @@
         "getTestsDB"
         ]),
       ...mapMutations([]),
+      testRoute({id}){
+        this.$router.push({name: 'adminsTest', params: { id  } })
+      },
       createTest(){
         this.$router.push({name: 'adminsTestCreate', params: {operation:"create", id: this.parentId  } })
       },
-      
     },
     async mounted(){},
     async created(){

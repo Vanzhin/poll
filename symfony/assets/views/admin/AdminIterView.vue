@@ -26,7 +26,7 @@
           </div>
       </div>
     </div>
-    <MessageView/>
+    
     <div class="container">
         <div class="row">
           <div class="tests__block"
