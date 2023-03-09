@@ -157,15 +157,8 @@ class TestController extends AbstractController
                            FileHandler       $handler,
                            QuestionService   $questionService,
                            SectionService    $sectionService
-    ): Response
+    ): JsonResponse
     {
-//        $questions = $test->getQuestion()->toArray();
-//        $response = $questionService->getUploadedQuestionsSummary($questions);
-//        return $this->json($response,
-//                200,
-//                ['charset=utf-8'],
-//                ['groups'=> 'create']
-//            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
 
         $file = $request->files->get('file');
         $errors = $validation->fileValidate($file);
@@ -180,16 +173,16 @@ class TestController extends AbstractController
         try {
             $questionData = $handler->getQuestion($file);
             $status = 200;
-
             $total = [];
-            foreach ($questionData as $key => $question) {
-
-                if ($validation->questionValidate($question)) {
-                    $total[$key]['error']['question'] = $validation->questionValidate($question);
+            foreach ($questionData as $key => $data) {
+                $data['test'] = $test->getId();
+                $question = $questionService->make(new Question(), $data);
+                if ($validation->validate($question)) {
+                    $total[$key]['error']['question'] = $validation->validate($question);
                 }
-                if ($validation->manyVariantsValidate($question)) {
-                    $total[$key]['error']['variant'] = $validation->manyVariantsValidate($question);
-                    $total[$key]['error']['variant']['question'] = $question;
+                if ($validation->manyVariantsValidate($data)) {
+                    $total[$key]['error']['variant'] = $validation->manyVariantsValidate($data);
+                    $total[$key]['error']['variant']['question'] = $data;
                 }
 
             }

@@ -34,7 +34,7 @@ class VariantController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage');
-        $variant = $variantService->save(new Variant(), $data['variant']);
+        $variant = $variantService->make(new Variant(), $data['variant']);
 
         $errors = $validation->entityWithImageValidate($variant, $image);
         if (!is_null($errors) && count($errors) > 0) {
@@ -59,7 +59,7 @@ class VariantController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage');
-        $variant = $variantService->save($variant, $data['variant']);
+        $variant = $variantService->make($variant, $data['variant']);
 
         $errors = $validation->entityWithImageValidate($variant, $image);
         if (!is_null($errors) && count($errors) > 0) {
@@ -120,7 +120,7 @@ class VariantController extends AbstractController
             foreach ($data['variant'] as $key => $variantData) {
                 $image = $images[$key] ?? null;
                 $variantData['questionId'] = $data['questionId'];
-                $variant = $variantService->save(new Variant(), $variantData ?? [], $image);
+                $variant = $variantService->make(new Variant(), $variantData ?? [], $image);
                 if ($question->getType()->getTitle() === 'order') {
                     $answers[] = $variant->getId();
                 }

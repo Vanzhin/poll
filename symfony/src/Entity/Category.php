@@ -12,13 +12,16 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[Gedmo\Tree(type: 'nested')]
 #[ORM\Table(name: 'category')]
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[UniqueEntity(
-    fields: ['title', 'lvl'],
-    message: 'Раздел с таким названием уже существует',
+    fields: ['title', 'parent'],
+    message: 'category.title.unique',
+    ignoreNull: false
 )]
 #[ORM\UniqueConstraint('title_lvl_idx', ['title', 'lvl'])]
 class Category
@@ -33,6 +36,13 @@ class Category
 
     #[ORM\Column(length: 500)]
     #[Groups(['main', 'admin', 'category'])]
+    #[Assert\NotBlank(
+        message: 'category.title.not_blank'
+    )]
+    #[Assert\Length(
+        max: 500,
+        maxMessage: 'category.title.not_blank'
+    )]
     private ?string $title = null;
 
     #[Gedmo\TreeLeft]

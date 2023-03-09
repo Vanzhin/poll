@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Category;
+use App\Entity\Question;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -13,10 +14,7 @@ class CategoryService
     {
     }
 
-    /**
-     * @throws FilesystemException
-     */
-    public function save(Category $category, array $data, UploadedFile $image = null): Category
+    public function make(Category $category, array $data): Category
     {
         foreach ($data as $key => $item) {
             if ($key === 'title') {
@@ -35,14 +33,40 @@ class CategoryService
 
         }
 
-        if ($image) {
-            $category->setImage($this->categoryImageUploader->uploadImage($image, $category->getImage()));
-        };
-
-
-        $this->em->persist($category);
-        $this->em->flush();
         return $category;
+    }
+
+    public function saveResponse(Category $category, ?UploadedFile $image): array
+    {
+        try {
+            if ($category->getId()) {
+                $message = 'Раздел обновлен';
+            } else {
+                $message = 'Раздел создан';
+
+            }
+
+            if ($image) {
+                $category->setImage($this->categoryImageUploader->uploadImage($image, $category->getImage()));
+            };
+
+            $this->em->persist($category);
+            $this->em->flush();
+            $response = [
+                'message' => $message,
+                'questionId' => $category->getId()
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } catch (FilesystemException $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return ['response' => $response, 'status' => $status];
+        }
+
     }
 
     public function delete(Category $category): void

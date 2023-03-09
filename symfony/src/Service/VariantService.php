@@ -15,7 +15,7 @@ class VariantService
     {
     }
 
-    public function save(Variant $variant, array $data): Variant
+    public function make(Variant $variant, array $data): Variant
     {
         if (!$variant->getQuestion() && isset($data['questionId'])) {
             $question = $this->em->find(Question::class, $data['questionId']);
@@ -44,7 +44,7 @@ class VariantService
 
     }
 
-    public function questionUpdate(Variant $variant): Question
+    public function questionUpdate(Variant $variant, bool $flush = false): Question
     {
         $question = $variant->getQuestion();
         switch ($question->getType()->getTitle()) {
@@ -83,11 +83,23 @@ class VariantService
 
                 break;
         }
+        if($flush){
+            $this->em->persist($question);
+            $this->em->flush();
+        }
 
         return $question;
     }
 
+    public function imageAttach(Variant $variant, UploadedFile $image = null): void
+    {
+        if ($image) {
+            $variant->setImage($this->variantImageUploader->uploadImage($image, $variant->getImage()));
+            $this->em->persist($variant);
+            $this->em->flush();
+        };
 
+    }
     public function saveResponse(Variant $variant, ?UploadedFile $image): array
     {
         try {
