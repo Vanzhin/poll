@@ -27,12 +27,14 @@
         </div>
       </div>
     </div> 
+    <MessageView/>
   </div> 
 </template>
 
 <script>
 import { RouterLink } from 'vue-router'
 import DropDownItems from './ui/DropDownItems.vue';
+import MessageView from "./ui/MessageView.vue"
 export default {
   data() {
     return {
@@ -40,7 +42,8 @@ export default {
     }
   },
   components:{
-    DropDownItems
+    DropDownItems,
+    MessageView
   },
   computed:{
     classObject() {

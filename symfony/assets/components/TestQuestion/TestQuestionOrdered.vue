@@ -12,7 +12,8 @@
         @drop="onDrop($event)"
         @dragover.prevent
         @dragenter.prevent
-        >
+        v-if="this.qestion.variant"
+      >
         <div class="custom-control custom-radio"
           v-for="(answer, ind ) in qestionVariantSort" 
           :key="answer"
@@ -80,9 +81,10 @@ export default {
     }
   },
   mounted(){
+    if (this.qestion.variant){
     this.qestion.variant.forEach((item, index ) => 
       this.qestionVariant.push({id:index, title:item, sort: index})
-    )
+    )} 
     // console.log(this.qestionVariant)
   }
 }

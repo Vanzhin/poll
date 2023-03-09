@@ -323,20 +323,20 @@ const state = () => ({
 
 
 const actions = {
-  async getQuestionsDb({ commit }, id) {
-     const slag = 'mindal-kraiola-ooo-kompaniia-rybvektorzheldorprof' // опен серв
+  async getQuestionsDb({dispatch, commit }, {id, slug}) {
+    //  const slag = 'mindal-kraiola-ooo-kompaniia-rybvektorzheldorprof' // опен серв
     // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
     console.log("id - ",  id)
     let url = ''
     if (id === "rnd20" || id === "rnd20t") {
-      url = `/api/test/${slag}/question/10`
+      url = `/api/test/${slug}/question/10`
     } else if (id === "rnd"){
-      const i = Math.floor(Math.random() * (30 - 1) + 1)
+      const i = Math.floor(Math.random() * (30 - 1) )
       console.log("i - ",  i)
-      url = `/api/test/${slag}/question/${i}`
-    } 
-    else { return }
-    
+      url = `/api/test/${slug}/question/${i}`
+    } else {
+      url = `/api/ticket/${id}/question`
+    }
     try{
       const config = {
         method: 'get',
@@ -355,7 +355,30 @@ const actions = {
         console.log(e.message);
     }
   },
+  
+  async getQuestionsTestIdDb({dispatch, commit }, {id, page=null}) {
+    console.log("id - ",  id)
 
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/admin/test/${id}/question`,
+        headers: { 
+          Accept: 'application/json', 
+          // Authorization: `Bearer ${token}`
+        }
+      };
+      if (page) {config.url = config.url + `?page=${page}`}
+      await axios(config)
+        .then(({data})=>{
+          console.log("getQuestionsTestIdDb - ",  data.question)
+          commit("SET_QUESTIONS", data.question);
+          dispatch("setPagination", data.pagination);
+        })
+    } catch (e) {
+        console.log(e.message);
+    }
+  },
   async setResultDb({dispatch, commit, state }, {token, userAuth} ){
     console.log(JSON.stringify(state.resultTicketUser))
     commit("SET_LOADER_STATUS", true)
@@ -372,6 +395,7 @@ const actions = {
         data:  JSON.stringify(state.resultTicketUser)
       };
       if (userAuth) {
+        console.log('авторизовался')
         config.url = '/api/auth/test/handle'
         config.headers.Authorization = `Bearer ${token}`
       }
@@ -413,13 +437,47 @@ const actions = {
       //   } else {
       //     data.append(`${element.name}`, element.value)
       //   }
-       
       // });
       // questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
       const config = {
         method: 'post',
         // url: '/api/auth/create/question',
         url: '/api/question/create_with_variant',
+        headers: { 
+          Accept: 'application/json', 
+          // Authorization: `Bearer ${token}`
+        },
+        data:  data
+      };
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("saveQuestionDb - ",  data)
+          dispatch('setMessage', {err: false, mes: data.message})
+          commit("SET_LOADER_TOGGLE")
+        })
+         
+      
+    } catch (e) {
+      console.log(e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}  ${e.response.data.error[0]}`
+      })
+    }
+  },
+  async importQuestionsFileDb({ dispatch, commit, state }, {id, token, questionSend} ){
+    console.dir(questionSend)
+    commit("SET_LOADER_TOGGLE")
+    try{
+      const data = new FormData(questionSend);
+      for(let [name, value] of data) {
+        console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+
+      }
+      const config = {
+        method: 'post',
+        // url: '/api/auth/create/question',
+        url: `/api/admin/test/${id}/upload`,
         headers: { 
           Accept: 'application/json', 
           // Authorization: `Bearer ${token}`

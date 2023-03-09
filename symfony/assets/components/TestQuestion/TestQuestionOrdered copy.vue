@@ -8,27 +8,33 @@
         :value="answerSelect">
       <hr> 
       <i class="i">Укажите ответы в правильном порядке.</i>
-      <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
-        :key="answer"
+      {{ qestion }}
+      <div
+        v-if="qestion.variant"
       >
-       
-        <div class="custom-control-number">
-          {{  getOrdered(ind )}}     
-        <input type="checkbox" 
-          :name="'q' + (index + 1) + (ind + 1)"  
-          :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind "
-          v-model="answerSelect"
-          v-if="answer!==''"
-          class="custom-control-input"  >
-        </div> 
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
-        </label>
+        {{ qestion.variant }}
+        <div class="custom-control custom-radio"
+          v-for="(answer, ind ) in qestion.variant" 
+          :key="answer"
+        >
+        
+          <div class="custom-control-number">
+            {{  getOrdered(ind )}}     
+          <input type="checkbox" 
+            :name="'q' + (index + 1) + (ind + 1)"  
+            :id="'q' + (index + 1) + (ind + 1) "
+            :value= "ind "
+            v-model="answerSelect"
+            v-if="answer!==''"
+            class="custom-control-input"  >
+          </div> 
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm" 
+            :for="'q' + (index + 1) + (ind + 1)"
+          >{{ answer }}
+          </label>
+        </div>
       </div>
       <br>
       
@@ -57,12 +63,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  
-  .shadow{
+    .shadow{
     padding: 5px;
   }
- 
-  .custom-control {
+   .custom-control {
     position: relative;
     display: flex;
     align-items:flex-start;
@@ -75,7 +79,6 @@ export default {
     &-number{
       width: 30px;
       height: 20px;
-      
       display: flex;
       justify-content: flex-end;
       align-items: center;
