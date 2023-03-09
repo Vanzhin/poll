@@ -18,10 +18,10 @@ class Section
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['admin', 'admin_section', 'admin_ticket'])]
+    #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question'])]
     private ?int $id = null;
 
-    #[Groups(['admin', 'admin_section', 'admin_ticket'])]
+    #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 

@@ -20,11 +20,11 @@ class Variant
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'admin_question'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 700)]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'admin_question'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
