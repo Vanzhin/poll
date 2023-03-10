@@ -2,12 +2,8 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      <input type="hidden" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
-        :value="answerSelect">
       <hr>
-      <i class="i">Выберите ответы из выпадающего списка.</i>
+      <i class="i">Варианты ответов:</i>
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in qestion.subTitle" 
         :key="answer"
@@ -15,18 +11,30 @@
         <label 
           v-if="answer!==''"
           class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
+          
         >{{ answer }}
         </label>
-        <select 
-          v-model="answerSelect[ind]"
-          >
-          <option disabled value="">Выберите один из вариантов</option>
-          <option 
-            v-for="(variant, vInd ) in qestion.variant"
-            :value="vInd" 
-          >
-            {{ variant }}
+        <select>
+          disabled
+          <option>
+            {{ variantConformity(ind) }}
+          </option>
+        </select>
+      </div>
+      <div class="custom-control custom-radio"
+        v-for="(answer, ind ) in additionalVariants" 
+        :key="answer"
+      >
+        <label 
+          v-if="answer!==''"
+          class="custom-control-label f_sm" 
+          
+        >
+        </label>
+        <select>
+          disabled
+          <option>
+            {{ answer.title }}
           </option>
         </select>
       </div>
@@ -42,15 +50,28 @@ export default {
   data() {
     return {
       count: 0,
-       answerSelect:[] 
+      additionalVariants:[] 
     }
   },
   computed:{
     
   },
   methods: {
-   
-  } 
+    variantConformity(ind){
+      return this.qestion.variant.find(elem => elem.id === this.qestion.answer[ind]).title
+    }
+  },
+  mounted(){
+    if (this.qestion.answer){
+      this.additionalVariants = this.qestion.variant
+      this.qestion.answer.forEach((item, index ) =>{ 
+      let arr = [...this.additionalVariants]
+      
+      this.additionalVariants = arr.filter(elem => elem.id !== item)}
+     
+    )} 
+    
+  }
 }
 
 </script>

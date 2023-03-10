@@ -38,7 +38,10 @@ export default {
   },
   computed:{
     getUserAnswer(){
-      return  this.qestion.result.user_answer.length > 0 && this.qestion.result.user_answer[0] !==''
+      
+      return  this.qestion.result.user_answer ? 
+          this.qestion.result.user_answer.length > 0 && this.qestion.result.user_answer[0] !==''
+          : false
     },
   },
   methods: {

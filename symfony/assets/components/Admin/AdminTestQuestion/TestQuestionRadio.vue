@@ -7,30 +7,22 @@
         :name="qestion.id" 
         :value="answerSelect">
       <hr>
-      <i class="i"
-        v-if="admin"
-      >Варианты ответов.</i>
-      <i class="i"
-        v-else
-      >Выберите правильные ответы.</i>
+      <i class="i">Варианты ответов:</i>
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in qestion.variant" 
-        :key="answer"
+        :key="answer.id"
       >
-        <input type="checkbox" 
-          :name="'q' + (index + 1) + (ind + 1)"  
-          :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind "
-          v-model="answerSelect"
+        <input type="radio" 
+          :value= "answer.id"
           v-if="answer!==''"
+          v-model="answerSelect"
+          disabled
           class="custom-control-input"  >
         <label 
           v-if="answer!==''"
           class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
+        >{{ answer.title }}
         </label>
-        
       </div>
       <br>
       
@@ -38,13 +30,13 @@
   </div>
 </template>
 <script>
-// v-model="answer"
+
 export default {
-  props: ['qestion', 'index', 'admin' ],
+  props: ['qestion', 'index' ],
   data() {
     return {
       count: 0,
-      answerSelect:[]
+      answerSelect: this.qestion.answer[0]
     }
   },
   computed:{
@@ -55,12 +47,7 @@ export default {
       console.log(event.target.value)
       this.answer = event.target.value
     }
-  }, 
-  created(){
-    if (this.admin) {
-      this.answerSelect = []
-    }
-  }
+  } 
 }
 
 </script>

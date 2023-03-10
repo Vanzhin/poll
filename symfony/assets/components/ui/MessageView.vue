@@ -46,11 +46,12 @@ export default {
   display: flex;
   justify-content: center;
   
+  
   &-view{
     position: absolute;
     min-height: 50px;
     min-width: 300px;
-    bottom: -26px;
+    bottom: -40vh;
     max-width: 300px;
     z-index: 10;
     display: flex;
@@ -58,7 +59,7 @@ export default {
     align-items: center;
     background-color: #9ac7c7;
     border-radius: 10px;
-    animation: move 5s 1 linear;
+    animation: move 3s 1 linear;
     text-align: center;
     transform: scaleY(0);
     padding: 15px;

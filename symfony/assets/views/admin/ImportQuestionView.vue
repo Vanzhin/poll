@@ -12,13 +12,24 @@
    <div class="container">
       <div class="row">
         <form @submit.prevent="onSubmit">
-         
+          <div
+            v-if="!this.$route.params.id"
+          >
+            <label class="label">Укажите тест для импорта</label>
+            <select  name="hero" v-model="selectedId">
+              <option disabled>Выберите тест</option>
+              <option 
+              v-for="(item, index) in getTests"
+              :value="item.id" 
+              >{{item.title}}</option>
+            </select>
+          </div>
           <label class="label">Выберите файл для импорта</label>
           <br>
           <div class="d-flex align-items-center">
             <input  class="input_file" type="file"  
               @change="changeFileValue" 
-              name="file_title"
+              name="file"
               :value="testValue"
             >
             <div class="custom-block">
@@ -29,16 +40,11 @@
             </div>
           </div>
           <br> 
-          <div style="width: 100%;">
-            <MessageView/>
-          </div>
           <button type="submit" class="button">Загрузить</button>
         </form>
       </div>
     </div>
   </div>
-
-  
 </template>
  
 <script>
@@ -52,21 +58,25 @@
     },
     data() {
       return {
-        testFile:'',
-        testValue:null,
-        testFileUrl:'',
+        testFile: '',
+        testValue: null,
         isLoader: true,
+        selectedId: null,
+        message: null
       }
     },
     computed:{ 
-      ...mapGetters(["getAutchUserToken", "getMessage"]),
+      ...mapGetters([
+        "getAutchUserToken", 
+        "getMessage",
+        "getTests"
+      ]),
     },
    
     methods: { 
-      ...mapActions(["importFileTestDb", "setMessage"]),
+      ...mapActions(["importFileTestDb", "setMessage", "getTestsDB"]),
       ...mapMutations([]),
-      onSubmit(e){
-       
+      async onSubmit(e){
         if (!this.testValue) {
           const message = {
             err: true, 
@@ -76,26 +86,41 @@
           return
         }
         const testFile = e.target
-        // this.setMessage({rrr:"dfgdfg"})
-        this.importFileTestDb({testFile, token: this.getAutchUserToken})
-        // this.$router.push({ path:'/result'})
+        this.isLoader = true
+        await this.importFileTestDb({id: this.$route.params.id, testFile, token: this.getAutchUserToken})
+        this.message = !this.getMessage.err
+        if ( this.message ) {
+          this.testFileDelete()
+        }
+
+        this.isLoader = false
+        
+        let timerId = setInterval(() => {
+          if ( !this.getMessage ) {
+            clearInterval(timerId)
+            if (this.message){this.$router.go(-1)}
+          }
+        }, 200);
       },
       changeFileValue(e){
         if (typeof e.target.files[0] === 'object'){
           this.testFile = e.target.files[0]
-          this.testFileUrl = URL.createObjectURL(e.target.files[0])
           this.testValue = e.target.value
         }
       },
       testFileDelete(){
         this.testFile = ''
-        this.testFileUrl = ''
         this.testValue = null
       }
     },
-    async mounted(){
-      setTimeout(()=>this.isLoader = false, 1000 )
-      
+    async mounted(){},
+    async created(){
+      console.log(this.$route)
+      console.log(this.parentId)
+      // if (!(this.getMessage.length > 0)){
+      //   await this.getTestsDB({}) 
+      // }       
+      this.isLoader = false
     }
    
  } 

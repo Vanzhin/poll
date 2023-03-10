@@ -7,28 +7,22 @@
         :name="qestion.id" 
         :value="answerSelect">
       <hr>
-      <i class="i"
-        v-if="admin"
-      >Варианты ответов.</i>
-      <i class="i"
-        v-else
-      >Выберите правильные ответы.</i>
+      <i class="i">Варианты ответов:</i> 
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in qestion.variant" 
         :key="answer"
       >
         <input type="checkbox" 
-          :name="'q' + (index + 1) + (ind + 1)"  
-          :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind "
+          :value= "answer.id"
           v-model="answerSelect"
           v-if="answer!==''"
+          disabled
           class="custom-control-input"  >
         <label 
           v-if="answer!==''"
           class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
+         
+        >{{ answer.title }}
         </label>
         
       </div>
@@ -44,7 +38,7 @@ export default {
   data() {
     return {
       count: 0,
-      answerSelect:[]
+      answerSelect:this.qestion.answer
     }
   },
   computed:{
