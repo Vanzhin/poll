@@ -154,6 +154,12 @@ class QuestionService
 
     public function saveWithVariantIfValid(Question $question, array $data, $questionImage = null, array $variantImages = null): array
     {
+        if (!$question->getId()) {
+            $message = 'Вопрос создан';
+        } else {
+            $message = 'Вопрос обновлен';
+        }
+
         $question = $this->make($question, $data['question'] ?? []);
         $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage);
         $errors = $questionErrors;
@@ -163,7 +169,11 @@ class QuestionService
         $variants = [];
         foreach ($data['variant'] as $key => $variantData) {
             $variantData['questionId'] = $question->getId();
-            $variant = $this->variantService->make(new Variant(), $variantData);
+            if ($this->em->find(Variant::class, $key)) {
+                $variant = $this->variantService->make($this->em->find(Variant::class, $key), $variantData);
+            } else {
+                $variant = $this->variantService->make(new Variant(), $variantData);
+            }
 
             if (!is_null($variantImages) && isset($variantImages[$key])) {
                 $image = $variantImages[$key];
@@ -180,6 +190,7 @@ class QuestionService
                 $this->variantService->questionUpdate($variant, true);
             }
         }
+
         if (!is_null($errors)) {
             $this->em->rollback();
             return [
@@ -187,13 +198,19 @@ class QuestionService
                 'error' => $errors];
 
         } else {
+
             try {
                 $this->imageAttach($question, $questionImage);
                 foreach ($variants as $key => $variant) {
                     $this->variantService->imageAttach($variant, $variantImages[$key] ?? null);
                 }
+                foreach ($question->getVariant() as $variant) {
+                    if (!in_array($variant, $variants)) {
+                        $this->variantService->delete($variant);
+                    };
+                }
                 $response = [
-                    'message' => 'Вопрос создан',
+                    'message' => $message,
                     'question' => $question,
                 ];
                 $this->em->commit();
@@ -210,7 +227,7 @@ class QuestionService
     public function getUploadedQuestionsSummary(array $questions): array
     {
         $info = [];
-        $info['message'] = 'Загружено ' . count($questions) . ' вопросов';
+        $info['message'] = 'Загружено ' . count($questions) . ' вопросов(а)';
 //        $sectionTitle = '';
 //        foreach ($questions as $key => $question){
 //

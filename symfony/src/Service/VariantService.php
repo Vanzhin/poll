@@ -72,7 +72,10 @@ class VariantService
             case 'checkbox_picture':
                 $answers = $question->getAnswer();
                 if ($variant->getIsCorrect()) {
-                    $answers[] = $variant->getId();
+
+                    if (!in_array($variant->getId(), $answers)) {
+                        $answers[] = $variant->getId();
+                    }
                 } else {
                     $answers = array_filter($answers, function ($variantId) use ($variant) {
                         return $variantId !== $variant->getId();
@@ -83,7 +86,7 @@ class VariantService
 
                 break;
         }
-        if($flush){
+        if ($flush) {
             $this->em->persist($question);
             $this->em->flush();
         }
@@ -100,6 +103,7 @@ class VariantService
         };
 
     }
+
     public function saveResponse(Variant $variant, ?UploadedFile $image): array
     {
         try {
@@ -141,8 +145,7 @@ class VariantService
         $answers = array_filter($variant->getQuestion()->getAnswer(), function ($variantId) use ($variant) {
             return $variantId !== $variant->getId();
         });
-
-        $question = $variant->getQuestion()->setAnswer($answers);
+        $question = $variant->getQuestion()->setAnswer(array_values($answers));
         $this->variantImageUploader->delete($variant->getImage());
         $this->em->persist($question);
         $this->em->remove($variant);
