@@ -2,35 +2,22 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      <input type="hidden" 
+      
+      <div class="custom-control custom-radio"
+        
+      >
+        
+        <label 
+          class="custom-control-label f_sm" 
+          :for="'a_' +  qestion.id"
+        >Введите ответ:
+        </label>
+        <hr>
+        <input type="text" 
         :id="'a_' +  qestion.id"
         :name="qestion.id" 
-        :value="answerSelect">
-      <hr>
-      <i class="i"
-        v-if="admin"
-      >Варианты ответов.</i>
-      <i class="i"
-        v-else
-      >Выберите правильные ответы.</i>
-      <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
-        :key="answer"
-      >
-        <input type="checkbox" 
-          :name="'q' + (index + 1) + (ind + 1)"  
-          :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind "
-          v-model="answerSelect"
-          v-if="answer!==''"
-          class="custom-control-input"  >
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
-        </label>
-        
+        :value="answer">
+      
       </div>
       <br>
       
@@ -40,11 +27,11 @@
 <script>
 // v-model="answer"
 export default {
-  props: ['qestion', 'index', 'admin' ],
+  props: ['qestion', 'index' ],
   data() {
     return {
       count: 0,
-      answerSelect:[]
+      answer:''
     }
   },
   computed:{
@@ -55,12 +42,7 @@ export default {
       console.log(event.target.value)
       this.answer = event.target.value
     }
-  }, 
-  created(){
-    if (this.admin) {
-      this.answerSelect = []
-    }
-  }
+  } 
 }
 
 </script>
@@ -76,6 +58,7 @@ export default {
     align-items:flex-start;
     min-height: 1.5rem;
     padding-left: 1.5rem;
+    flex-wrap: wrap;
   }
   .f_sm {
       font-size: 0.9rem;
@@ -85,4 +68,7 @@ export default {
       margin-bottom: 0;
       margin-left: 10px;
   }
+  @media (max-width: 576px) {
+    
+}
 </style>

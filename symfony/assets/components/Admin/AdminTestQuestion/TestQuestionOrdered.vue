@@ -2,37 +2,19 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      <input type="hidden" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
-        :value="answerSelect">
       <hr> 
-      <i class="i">Укажите ответы в правильном порядке.</i>
-      {{ qestion }}
-      <div
-        v-if="qestion.variant"
-      >
-        {{ qestion.variant }}
+      <i class="i">Ответы в правильном порядке.</i>
+      <div>
         <div class="custom-control custom-radio"
-          v-for="(answer, ind ) in qestion.variant" 
+          v-for="(answer, ind ) in qestionVariant" 
           :key="answer"
         >
-        
-          <div class="custom-control-number">
-            {{  getOrdered(ind )}}     
-          <input type="checkbox" 
-            :name="'q' + (index + 1) + (ind + 1)"  
-            :id="'q' + (index + 1) + (ind + 1) "
-            :value= "ind "
-            v-model="answerSelect"
-            v-if="answer!==''"
-            class="custom-control-input"  >
-          </div> 
+        <div class="block_drop"  :dataname="answer.sort"></div>
           <label 
             v-if="answer!==''"
             class="custom-control-label f_sm" 
-            :for="'q' + (index + 1) + (ind + 1)"
-          >{{ answer }}
+          >
+            {{ answer.title }}
           </label>
         </div>
       </div>
@@ -48,31 +30,46 @@ export default {
   data() {
     return {
       count: 0,
-      answerSelect:[]
+      answerSelect:[],
+      qestionVariant:[],
+      blockY:0
     }
   },
-  methods: {
-    getOrdered(id){
-      const ind = this.answerSelect.indexOf(id)
-      return ind>-1 ? ind + 1 : ''
-    },
-    
+  computed:{
+   
   },
+  methods: {
+  },
+  mounted(){
+    if (this.qestion.answer){
+    this.qestion.answer.forEach((item, index ) => 
+      this.qestionVariant.push(
+        this.qestion.variant.find(elem => elem.id === item)
+      )
+    )} 
+    
+  }
 }
 
 </script>
 
 <style lang="scss" scoped>
-    .shadow{
+  
+  .shadow{
     padding: 5px;
   }
-   .custom-control {
+ 
+  .custom-control {
     position: relative;
     display: flex;
     align-items:flex-start;
     justify-content:flex-start;
     min-height: 1.5rem;
     padding-left: 1.5rem;
+    background-color: rgb(245 245 242);
+    border: 1px solid rgb(167, 167, 163);
+    border-radius: 10px;
+    margin-top: 2px;
     &-input{
       margin-left: 5px;
     }
@@ -83,6 +80,13 @@ export default {
       justify-content: flex-end;
       align-items: center;
     }
+  }
+  .block_drop{
+    position: absolute;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+    left: 0;
   }
   .f_sm {
       font-size: 0.9rem;

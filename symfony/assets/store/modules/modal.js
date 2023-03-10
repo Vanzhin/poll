@@ -6,10 +6,10 @@ const state = () => ({
     message: false,
   })
 const actions = {
-  async setMessage({ commit }, message) {
+  setMessage({ commit }, message) {
     console.log("setMessage - ",  message)
     commit("SET_MESSAGE", message);
-    setTimeout(()=> commit("SET_MESSAGE_NULL"), 5000)
+    setTimeout(()=> commit("SET_MESSAGE_NULL"), 3000)
   },
   
 }

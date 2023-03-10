@@ -56,9 +56,7 @@
             v-else-if="selectTypeQuestion.type === 'conformity'"
           />
           <br> 
-          <div style="width: 100%;">
-            <MessageView/>
-          </div>
+          
         <button type="submit" class="button">Сохранить</button>
       </form>
     </div>

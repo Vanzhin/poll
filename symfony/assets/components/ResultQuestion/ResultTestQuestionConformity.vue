@@ -13,12 +13,13 @@
           class="custom-control-label f_sm " 
         >{{ answer }}
         </label>
-        <label 
-          v-if="qestion.result.user_answer[ind] && qestion.result.user_answer[ind]!==''"
-          class="custom-control-label f_sm answer" 
-          :class="classAnswer(ind)"
-        >{{ qestion.variant[qestion.result.user_answer[ind]] }}
-        </label>
+        <div v-if="getUserAnswer"  class="custom-control-label d-flex">
+          <label 
+            v-if="qestion.result.user_answer[ind] && qestion.result.user_answer[ind]!==''"
+            class="custom-control-label f_sm answer " 
+            :class="classAnswer(ind)"
+          >{{ qestion.variant[qestion.result.user_answer[ind]] }}
+          </label>
         
           <label 
             v-if="
@@ -31,7 +32,7 @@
             class="custom-control-label f_sm " 
           >
           </label>
-        
+        </div>
       </div>
       <br>
       
@@ -49,7 +50,9 @@ export default {
   },
   computed:{
     getUserAnswer(){
-      return  this.qestion.result.user_answer.length > 0
+      return   this.qestion.result.user_answer ? this.qestion.result.user_answer.length > 0 
+        ? this.qestion.result.user_answer[0]!=='' : false
+        : false
     },
   },
   methods: {
