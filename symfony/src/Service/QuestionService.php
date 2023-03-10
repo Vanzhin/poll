@@ -89,13 +89,14 @@ class QuestionService
         $this->em->flush();
     }
 
-    public function imageAttach(Question $question, UploadedFile $image = null): void
+    public function imageAttach(Question $question, UploadedFile $image = null): Question
     {
         if ($image) {
             $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
             $this->em->persist($question);
             $this->em->flush();
         };
+        return $question;
 
     }
 
@@ -189,7 +190,7 @@ class QuestionService
             try {
                 $this->imageAttach($question, $questionImage);
                 foreach ($variants as $key => $variant) {
-                    $this->variantService->imageAttach($variant, $variantImages[$key]);
+                    $this->variantService->imageAttach($variant, $variantImages[$key] ?? null);
                 }
                 $response = [
                     'message' => 'Вопрос создан',
