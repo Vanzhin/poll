@@ -6,7 +6,6 @@ use App\Entity\Question;
 use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class VariantService
@@ -44,7 +43,7 @@ class VariantService
 
     }
 
-    public function questionUpdate(Variant $variant, bool $flush = false): Question
+    public function questionAnswerUpdate(Variant $variant, bool $flush = false): Question
     {
         $question = $variant->getQuestion();
         switch ($question->getType()->getTitle()) {
@@ -62,17 +61,23 @@ class VariantService
                 break;
             case 'order':
 //            case 'conformity':
-
                 $answers = $question->getAnswer();
+                if (($key = array_search($variant->getId(), $answers)) !== false) {
+                    unset($answers[$key]);
+                }
+
                 $answers[] = $variant->getId();
-                $question->setAnswer($answers);
+                $question->setAnswer(array_values($answers));
 
                 break;
             case 'checkbox':
             case 'checkbox_picture':
                 $answers = $question->getAnswer();
                 if ($variant->getIsCorrect()) {
-                    $answers[] = $variant->getId();
+
+                    if (!in_array($variant->getId(), $answers)) {
+                        $answers[] = $variant->getId();
+                    }
                 } else {
                     $answers = array_filter($answers, function ($variantId) use ($variant) {
                         return $variantId !== $variant->getId();
@@ -83,7 +88,7 @@ class VariantService
 
                 break;
         }
-        if($flush){
+        if ($flush) {
             $this->em->persist($question);
             $this->em->flush();
         }
@@ -100,6 +105,7 @@ class VariantService
         };
 
     }
+
     public function saveResponse(Variant $variant, ?UploadedFile $image): array
     {
         try {
@@ -117,7 +123,7 @@ class VariantService
             if (!$variant->getId()) {
                 $this->em->flush();
             }
-            $this->em->persist($this->questionUpdate($variant));
+            $this->em->persist($this->questionAnswerUpdate($variant));
             $this->em->flush();
             $response = [
                 'message' => $message,
@@ -141,8 +147,7 @@ class VariantService
         $answers = array_filter($variant->getQuestion()->getAnswer(), function ($variantId) use ($variant) {
             return $variantId !== $variant->getId();
         });
-
-        $question = $variant->getQuestion()->setAnswer($answers);
+        $question = $variant->getQuestion()->setAnswer(array_values($answers));
         $this->variantImageUploader->delete($variant->getImage());
         $this->em->persist($question);
         $this->em->remove($variant);

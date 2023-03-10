@@ -120,4 +120,23 @@ class QuestionController extends AbstractController
             ['groups' => 'create',]
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
+
+    #[Route('/api/admin/question/{id}/edit_with_variant', name: 'app_api_admin_question_edit_with_variant', methods: 'POST')]
+    public function editWithVariant(Question $question, Request $request, QuestionService $questionService, ValidationService $validation, VariantService $variantService, EntityManagerInterface $em,): JsonResponse
+    {
+        $data = $request->request->all();
+        $questionImage = $request->files->get('questionImage');
+        $variantImages = $request->files->get('variantImage');
+        $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages);
+        if (in_array('error', $response)) {
+            $status = 422;
+        } else {
+            $status = 200;
+        }
+        return $this->json($response,
+            $status,
+            ['charset=utf-8'],
+            ['groups' => 'create',]
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
 }
