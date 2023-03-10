@@ -60,7 +60,7 @@ class QuestionService
 
             }
             if ($key === 'subTitle') {
-                $question->setSubTitle($item);
+                $question->setSubTitle(array_values($item));
                 continue;
 
             }
