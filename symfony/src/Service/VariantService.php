@@ -6,7 +6,6 @@ use App\Entity\Question;
 use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class VariantService
@@ -44,7 +43,7 @@ class VariantService
 
     }
 
-    public function questionUpdate(Variant $variant, bool $flush = false): Question
+    public function questionAnswerUpdate(Variant $variant, bool $flush = false): Question
     {
         $question = $variant->getQuestion();
         switch ($question->getType()->getTitle()) {
@@ -62,10 +61,13 @@ class VariantService
                 break;
             case 'order':
 //            case 'conformity':
-
                 $answers = $question->getAnswer();
+                if (($key = array_search($variant->getId(), $answers)) !== false) {
+                    unset($answers[$key]);
+                }
+
                 $answers[] = $variant->getId();
-                $question->setAnswer($answers);
+                $question->setAnswer(array_values($answers));
 
                 break;
             case 'checkbox':
@@ -121,7 +123,7 @@ class VariantService
             if (!$variant->getId()) {
                 $this->em->flush();
             }
-            $this->em->persist($this->questionUpdate($variant));
+            $this->em->persist($this->questionAnswerUpdate($variant));
             $this->em->flush();
             $response = [
                 'message' => $message,

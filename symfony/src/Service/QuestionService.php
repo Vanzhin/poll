@@ -145,7 +145,7 @@ class QuestionService
             $variant = $this->variantService->make(new Variant(), $variantItem ?? [], $image);
             $this->em->persist($variant);
             $this->em->flush();
-            $this->variantService->questionUpdate($variant, true);
+            $this->variantService->questionAnswerUpdate($variant, true);
 
         }
 
@@ -174,7 +174,6 @@ class QuestionService
             } else {
                 $variant = $this->variantService->make(new Variant(), $variantData);
             }
-
             if (!is_null($variantImages) && isset($variantImages[$key])) {
                 $image = $variantImages[$key];
             } else {
@@ -187,7 +186,7 @@ class QuestionService
                 $variants[$key] = $variant;
                 $this->em->persist($variant);
                 $this->em->flush();
-                $this->variantService->questionUpdate($variant, true);
+                $this->variantService->questionAnswerUpdate($variant, true);
             }
         }
 
