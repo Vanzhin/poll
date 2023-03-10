@@ -27,7 +27,7 @@ class QuestionController extends AbstractController
             200,
             ['charset=utf-8'],
             [
-                'groups' => 'admin',
+                'groups' => 'admin_question',
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractNormalizer::CALLBACKS => [
                     'image' => $normalizerService->imageCallback($upLoadedAsset),

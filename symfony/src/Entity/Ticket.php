@@ -22,7 +22,6 @@ class Ticket
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets', orphanRemoval: true)]
-    #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets')]
     #[Groups(['main', 'admin_ticket'])]
     private Collection $question;
 
