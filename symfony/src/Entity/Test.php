@@ -47,13 +47,13 @@ class Test
     #[Groups(['main', 'category', 'admin'])]
     private ?string $slug = null;
 
-    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class, orphanRemoval: true)]
     private Collection $question;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Section::class, orphanRemoval: true)]
     private Collection $section;
 
-    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class, orphanRemoval: true)]
     #[Groups(['main', 'category', 'admin'])]
     private Collection $ticket;
 

@@ -2,10 +2,8 @@
 
 namespace App\Service;
 
-use App\Entity\Category;
 use App\Entity\Question;
 use App\Entity\Variant;
-use App\Entity\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints\File as FileConstraint;
@@ -85,44 +83,15 @@ class ValidationService
 
     }
 
-    public function questionValidate(array $data, File $image = null): ?array
+    public function entityWithImageValidate(object $entity, File $image = null, string $imageSize = '1M'): ?array
     {
-        $errors = [];
-        foreach ($data as $key => $value) {
-            if ($key === 'title') {
-                $violations = $this->validator->validate($value, [
-                    new NotBlank([
-                        'message' => 'question.title.not_blank'
-                    ]),
-
-                ]);
-
-                foreach ($violations as $violation) {
-                    $errors[] = $violation->getMessage();
-                }
-                continue;
-            }
-            if ($key === 'type') {
-                $violations = $this->validator->validate($this->em->getRepository(Type::class)->findOneBy(['title' => $value]), [
-                    new NotNull([
-                        'message' => 'question.type.invalid'
-                    ]),
-
-                ]);
-                foreach ($violations as $violation) {
-                    $errors[] = $violation->getMessage();
-                }
-                continue;
-
-            }
-        }
+        $errors = $this->validate($entity);
         if ($image) {
 
-            if (!is_null($this->imageValidate($image))) {
+            if (!is_null($this->imageValidate($image, $imageSize))) {
                 $errors[] = implode(',', $this->imageValidate($image));
             };
         };
-
 
         if (count($errors) === 0) {
             return null;
@@ -249,76 +218,6 @@ class ValidationService
 
         if (array_unique($variantTitles) !== $variantTitles) {
             $errors[] = 'Название вариантов не может быть одинаковым';
-        }
-
-        if (count($errors) === 0) {
-            return null;
-        }
-
-        return $errors;
-    }
-
-    public function categoryValidate(array $data, File $image = null): ?array
-    {
-
-        $errors = [];
-        foreach ($data as $key => $value) {
-            if ($key === 'title') {
-                $violations = $this->validator->validate($value, [
-                    new NotBlank([
-                        'message' => 'category.title.not_blank'
-                    ]),
-                    new Length([
-                        'min' => 5,
-                        'max' => 255,
-//
-                    ]),
-
-                ]);
-                foreach ($violations as $violation) {
-                    $errors[] = $violation->getMessage();
-                }
-                continue;
-
-            }
-            if (isset($data['parentId']) && $key === 'parentId') {
-                $violations = $this->validator->validate($this->em->getRepository(Category::class)->find($value) instanceof Category, [
-                    new IsTrue([
-                        'message' => "category.parent.exist"
-                    ]),
-
-                ]);
-                foreach ($violations as $violation) {
-                    $errors[] = $violation->getMessage();
-                }
-                $parent = $this->em->find(Category::class, $value);
-                if ($parent) {
-                    $notUniq = $parent->getChildren()->contains($this->em->getRepository(Category::class)->findOneBy(['title' => $data['title'], 'parent' => $parent->getId()]));
-                    if ($notUniq) {
-                        $errors[] = 'Такое название уже существует в данном разделе';
-                    }
-                }
-                continue;
-
-            }
-
-        }
-        if ($image) {
-
-            if (!is_null($this->imageValidate($image))) {
-                $errors[] = implode(',', $this->imageValidate($image));
-            };
-        };
-
-        if (!isset($data['parentId'])) {
-            foreach ($this->em->getRepository(Category::class)->findBy(['parent' => null]) as $category) {
-                if (array_key_exists('title', $data)) {
-                    if ($category->gettitle() === $data['title']) {
-                        $errors[] = 'Такое название уже существует в данном разделе';
-                    }
-                }
-
-            };
         }
 
         if (count($errors) === 0) {

@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Question;
 use App\Entity\Variant;
+use App\Service\QuestionService;
 use App\Service\ValidationService;
 use App\Service\VariantService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,12 +30,13 @@ class VariantController extends AbstractController
     }
 
     #[Route('/api/variant/create', name: 'app_api_variant_create', methods: 'POST')]
-    public function create(Request $request, VariantService $variantService, ValidationService $validation): JsonResponse
+    public function create(Request $request, VariantService $variantService, ValidationService $validation, EntityManagerInterface $em, QuestionService $questionService): JsonResponse
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage');
+        $variant = $variantService->make(new Variant(), $data['variant']);
 
-        $errors = $validation->variantValidate($data['variant'] ?? [], $image);
+        $errors = $validation->entityWithImageValidate($variant, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -44,25 +46,11 @@ class VariantController extends AbstractController
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
 
-        try {
-            $variant = $variantService->save(new Variant(), $data['variant'] ?? [], $image);
-            $response = [
-                'message' => 'Вариант создан',
-                'variantId' => $variant->getId()
-            ];
-            $status = 200;
-        } catch (\Exception $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } catch (FilesystemException $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } finally {
-            return $this->json($response,
-                $status,
-                ['charset=utf-8'],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
+        $response = $variantService->saveResponse($variant, $image);
+        return $this->json($response['response'],
+            $response['status'],
+            ['charset=utf-8'],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
 
     }
 
@@ -71,7 +59,9 @@ class VariantController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage');
-        $errors = $validation->variantValidate($data['variant'] ?? [], $image);
+        $variant = $variantService->make($variant, $data['variant']);
+
+        $errors = $validation->entityWithImageValidate($variant, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -81,26 +71,11 @@ class VariantController extends AbstractController
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
 
-        try {
-            $variant = $variantService->save($variant, $data['variant'] ?? [], $image);
-            $response = [
-                'message' => 'Вариант обновлен',
-                'variantId' => $variant->getId()
-            ];
-            $status = 200;
-        } catch (\Exception $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } catch (FilesystemException $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } finally {
-            return $this->json($response,
-                $status,
-                ['charset=utf-8'],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
-
+        $response = $variantService->saveResponse($variant, $image);
+        return $this->json($response['response'],
+            $response['status'],
+            ['charset=utf-8'],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
     #[Route("api/variant/{id}/delete", name: 'app_api_variant_delete')]
@@ -145,7 +120,7 @@ class VariantController extends AbstractController
             foreach ($data['variant'] as $key => $variantData) {
                 $image = $images[$key] ?? null;
                 $variantData['questionId'] = $data['questionId'];
-                $variant = $variantService->save(new Variant(), $variantData ?? [], $image);
+                $variant = $variantService->make(new Variant(), $variantData ?? [], $image);
                 if ($question->getType()->getTitle() === 'order') {
                     $answers[] = $variant->getId();
                 }

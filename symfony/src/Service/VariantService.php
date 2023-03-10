@@ -7,6 +7,7 @@ use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class VariantService
 {
@@ -14,43 +15,48 @@ class VariantService
     {
     }
 
-    /**
-     * @throws FilesystemException
-     */
-    public function save(Variant $variant, array $data, File $image = null): Variant
+    public function make(Variant $variant, array $data): Variant
     {
-        $question = $this->em->find(Question::class, $data['questionId']);
+        if (!$variant->getQuestion() && isset($data['questionId'])) {
+            $question = $this->em->find(Question::class, $data['questionId']);
+        } else {
+            $question = $variant->getQuestion();
+        }
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $variant->setTitle($item);
                 continue;
             };
-
+            if ($key === 'correct' && $item === 'true') {
+                $variant->setIsCorrect(true);
+                continue;
+            };
         }
         if (isset($data['weight'])) {
             $variant->setWeight($data['weight']);
         } else {
-            $variant->setWeight(1);
+            $variant->setWeight(100);
         }
         if ($question) {
             $variant->setQuestion($question);
         }
+        return $variant;
 
-        if ($image) {
-            $variant->setImage($this->variantImageUploader->uploadImage($image, $variant->getImage()));
-        };
+    }
 
-        if (!$variant->getId()) {
-            $this->em->persist($variant);
-            $this->em->flush();
-        }
-
+    public function questionUpdate(Variant $variant, bool $flush = false): Question
+    {
+        $question = $variant->getQuestion();
         switch ($question->getType()->getTitle()) {
             case 'radio':
-                if (isset($data['correct']) && $data['correct'] === 'true') {
+                if ($variant->getIsCorrect()) {
                     $answers = [$variant->getId()];
                     $question->setAnswer($answers);
 
+                } else {
+                    if (in_array($variant->getId(), $question->getAnswer())) {
+                        $question->setAnswer([]);
+                    }
                 }
 
                 break;
@@ -65,7 +71,7 @@ class VariantService
             case 'checkbox':
             case 'checkbox_picture':
                 $answers = $question->getAnswer();
-                if (isset($data['correct']) && $data['correct'] === 'true') {
+                if ($variant->getIsCorrect()) {
                     $answers[] = $variant->getId();
                 } else {
                     $answers = array_filter($answers, function ($variantId) use ($variant) {
@@ -76,13 +82,57 @@ class VariantService
                 $question->setAnswer($answers);
 
                 break;
-
+        }
+        if($flush){
+            $this->em->persist($question);
+            $this->em->flush();
         }
 
+        return $question;
+    }
 
-        $this->em->persist($variant);
-        $this->em->flush();
-        return $variant;
+    public function imageAttach(Variant $variant, UploadedFile $image = null): void
+    {
+        if ($image) {
+            $variant->setImage($this->variantImageUploader->uploadImage($image, $variant->getImage()));
+            $this->em->persist($variant);
+            $this->em->flush();
+        };
+
+    }
+    public function saveResponse(Variant $variant, ?UploadedFile $image): array
+    {
+        try {
+            if ($variant->getId()) {
+                $message = 'Вариант обновлен';
+            } else {
+                $message = 'Вариант создан';
+            }
+
+            if ($image) {
+                $variant->setImage($this->variantImageUploader->uploadImage($image, $variant->getImage()));
+            };
+
+            $this->em->persist($variant);
+            if (!$variant->getId()) {
+                $this->em->flush();
+            }
+            $this->em->persist($this->questionUpdate($variant));
+            $this->em->flush();
+            $response = [
+                'message' => $message,
+                'variantId' => $variant->getId()
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } catch (FilesystemException $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return ['response' => $response, 'status' => $status];
+        }
 
     }
 

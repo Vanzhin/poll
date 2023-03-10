@@ -20,27 +20,25 @@ class QuestionService
         private readonly EntityManagerInterface $em,
         private readonly FileUploader           $questionImageUploader,
         private readonly FileUploader           $variantImageUploader,
-        private readonly VariantService         $variantService
+        private readonly VariantService         $variantService,
+        private readonly ValidationService      $validation
     )
     {
     }
 
-    /**
-     * @throws FilesystemException
-     */
-    public function save(Question $question, array $data, UploadedFile $image = null): Question
+    public function make(Question $question, array $data): Question
     {
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $question->setTitle($item);
                 continue;
             };
-            if ($key === 'type') {
+            if ($key === 'type' && $this->em->getRepository(Type::class)->findOneBy(['title' => $item])) {
                 $question->setType($this->em->getRepository(Type::class)->findOneBy(['title' => $item]));
                 continue;
 
             };
-            if ($key === 'answer') {
+            if ($key === 'answer' && $question->getType()) {
                 if (in_array($question->getType()->getTitle(), ['input_one', 'input_many'])) {
                     $question->setAnswer($item);
                 }
@@ -77,13 +75,6 @@ class QuestionService
 
             }
         }
-
-        if ($image) {
-            $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
-        };
-
-        $this->em->persist($question);
-        $this->em->flush();
         return $question;
     }
 
@@ -98,7 +89,17 @@ class QuestionService
         $this->em->flush();
     }
 
-    public function saveResponse(Question $question, array $data, ?UploadedFile $image): array
+    public function imageAttach(Question $question, UploadedFile $image = null): void
+    {
+        if ($image) {
+            $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
+            $this->em->persist($question);
+            $this->em->flush();
+        };
+
+    }
+
+    public function saveResponse(Question $question, ?UploadedFile $image): array
     {
         try {
             if ($question->getId()) {
@@ -107,7 +108,13 @@ class QuestionService
                 $message = 'Вопрос создан';
 
             }
-            $question = $this->save($question, $data ?? [], $image);
+
+            if ($image) {
+                $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
+            };
+
+            $this->em->persist($question);
+            $this->em->flush();
             $response = [
                 'message' => $message,
                 'questionId' => $question->getId()
@@ -127,21 +134,76 @@ class QuestionService
 
     public function saveWithVariant(Question $question, ?array $questionData, ?array $variantData, UploadedFile $questionImage = null, array $variantImages = []): Question
     {
-        $question = $this->save($question, $questionData ?? [], $questionImage);
+        $question = $this->make($question, $questionData ?? [], $questionImage);
+        $this->em->persist($question);
+        $this->em->flush();
+
         foreach ($variantData as $key => $variantItem) {
             $image = $variantImages[$key] ?? null;
             $variantItem['questionId'] = $question->getId();
-            $variant = $this->variantService->save(new Variant(), $variantItem ?? [], $image);
-            if ($question->getType()->getTitle() === 'order') {
-                $answers[] = $variant->getId();
+            $variant = $this->variantService->make(new Variant(), $variantItem ?? [], $image);
+            $this->em->persist($variant);
+            $this->em->flush();
+            $this->variantService->questionUpdate($variant, true);
+
+        }
+
+        return $question;
+    }
+
+    public function saveWithVariantIfValid(Question $question, array $data, $questionImage = null, array $variantImages = null): array
+    {
+        $question = $this->make($question, $data['question'] ?? []);
+        $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage);
+        $errors = $questionErrors;
+        $this->em->beginTransaction();
+        $this->em->persist($question);
+        $this->em->flush();
+        $variants = [];
+        foreach ($data['variant'] as $key => $variantData) {
+            $variantData['questionId'] = $question->getId();
+            $variant = $this->variantService->make(new Variant(), $variantData);
+
+            if (!is_null($variantImages) && isset($variantImages[$key])) {
+                $image = $variantImages[$key];
+            } else {
+                $image = null;
+            }
+            if ($this->validation->entityWithImageValidate($variant, $image)) {
+                $errors[] = implode(',', $this->validation->entityWithImageValidate($variant, $image));
+
+            } else {
+                $variants[$key] = $variant;
+                $this->em->persist($variant);
+                $this->em->flush();
+                $this->variantService->questionUpdate($variant, true);
             }
         }
-        if ($question->getType()->getTitle() === 'order') {
-            $question->setAnswer($answers);
-            $this->em->persist($question);
-            $this->em->flush();
+        if (!is_null($errors)) {
+            $this->em->rollback();
+            return [
+                'message' => 'Ошибка при вводе данных',
+                'error' => $errors];
+
+        } else {
+            try {
+                $this->imageAttach($question, $questionImage);
+                foreach ($variants as $key => $variant) {
+                    $this->variantService->imageAttach($variant, $variantImages[$key]);
+                }
+                $response = [
+                    'message' => 'Вопрос создан',
+                    'question' => $question,
+                ];
+                $this->em->commit();
+            } catch (\Exception $e) {
+                $response = ['error' => $e->getMessage()];
+            } catch (FilesystemException $e) {
+                $response = ['error' => $e->getMessage()];
+            } finally {
+                return $response;
+            }
         }
-        return $question;
     }
 
     public function getUploadedQuestionsSummary(array $questions): array

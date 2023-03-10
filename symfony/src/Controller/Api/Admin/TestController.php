@@ -66,9 +66,11 @@ class TestController extends AbstractController
 
         $test = $testService->save(new Test(), $data);
         if (count($validation->validate($test)) > 0) {
-            return $this->json([
-                'message' => 'Ошибка при вводе данных',
-                'error' => $validation->validate($test)],
+            return $this->json(
+                [
+                    'message' => 'Ошибка при вводе данных',
+                    'error' => $validation->validate($test)
+                ],
                 422,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
@@ -158,8 +160,9 @@ class TestController extends AbstractController
                            FileHandler       $handler,
                            QuestionService   $questionService,
                            SectionService    $sectionService
-    ): Response
+    ): JsonResponse
     {
+
         $file = $request->files->get('file');
         $errors = $validation->fileValidate($file);
         if (!is_null($errors) && count($errors) > 0) {
@@ -173,16 +176,16 @@ class TestController extends AbstractController
         try {
             $questionData = $handler->getQuestion($file);
             $status = 200;
-
             $total = [];
-            foreach ($questionData as $key => $question) {
-
-                if ($validation->questionValidate($question)) {
-                    $total[$key]['error']['question'] = $validation->questionValidate($question);
+            foreach ($questionData as $key => $data) {
+                $data['test'] = $test->getId();
+                $question = $questionService->make(new Question(), $data);
+                if ($validation->validate($question)) {
+                    $total[$key]['error']['question'] = $validation->validate($question);
                 }
-                if ($validation->manyVariantsValidate($question)) {
-                    $total[$key]['error']['variant'] = $validation->manyVariantsValidate($question);
-                    $total[$key]['error']['variant']['question'] = $question;
+                if ($validation->manyVariantsValidate($data)) {
+                    $total[$key]['error']['variant'] = $validation->manyVariantsValidate($data);
+                    $total[$key]['error']['variant']['question'] = $data;
                 }
 
             }

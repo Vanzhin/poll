@@ -94,7 +94,8 @@ class CategoryController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('categoryImage');
-        $errors = $validation->categoryValidate($data ?? [], $image);
+        $category = $categoryService->make(new Category(), $data);
+        $errors = $validation->entityWithImageValidate($category, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -104,25 +105,11 @@ class CategoryController extends AbstractController
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
 
-        try {
-            $category = $categoryService->save(new Category(), $data ?? [], $image);
-            $response = [
-                'message' => 'Раздел создан',
-                'categoryId' => $category->getId()
-            ];
-            $status = 200;
-        } catch (\Exception $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } catch (FilesystemException $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } finally {
-            return $this->json($response,
-                $status,
-                ['charset=utf-8'],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
+        $response = $categoryService->saveResponse($category, $image);
+        return $this->json($response['response'],
+            $response['status'],
+            ['charset=utf-8'],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
     #[Route('/api/admin/category/{id}/edit', name: 'app_api_admin_category_update', methods: 'POST')]
@@ -130,7 +117,8 @@ class CategoryController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('categoryImage');
-        $errors = $validation->categoryValidate($data ?? [], $image);
+        $category = $categoryService->make($category, $data);
+        $errors = $validation->entityWithImageValidate($category, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -140,25 +128,11 @@ class CategoryController extends AbstractController
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
 
-        try {
-            $category = $categoryService->save($category, $data ?? [], $image);
-            $response = [
-                'message' => 'Раздел обновлен',
-                'categoryId' => $category->getId()
-            ];
-            $status = 200;
-        } catch (\Exception $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } catch (FilesystemException $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } finally {
-            return $this->json($response,
-                $status,
-                ['charset=utf-8'],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
+        $response = $categoryService->saveResponse($category, $image);
+        return $this->json($response['response'],
+            $response['status'],
+            ['charset=utf-8'],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
     #[Route("api/admin/category/{id}/delete", name: 'app_api_admin_category_delete')]
