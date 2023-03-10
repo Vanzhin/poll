@@ -44,7 +44,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getPagination",]),
+    ...mapGetters(["getPagination", "getTotalPage"]),
   },
   methods: {
     ...mapActions(["getCategorysDB", "getTestsDB", "getQuestionsTestIdDb"]),
@@ -53,13 +53,14 @@ export default {
         case '-1' : {
           if (this.currentPage > 1) {
             --this.currentPage
-          }
+          } else { return }
         break;
         }
         case '+1' : {
-          if  (this.currentPage < this.getPagination.length) {
+          console.log(this.getTotalPage)
+          if  (this.currentPage < this.getTotalPage) {
             ++this.currentPage
-          }
+          } else { return }
         break;
         }
         default:{
@@ -68,11 +69,13 @@ export default {
       }
       console.log(this.type)
      
-      await this[this.type]({
+      const data = {
         page: this.currentPage, 
         parentId: this.$route.params.id||null,
         id: this.$route.params.id||null
-      })
+      }
+      console.log(data)
+      await this[this.type](data)
     }
   }, 
 } 

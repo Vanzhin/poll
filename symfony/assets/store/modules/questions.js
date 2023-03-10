@@ -323,6 +323,7 @@ const state = () => ({
 
 
 const actions = {
+  //запрос на получение вопросов пользователем при тестированиии
   async getQuestionsDb({dispatch, commit }, {id, slug}) {
     //  const slag = 'mindal-kraiola-ooo-kompaniia-rybvektorzheldorprof' // опен серв
     // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
@@ -355,10 +356,9 @@ const actions = {
         console.log(e.message);
     }
   },
-  
+  //запрос на получение вопросов теста по его id для админки
   async getQuestionsTestIdDb({dispatch, commit }, {id, page=null}) {
     console.log("id - ",  id)
-
     try{
       const config = {
         method: 'get',
@@ -379,6 +379,7 @@ const actions = {
         console.log(e.message);
     }
   },
+  // отаправка результата прохождения теста на сервер
   async setResultDb({dispatch, commit, state }, {token, userAuth} ){
     console.log(JSON.stringify(state.resultTicketUser))
     commit("SET_LOADER_STATUS", true)
@@ -419,6 +420,8 @@ const actions = {
        return err
     }
   },
+
+  //сохранение нового вопроса в базу
   async saveQuestionDb({ dispatch, commit, state }, {token, questionSend} ){
     console.dir(questionSend)
     commit("SET_LOADER_TOGGLE")
@@ -442,7 +445,7 @@ const actions = {
       const config = {
         method: 'post',
         // url: '/api/auth/create/question',
-        url: '/api/question/create_with_variant',
+        url: '/api/admin/question/create_with_variant',
         headers: { 
           Accept: 'application/json', 
           // Authorization: `Bearer ${token}`
@@ -456,8 +459,6 @@ const actions = {
           dispatch('setMessage', {err: false, mes: data.message})
           commit("SET_LOADER_TOGGLE")
         })
-         
-      
     } catch (e) {
       console.log(e);
       dispatch('setMessage', {err: true, 
@@ -484,17 +485,13 @@ const actions = {
         },
         data:  data
       };
-      
       console.log(config)
-      
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
           dispatch('setMessage', {err: false, mes: data.message})
           commit("SET_LOADER_TOGGLE")
         })
-         
-      
     } catch (e) {
       console.log(e);
       dispatch('setMessage', {err: true, 
@@ -502,6 +499,33 @@ const actions = {
       })
     }
   },
+
+  async deleteQuestionDb({ dispatch, commit, state }, {token, id, testId, page= null} ){
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/admin/question/${id}/delete`,
+        headers: { 
+          Accept: 'application/json', 
+          // Authorization: `Bearer ${token}`
+        },
+      };
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("deleteQuestionDb - ",  data)
+          dispatch('getQuestionsTestIdDb', {id: testId, page})
+          dispatch('setMessage', {err: false, mes: data.message})
+          
+        })
+    } catch (e) {
+      console.log(e);
+      dispatch('setMessage', {err: true, 
+        mes: `${e.response.data.message}  ${e.response.data.error[0]}`
+      })
+    }
+  },
+
   setIsLoader({ commit }){
     commit("SET_LOADER_TOGGLE")
   },

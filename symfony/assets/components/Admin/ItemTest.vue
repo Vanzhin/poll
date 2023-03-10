@@ -53,9 +53,7 @@
       >
         Включает:
       </div>
-      
     </div>
-    
   </div>
 </template>
 <script>
@@ -116,10 +114,10 @@ export default {
       this.confirmYes = this.deleteTest
     },
     importQuestionsFile(){
-      this.$router.push({name: 'adminsImportId',  params: {id: this.item.id }})
+      this.$router.push({name: 'adminsImportId',  params: {id: this.item.id}})
     },
     addQuestion( ){
-      this.$router.push({path: '/admins/questions',  })
+      this.$router.push({path: '/admins/questions', params: {id: this.item.id} })
     }
   }
 } 

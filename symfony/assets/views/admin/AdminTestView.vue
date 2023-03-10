@@ -14,90 +14,45 @@
     
     <div class="container">
       <div class="row">
-          <div v-for="(qestion, index ) in qestions" 
-            :key="qestion.id"
-            class=" flex-shrink-1 shadow flex-row"
-          >
-            <TestQuestionRadio
-              v-if="questionType(qestion.type) === 'radio'"
-              :qestion="qestion"
-              :index="numQuestion(index)"
-            />
-            <TestQuestionCheckbox
-              v-else-if="questionType(qestion.type) === 'checkbox'"
-              :qestion="qestion"
-              :index="numQuestion(index)"
-            />
-            <TestQuestionInputOne
-              v-else-if="questionType(qestion.type) === 'input_one'"
-              :qestion="qestion"
-              :index="numQuestion(index)"
-            />
-            <TestQuestionOrdered
-              v-else-if="questionType(qestion.type) === 'order'"
-              :qestion="qestion"
-              :index="numQuestion(index)"
-            />
-            <TestQuestionConformity
-              v-else-if="questionType(qestion.type) === 'conformity'"
-              :qestion="qestion"
-              :index="numQuestion(index)"
-            />
-            <div class="btn-group" >
-              <div class="btn btn-outline-primary btn-center"
-                title="Редактировать"
-                @click.stop="editQuestion"
-              >
-                <i class="bi bi-pencil"></i>
-              </div>
-              <div class="btn btn-outline-primary btn-center" 
-              title="Удалить"
-                @click.stop="deleteVisibleConfirm"
-              >
-                <i class="bi bi-trash3"></i>
-              </div>
-              <div class="btn btn-outline-primary btn-center"
-                title="Утвердить"
-                @click.stop="addQuestion"
-              >
-                <i class="bi bi-file-check"></i>
-              </div>
-            </div>
-          </div>
-          <Pagination
-            type="getQuestionsTestIdDb"
+        <div v-for="(qestion, index ) in qestions" 
+          :key="qestion.id"
+        >
+          <ItemQuestion
+            :qestion="qestion"
+            :index="numQuestion(index)"
           />
+        </div>
+        <Pagination
+          type="getQuestionsTestIdDb"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import TestQuestionRadio from '../../components/Admin/AdminTestQuestion/TestQuestionRadio.vue'
-import TestQuestionCheckbox from '../../components/Admin/AdminTestQuestion/TestQuestionCheckbox.vue'
-import TestQuestionOrdered from '../../components/Admin/AdminTestQuestion/TestQuestionOrdered.vue'
-import TestQuestionInputOne from '../../components/Admin/AdminTestQuestion/TestQuestionInputOne.vue'
-import TestQuestionConformity from '../../components/Admin/AdminTestQuestion/TestQuestionConformity.vue'
+
+import ItemQuestion from '../../components/Admin/ItemQuestion.vue'
 import Pagination from "../../components/Pagination.vue"
+import MyConfirm from '../../components/ui/MyConfirm.vue'
 import Loader from '../../components/ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
+
 export default {
   components: {
-    TestQuestionRadio,
-    TestQuestionCheckbox,
-    TestQuestionOrdered,
-    TestQuestionInputOne,
-    TestQuestionConformity,
+    ItemQuestion,
     Loader,
-    Pagination
+    Pagination,
+    MyConfirm
   },
   data() {
     return {
       isLoader: true,
-      timeTicket: false,
-      timeEnd: false,
       ticketId: this.$route.params.id,
       ticketTitle:"",
+      confirmMessage: '',
+      confirmVisible: false,
+      confirmYes: null
     }
   },
   computed:{
@@ -115,21 +70,12 @@ export default {
     qestions () {
       return this.$store.getters.getQuestions
     }
-    
   },
    methods: {
     ...mapActions(["getQuestionsTestIdDb", ]),
-    
-    onSubmit(e){
-      this.$router.push({ path:'/result'})
-    },
-    
-    questionType(question){
-      return question.title ? question.title : question
-    },
     numQuestion(index){
       return index + (this.getActivePage - 1) * this.getTotalItemsPage
-    }
+    },
   },
   async created(){
     await this.getQuestionsTestIdDb({id: this.ticketId})
@@ -143,7 +89,6 @@ export default {
   .block{
     background-color: rgb(207 207 199);
     padding: 10px ;
-    
   }
   .title{
     margin: 10px;

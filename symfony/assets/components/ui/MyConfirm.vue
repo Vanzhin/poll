@@ -59,7 +59,7 @@ export default {
 .confirm{
   &__window{
     width: 50%;
-    height: 100%;
+    height: 110px;
     background-color: rgb(253 253 253);
     border: 3px solid #b37ed6;
     border-radius: 20px;

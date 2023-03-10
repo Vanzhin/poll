@@ -2,53 +2,35 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      
-      <div class="custom-control custom-radio"
-        
-      >
-        
+      <div class="custom-control custom-radio">
         <label 
           class="custom-control-label f_sm" 
           :for="'a_' +  qestion.id"
-        >Введите ответ:
+        >Правильный ответ:
         </label>
         <hr>
-        <input type="text" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
-        :value="answer">
-      
+        <input type="text" class="input"
+          :value="qestion.answer[0]"
+        >
       </div>
       <br>
-      
     </div>       
   </div>
 </template>
+
 <script>
-// v-model="answer"
 export default {
   props: ['qestion', 'index' ],
   data() {
     return {
-      count: 0,
-      answer:''
     }
   },
-  computed:{
-    
-  },
-  methods: {
-    setChangeAnswer(event){
-      console.log(event.target.value)
-      this.answer = event.target.value
-    }
-  } 
+  computed:{},
+  methods: {} 
 }
-
 </script>
 
 <style lang="scss" scoped>
-
   .shadow{
     padding: 5px;
   }
@@ -68,7 +50,10 @@ export default {
       margin-bottom: 0;
       margin-left: 10px;
   }
+  .input{
+    padding-left: 10px;
+    line-height:20px;
+  }
   @media (max-width: 576px) {
-    
 }
 </style>
