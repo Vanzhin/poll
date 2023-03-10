@@ -18,15 +18,16 @@ class Ticket
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'category'])]
+    #[Groups(['main', 'category','admin_section', 'admin_ticket', 'admin_question'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets', orphanRemoval: true)]
-    #[Groups(['main'])]
+    #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets')]
+    #[Groups(['main', 'admin_ticket'])]
     private Collection $question;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['main', 'account', 'admin', 'category'])]
+    #[Groups(['main', 'account', 'admin', 'category', 'admin_section', 'admin_ticket', 'admin_question'])]
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class, cascade: ['persist', 'remove'])]

@@ -22,40 +22,40 @@ class Question
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'create'])]
+    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket', 'admin_question'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['main', 'admin'])]
     #[Assert\NotBlank(
         message: 'question.title.not_blank'
     )]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question'])]
     private ?string $title = null;
 
     #[ORM\Column]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main','admin_question'])]
     private array $answer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
-    #[Groups(['main', 'admin'])]
     #[Assert\NotNull(
         message: 'question.type.invalid'
     )]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket','admin_question'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_question'])]
     private Collection $tickets;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'admin_question'])]
     private array $subTitle = [];
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin_question'])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -63,6 +63,7 @@ class Question
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[Groups(['admin', 'admin_ticket', 'admin_question'])]
     private ?Section $section = null;
 
     #[ORM\ManyToOne(inversedBy: 'question')]
@@ -75,6 +76,7 @@ class Question
     private ?User $author = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['admin_question'])]
     private ?\DateTimeInterface $publishedAt = null;
 
     public function __construct()

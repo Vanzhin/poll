@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Question;
+use App\Service\FileUploader;
 use App\Service\NormalizerService;
 use App\Service\QuestionService;
 use App\Service\ValidationService;
@@ -90,10 +91,11 @@ class QuestionController extends AbstractController
     }
 
     #[Route("api/question/{id}/delete", name: 'app_api_question_delete')]
-    public function delete(Question $question, QuestionService $questionService): Response
+    public function delete(Question $question, QuestionService $questionService, FileUploader $questionImageUploader): Response
     {
         try {
             $questionService->delete($question);
+            $questionService->delete($question, $questionImageUploader);
             $response = [
                 'message' => 'Вопрос удален',
             ];

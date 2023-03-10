@@ -39,12 +39,12 @@ class Test
 
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'category'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, unique: true)]
     #[Gedmo\Slug(fields: ['title'])]
-    #[Groups(['main', 'category'])]
+    #[Groups(['main', 'category', 'admin'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class, orphanRemoval: true)]

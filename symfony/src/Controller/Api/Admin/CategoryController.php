@@ -3,8 +3,12 @@
 namespace App\Controller\Api\Admin;
 
 use App\Entity\Category;
+use App\Repository\CategoryRepository;
+use App\Repository\TestRepository;
 use App\Service\CategoryService;
+use App\Service\FileUploader;
 use App\Service\NormalizerService;
+use App\Service\Paginator;
 use App\Service\ValidationService;
 use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,16 +24,33 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 class CategoryController extends AbstractController
 {
     #[Route('/api/admin/category', name: 'app_api_admin_category_index')]
-    public function index(AppUpLoadedAsset $upLoadedAsset, EntityManagerInterface $em, NormalizerService $normalizerService): JsonResponse
+    public function index(Request $request, AppUpLoadedAsset $upLoadedAsset, Paginator $paginator, CategoryRepository $categoryRepository, TestRepository $testRepository, NormalizerService $normalizerService): JsonResponse
     {
-        $categories = $em->getRepository(Category::class)->findBy(['parent' => null]);
+        $parentId = $request->query->get('parent');
+        $pagination = $paginator->getPagination($categoryRepository->findAllLatestChildrenQuery(!is_null($parentId) && !is_null($categoryRepository->find($parentId)) ? $parentId : null));
+        if ($pagination->count() > 0) {
+            $response['children'] = $pagination;
+
+        }
+        $parent = !is_null($parentId) ? $categoryRepository->find($parentId) : null;
+        if (isset($parent)) {
+            $category = $categoryRepository->find($parent);
+            $response['parent'] = $category;
+
+            $test = $parent->getTest();
+            if (count($test) > 0) {
+                $pagination = $paginator->getPagination($testRepository->findLastUpdatedByCategoryQuery($parent));
+                $response['test'] = $pagination;
+            }
+        }
+        $response['pagination'] = $paginator->getInfo($pagination);
 
         return $this->json(
-            $categories,
+            $response,
             200,
             ['charset=utf-8'],
             [
-                'groups' => 'admin',
+                'groups' => ['category'],
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,
                 AbstractNormalizer::CALLBACKS => [
@@ -115,10 +136,10 @@ class CategoryController extends AbstractController
     }
 
     #[Route("api/admin/category/{id}/delete", name: 'app_api_admin_category_delete')]
-    public function delete(Category $category, CategoryService $categoryService): Response
+    public function delete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader): Response
     {
         try {
-            $categoryService->delete($category);
+            $categoryService->delete($category, $categoryImageUploader);
 
             $response = [
                 'message' => 'Раздел удален',
@@ -136,4 +157,25 @@ class CategoryController extends AbstractController
 
     }
 
+    #[Route("api/admin/category/{id}/image_delete", name: 'app_api_admin_category_image_delete')]
+    public function imageDelete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader): JsonResponse
+    {
+        try {
+            $categoryService->imageDelete($category, $categoryImageUploader);
+
+            $response = [
+                'message' => 'Фото удалено',
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+
+    }
 }

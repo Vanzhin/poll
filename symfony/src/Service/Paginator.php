@@ -42,6 +42,8 @@ class Paginator
             $response['totalPages'] = ceil($pagination->getTotalItemCount() / $pagination->getItemNumberPerPage());
             $response['totalItem'] = $pagination->getTotalItemCount();
             $response['totalItemsPerPage'] = $pagination->count();
+            $response['limit'] = $pagination->getItemNumberPerPage();
+
         };
 
 

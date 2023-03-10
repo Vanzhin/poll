@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
-    #[Route(path: '/login', name: 'app_login')]
+//    #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
@@ -40,13 +40,13 @@ class SecurityController extends AbstractController
             ]);
     }
 
-    #[Route(path: '/logout', name: 'app_logout')]
+//    #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    #[Route('/login_link/{savedEmail}', name: 'app_login_link')]
+//    #[Route('/login_link/{savedEmail}', name: 'app_login_link')]
     public function requestLoginLink(ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request, Mailer $mailer, string $savedEmail = null): Response
     {
         $email = $request->request->get('email');
@@ -90,7 +90,7 @@ class SecurityController extends AbstractController
         return $this->render('security/login_link.html.twig', ['savedEmail' => $savedEmail]);
     }
 
-    #[Route('/login_check', name: 'app_login_check')]
+//    #[Route('/login_check', name: 'app_login_check')]
     public function check(Request $request)
     {
 //        // get the login link query parameters
