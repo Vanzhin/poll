@@ -14,41 +14,39 @@
     
     <div class="container">
       <div class="row">
-        
           <div v-for="(qestion, index ) in qestions" 
             :key="qestion.id"
             class=" flex-shrink-1 shadow flex-row"
           >
-           
             <TestQuestionRadio
               v-if="questionType(qestion.type) === 'radio'"
               :qestion="qestion"
-              :index="index"
+              :index="numQuestion(index)"
             />
             <TestQuestionCheckbox
               v-else-if="questionType(qestion.type) === 'checkbox'"
               :qestion="qestion"
-              :index="index"
+              :index="numQuestion(index)"
             />
             <TestQuestionInputOne
               v-else-if="questionType(qestion.type) === 'input_one'"
               :qestion="qestion"
-              :index="index"
+              :index="numQuestion(index)"
             />
             <TestQuestionOrdered
               v-else-if="questionType(qestion.type) === 'order'"
               :qestion="qestion"
-              :index="index"
+              :index="numQuestion(index)"
             />
             <TestQuestionConformity
               v-else-if="questionType(qestion.type) === 'conformity'"
               :qestion="qestion"
-              :index="index"
+              :index="numQuestion(index)"
             />
             <div class="btn-group" >
               <div class="btn btn-outline-primary btn-center"
                 title="Редактировать"
-                @click.stop="editTest"
+                @click.stop="editQuestion"
               >
                 <i class="bi bi-pencil"></i>
               </div>
@@ -69,18 +67,17 @@
           <Pagination
             type="getQuestionsTestIdDb"
           />
-       
       </div>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
-import TestQuestionRadio from '../../components/TestQuestion/TestQuestionRadio.vue'
-import TestQuestionCheckbox from '../../components/TestQuestion/TestQuestionCheckbox.vue'
-import TestQuestionOrdered from '../../components/TestQuestion/TestQuestionOrdered.vue'
-import TestQuestionInputOne from '../../components/TestQuestion/TestQuestionInputOne.vue'
-import TestQuestionConformity from '../../components/TestQuestion/TestQuestionConformity.vue'
+import TestQuestionRadio from '../../components/Admin/AdminTestQuestion/TestQuestionRadio.vue'
+import TestQuestionCheckbox from '../../components/Admin/AdminTestQuestion/TestQuestionCheckbox.vue'
+import TestQuestionOrdered from '../../components/Admin/AdminTestQuestion/TestQuestionOrdered.vue'
+import TestQuestionInputOne from '../../components/Admin/AdminTestQuestion/TestQuestionInputOne.vue'
+import TestQuestionConformity from '../../components/Admin/AdminTestQuestion/TestQuestionConformity.vue'
 import Pagination from "../../components/Pagination.vue"
 import Loader from '../../components/ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
@@ -101,33 +98,37 @@ export default {
       timeEnd: false,
       ticketId: this.$route.params.id,
       ticketTitle:"",
-     
     }
   },
   computed:{
-    ...mapGetters(["getSlug", "getRandomTicket", "getSelectTicket"]),
+    ...mapGetters([
+      "getSlug", 
+      "getRandomTicket", 
+      "getSelectTicket",
+      "getTest",
+      "getActivePage",
+      "getTotalItemsPage"
+    ]),
     testName () {
       return this.$store.getters.getTestTitleActive
     },
     qestions () {
       return this.$store.getters.getQuestions
-    },
+    }
     
   },
    methods: {
     ...mapActions(["getQuestionsTestIdDb", ]),
+    
     onSubmit(e){
-      const ticket = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
-        .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-      
-      this.saveResultTicketUser(ticket)
       this.$router.push({ path:'/result'})
     },
-    timerEnd(){ //написать действия при окончании времени таймера
-      this.timeEnd = true
-    },
+    
     questionType(question){
-      return question.title ? question.title:question
+      return question.title ? question.title : question
+    },
+    numQuestion(index){
+      return index + (this.getActivePage - 1) * this.getTotalItemsPage
     }
   },
   async created(){

@@ -13,7 +13,7 @@ export default {
   .container{
     width: 100%;
     min-height: 300px;
-    background-color: rgb(255, 255, 255);
+    
     display: flex;
     justify-content: center;
     align-items: center;

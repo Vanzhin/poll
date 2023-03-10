@@ -119,6 +119,9 @@ const actions = {
     if (test) dispatch("setTickets", test.ticket)
     commit("SET_TEST", test)
   },
+  setTestItem({dispatch ,commit}, test) {
+    commit("SET_TEST", test)
+  },
   setTests({dispatch ,commit}, tests) {
     commit("SET_TESTS", tests)
   },

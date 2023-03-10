@@ -7,28 +7,22 @@
         :name="qestion.id" 
         :value="answerSelect">
       <hr>
-      <i class="i">Выберите ответы из выпадающего списка.</i>
+      <i class="i">Варианты ответов:</i>
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.subTitle" 
-        :key="answer"
+        v-for="(answer, ind ) in qestion.variant" 
+        :key="answer.id"
       >
+        <input type="radio" 
+          :value= "answer.id"
+          v-if="answer!==''"
+          v-model="answerSelect"
+          disabled
+          class="custom-control-input"  >
         <label 
           v-if="answer!==''"
           class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
+        >{{ answer.title }}
         </label>
-        <select 
-          v-model="answerSelect[ind]"
-          >
-          <option disabled value="">Выберите один из вариантов</option>
-          <option 
-            v-for="(variant, vInd ) in qestion.variant"
-            :value="vInd" 
-          >
-            {{ variant }}
-          </option>
-        </select>
       </div>
       <br>
       
@@ -42,14 +36,17 @@ export default {
   data() {
     return {
       count: 0,
-       answerSelect:[] 
+      answerSelect: this.qestion.answer[0]
     }
   },
   computed:{
     
   },
   methods: {
-   
+    setChangeAnswer(event){
+      console.log(event.target.value)
+      this.answer = event.target.value
+    }
   } 
 }
 
@@ -64,10 +61,8 @@ export default {
     position: relative;
     display: flex;
     align-items:flex-start;
-    justify-content: space-between;
     min-height: 1.5rem;
     padding-left: 1.5rem;
-    padding-right: 1.5rem;
   }
   .f_sm {
       font-size: 0.9rem;

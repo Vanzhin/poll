@@ -1,0 +1,100 @@
+<template>
+  <div class="col-sm-12 col-md-12 col-lg-12"> 
+    <div class="card flex-shrink-1 shadow">
+      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+      <hr> 
+      <i class="i">Ответы в правильном порядке.</i>
+      <div>
+        <div class="custom-control custom-radio"
+          v-for="(answer, ind ) in qestionVariant" 
+          :key="answer"
+        >
+        <div class="block_drop"  :dataname="answer.sort"></div>
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm" 
+          >
+            {{ answer.title }}
+          </label>
+        </div>
+      </div>
+      <br>
+      
+    </div>       
+  </div>
+</template>
+<script>
+
+export default {
+  props: ['qestion', 'index' ],
+  data() {
+    return {
+      count: 0,
+      answerSelect:[],
+      qestionVariant:[],
+      blockY:0
+    }
+  },
+  computed:{
+   
+  },
+  methods: {
+  },
+  mounted(){
+    if (this.qestion.answer){
+    this.qestion.answer.forEach((item, index ) => 
+      this.qestionVariant.push(
+        this.qestion.variant.find(elem => elem.id === item)
+      )
+    )} 
+    
+  }
+}
+
+</script>
+
+<style lang="scss" scoped>
+  
+  .shadow{
+    padding: 5px;
+  }
+ 
+  .custom-control {
+    position: relative;
+    display: flex;
+    align-items:flex-start;
+    justify-content:flex-start;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+    background-color: rgb(245 245 242);
+    border: 1px solid rgb(167, 167, 163);
+    border-radius: 10px;
+    margin-top: 2px;
+    &-input{
+      margin-left: 5px;
+    }
+    &-number{
+      width: 30px;
+      height: 20px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+  .block_drop{
+    position: absolute;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+    left: 0;
+  }
+  .f_sm {
+      font-size: 0.9rem;
+  }
+  .custom-control-label {
+      max-width: 90%;
+      position: relative;
+      margin-bottom: 0;
+      margin-left: 10px;
+  }
+</style>

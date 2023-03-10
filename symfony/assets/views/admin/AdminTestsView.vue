@@ -32,7 +32,7 @@
               :key="item.id"
               :item="item"
               :index="index"
-              @click.stop="testRoute({id: item.id})"
+              @click.stop="testRoute(item)"
             />
           </div>
       </div>
@@ -81,11 +81,13 @@
         "saveQuestionDb", 
         "setMessage",
         "getCategorysDB",
-        "getTestsDB"
+        "getTestsDB",
+        "setTestItem"
         ]),
       ...mapMutations([]),
-      testRoute({id}){
-        this.$router.push({name: 'adminsTest', params: { id  } })
+      async testRoute(item){
+        await this.setTestItem(item)
+        this.$router.push({name: 'adminsTest', params: { id: item.id }})
       },
       createTest(){
         this.$router.push({name: 'adminsTestCreate', params: {operation:"create", id: this.parentId  } })

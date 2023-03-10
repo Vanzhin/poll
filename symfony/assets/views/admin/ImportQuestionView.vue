@@ -88,8 +88,13 @@
         const testFile = e.target
         this.isLoader = true
         await this.importFileTestDb({id: this.$route.params.id, testFile, token: this.getAutchUserToken})
-        this.isLoader = false
         this.message = !this.getMessage.err
+        if ( this.message ) {
+          this.testFileDelete()
+        }
+
+        this.isLoader = false
+        
         let timerId = setInterval(() => {
           if ( !this.getMessage ) {
             clearInterval(timerId)

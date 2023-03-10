@@ -2,33 +2,22 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      <input type="hidden" 
+      
+      <div class="custom-control custom-radio"
+        
+      >
+        
+        <label 
+          class="custom-control-label f_sm" 
+          :for="'a_' +  qestion.id"
+        >Введите ответ:
+        </label>
+        <hr>
+        <input type="text" 
         :id="'a_' +  qestion.id"
         :name="qestion.id" 
-        :value="answerSelect">
-      <hr>
-      <i class="i">Выберите ответы из выпадающего списка.</i>
-      <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.subTitle" 
-        :key="answer"
-      >
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
-        </label>
-        <select 
-          v-model="answerSelect[ind]"
-          >
-          <option disabled value="">Выберите один из вариантов</option>
-          <option 
-            v-for="(variant, vInd ) in qestion.variant"
-            :value="vInd" 
-          >
-            {{ variant }}
-          </option>
-        </select>
+        :value="answer">
+      
       </div>
       <br>
       
@@ -36,20 +25,23 @@
   </div>
 </template>
 <script>
-
+// v-model="answer"
 export default {
   props: ['qestion', 'index' ],
   data() {
     return {
       count: 0,
-       answerSelect:[] 
+      answer:''
     }
   },
   computed:{
     
   },
   methods: {
-   
+    setChangeAnswer(event){
+      console.log(event.target.value)
+      this.answer = event.target.value
+    }
   } 
 }
 
@@ -64,10 +56,9 @@ export default {
     position: relative;
     display: flex;
     align-items:flex-start;
-    justify-content: space-between;
     min-height: 1.5rem;
     padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    flex-wrap: wrap;
   }
   .f_sm {
       font-size: 0.9rem;
@@ -77,4 +68,7 @@ export default {
       margin-bottom: 0;
       margin-left: 10px;
   }
+  @media (max-width: 576px) {
+    
+}
 </style>

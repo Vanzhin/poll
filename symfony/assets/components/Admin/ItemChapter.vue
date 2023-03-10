@@ -29,13 +29,15 @@
           </div>
           <div class="btn btn-outline-primary btn-center"
             title="Добавить вложенную категорию"
-            @click.stop=""
+            @click.stop="createChildrenCategory"
+            v-if="item.test.length === 0"
           >
             <i class="bi bi-file-earmark"></i>
           </div>
           <div class="btn btn-outline-primary btn-center"
             title="Добавить тест"
-            @click.stop=""
+            @click.stop="createChildrenTest"
+            v-if="item.children.length === 0"
           >
             <i class="bi bi-archive"></i>
           </div>
@@ -102,7 +104,12 @@ export default {
       this.confirmVisible = true
       this.confirmYes = this.deleteCategoty
     },
-   
+    createChildrenCategory(){
+      this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id: this.item.id  } })
+    },
+    createChildrenTest(){
+      this.$router.push({name: 'adminsTestCreate', params: {operation:"create", id: this.item.id  } })
+    }
   }
 } 
 

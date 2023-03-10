@@ -6,6 +6,8 @@ import axios from 'axios';
 const state = () => ({
   pagination:[],
   activePage: 1,
+  totalItemsPage:0
+
 })
 
 const actions = {
@@ -22,13 +24,19 @@ const getters = {
   getActivePage(state) {
     return state.activePage 
   },
+  getTotalItemsPage(state) {
+    return state.totalItemsPage 
+  },
 }
 
 const mutations = {
  [SET_PAGINATION] (state, pagination) {
+  
+
   let  pagin = []
   console.log("pagination -", pagination)
   if (pagination) {
+    state.totalItemsPage = pagination.totalItemsPerPage
     if (pagination.error) {
       state.pagination = []
       return
