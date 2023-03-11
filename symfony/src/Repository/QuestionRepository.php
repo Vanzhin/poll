@@ -78,6 +78,13 @@ class QuestionRepository extends ServiceEntityRepository
             ->setParameters(['testId' => $test->getId()]);
     }
 
+    public function findLastUpdatedQuery(): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('qu');
+        return
+            $this->lastUpdated($queryBuilder);
+    }
+
 //    /**
 //     * @return Question[] Returns an array of Question objects
 //     */

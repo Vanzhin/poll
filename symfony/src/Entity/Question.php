@@ -75,7 +75,7 @@ class Question
     #[ORM\ManyToOne(inversedBy: 'questions')]
     private ?User $author = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['admin_question'])]
     private ?\DateTimeInterface $publishedAt = null;
 

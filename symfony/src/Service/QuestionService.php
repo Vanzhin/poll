@@ -74,6 +74,11 @@ class QuestionService
                 continue;
 
             }
+            if ($key === 'published') {
+                $question->setPublishedAt(new \DateTime('now'));
+                continue;
+
+            }
         }
         return $question;
     }
