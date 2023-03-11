@@ -377,7 +377,7 @@ const actions = {
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
-        console.log(e.message);
+        dispatch('setMessageError', e)
     }
   },
   // отаправка результата прохождения теста на сервер
@@ -423,7 +423,7 @@ const actions = {
   },
 
   //сохранение нового вопроса в базу
-  async saveQuestionDb({ dispatch, commit, state }, {token, questionSend} ){
+  async saveQuestionDb({ dispatch, commit, state }, {token, questionSend, id = null} ){
     console.dir(questionSend)
     commit("SET_LOADER_TOGGLE")
     try{
@@ -452,26 +452,18 @@ const actions = {
         },
         data:  data
       };
+      if (id) {
+        config.url = `api/admin/question/${id}/edit_with_variant`
+      }
       console.log(config)
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
-          if (data.error) {
-            console.log("ошибка - ")
-            dispatch('setMessage', {err: true, mes: `${data.message}!<hr>  ${data.error[0]}`})
-          } else {
-            console.log("сообщение - ")
-            dispatch('setMessage', {err: false, mes: data.message})
-          }
-          
+          dispatch('setMessage', data)
           commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-      console.log("ошибка загрузки - ");
-      console.log(e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!<hr>   ${e.response.data.error[0]}`
-      })
+      dispatch('setMessageError', e)
     }
   },
   async importQuestionsFileDb({ dispatch, commit, state }, {id, token, questionSend} ){
@@ -497,15 +489,11 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
-          dispatch('setMessage', {err: false, 
-            mes: data.message})
+          dispatch('setMessage',  data)
           commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-      console.log(e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!<hr>   ${e.response.data.error[0]}`
-      })
+      dispatch('setMessageError', e)
     }
   },
 
@@ -522,16 +510,12 @@ const actions = {
       console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("deleteQuestionDb - ",  data)
           dispatch('getQuestionsTestIdDb', {id: testId, page})
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', data)
           
         })
     } catch (e) {
-      console.log(e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!<hr>   ${e.response.data.error[0]}`
-      })
+      dispatch('setMessageError', e)
     }
   },
 

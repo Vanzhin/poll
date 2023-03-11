@@ -128,7 +128,7 @@
     },
    
     methods: { 
-      ...mapActions(["saveQuestionDb", "setMessage"]),
+      ...mapActions(["saveQuestionDb", "setMessageUser"]),
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       async onSubmit(e){
@@ -138,13 +138,13 @@
             err: true, 
             mes: 'Укажите правильный ответ!'
           }
-          this.setMessage(message)
+          this.setMessageUser(message)
           return
         }
         const questionSend = e.target
-        
+       
         if ( this.operation === 'edit'){
-          await this.editQuestionDb({questionSend, token: this.getAutchUserToken, id:+this.questionId})
+          await this.saveQuestionDb({questionSend, token: this.getAutchUserToken, id:+this.questionId})
         } else if ( this.operation === 'create'){
           await this.saveQuestionDb({questionSend, token: this.getAutchUserToken})
         }
@@ -166,8 +166,9 @@
       
     },
     created(){
-      console.log(this.typeQuestions.find(item => item.type = this.getQuestion.type))
+     
       if ( this.operation === 'edit'){
+        console.log(this.typeQuestions.find(item => item.type = this.getQuestion.type))
         const item = this.typeQuestions.find(item => item.type = this.getQuestion.type)
         this.selectTypeQuestion = {
           id: item.id, 

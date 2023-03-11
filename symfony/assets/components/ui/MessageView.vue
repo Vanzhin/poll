@@ -2,13 +2,15 @@
    <div class="cont-message"
       v-if="getMessage"
     >
-    <div class="cont-message-view">
-      <p 
-        :class="classObject"
-        v-html="getMessage.mes"
-      >
-      </p>
-    </div> 
+    <div class="cont-message-cont">
+      <div class="cont-message-view">
+        <p 
+          :class="classObject"
+          v-html="getMessage.mes"
+        >
+        </p>
+      </div> 
+    </div>
   </div>
 </template>
 <script>
@@ -42,16 +44,24 @@ export default {
 <style lang="scss" scoped>
 .cont-message{
   position: relative;
-  display: flex;
-  justify-content: center;
   
+  &-cont{
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(240, 248, 255, 0.267);
+  }
   
   &-view{
-    position: absolute;
+    
     min-height: 50px;
     min-width: 300px;
-    bottom: -40vh;
+    // bottom: -40vh;
     max-width: 300px;
+    max-height: 300px;
     z-index: 10;
     display: flex;
     justify-content: center;
@@ -82,7 +92,6 @@ export default {
     80% {
         transform: scaleY(1);
         opacity:  1;
-      
       }  
     100% {
         transform: scaleY(0);

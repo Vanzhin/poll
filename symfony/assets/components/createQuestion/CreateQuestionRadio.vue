@@ -5,6 +5,7 @@
       
       <input type="hidden" 
         id="answer_true"
+        name="question[answer][]"
         :value="answerSelect"
       >
       <hr>
@@ -23,21 +24,20 @@
       >
         <div class="custom-radio" >
           <input type="radio" 
-            :value= "ind "
+            :value= "operationEdit ? answer.id : ind"
             v-model="answerSelect"
             class="custom-control-input"  
           >
           <div class="custom-radio img_block">
             <textarea rows="1"
-              :name="`variant[${ind}][title]`"
-              :id="'answer' + (ind)" 
+              :name="operationEdit ? `variant[${answer.id}][title]` : `variant[a${ind}][title]`"
               v-model= "answer.title"
               class="textarea_input"
               required 
             >
             </textarea> 
             <input type="hidden" 
-              :name="`variant[${ind}][correct]`" 
+              :name="operationEdit ? `variant[${answer.id}][correct]` : `variant[a${ind}][correct]`" 
               :value="ind === answerSelect"
             >
             <i class="bi bi-eraser custom-close" title="Очистить поле"
@@ -63,7 +63,7 @@
           <label class="label">Прикрепить изображение </label>
           <input  class="" type="file" accept="image/*"  
             @change="(e)=> changeAnswerImg(e, ind)"
-            :name="`variantImage[${ind}]`"
+            :name="operationEdit ? `variantImage[${answer.id}]` : `variantImage[a${ind}]`"
             :value="answer.value"
           >
         </div>
@@ -75,6 +75,7 @@
 </template>
 <script>
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   props: ['question', 'index' ],
   components: {
@@ -85,17 +86,23 @@ export default {
       count: 0,
       answerSelect: null,
       answers: [{
+        id:"",
         title:"",
         file:"",
         url:"",
         value:""
       }],
       numberAnswers: 1,
-      showPreviewQuestionImg: false
+      showPreviewQuestionImg: false,
+      operation: this.$route.params.operation,
+      operationEdit: this.$route.params.operation === "edit"
     }
   },
   computed:{
-    
+    ...mapGetters([
+      "getTest",
+      "getQuestion"
+    ]),
   },
   methods: {
     changeNumberAnswers(){
@@ -104,7 +111,7 @@ export default {
         return
       }
       if ( this.answers.length < this.numberAnswers) {
-        this.answers.push({title:"",file:"",url:"",value:""})
+        this.answers.push({id:"", title:"", file:"", url:"", value:""})
       } else {
         this.answers.pop()
       }
@@ -130,7 +137,25 @@ export default {
     
      
     
-  } 
+  },
+  created(){
+    console.log(this.getQuestion)
+    if (this.operationEdit) {
+      this.answerSelect = this.getQuestion.answer[0]
+      this.numberAnswers = this.getQuestion.variant.length
+      this.answers = this.getQuestion.variant.map(item => 
+        {
+          return {
+            id: item.id,
+            title: item.title,
+            file: '',
+            url: item.image ? item.image : '',
+            value: ''
+          }
+        })
+      console.log("this.answers -",this.answers )
+    }
+  }  
 }
 
 </script>

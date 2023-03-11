@@ -5,6 +5,7 @@
       
       <input type="hidden" 
         id="answer_true"
+        name="question[answer]"
         :value="answerSelect"
       >
       <hr>
@@ -23,20 +24,20 @@
       >
         <div class="custom-radio" >
           <input type="checkbox" 
-            :value= "ind "
+            :value= "operationEdit ? answer.id : ind"
             v-model="answerSelect"
             class="custom-control-input"  
           >
           <div class="custom-radio img_block">
             <textarea rows="1" required
-              :name="`variant[${ind}][title]`"
+              :name="operationEdit ? `variant[${answer.id}][title]` : `variant[a${ind}][title]`"
               v-model= "answer.title"
               class="textarea_input" 
             >
             </textarea> 
             <input type="hidden" 
-              :name="`variant[${ind}][correct]`" 
-              :value="answerSelect.includes(ind)"
+              :name="operationEdit ? `variant[${answer.id}][correct]` : `variant[a${ind}][correct]`" 
+              :value="answerSelect.includes(operationEdit ? answer.id : ind)"
             >
             <i class="bi bi-eraser custom-close" title="Очистить поле"
               @click="answer.title = ''"
@@ -51,8 +52,10 @@
         <div class="mb-3 w-100">
           <div class="img_block">
             <img :src="answer.url"  width="200"
-              v-if="typeof answer.file === 'object'"
+              v-if="answer.url !== ''"
+              
             /> 
+            <!-- v-if="typeof answer.file === 'object'" -->
             <i class="bi bi-x-lg custom-close" title="Удалить изображение"
               @click="answerImgDelete(ind)"
             v-if="typeof answer.file === 'object'"
@@ -61,7 +64,7 @@
           <label class="label">Прикрепить изображение </label>
           <input  class="" type="file" accept="image/*"  
             @change="(e)=> changeAnswerImg(e, ind)"
-            :name="`variantImage[${ind}]`"
+            :name="operationEdit ? `variantImage[${answer.id}]` : `variantImage[a${ind}]`"
             :value="answer.value"
           >
         </div>
@@ -83,6 +86,7 @@ export default {
       count: 0,
       answerSelect: [],
       answers: [{
+        id:"",
         title:"",
         file:"",
         url:"",
@@ -90,7 +94,8 @@ export default {
       }],
       numberAnswers: 1,
       showPreviewQuestionImg: false,
-      operation: this.$route.params.operation
+      operation: this.$route.params.operation,
+      operationEdit: this.$route.params.operation === "edit"
     }
   },
   computed:{
@@ -107,7 +112,7 @@ export default {
         return
       }
       if ( this.answers.length < this.numberAnswers) {
-        this.answers.push({title:"",file:"",url:"",value:""})
+        this.answers.push({id:"", title:"", file:"", url:"", value:""})
       } else {
         this.answers.pop()
       }
@@ -133,14 +138,20 @@ export default {
   },
   created(){
     console.log(this.getQuestion)
-    if ( this.operation === 'edit'){
-      this.answerSelect= this.getQuestion.answer,
-      this.answers = [{
-        title:"",
-        file:"",
-        url:"",
-        value:""
-      }]
+    if (this.operationEdit) {
+      this.answerSelect = this.getQuestion.answer
+      this.numberAnswers = this.getQuestion.variant.length
+      this.answers = this.getQuestion.variant.map(item => 
+        {
+          return {
+            id: item.id,
+            title: item.title,
+            file: '',
+            url: item.image ? item.image : '',
+            value: ''
+          }
+        })
+      console.log("this.answers -",this.answers )
     }
   } 
 }
