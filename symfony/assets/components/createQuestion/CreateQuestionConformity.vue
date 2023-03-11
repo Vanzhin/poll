@@ -22,7 +22,7 @@
         @dragenter.prevent
       >
         <div class="custom-control "
-          v-for="(answer, ind ) in qestionVariantSort" 
+          v-for="(answer, ind ) in questionVariantSort" 
           :key="answer"
           @dragstart="onDragStart($event, ind)"
           draggable="true"
@@ -33,15 +33,15 @@
               <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <div class="d-flex align-items-center">
                   <textarea rows="1" required
-                    :name="`variant[${ind}][title]`"
-                    v-model= "answer.title"
+                    :name="`question[subTitle][a${ind}]`"
+                    v-model= "answer.subTitle"
                     class="textarea_input" 
                   >
                   </textarea> 
                   <div class="custom-block">
                     <i class="bi bi-eraser custom-close" title="Очистить поле"
                       @click="answer.title = ''"
-                      v-if="answer.title !== ''"
+                      v-if="answer.subTitle !== ''"
                     ></i>
                   </div>
                 </div>
@@ -49,14 +49,14 @@
               <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <div class="row d-flex align-items-center">
                   <input required
-                    :name="`question[subTitle][${ind}]`"
-                    v-model= "answer.subTitle"
+                    :name="`variant[a${ind}][title]`"
+                    v-model= "answer.title"
                     class="input" 
                   >
                   <div class="custom-block">
                     <i class="bi bi-eraser custom-close" title="Очистить поле"
                       @click="answer.title = ''"
-                      v-if="answer.subTitle !== ''"
+                      v-if="answer.title !== ''"
                     ></i>
                   </div> 
                   <div class="custom-block">
@@ -86,7 +86,7 @@
               <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
               <input  class="" type="file" accept="image/*"  
                 @change="(e)=> changeAnswerImg(e, ind)"
-                :name="`variantImage[${ind}]`"
+                :name="`variantImage[a${ind}]`"
                 :value="answer.value"
               >
             </div>
@@ -128,7 +128,7 @@ export default {
     }
   },
   computed:{
-    qestionVariantSort(){
+    questionVariantSort(){
       this.answers.sort((a,b) => a.sort-b.sort)
       this.answers.forEach((item, index ) => {
         item.sort = index

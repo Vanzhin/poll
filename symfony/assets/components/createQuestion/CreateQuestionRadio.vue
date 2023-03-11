@@ -76,7 +76,7 @@
 <script>
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   components: {
     QuestionHeaderQuestion
   },

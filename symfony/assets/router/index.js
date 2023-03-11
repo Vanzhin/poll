@@ -190,7 +190,13 @@ const router = createRouter({
       name: 'adminsTestCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateTestView.vue')
-    }
+    },
+    {
+      path: '/admins/test/:testId/question/:questionId/:operation',
+      name: 'adminsQuestionsCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateQuestionView.vue')
+    },
   ]
 })
 router.beforeEach((to, from, next) => {

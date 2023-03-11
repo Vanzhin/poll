@@ -2,8 +2,8 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i class="result"
-        :class="{resultTrue: qestion.result.score }"
-      ><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+        :class="{resultTrue: question.result.score }"
+      ><b>{{ index+1 }})</b> {{ question.title }}</i>
       
       
       
@@ -13,7 +13,7 @@
 <script>
 // v-model="answer"
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
      
@@ -21,8 +21,8 @@ export default {
   },
   computed:{
     getUserAnswer(){
-      return  this.qestion.result.user_answer ? 
-          this.qestion.result.user_answer.length > 0 && this.qestion.result.user_answer[0] !==''
+      return  this.question.result.user_answer ? 
+          this.question.result.user_answer.length > 0 && this.question.result.user_answer[0] !==''
           : false
     },
   },

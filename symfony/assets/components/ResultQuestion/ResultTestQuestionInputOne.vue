@@ -2,18 +2,18 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i class="result"
-        :class="{resultTrue: qestion.result.score }"
-      ><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+        :class="{resultTrue: question.result.score }"
+      ><b>{{ index+1 }})</b> {{ question.title }}</i>
       <hr>
       <div class="custom-control custom-radio">
         <label v-if="getUserAnswer"
           class="custom-control-label f_sm " 
           :class="classAnswer()"
-        >{{  qestion.result.user_answer[0] }}
+        >{{  question.result.user_answer[0] }}
         </label>
-        <label v-if="getUserAnswer && !qestion.result.score"
+        <label v-if="getUserAnswer && !question.result.score"
           class="custom-control-label f_sm answer-true" 
-        > - {{ qestion.result.true_answer[0] }}
+        > - {{ question.result.true_answer[0] }}
         </label>
       </div>
       <br>
@@ -23,7 +23,7 @@
 <script>
 
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
      
@@ -32,14 +32,14 @@ export default {
   computed:{
     getUserAnswer(){
       
-      return this.qestion.result.user_answer ?  this.qestion.result.user_answer.length > 0 && this.qestion.result.user_answer[0] !=='' : false
+      return this.question.result.user_answer ?  this.question.result.user_answer.length > 0 && this.question.result.user_answer[0] !=='' : false
     },
   },
   methods: {
     classAnswer(){
       return  {
-        "answer-true": this.getUserAnswer && this.qestion.result.score,
-        "answer-user": this.getUserAnswer && !this.qestion.result.score,
+        "answer-true": this.getUserAnswer && this.question.result.score,
+        "answer-user": this.getUserAnswer && !this.question.result.score,
       }
     },
     

@@ -1,4 +1,4 @@
-import { SET_QUESTION } from './mutation-types.js'
+import { } from './mutation-types.js'
 
 
 const state = () => ({
@@ -80,12 +80,7 @@ const mutations = {
       active: 0, list: cources, isLoaded: true
     }
   },
-  [SET_QUESTION] (state, id) {
-    if (state.cources.list.hasOwnProperty(id)) {
-      state.cources.active = id;
-    }
-    ;
-  },
+  
 }
 export default {
   namespaced: false,

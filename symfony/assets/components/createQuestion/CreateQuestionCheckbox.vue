@@ -30,7 +30,6 @@
           <div class="custom-radio img_block">
             <textarea rows="1" required
               :name="`variant[${ind}][title]`"
-              :id="'answer' +  (ind) " 
               v-model= "answer.title"
               class="textarea_input" 
             >
@@ -68,14 +67,14 @@
         </div>
       </div>
       <br>
-      
     </div>       
   </div>
 </template>
 <script>
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   components: {
     QuestionHeaderQuestion
   },
@@ -90,10 +89,15 @@ export default {
         value:""
       }],
       numberAnswers: 1,
-      showPreviewQuestionImg: false
+      showPreviewQuestionImg: false,
+      operation: this.$route.params.operation
     }
   },
   computed:{
+    ...mapGetters([
+      "getTest",
+      "getQuestion"
+    ]),
     
   },
   methods: {
@@ -126,6 +130,18 @@ export default {
       this.answers[ind].url = ''
       this.answers[ind].value = ''
     },
+  },
+  created(){
+    console.log(this.getQuestion)
+    if ( this.operation === 'edit'){
+      this.answerSelect= this.getQuestion.answer,
+      this.answers = [{
+        title:"",
+        file:"",
+        url:"",
+        value:""
+      }]
+    }
   } 
 }
 </script>

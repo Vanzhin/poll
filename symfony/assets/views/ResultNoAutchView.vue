@@ -14,11 +14,11 @@
     </div>
     <div class="container">
       <div class="row">
-        <div v-for="(qestion, index ) in getResultQuestions" 
-          :key="qestion.id"
+        <div v-for="(question, index ) in getResultQuestions" 
+          :key="question.id"
         >
           <ResultTestQuestion
-            :qestion="qestion"
+            :question="question"
             :index="index"
           /> 
         </div>

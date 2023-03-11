@@ -2,14 +2,14 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i class="result"
-        :class="{resultTrue: qestion.result.score }"
-      ><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+        :class="{resultTrue: question.result.score }"
+      ><b>{{ index+1 }})</b> {{ question.title }}</i>
       
       <hr>
      
         <div class="custom-control custom-radio"
           
-          v-for="(answer, ind ) in qestion.variant" 
+          v-for="(answer, ind ) in question.variant" 
           :key="answer"
         >
           
@@ -29,7 +29,7 @@
 <script>
 // v-model="answer"
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       count: 0,
@@ -39,17 +39,17 @@ export default {
   computed:{
     getUserAnswer(){
       
-      return  this.qestion.result.user_answer ? 
-          this.qestion.result.user_answer.length > 0 && this.qestion.result.user_answer[0] !==''
+      return  this.question.result.user_answer ? 
+          this.question.result.user_answer.length > 0 && this.question.result.user_answer[0] !==''
           : false
     },
   },
   methods: {
     classAnswer(ind){
       return  {
-        "answer-true": this.getUserAnswer && this.qestion.result.true_answer.indexOf(ind) > -1 && this.qestion.result.user_answer.indexOf(`${ind}`) > -1,
-        "answer-user": this.getUserAnswer && this.qestion.result.user_answer.indexOf(`${ind}`) > -1,
-        "answer": this.getUserAnswer && this.qestion.result.true_answer.indexOf(ind) > -1,
+        "answer-true": this.getUserAnswer && this.question.result.true_answer.indexOf(ind) > -1 && this.question.result.user_answer.indexOf(`${ind}`) > -1,
+        "answer-user": this.getUserAnswer && this.question.result.user_answer.indexOf(`${ind}`) > -1,
+        "answer": this.getUserAnswer && this.question.result.true_answer.indexOf(ind) > -1,
       }
     },
     getAnswer(ind){

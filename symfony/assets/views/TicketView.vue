@@ -21,32 +21,32 @@
     <div class="container">
       <div class="row">
         <form @submit.prevent="onSubmit">
-          <div v-for="(qestion, index ) in qestions" 
-            :key="qestion.id"
+          <div v-for="(question, index ) in questions" 
+            :key="question.id"
           >
             <TestQuestionRadio
-              v-if="qestion.type === 'radio'"
-              :qestion="qestion"
+              v-if="question.type === 'radio'"
+              :question="question"
               :index="index"
             />
             <TestQuestionCheckbox
-              v-else-if="qestion.type === 'checkbox'"
-              :qestion="qestion"
+              v-else-if="question.type === 'checkbox'"
+              :question="question"
               :index="index"
             />
             <TestQuestionInputOne
-              v-else-if="qestion.type === 'input_one'"
-              :qestion="qestion"
+              v-else-if="question.type === 'input_one'"
+              :question="question"
               :index="index"
             />
             <TestQuestionOrdered
-              v-else-if="qestion.type === 'order'"
-              :qestion="qestion"
+              v-else-if="question.type === 'order'"
+              :question="question"
               :index="index"
             />
             <TestQuestionConformity
-              v-else-if="qestion.type === 'conformity'"
-              :qestion="qestion"
+              v-else-if="question.type === 'conformity'"
+              :question="question"
               :index="index"
             />
           </div>
@@ -95,7 +95,7 @@ export default {
     testName () {
       return this.$store.getters.getTestTitleActive
     },
-    qestions () {
+    questions () {
       return this.$store.getters.getQuestions
     },
    

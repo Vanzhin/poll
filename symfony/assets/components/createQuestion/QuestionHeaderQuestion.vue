@@ -33,7 +33,7 @@
 <script>
 
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       questionTitle:"",

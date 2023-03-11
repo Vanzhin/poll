@@ -1,5 +1,4 @@
 import { 
-  SET_QUESTION, 
   SET_TEST_TITLE, 
   SET_TEST,
   SET_TESTS
@@ -75,7 +74,7 @@ const actions = {
     } catch (e) {
       console.log("Ошибка при получении теста", e)
       dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
+        mes: `${e.response.data.message}!<hr> 
         ${e.response.data.error[0]}.`
       })
     }
@@ -111,7 +110,7 @@ const actions = {
     } catch (e) {
       console.log("importFileTestDb err- ", e);
       dispatch('setMessage', {err: true, 
-         mes: `${e.response.data.message}  ${e.response.data.error[0]}`
+         mes: `${e.response.data.message}!<hr>  ${e.response.data.error[0]}`
       })
     }
   },
@@ -271,12 +270,6 @@ const mutations = {
     return state.cources = {
       active: 0, list: cources, isLoaded: true
     }
-  },
-  [SET_QUESTION] (state, id) {
-    if (state.cources.list.hasOwnProperty(id)) {
-      return state.cources.active = id;
-    }
-    return;
   },
   [SET_TEST_TITLE] (state, id) {
     return state.testTitle = state.tests.find(test => {

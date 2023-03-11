@@ -5,9 +5,8 @@
     <div class="cont-message-view">
       <p 
         :class="classObject"
+        v-html="getMessage.mes"
       >
-      
-      {{ getMessage.mes }}
       </p>
     </div> 
   </div>
