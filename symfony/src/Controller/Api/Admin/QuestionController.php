@@ -135,7 +135,7 @@ class QuestionController extends AbstractController
         $questionImage = $request->files->get('questionImage');
         $variantImages = $request->files->get('variantImage');
         $response = $questionService->saveWithVariantIfValid(new Question(), $data, $questionImage, $variantImages);
-        if (in_array('error', $response)) {
+        if (key_exists('error', $response)) {
             $status = 422;
         } else {
             $status = 200;
@@ -154,7 +154,7 @@ class QuestionController extends AbstractController
         $questionImage = $request->files->get('questionImage');
         $variantImages = $request->files->get('variantImage');
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages);
-        if (in_array('error', $response)) {
+        if (key_exists('error', $response)) {
             $status = 422;
         } else {
             $status = 200;
