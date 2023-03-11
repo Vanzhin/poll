@@ -172,6 +172,7 @@ class QuestionService
         $this->em->persist($question);
         $this->em->flush();
         $variants = [];
+        $subtitles = $data['question']['subTitle'];
         foreach ($data['variant'] as $key => $variantData) {
             $variantData['questionId'] = $question->getId();
             if ($this->em->find(Variant::class, $key)) {
@@ -193,6 +194,17 @@ class QuestionService
                 $this->em->flush();
                 $this->variantService->questionAnswerUpdate($variant, true);
             }
+        }
+        //todo убрать костыль
+        if($question->getType()->getTitle() === 'conformity'){
+            $answers = [];
+            foreach ($subtitles as $key => $subtitle) {
+                $answers[]=$variants[$key]->getId();
+
+            }
+            $question->setAnswer($answers);
+            $this->em->persist($question);
+            $this->em->flush();
         }
 
         if (!is_null($errors)) {
