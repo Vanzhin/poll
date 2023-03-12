@@ -9,17 +9,20 @@ use App\Repository\SectionRepository;
 use App\Repository\TestRepository;
 use App\Repository\TicketRepository;
 use App\Service\FileHandler;
+use App\Service\NormalizerService;
 use App\Service\Paginator;
 use App\Service\QuestionService;
 use App\Service\SectionService;
 use App\Service\TestService;
 use App\Service\ValidationService;
+use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class TestController extends AbstractController
@@ -220,7 +223,7 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/admin/test/{id}/question', name: 'app_api_admin_test_question', methods: 'GET')]
-    public function getQuestion(Test $test, Paginator $paginator, QuestionRepository $repository): JsonResponse
+    public function getQuestion(Test $test, Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
         $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test), 5);
         if ($pagination->count() > 0) {
@@ -235,6 +238,9 @@ class TestController extends AbstractController
             [
                 'groups' => 'admin_question',
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractNormalizer::CALLBACKS => [
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
+                ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
