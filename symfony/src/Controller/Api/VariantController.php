@@ -34,7 +34,7 @@ class VariantController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage');
-        $variant = $variantService->make(new Variant(), $data['variant']);
+        $variant = $variantService->make(new Variant(), $data['variant'] ?? []);
 
         $errors = $validation->entityWithImageValidate($variant, $image);
         if (!is_null($errors) && count($errors) > 0) {
@@ -59,7 +59,7 @@ class VariantController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage');
-        $variant = $variantService->make($variant, $data['variant']);
+        $variant = $variantService->make($variant, $data['variant'] ?? []);
 
         $errors = $validation->entityWithImageValidate($variant, $image);
         if (!is_null($errors) && count($errors) > 0) {

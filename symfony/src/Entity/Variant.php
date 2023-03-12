@@ -51,7 +51,7 @@ class Variant
     private ?Question $question = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['main', 'admin'])]
+    #[Groups(['main', 'admin', 'admin_question'])]
     private ?string $image = null;
 
     private bool|null $isCorrect = null;
