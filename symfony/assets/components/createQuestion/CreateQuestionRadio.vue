@@ -5,7 +5,7 @@
       
       <input type="hidden" 
         id="answer_true"
-        name="question[answer][]"
+        name="question[answer]"
         :value="answerSelect"
       >
       <hr>
@@ -38,7 +38,7 @@
             </textarea> 
             <input type="hidden" 
               :name="operationEdit ? `variant[${answer.id}][correct]` : `variant[a${ind}][correct]`" 
-              :value="ind === answerSelect"
+              :value="operationEdit ? answer.id === answerSelect : ind === answerSelect"
             >
             <i class="bi bi-eraser custom-close" title="Очистить поле"
               @click="answer.title = ''"

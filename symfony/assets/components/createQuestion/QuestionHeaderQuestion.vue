@@ -17,12 +17,16 @@
         v-if="questionImgUrl !== ''"
       />  
       <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-            @click="questionImgDelete()"
-          v-if="questionImgUrl !== ''"
+        @click="questionImgDelete()"
+        v-if="questionImgUrl !== ''"
       ></i>
     </div>
-    <label class="label">Прикрепить изображение </label>
-    
+    <label class="label"
+      v-if="questionImgUrl === ''"
+    >Прикрепить изображение</label>
+    <label class="label"
+      v-else
+    >Изменить изображение</label>
     <input  class="" type="file" accept="image/*"  
       @change="changeQuestionImg" 
       name="questionImage"
@@ -67,9 +71,7 @@ export default {
     
     if (this.operationEdit){
       this.questionTitle = this.getQuestion.title
-      this.questionImgFile =""
       this.questionImgUrl = this.getQuestion.image ? this.getQuestion.image :''
-      this.questionImgValue = this.getQuestion.image ? this.getQuestion.image :''
     }
   } 
 }

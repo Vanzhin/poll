@@ -154,11 +154,11 @@
           if ( !this.getMessage) {
             clearInterval(timerId)
             if (this.message ){this.selectTypeQuestion = ""}
+            if ( this.operation === 'edit'){
+              this.$router.go(-1)
+            }
           }
         }, 200);
-
-
-
         // this.$router.push({ path:'/result'})
       },
     },
@@ -175,6 +175,7 @@
           type: item.type.title ? item.type.title : item.type,
           title: item.title,
         }
+        console.log(this.selectTypeQuestion)
       }
     }
    

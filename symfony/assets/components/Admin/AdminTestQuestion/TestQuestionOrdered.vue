@@ -2,6 +2,9 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      />  
       <hr> 
       <i class="i">Ответы в правильном порядке.</i>
       <div>
@@ -10,6 +13,9 @@
           :key="answer"
         >
         <div class="block_drop"  :dataname="answer.sort"></div>
+          <img :src="answer.image" width="200" 
+            v-if="answer.image"
+          />  
           <label 
             v-if="answer!==''"
             class="custom-control-label f_sm" 

@@ -453,7 +453,7 @@ const actions = {
         data:  data
       };
       if (id) {
-        config.url = `api/admin/question/${id}/edit_with_variant`
+        config.url = `/api/admin/question/${id}/edit_with_variant`
       }
       console.log(config)
       await axios(config)
