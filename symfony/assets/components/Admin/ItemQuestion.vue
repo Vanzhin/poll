@@ -10,67 +10,67 @@
         v-if="confirmVisible"
       />
       <TestQuestionRadio
-        v-if="questionType(qestion.type) === 'radio'"
-        :qestion="qestion"
+        v-if="questionType(question.type) === 'radio'"
+        :question="question"
         :index="index"
       />
       <TestQuestionCheckbox
-        v-else-if="questionType(qestion.type) === 'checkbox'"
-        :qestion="qestion"
+        v-else-if="questionType(question.type) === 'checkbox'"
+        :question="question"
         :index="index"
       />
       <TestQuestionInputOne
-        v-else-if="questionType(qestion.type) === 'input_one'"
-        :qestion="qestion"
+        v-else-if="questionType(question.type) === 'input_one'"
+        :question="question"
         :index="index"
       />
       <TestQuestionOrdered
-        v-else-if="questionType(qestion.type) === 'order'"
-        :qestion="qestion"
+        v-else-if="questionType(question.type) === 'order'"
+        :question="question"
         :index="index"
       />
       <TestQuestionConformity
-        v-else-if="questionType(qestion.type) === 'conformity'"
-        :qestion="qestion"
+        v-else-if="questionType(question.type) === 'conformi'"
+        :question="question"
         :index="index"
       />
     </div>
-    <div class="btn-group" >
-      <div class="btn btn-outline-primary btn-center"
-        title="Редактировать"
-        @click.stop="editQuestion"
-      >
-        <i class="bi bi-pencil"></i>
-      </div>
-      <div class="btn btn-outline-primary btn-center" 
-      title="Удалить"
-        @click.stop="deleteVisibleConfirm"
-      >
-        <i class="bi bi-trash3"></i>
-      </div>
-      <div class="btn btn-outline-primary btn-center"
-        title="Утвердить"
-        @click.stop="addQuestion"
-      >
-        <i class="bi bi-file-check"></i>
+    <div class="block-button">
+      <div class="btn-group">
+        <div class="btn btn-outline-primary btn-center"
+          title="Редактировать"
+          @click.stop="editQuestion"
+        >
+          <i class="bi bi-pencil"></i>
+        </div>
+        <div class="btn btn-outline-primary btn-center" 
+        title="Удалить"
+          @click.stop="deleteVisibleConfirm"
+        >
+          <i class="bi bi-trash3"></i>
+        </div>
+        <div class="btn btn-outline-primary btn-center"
+          title="Утвердить"
+          @click.stop="addQuestion"
+        >
+          <i class="bi bi-file-check"></i>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
+<!-- conformity -->
 <script>
 import TestQuestionRadio from './AdminTestQuestion/TestQuestionRadio.vue'
 import TestQuestionCheckbox from './AdminTestQuestion/TestQuestionCheckbox.vue'
 import TestQuestionOrdered from './AdminTestQuestion/TestQuestionOrdered.vue'
 import TestQuestionInputOne from './AdminTestQuestion/TestQuestionInputOne.vue'
 import TestQuestionConformity from './AdminTestQuestion/TestQuestionConformity.vue'
-import Pagination from "../Pagination.vue"
 import MyConfirm from '../ui/MyConfirm.vue'
-import Loader from '../ui/Loader.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 
 export default {
-  props:['qestion', 'index'],
+  props:['question', 'index'],
   components: {
     TestQuestionRadio,
     TestQuestionCheckbox,
@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      "deleteQuestionDb", 
+      "deleteQuestionDb", "setQuestion"
     ]),
     questionType(question){
       return question.title ? question.title : question
@@ -105,16 +105,29 @@ export default {
       this.confirmYes = this.deleteQuestin
     },
     async deleteQuestin(){
-      console.log('Удаляю вопрос № - ', this.qestion)
+      console.log('Удаляю вопрос № - ', this.question)
       console.log('роут  - ', this.$route)
       await this.deleteQuestionDb({
-        id: this.qestion.id, 
+        id: this.question.id, 
         testId: this.getTest.id, 
         page: this.getActivePage,
       })
       this.confirmVisible = false
       this.confirmYes = null
     },
+    editQuestion(){
+      console.log('Редактировать № - ', this.question)
+      console.log('тест № - ', this.getTest)
+      this.setQuestion(this.question)
+      this.$router.push({
+        name: 'adminsQuestionsCreate', 
+        params: {
+          testId: this.getTest.id,
+          questionId: this.question.id,
+          operation: 'edit'
+        }
+      })
+    }
   },
   async created(){
    
@@ -126,6 +139,9 @@ export default {
   .block{
     background-color: rgb(207 207 199);
     padding: 10px ;
+  }
+  .block-button{
+    padding: 0 10px 10px 10px;
   }
   .title{
     margin: 10px;

@@ -14,28 +14,28 @@
     </div>
     <div class="container">
       <div class="row">
-        <div v-for="(qestion, index ) in getResultQuestions" 
-          :key="qestion.id"
+        <div v-for="(question, index ) in getResultQuestions" 
+          :key="question.id"
         >
           <ResultTestQuestionCheckbox
-            :qestion="qestion"
+            :question="question"
             :index="index"
-            v-if="qestion.type==='radio' || qestion.type==='checkbox'"
+            v-if="question.type==='radio' || question.type==='checkbox'"
           />
           <ResultTestQuestionOrdered
-            :qestion="qestion"
+            :question="question"
             :index="index"
-            v-else-if="qestion.type==='order'"
+            v-else-if="question.type==='order'"
           />
           <ResultTestQuestionInputOne
-            :qestion="qestion"
+            :question="question"
             :index="index"
-            v-else-if="qestion.type==='input_one'"
+            v-else-if="question.type==='input_one'"
           />
           <ResultTestQuestionConformity
-            :qestion="qestion"
+            :question="question"
             :index="index"
-            v-else-if="qestion.type==='conformity'"
+            v-else-if="question.type==='conformity'"
           />
         </div>
       </div>

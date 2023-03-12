@@ -1,15 +1,14 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      <input type="hidden" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
-        :value="answerSelect">
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      />  
       <hr>
       <i class="i">Варианты ответов:</i> 
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
+        v-for="(answer, ind ) in question.variant" 
         :key="answer"
       >
         <input type="checkbox" 
@@ -18,13 +17,18 @@
           v-if="answer!==''"
           disabled
           class="custom-control-input"  >
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-         
-        >{{ answer.title }}
-        </label>
-        
+        <div class="">
+          <img :src="answer.image" 
+            v-if="answer.image"
+            class="img"
+          />  
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm " 
+          
+          >{{ answer.title }}
+          </label>
+        </div>
       </div>
       <br>
       
@@ -34,11 +38,11 @@
 <script>
 // v-model="answer"
 export default {
-  props: ['qestion', 'index', 'admin' ],
+  props: ['question', 'index', 'admin' ],
   data() {
     return {
       count: 0,
-      answerSelect:this.qestion.answer
+      answerSelect:this.question.answer
     }
   },
   computed:{
@@ -60,7 +64,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .img{
+    height: 130px;
+    margin-left: 10px;
+    max-width: 170px;
+  }
   .shadow{
     padding: 5px;
   }
@@ -70,6 +78,8 @@ export default {
     align-items:flex-start;
     min-height: 1.5rem;
     padding-left: 1.5rem;
+    margin-top: 5px;
+    align-items: center;
   }
   .f_sm {
       font-size: 0.9rem;
@@ -78,5 +88,6 @@ export default {
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
+      word-wrap: break-word;
   }
 </style>

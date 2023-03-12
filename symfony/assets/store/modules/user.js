@@ -81,11 +81,7 @@ const actions = {
         })
         return false
     } catch (e) {
-      console.log("ошибка - ", e)
-      dispatch('setMessage',{
-        mes:JSON.stringify(e.response.data.message),
-        err: true
-      });
+      dispatch('setMessageError', e)
       return true
     }
   },
@@ -107,19 +103,11 @@ const actions = {
       await axios(config)
         .then((data)=>{
           console.log("getRegistrationUser - ", data.data.message )
-          dispatch('setMessage', {
-            mes:JSON.stringify(data.data.message),
-            err: false
-          })
-          // commit("SET_IS_AUTCH_USER", true)
+          dispatch('setMessage', data)
         })
         return false
     } catch (e) {
-      console.log("ошибка - ", e.response.data.error)
-      dispatch('setMessage',{
-        mes:JSON.stringify(e.response.data.error[0]),
-        err: true
-      });
+      dispatch('setMessageError', e)
       return true
     }
   },

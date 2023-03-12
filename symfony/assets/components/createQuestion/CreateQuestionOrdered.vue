@@ -23,7 +23,7 @@
         @dragenter.prevent
       >
         <div class="custom-control"
-          v-for="(answer, ind ) in qestionVariantSort" 
+          v-for="(answer, ind ) in questionVariantSort" 
           :key="answer"
           @dragstart="onDragStart($event, ind)"
           draggable="true"
@@ -33,7 +33,7 @@
             <div class="custom-radio" >
               <div class="custom-radio img_block align-items-center">
                 <textarea rows="1" required
-                  :name="`variant[${ind}][title]`"
+                  :name="`variant[a${ind}][title]`"
                   v-model = "answer.title"
                   class="textarea_input" 
                 >
@@ -65,7 +65,7 @@
               <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
               <input  class="" type="file" accept="image/*"  
                 @change="(e)=> changeAnswerImg(e, ind)"
-                :name="`variant[${ind}][img]`"
+                :name="`variantImage[a${ind}]`"
                 :value="answer.value"
               >
             </div>
@@ -78,9 +78,9 @@
 </template>
 <script>
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
-import { SlickList, SlickItem } from 'vue-slicksort';
+// import { SlickList, SlickItem } from 'vue-slicksort';
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   components: {
     QuestionHeaderQuestion
   },
@@ -105,7 +105,7 @@ export default {
     }
   },
   computed:{
-    qestionVariantSort(){
+    questionVariantSort(){
       this.answers.sort((a,b) => a.sort-b.sort)
       this.answers.forEach((item, index ) => {
         item.sort = index

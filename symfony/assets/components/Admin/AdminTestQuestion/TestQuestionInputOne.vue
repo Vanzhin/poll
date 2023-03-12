@@ -1,16 +1,20 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      /> 
+      <hr> 
       <div class="custom-control custom-radio">
         <label 
           class="custom-control-label f_sm" 
-          :for="'a_' +  qestion.id"
+          :for="'a_' +  question.id"
         >Правильный ответ:
         </label>
         <hr>
         <input type="text" class="input"
-          :value="qestion.answer[0]"
+          :value="question.variant[0].title"
         >
       </div>
       <br>
@@ -20,7 +24,7 @@
 
 <script>
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
     }
