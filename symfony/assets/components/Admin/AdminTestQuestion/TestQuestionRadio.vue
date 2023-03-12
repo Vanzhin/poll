@@ -1,15 +1,15 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
       <input type="hidden" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
+        :id="'a_' +  question.id"
+        :name="question.id" 
         :value="answerSelect">
       <hr>
       <i class="i">Варианты ответов:</i>
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
+        v-for="(answer, ind ) in question.variant" 
         :key="answer.id"
       >
         <input type="radio" 
@@ -32,11 +32,11 @@
 <script>
 
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       count: 0,
-      answerSelect: this.qestion.answer[0]
+      answerSelect: this.question.answer[0]
     }
   },
   computed:{

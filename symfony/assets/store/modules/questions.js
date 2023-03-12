@@ -1,9 +1,10 @@
 import { 
   SET_QUESTIONS, 
-  SET_RESULT_QUESTIONS, 
+  SET_QUESTIONS_RESULT, 
   SET_LOADER_TOGGLE,
   SET_RESULT_TICKET_USER,
-  SET_LOADER_STATUS
+  SET_LOADER_STATUS,
+  SET_QUESTION
 } from './mutation-types.js'
 import axios from 'axios';
 
@@ -376,7 +377,7 @@ const actions = {
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
-        console.log(e.message);
+        dispatch('setMessageError', e)
     }
   },
   // отаправка результата прохождения теста на сервер
@@ -405,7 +406,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("setResultDb - ",  data)
-          commit("SET_RESULT_QUESTIONS", data);
+          commit("SET_QUESTIONS_RESULT", data);
           commit("SET_LOADER_STATUS", false)
         })
         const err = {
@@ -422,7 +423,7 @@ const actions = {
   },
 
   //сохранение нового вопроса в базу
-  async saveQuestionDb({ dispatch, commit, state }, {token, questionSend} ){
+  async saveQuestionDb({ dispatch, commit, state }, {token, questionSend, id = null} ){
     console.dir(questionSend)
     commit("SET_LOADER_TOGGLE")
     try{
@@ -444,7 +445,6 @@ const actions = {
       // questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
       const config = {
         method: 'post',
-        // url: '/api/auth/create/question',
         url: '/api/admin/question/create_with_variant',
         headers: { 
           Accept: 'application/json', 
@@ -452,18 +452,18 @@ const actions = {
         },
         data:  data
       };
+      if (id) {
+        config.url = `api/admin/question/${id}/edit_with_variant`
+      }
       console.log(config)
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', data)
           commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-      console.log(e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}  ${e.response.data.error[0]}`
-      })
+      dispatch('setMessageError', e)
     }
   },
   async importQuestionsFileDb({ dispatch, commit, state }, {id, token, questionSend} ){
@@ -489,14 +489,11 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage',  data)
           commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-      console.log(e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}  ${e.response.data.error[0]}`
-      })
+      dispatch('setMessageError', e)
     }
   },
 
@@ -513,23 +510,21 @@ const actions = {
       console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("deleteQuestionDb - ",  data)
           dispatch('getQuestionsTestIdDb', {id: testId, page})
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', data)
           
         })
     } catch (e) {
-      console.log(e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}  ${e.response.data.error[0]}`
-      })
+      dispatch('setMessageError', e)
     }
   },
 
   setIsLoader({ commit }){
     commit("SET_LOADER_TOGGLE")
   },
-  getQuestion(){},
+  setQuestion({ commit }, question){
+    commit("SET_QUESTION", question)
+  },
   saveResultTicketUser({ commit }, ticket){
     commit("SET_RESULT_TICKET_USER", ticket);
   }
@@ -547,6 +542,9 @@ const getters = {
     console.log("isLoader ", state.isLoader)
     return state.isLoader 
   },
+  getQuestion(state) {
+    return state.question 
+  },
   
 }
 
@@ -555,8 +553,8 @@ const mutations = {
     console.log("SET_QUESTIONS", questions)
     state.questions = questions
   },
-  [SET_RESULT_QUESTIONS] (state, questions) {
-    console.log("SET_RESULT_QUESTIONS", questions)
+  [SET_QUESTIONS_RESULT] (state, questions) {
+    console.log("SET_QUESTIONS_RESULT", questions)
     state.resultQuestions = questions
     // localStorage.setItem('resultQuestions', JSON.stringify(questions));
   },
@@ -572,7 +570,11 @@ const mutations = {
     console.log("SET_RESULT_TICKET_USER", )
     state.resultTicketUser = ticket
     localStorage.setItem('resultTicketUser', JSON.stringify(ticket));
-  }
+  },
+  [SET_QUESTION] (state, question ) {
+    console.log("SET_QUESTION", question)
+    state.question = question
+  },
 }
 
 export default {

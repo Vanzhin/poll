@@ -84,7 +84,10 @@ export default {
   ]),
   },
   methods:{
-    ...mapActions(["deleteTestDb"]),
+    ...mapActions([
+      "deleteTestDb", 
+      "setTest"
+    ]),
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
       return img
@@ -114,10 +117,19 @@ export default {
       this.confirmYes = this.deleteTest
     },
     importQuestionsFile(){
+      this.setTest(this.item)
       this.$router.push({name: 'adminsImportId',  params: {id: this.item.id}})
     },
-    addQuestion( ){
-      this.$router.push({path: '/admins/questions', params: {id: this.item.id} })
+    addQuestion(){
+      this.setTest(this.item)
+      this.$router.push({
+        name: 'adminsQuestionsCreate', 
+        params: {
+          testId: this.item.id,
+          questionId:0,
+          operation: "create"
+        }
+      })
     }
   }
 } 

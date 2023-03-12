@@ -6,7 +6,7 @@
     v-else
   >
     <div class="title">
-      <h2> {{ testName }}</h2>
+      <h2>Тест: {{ testName }}</h2>
       <div class="test">
         <p> {{ ticketTitle }}</p>  
       </div>
@@ -14,11 +14,11 @@
     
     <div class="container">
       <div class="row">
-        <div v-for="(qestion, index ) in qestions" 
-          :key="qestion.id"
+        <div v-for="(question, index ) in questions" 
+          :key="question.id"
         >
           <ItemQuestion
-            :qestion="qestion"
+            :question="question"
             :index="numQuestion(index)"
           />
         </div>
@@ -67,7 +67,7 @@ export default {
     testName () {
       return this.$store.getters.getTestTitleActive
     },
-    qestions () {
+    questions () {
       return this.$store.getters.getQuestions
     }
   },

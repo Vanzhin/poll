@@ -89,16 +89,23 @@
         this.isLoader = true
         await this.importFileTestDb({id: this.$route.params.id, testFile, token: this.getAutchUserToken})
         this.message = !this.getMessage.err
-        if ( this.message ) {
+        
           this.testFileDelete()
-        }
+        
 
         this.isLoader = false
         
         let timerId = setInterval(() => {
           if ( !this.getMessage ) {
             clearInterval(timerId)
-            if (this.message){this.$router.go(-1)}
+            // if (this.message){this.$router.go(-1)} adminsTest
+            if (this.message)
+            {
+              this.$router.push({
+                name: 'adminsTest', 
+                params: {id:  this.$route.params.id} 
+              })
+            }
           }
         }, 200);
       },

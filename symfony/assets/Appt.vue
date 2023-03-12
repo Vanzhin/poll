@@ -1,13 +1,7 @@
 <template>
-  
-    <component :is="layout" >
-      <RouterView />
-    </component>
-    
- 
-  
-
-  
+  <component :is="layout" >
+    <RouterView />
+  </component>
 </template>
 <script>
 import { RouterLink, RouterView } from 'vue-router'

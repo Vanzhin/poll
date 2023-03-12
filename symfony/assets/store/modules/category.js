@@ -1,10 +1,9 @@
 import { 
   SET_CATEGORYS, 
-  SET_PAGINATION, 
   SET_CATEGORY_TITLE, 
   SET_CATEGORY_DESCRIPTION,
   SET_CATEGORYS_PARENT,
-  SET_TEST,
+ 
  } from './mutation-types.js'
 import axios from 'axios';
 
@@ -71,14 +70,10 @@ const actions = {
         .then(({data})=>{
           console.log("deletCategoryDb - удалено",  data)
           dispatch("getCategorysDB",  { page: null , parentId: parentId });
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', data)
         })
     } catch (e) {
-      console.log("Ошибка при удалении", e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
-        ${e.response.data.error[0]}.`
-      })
+      dispatch('setMessageError', e)
     }
   },
   async createCategory ({dispatch, commit}, {id, questionSend, token}){
@@ -99,15 +94,12 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("createCategory - создано",  data)
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', data)
           // dispatch("getCategorysDB",  { page: null , parentId: id });
         })
     } catch (e) {
       console.log("Ошибка при создании",e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
-        ${e.response.data.error[0]}.`
-      })
+      dispatch('setMessageError', e)
     }
   },
   async editCategory ({dispatch, commit}, {id, questionSend, token}){
@@ -128,15 +120,12 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("createCategory - изменено",  data)
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', data)
           dispatch("getCategorysDB", { page: null , parentId: id });
         })
     } catch (e) {
       console.log("Ошибка при изменении:", e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
-        ${e.response.data.error[0]}.`
-      })
+      dispatch('setMessageError', e)
     }
   },
 };

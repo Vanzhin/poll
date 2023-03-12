@@ -18,7 +18,7 @@
         class="sub-item"
       >
         <input required
-          :name="`question[subTitle][${richtVariant + ind}]`"
+          :name="`variant[a${richtVariant +ind}][title]`"
           v-model= "subTitle.title"
           class="sub-item-input" 
         >

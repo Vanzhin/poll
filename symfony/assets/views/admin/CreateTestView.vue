@@ -72,10 +72,12 @@
         description: "",
         message: null,
         isLoader: true,
+        operation: this.$route.params.operation
       }
     },
     computed:{ 
-      ...mapGetters(["getAutchUserToken", "getMessage", "getCategoryParendId", "getTest"]),
+      ...mapGetters(["getAutchUserToken", 
+      "getMessage", "getCategoryParendId", "getTest"]),
       getTest () {
         const test = this.$store.getters.getTest
         console.log(test)
@@ -90,10 +92,10 @@
       async onSubmit(e){
         const questionSend = e.target
         
-        if ( this.$route.params.operation === 'edit'){
+        if ( this.operation === 'edit'){
           await this.editTest({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
           
-        } else if ( this.$route.params.operation === 'create'){
+        } else if ( this.operation === 'create'){
           await this.createTest({questionSend, token: this.getAutchUserToken, })
          
         }

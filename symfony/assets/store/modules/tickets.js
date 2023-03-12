@@ -1,5 +1,5 @@
 import { 
-  SET_QUESTION,
+  
   SET_TICKETS
  } from './mutation-types.js'
  import axios from 'axios';
@@ -48,13 +48,8 @@ const mutations = {
       active: 0, list: cources, isLoaded: true
     }
   },
-  [SET_QUESTION] (state, id) {
-    if (state.cources.list.hasOwnProperty(id)) {
-      state.cources.active = id;
-    }
-  },
   [SET_TICKETS] (state, tickets){
-     state.tickets = tickets
+    state.tickets = tickets
   },
 }
 export default {

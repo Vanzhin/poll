@@ -1,12 +1,12 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
       <hr> 
       <i class="i">Ответы в правильном порядке.</i>
       <div>
         <div class="custom-control custom-radio"
-          v-for="(answer, ind ) in qestionVariant" 
+          v-for="(answer, ind ) in questionVariant" 
           :key="answer"
         >
         <div class="block_drop"  :dataname="answer.sort"></div>
@@ -26,12 +26,12 @@
 <script>
 
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       count: 0,
       answerSelect:[],
-      qestionVariant:[],
+      questionVariant:[],
       blockY:0
     }
   },
@@ -41,10 +41,10 @@ export default {
   methods: {
   },
   mounted(){
-    if (this.qestion.answer){
-    this.qestion.answer.forEach((item, index ) => 
-      this.qestionVariant.push(
-        this.qestion.variant.find(elem => elem.id === item)
+    if (this.question.answer){
+    this.question.answer.forEach((item, index ) => 
+      this.questionVariant.push(
+        this.question.variant.find(elem => elem.id === item)
       )
     )} 
     

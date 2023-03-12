@@ -1,7 +1,15 @@
 <template>
   <div class="block">
     <div class="title">
-      <h2>Создание вопроса</h2>
+      <h2 
+        v-if="getTest"
+      >Тест: {{ getTest.title }}</h2>
+      <h4
+        v-if="operation === 'create'"
+      >Создайте вопрос</h4>
+      <h4
+        v-if="operation === 'edit'"
+      >Отредактируйте вопрос</h4>
       <div class="test">
         <div class="dropdown">
           <button class="dropdown-toggle" 
@@ -37,6 +45,10 @@
     <div class="row">
       <form @submit.prevent="onSubmit">
         <input type="hidden" 
+          name="question[test]" 
+          :value="testId"
+        >
+        <input type="hidden" 
           name="question[type]" 
           :value="selectTypeQuestion.type"
         >
@@ -56,7 +68,6 @@
             v-else-if="selectTypeQuestion.type === 'conformity'"
           />
           <br> 
-          
         <button type="submit" class="button">Сохранить</button>
       </form>
     </div>
@@ -83,7 +94,6 @@
     data() {
       return {
         count: 0,
-          //  testName:''
         typeQuestions:[
           {id: 1, 
             type: "radio",
@@ -107,35 +117,65 @@
           },
         ],
         selectTypeQuestion: '',
-        message: null
+        message: null,
+        testId: this.$route.params.testId ? this.$route.params.testId: null,
+        questionId: this.$route.params.questionId ? this.$route.params.questionId: null,
+        operation: this.$route.params.operation
       }
     },
     computed:{ 
-      ...mapGetters(["getAutchUserToken", "getMessage"]),
+      ...mapGetters(["getAutchUserToken", "getMessage", "getTest", "getQuestion"]),
     },
    
     methods: { 
-      ...mapActions(["saveQuestionDb", "setMessage"]),
+      ...mapActions(["saveQuestionDb", "setMessageUser"]),
       ...mapMutations([]),
       setSelectTypeQuestion(){},
-      onSubmit(e){
+      async onSubmit(e){
         const trueAnswer = Array.from(e.target).filter(inp => inp.id === "answer_true")
         if (!trueAnswer[0].value) {
           const message = {
             err: true, 
             mes: 'Укажите правильный ответ!'
           }
-          this.setMessage(message)
+          this.setMessageUser(message)
           return
         }
         const questionSend = e.target
-        // this.setMessage({rrr:"dfgdfg"})
-        this.saveQuestionDb({questionSend, token: this.getAutchUserToken})
+       
+        if ( this.operation === 'edit'){
+          await this.saveQuestionDb({questionSend, token: this.getAutchUserToken, id:+this.questionId})
+        } else if ( this.operation === 'create'){
+          await this.saveQuestionDb({questionSend, token: this.getAutchUserToken})
+        }
+
+        this.message = !this.getMessage.err
+        let timerId = setInterval(() => {
+          if ( !this.getMessage) {
+            clearInterval(timerId)
+            if (this.message ){this.selectTypeQuestion = ""}
+          }
+        }, 200);
+
+
+
         // this.$router.push({ path:'/result'})
       },
     },
     async mounted(){
       
+    },
+    created(){
+     
+      if ( this.operation === 'edit'){
+        console.log(this.typeQuestions.find(item => item.type = this.getQuestion.type))
+        const item = this.typeQuestions.find(item => item.type = this.getQuestion.type)
+        this.selectTypeQuestion = {
+          id: item.id, 
+          type: item.type.title ? item.type.title : item.type,
+          title: item.title,
+        }
+      }
     }
    
  } 

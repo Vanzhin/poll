@@ -14,15 +14,15 @@
   <div class="mb-3 w-100">
     <div class="img_block">
       <img :src="questionImgUrl" width="200" 
-        v-if="typeof questionImgFile === 'object'"
+        v-if="questionImgUrl !== ''"
       />  
       <i class="bi bi-x-lg custom-close" title="Удалить изображение"
             @click="questionImgDelete()"
-          v-if="typeof questionImgFile === 'object'"
+          v-if="questionImgUrl !== ''"
       ></i>
     </div>
     <label class="label">Прикрепить изображение </label>
-    <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
+    
     <input  class="" type="file" accept="image/*"  
       @change="changeQuestionImg" 
       name="questionImage"
@@ -31,19 +31,23 @@
   </div>
 </template>
 <script>
-
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       questionTitle:"",
       questionImgFile:"",
       questionImgUrl:"",
       questionImgValue:"",
+      operationEdit: this.$route.params.operation === "edit"
     }
   },
   computed:{
-    
+    ...mapGetters([
+      "getTest",
+      "getQuestion"
+    ]),
   },
   methods: {
     changeQuestionImg(e){
@@ -57,6 +61,15 @@ export default {
       this.questionImgFile = ''
       this.questionImgUrl = ''
       this.questionImgValue = ''
+    }
+  },
+  created(){
+    
+    if (this.operationEdit){
+      this.questionTitle = this.getQuestion.title
+      this.questionImgFile =""
+      this.questionImgUrl = this.getQuestion.image ? this.getQuestion.image :''
+      this.questionImgValue = this.getQuestion.image ? this.getQuestion.image :''
     }
   } 
 }

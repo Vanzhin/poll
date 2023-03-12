@@ -2,11 +2,11 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i class="result"
-        :class="{resultTrue: qestion.result.score }"
-      ><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+        :class="{resultTrue: question.result.score }"
+      ><b>{{ index+1 }})</b> {{ question.title }}</i>
       <hr>
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.subTitle" 
+        v-for="(answer, ind ) in question.subTitle" 
         :key="answer"
       >
         <label v-if="answer!==''"
@@ -15,17 +15,17 @@
         </label>
         <div v-if="getUserAnswer"  class="custom-control-label d-flex">
           <label 
-            v-if="qestion.result.user_answer[ind] && qestion.result.user_answer[ind]!==''"
+            v-if="question.result.user_answer[ind] && question.result.user_answer[ind]!==''"
             class="custom-control-label f_sm answer " 
             :class="classAnswer(ind)"
-          >{{ qestion.variant[qestion.result.user_answer[ind]] }}
+          >{{ question.variant[question.result.user_answer[ind]] }}
           </label>
         
           <label 
             v-if="
-                +qestion.result.user_answer[ind] !== qestion.result.true_answer[ind]"
+                +question.result.user_answer[ind] !== question.result.true_answer[ind]"
             class="custom-control-label f_sm " 
-          >{{ qestion.variant[qestion.result.true_answer[ind]] }}
+          >{{ question.variant[question.result.true_answer[ind]] }}
           </label>
           <label 
             v-else
@@ -42,7 +42,7 @@
 <script>
 
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       answerSelect:[]
@@ -50,15 +50,15 @@ export default {
   },
   computed:{
     getUserAnswer(){
-      return   this.qestion.result.user_answer ? this.qestion.result.user_answer.length > 0 
-        ? this.qestion.result.user_answer[0]!=='' : false
+      return   this.question.result.user_answer ? this.question.result.user_answer.length > 0 
+        ? this.question.result.user_answer[0]!=='' : false
         : false
     },
   },
   methods: {
     classAnswer(ind){
       return  {
-        "answer-true": this.getUserAnswer && (this.qestion.result.true_answer[ind] === +this.qestion.result.user_answer[ind]) ,
+        "answer-true": this.getUserAnswer && (this.question.result.true_answer[ind] === +this.question.result.user_answer[ind]) ,
       }
     },
     
