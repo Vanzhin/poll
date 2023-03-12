@@ -1,15 +1,14 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      <input type="hidden" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
-        :value="answerSelect">
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      />  
       <hr>
       <i class="i">Варианты ответов:</i> 
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
+        v-for="(answer, ind ) in question.variant" 
         :key="answer"
       >
         <input type="checkbox" 
@@ -18,6 +17,9 @@
           v-if="answer!==''"
           disabled
           class="custom-control-input"  >
+        <img :src="answer.image" width="200" 
+          v-if="answer.image"
+        />  
         <label 
           v-if="answer!==''"
           class="custom-control-label f_sm" 
@@ -34,11 +36,11 @@
 <script>
 // v-model="answer"
 export default {
-  props: ['qestion', 'index', 'admin' ],
+  props: ['question', 'index', 'admin' ],
   data() {
     return {
       count: 0,
-      answerSelect:this.qestion.answer
+      answerSelect:this.question.answer
     }
   },
   computed:{

@@ -1,11 +1,14 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      />  
       <hr>
       <i class="i">Варианты ответов:</i>
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.subTitle" 
+        v-for="(answer, ind ) in question.subTitle" 
         :key="answer"
       >
         <label 
@@ -46,7 +49,7 @@
 <script>
 
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       count: 0,
@@ -58,13 +61,13 @@ export default {
   },
   methods: {
     variantConformity(ind){
-      return this.qestion.variant.find(elem => elem.id === this.qestion.answer[ind]).title
+      return this.question.variant.find(elem => elem.id === this.question.answer[ind]).title
     }
   },
   mounted(){
-    if (this.qestion.answer){
-      this.additionalVariants = this.qestion.variant
-      this.qestion.answer.forEach((item, index ) =>{ 
+    if (this.question.answer){
+      this.additionalVariants = this.question.variant
+      this.question.answer.forEach((item, index ) =>{ 
       let arr = [...this.additionalVariants]
       
       this.additionalVariants = arr.filter(elem => elem.id !== item)}

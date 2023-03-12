@@ -1,10 +1,10 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
       <input type="hidden" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
+        :id="'a_' +  question.id"
+        :name="question.id" 
         :value="answerSelect">
       <hr> 
       <i class="i">Расположите ответы в правильном порядке.</i>
@@ -12,10 +12,10 @@
         @drop="onDrop($event)"
         @dragover.prevent
         @dragenter.prevent
-        v-if="this.qestion.variant"
+        v-if="this.question.variant"
       >
         <div class="custom-control custom-radio"
-          v-for="(answer, ind ) in qestionVariantSort" 
+          v-for="(answer, ind ) in questionVariantSort" 
           :key="answer"
           @dragstart="onDragStart($event, ind)"
           draggable="true"
@@ -39,24 +39,24 @@
 <script>
 
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       count: 0,
       answerSelect:[],
-      qestionVariant:[],
+      questionVariant:[],
       blockY:0
     }
   },
   computed:{
-    qestionVariantSort(){
+    questionVariantSort(){
       this.answerSelect = []
-      this.qestionVariant.sort((a,b) => a.sort-b.sort)
-      this.qestionVariant.forEach((item, index ) => {
+      this.questionVariant.sort((a,b) => a.sort-b.sort)
+      this.questionVariant.forEach((item, index ) => {
         item.sort = index
         this.answerSelect.push(item.id)
       })
-      return this.qestionVariant
+      return this.questionVariant
     }
   },
   methods: {
@@ -75,17 +75,17 @@ export default {
       const item = parseInt(e.dataTransfer.getData('item'))
       const yEl = e.toElement.offsetParent.offsetTop + e.toElement.offsetParent.offsetParent.offsetTop+ e.toElement.clientHeight/2
       if (e.pageY > yEl  ) {
-        this.qestionVariant[item].sort = parseInt(e.toElement.attributes.dataname.value) + 0.5
-      } else this.qestionVariant[item].sort = parseInt(e.toElement.attributes.dataname.value) - 0.5
+        this.questionVariant[item].sort = parseInt(e.toElement.attributes.dataname.value) + 0.5
+      } else this.questionVariant[item].sort = parseInt(e.toElement.attributes.dataname.value) - 0.5
       
     }
   },
   mounted(){
-    if (this.qestion.variant){
-    this.qestion.variant.forEach((item, index ) => 
-      this.qestionVariant.push({id:index, title:item, sort: index})
+    if (this.question.variant){
+    this.question.variant.forEach((item, index ) => 
+      this.questionVariant.push({id:index, title:item, sort: index})
     )} 
-    // console.log(this.qestionVariant)
+    // console.log(this.questionVariant)
   }
 }
 

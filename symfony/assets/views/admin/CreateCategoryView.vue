@@ -124,7 +124,6 @@
          
         } else if ( this.$route.params.operation === 'create'){
           await this.createCategory({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
-         
         }
         this.message = !this.getMessage.err
         let timerId = setInterval(() => {
@@ -133,9 +132,7 @@
             if (this.message ){this.$router.go(-1)}
           }
         }, 200);
-          
-          
-       
+        
         // this.$router.push({ path:'/result'})
       },
       
