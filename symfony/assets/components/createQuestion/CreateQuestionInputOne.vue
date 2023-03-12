@@ -11,7 +11,7 @@
       <div class="custom-control ">
         <div class="custom-radio img_block">
           <input  
-            name="variant[0][title]"
+            :name="`variant[${answerId}][title]`"
             v-model="answers"
             class="custom-control-input" required  
           >
@@ -28,20 +28,34 @@
 </template>
 <script>
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   components: {
     QuestionHeaderQuestion
   },
   data() {
     return {
       answers: '',
+      operationEdit: this.$route.params.operation === "edit",
+      answerId: 'a0'
     }
   },
   computed:{
+    ...mapGetters([
+      "getTest",
+      "getQuestion"
+    ]),
   },
   methods: {
     
+  },
+  created(){
+    console.log(this.getQuestion)
+    if (this.operationEdit) {
+      this.answers = this.getQuestion.variant[0].title
+      this.answerId = this.getQuestion.variant[0].id
+    }
   } 
 }
 </script>

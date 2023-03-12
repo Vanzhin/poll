@@ -91,7 +91,7 @@ export default {
       this.childVisible = !this.childVisible
     },
     editCategory(){
-      this.$router.push({name: 'adminsCategoryCreate', params: {operation:"edit" , id: item.id } })
+      this.$router.push({name: 'adminsCategoryCreate', params: {operation:"edit" , id: this.item.id } })
     },
     async deleteCategoty(){
       console.log('Удаляю категорию № - ',this.item.id)

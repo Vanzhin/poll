@@ -56,12 +56,7 @@ const mutations = {
       active: 0, list: cources, isLoaded: true
     }
   },
-  [SET_QUESTION] (state, id) {
-    if (state.cources.list.hasOwnProperty(id)) {
-      return state.cources.active = id;
-    }
-    return;
-  },
+  
 }
 export default {
   namespaced: false,

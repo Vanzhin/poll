@@ -1,4 +1,4 @@
-import { SET_QUESTION } from './mutation-types.js'
+import {  } from './mutation-types.js'
 
 
 const state = () => ({
@@ -59,7 +59,7 @@ const actions = {
         commit("GET_COURCES", res.data.raw);
       })
       .catch((err) => {
-        console.log(err);
+        dispatch('setMessageError', e)
       });
   },
   getQues(){}

@@ -3,43 +3,51 @@
     class="item__block"
   >
     <div class="">
-      <div class="item__card" @click="">
-        <div class="item__card-block">
-          <div class="item__card__img">
-            <img :src="item.image" alt="" class="item__card__img"
-              v-if="item.image"
+      <div class="item__card">
+        <div class="item__card-row" >
+          <div class="item__card-header"> 
+            <div class="item__card-block">
+              <img :src="item.image" alt="" class="item__card__img"
+                v-if="item.image"
+              >
+              <div class="item__card-title">
+                {{ item.id }} - {{ item.title }}
+              </div>
+            </div>
+            <div class="item__card-info">
+              <div class="item__card-info-item">Вопросов: {{item.questionCount  }} </div>
+              <div class="item__card-info-item">Билетов: {{item.ticketCount  }} </div>
+              <div class="item__card-info-item">Секций: {{item.sectionCount  }} </div>
+            </div>
+          </div>
+          <div class="btn-group" >
+            <div class="btn btn-outline-primary btn-center"
+              title="Редактировать"
+              @click.stop="editTest"
             >
-          </div>
-          <div >
-            {{ item.id }} - {{ item.title }}
-          </div>
-        </div>
-        <div class="btn-group" >
-          <div class="btn btn-outline-primary btn-center"
-            title="Редактировать"
-            @click.stop="editTest"
-          >
-            <i class="bi bi-pencil"></i>
-          </div>
-          <div class="btn btn-outline-primary btn-center" 
-          title="Удалить"
-            @click.stop="deleteVisibleConfirm"
-          >
-            <i class="bi bi-trash3"></i>
-          </div>
-          <div class="btn btn-outline-primary btn-center"
-            title="Добавить вопрос"
-            @click.stop="addQuestion"
-          >
-            <i class="bi bi-question-square"></i>
-          </div>
-          <div class="btn btn-outline-primary btn-center"
-            title="Импортировать вопросы из файла"
-            @click.stop="importQuestionsFile"
-          >
-            <i class="bi bi-cloud-arrow-down"></i>
+              <i class="bi bi-pencil"></i>
+            </div>
+            <div class="btn btn-outline-primary btn-center" 
+            title="Удалить"
+              @click.stop="deleteVisibleConfirm"
+            >
+              <i class="bi bi-trash3"></i>
+            </div>
+            <div class="btn btn-outline-primary btn-center"
+              title="Добавить вопрос"
+              @click.stop="addQuestion"
+            >
+              <i class="bi bi-question-square"></i>
+            </div>
+            <div class="btn btn-outline-primary btn-center"
+              title="Импортировать вопросы из файла"
+              @click.stop="importQuestionsFile"
+            >
+              <i class="bi bi-cloud-arrow-down"></i>
+            </div>
           </div>
         </div>
+        
         <MyConfirm
           :message="confirmMessage"
           @yesConfirm="confirmYes"
@@ -84,7 +92,10 @@ export default {
   ]),
   },
   methods:{
-    ...mapActions(["deleteTestDb"]),
+    ...mapActions([
+      "deleteTestDb", 
+      "setTest"
+    ]),
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
       return img
@@ -114,10 +125,19 @@ export default {
       this.confirmYes = this.deleteTest
     },
     importQuestionsFile(){
+      this.setTest(this.item)
       this.$router.push({name: 'adminsImportId',  params: {id: this.item.id}})
     },
-    addQuestion( ){
-      this.$router.push({path: '/admins/questions', params: {id: this.item.id} })
+    addQuestion(){
+      this.setTest(this.item)
+      this.$router.push({
+        name: 'adminsQuestionsCreate', 
+        params: {
+          testId: this.item.id,
+          questionId:0,
+          operation: "create"
+        }
+      })
     }
   }
 } 
@@ -134,16 +154,34 @@ export default {
   .item__card{
     background-color: #e2e5fc;
     padding: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-width: 0;
-    word-wrap: break-word;
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: 0.25rem;
-    flex-wrap: wrap;
     position: relative;
+    &-header{
+      flex: 10;
+      
+    }
+    &-title{
+      min-height: 40px;
+    }
+    &-info{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      &-item{
+        flex: 1;
+        min-width: 150px;
+      }
+    }
+    &-row{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-width: 0;
+      word-wrap: break-word;
+      flex-wrap: wrap;
+    }
     &__img{
       height: 100px;
       width: 150px;

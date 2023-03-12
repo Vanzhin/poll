@@ -67,7 +67,12 @@ export default {
   transition:transform .3s,-webkit-transform .3s;
   bottom:0!important;
   height:auto!important;
-  z-index: 18;
+  z-index: 16;
+  @media (max-width: 768px) {
+    width: 60px;
+    overflow:hidden;
+    
+    }
 }
 .app-sidenav.open{
   -webkit-transform:translateX(0);

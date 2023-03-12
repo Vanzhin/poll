@@ -1,5 +1,4 @@
 import { 
-  SET_QUESTION, 
   SET_TEST_TITLE, 
   SET_TEST,
   SET_TESTS
@@ -73,11 +72,7 @@ const actions = {
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
-      console.log("Ошибка при получении теста", e)
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
-        ${e.response.data.error[0]}.`
-      })
+      dispatch('setMessageError', e)
     }
   },
   setTestTitle ({dispatch, commit}, {title}) {
@@ -105,14 +100,11 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("importFileTestDb - ",  data)
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', data)
           // commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-      console.log("importFileTestDb err- ", e);
-      dispatch('setMessage', {err: true, 
-         mes: `${e.response.data.message}  ${e.response.data.error[0]}`
-      })
+      dispatch('setMessageError', e)
     }
   },
   setTest({dispatch ,commit}, test) {
@@ -149,11 +141,7 @@ const actions = {
           
         })
     } catch (e) {
-      console.log("Ошибка при получении теста", e)
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
-        ${e.response.data.error[0]}.`
-      })
+      dispatch('setMessageError', e)
     }
   },
   async deleteTestDb({dispatch, commit}, {id, parentId, token, page, type}){
@@ -169,22 +157,16 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("deleteTestDb - удалено",  data)
-          if (type === "test") {
+        
+          if ( type === "test") {
             dispatch("getTestsDB",  { page })
           } else {
-            if ( type === "test") {
-              dispatch("getTestsDB",  { page })
-              
-            } else {
-            dispatch("getCategorysDB",  { page: null , parentId})}}
-            dispatch('setMessage', {err: false, mes: data.message})
-          })
+            dispatch("getCategorysDB",  { page: null , parentId})
+          }
+          dispatch('setMessage', data)
+        })
     } catch (e) {
-      console.log("Ошибка при удалении", e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
-        ${e.response.data.error[0]}.`
-      })
+      dispatch('setMessageError', e)
     }
   },
   async createTest ({dispatch, commit}, {questionSend, token}){
@@ -205,15 +187,11 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("createTest - создано",  data)
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage', data)
           // dispatch("getCategorysDB",  { page: null , parentId: id });
         })
     } catch (e) {
-      console.log("Ошибка при создании",e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
-        ${e.response.data.error[0]}.`
-      })
+      dispatch('setMessageError', e)
     }
   },
   async editTest ({dispatch, commit}, {id, questionSend, token}){
@@ -234,15 +212,11 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("editTest - изменено",  data)
-          dispatch('setMessage', {err: false, mes: data.message})
+          dispatch('setMessage',  data)
           // dispatch("getCategorysDB", { page: null , parentId: id });
         })
     } catch (e) {
-      console.log("Ошибка при изменении:", e);
-      dispatch('setMessage', {err: true, 
-        mes: `${e.response.data.message}!  
-        ${e.response.data.error[0]}.`
-      })
+      dispatch('setMessageError', e)
     }
   },
 };
@@ -271,12 +245,6 @@ const mutations = {
     return state.cources = {
       active: 0, list: cources, isLoaded: true
     }
-  },
-  [SET_QUESTION] (state, id) {
-    if (state.cources.list.hasOwnProperty(id)) {
-      return state.cources.active = id;
-    }
-    return;
   },
   [SET_TEST_TITLE] (state, id) {
     return state.testTitle = state.tests.find(test => {

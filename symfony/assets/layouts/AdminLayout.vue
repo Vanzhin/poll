@@ -31,13 +31,14 @@
     padding:2rem;
     background-color: rgb(237 237 237);
     min-height: 91%;
-    z-index: 19;
+    z-index: 15;
   };
   &-content{
     padding-top:80px;
     padding-left:250px;
     transition:padding-left .3s;
     position:relative;
+    z-index: 15;
     @media (max-width: 768px) {
       padding-left:60px;
     }

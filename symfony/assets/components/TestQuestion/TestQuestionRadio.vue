@@ -1,15 +1,18 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      />  
       <input type="hidden" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
+        :id="'a_' +  question.id"
+        :name="question.id" 
         :value="answerSelect">
       <hr>
       <i class="i">Выберите правильный ответ.</i>
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in qestion.variant" 
+        v-for="(answer, ind ) in question.variant" 
         :key="answer"
       >
         <input type="radio" 
@@ -18,14 +21,19 @@
           :value= "ind "
           v-model="answerSelect"
           v-if="answer!==''"
-          class="custom-control-input"  >
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
-        </label>
-        
+          class="custom-control-input">
+        <div class="">
+          <img :src="answer.image"  
+            v-if="answer.image"
+            class="img"
+          /> 
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm" 
+            :for="'q' + (index + 1) + (ind + 1)"
+          >{{ answer.title ? answer.title : answer}}
+          </label>
+        </div>
       </div>
       <br>
       
@@ -35,7 +43,7 @@
 <script>
 
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       count: 0,
@@ -56,7 +64,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .img{
+    height: 130px;
+    margin-left: 10px;
+    max-width: 170px;
+  }
   .shadow{
     padding: 5px;
   }
@@ -68,11 +80,12 @@ export default {
     padding-left: 1.5rem;
   }
   .f_sm {
-      font-size: 0.9rem;
+    font-size: 0.9rem;
   }
   .custom-control-label {
-      position: relative;
-      margin-bottom: 0;
-      margin-left: 10px;
+    position: relative;
+    margin-bottom: 0;
+    margin-left: 10px;
+    word-wrap: break-word;
   }
 </style>

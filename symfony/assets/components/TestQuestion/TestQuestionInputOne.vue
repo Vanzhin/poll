@@ -1,21 +1,21 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ qestion.title }}</i>
-      
-      <div class="custom-control custom-radio"
-        
-      >
-        
+      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      /> 
+      <hr>
+      <div class="custom-control custom-radio">
         <label 
           class="custom-control-label f_sm" 
-          :for="'a_' +  qestion.id"
+          :for="'a_' +  question.id"
         >Введите ответ:
         </label>
         <hr>
         <input type="text" 
-        :id="'a_' +  qestion.id"
-        :name="qestion.id" 
+        :id="'a_' +  question.id"
+        :name="question.id" 
         :value="answer">
       
       </div>
@@ -27,7 +27,7 @@
 <script>
 // v-model="answer"
 export default {
-  props: ['qestion', 'index' ],
+  props: ['question', 'index' ],
   data() {
     return {
       count: 0,
