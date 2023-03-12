@@ -23,7 +23,7 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'category', 'admin'])]
+    #[Groups(['main', 'category', 'admin', 'admin_test_general'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(
@@ -34,17 +34,17 @@ class Test
         maxMessage: 'test.title.max_length',
     )]
     #[ORM\Column(length: 255)]
-    #[Groups(['main', 'category', 'admin'])]
+    #[Groups(['main', 'category', 'admin', 'admin_test_general'])]
     private ?string $title = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['main', 'admin', 'category'])]
+    #[Groups(['main', 'admin', 'category', 'admin_test_general'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, unique: true)]
     #[Gedmo\Slug(fields: ['title'])]
-    #[Groups(['main', 'category', 'admin'])]
+    #[Groups(['main', 'category', 'admin', 'admin_test_general'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class, orphanRemoval: true)]
@@ -54,7 +54,7 @@ class Test
     private Collection $section;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class, orphanRemoval: true)]
-    #[Groups(['main', 'category'])]
+    #[Groups(['main', 'category', 'admin'])]
     private Collection $ticket;
 
     #[Assert\NotNull(
@@ -63,13 +63,13 @@ class Test
     #[ORM\ManyToOne(inversedBy: 'test')]
     private ?Category $category = null;
 
-    #[Groups(['admin'])]
+    #[Groups(['admin_test_general'])]
     private ?int $questionCount = null;
 
-    #[Groups(['admin'])]
+    #[Groups(['admin_test_general'])]
     private ?int $sectionCount = null;
 
-    #[Groups(['admin'])]
+    #[Groups(['admin_test_general'])]
     private ?int $ticketCount = null;
 
     /**

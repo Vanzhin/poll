@@ -35,24 +35,26 @@ class TestController extends AbstractController
             $response['test'] = $pagination;
 
         }
+        foreach ($pagination as $test) {
+            $test->setQuestionCount($repository->getQuestionCount($test));
+            $test->setSectionCount($repository->getSectionCount($test));
+            $test->setTicketCount($repository->getTicketCount($test));
+        }
         $response['pagination'] = $paginator->getInfo($pagination);
         return $this->json(
             $response,
             200,
             ['charset=utf-8'],
             [
-                'groups' => 'admin',
+                'groups' => 'admin_test_general',
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
     #[Route('/api/admin/test/{id}', name: 'app_api_admin_test_show', methods: 'GET')]
-    public function show(Test $test, TestRepository $repository): JsonResponse
+    public function show(Test $test): JsonResponse
     {
-        $test->setQuestionCount($repository->getQuestionCount($test));
-        $test->setSectionCount($repository->getSectionCount($test));
-        $test->setTicketCount($repository->getTicketCount($test));
         return $this->json(
             $test,
             200,
