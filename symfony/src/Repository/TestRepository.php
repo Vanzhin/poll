@@ -7,6 +7,8 @@ use App\Entity\Question;
 use App\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -67,11 +69,22 @@ class TestRepository extends ServiceEntityRepository
         return $queryBuilder ?? $this->createQueryBuilder('te');
     }
 
-    public function findLastUpdatedByCategoryQuery(Category $category):QueryBuilder
+    public function findLastUpdatedByCategoryQuery(Category $category): QueryBuilder
     {
         return $this->findLastUpdatedQuery()
             ->andWhere('te.category = :categoryId')
             ->setParameters(['categoryId' => $category->getId()]);
+    }
+
+    public function getQuestionCount(Test $test): int
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->select('COUNT(qu.id)')
+            ->join('te.question', 'qu')
+            ->andWhere('te.id = :testId')
+            ->setParameters(['testId' => $test->getId()])
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 

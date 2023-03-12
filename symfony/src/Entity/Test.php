@@ -63,6 +63,26 @@ class Test
     #[ORM\ManyToOne(inversedBy: 'test')]
     private ?Category $category = null;
 
+    #[Groups(['admin'])]
+    private ?int $questionCount = null;
+
+    /**
+     * @return int|null
+     */
+
+    public function getQuestionCount(): ?int
+    {
+        return $this->questionCount;
+    }
+
+    /**
+     * @param int|null $questionCount
+     */
+    public function setQuestionCount(?int $questionCount): void
+    {
+        $this->questionCount = $questionCount;
+    }
+
     public function __construct()
     {
         $this->question = new ArrayCollection();

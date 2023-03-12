@@ -48,8 +48,9 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/admin/test/{id}', name: 'app_api_admin_test_show', methods: 'GET')]
-    public function show(Test $test): JsonResponse
+    public function show(Test $test, TestRepository $repository): JsonResponse
     {
+        $test->setQuestionCount($repository->getQuestionCount($test));
         return $this->json(
             $test,
             200,
