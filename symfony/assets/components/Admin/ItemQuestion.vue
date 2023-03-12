@@ -35,24 +35,26 @@
         :index="index"
       />
     </div>
-    <div class="btn-group" >
-      <div class="btn btn-outline-primary btn-center"
-        title="Редактировать"
-        @click.stop="editQuestion"
-      >
-        <i class="bi bi-pencil"></i>
-      </div>
-      <div class="btn btn-outline-primary btn-center" 
-      title="Удалить"
-        @click.stop="deleteVisibleConfirm"
-      >
-        <i class="bi bi-trash3"></i>
-      </div>
-      <div class="btn btn-outline-primary btn-center"
-        title="Утвердить"
-        @click.stop="addQuestion"
-      >
-        <i class="bi bi-file-check"></i>
+    <div class="block-button">
+      <div class="btn-group">
+        <div class="btn btn-outline-primary btn-center"
+          title="Редактировать"
+          @click.stop="editQuestion"
+        >
+          <i class="bi bi-pencil"></i>
+        </div>
+        <div class="btn btn-outline-primary btn-center" 
+        title="Удалить"
+          @click.stop="deleteVisibleConfirm"
+        >
+          <i class="bi bi-trash3"></i>
+        </div>
+        <div class="btn btn-outline-primary btn-center"
+          title="Утвердить"
+          @click.stop="addQuestion"
+        >
+          <i class="bi bi-file-check"></i>
+        </div>
       </div>
     </div>
   </div>
@@ -137,6 +139,9 @@ export default {
   .block{
     background-color: rgb(207 207 199);
     padding: 10px ;
+  }
+  .block-button{
+    padding: 0 10px 10px 10px;
   }
   .title{
     margin: 10px;

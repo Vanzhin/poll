@@ -17,16 +17,18 @@
           v-if="answer!==''"
           disabled
           class="custom-control-input"  >
-        <img :src="answer.image" width="200" 
-          v-if="answer.image"
-        />  
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-         
-        >{{ answer.title }}
-        </label>
-        
+        <div class="">
+          <img :src="answer.image" 
+            v-if="answer.image"
+            class="img"
+          />  
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm " 
+          
+          >{{ answer.title }}
+          </label>
+        </div>
       </div>
       <br>
       
@@ -62,7 +64,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .img{
+    height: 130px;
+    margin-left: 10px;
+    max-width: 170px;
+  }
   .shadow{
     padding: 5px;
   }
@@ -72,6 +78,8 @@ export default {
     align-items:flex-start;
     min-height: 1.5rem;
     padding-left: 1.5rem;
+    margin-top: 5px;
+    align-items: center;
   }
   .f_sm {
       font-size: 0.9rem;
@@ -80,5 +88,6 @@ export default {
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
+      word-wrap: break-word;
   }
 </style>

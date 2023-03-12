@@ -4,7 +4,8 @@
       <i><b>{{ index+1 }})</b> {{ question.title }}</i>
       <img :src="question.image" width="200" 
         v-if="question.image"
-      />  
+      /> 
+      <hr> 
       <div class="custom-control custom-radio">
         <label 
           class="custom-control-label f_sm" 

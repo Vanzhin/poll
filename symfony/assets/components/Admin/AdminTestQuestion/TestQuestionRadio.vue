@@ -16,20 +16,21 @@
           v-if="answer!==''"
           v-model="answerSelect"
           disabled
-          class="custom-control-input">
-        <img :src="answer.image" width="200" 
-          v-if="answer.image"
-        />  
-
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-        >{{ answer.title }}
-        </label>
-
+          class="custom-control-input"
+        >
+        <div class="">
+          <img :src="answer.image"  
+            v-if="answer.image"
+            class="img"
+          /> 
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm" 
+          >{{ answer.title }}
+          </label> 
+        </div>
       </div>
       <br>
-      
     </div>       
   </div>
 </template>
@@ -57,16 +58,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .img{
+    height: 130px;
+    margin-left: 10px;
+    max-width: 170px;
+  }
+  .radio-block{
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
   .shadow{
     padding: 5px;
   }
-  .custom-control {
-    position: relative;
-    display: flex;
-    align-items:flex-start;
-    min-height: 1.5rem;
-    padding-left: 1.5rem;
+  .custom{
+    &-control {
+      position: relative;
+      display: flex;
+      align-items:flex-start;
+      min-height: 1.5rem;
+      padding-left: 1.5rem;
+      margin-top: 5px;
+
+      align-items: center;
+    }
   }
   .f_sm {
       font-size: 0.9rem;
@@ -75,5 +90,6 @@ export default {
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
+      word-wrap: break-word;
   }
 </style>

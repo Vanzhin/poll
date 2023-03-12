@@ -13,8 +13,9 @@
           :key="answer"
         >
         <div class="block_drop"  :dataname="answer.sort"></div>
-          <img :src="answer.image" width="200" 
+          <img :src="answer.image" 
             v-if="answer.image"
+            class="img"
           />  
           <label 
             v-if="answer!==''"
@@ -60,7 +61,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  
+   .img{
+    height: 130px;
+    margin: 5px;
+    max-width: 170px;
+  }
   .shadow{
     padding: 5px;
   }
