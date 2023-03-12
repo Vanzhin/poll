@@ -54,7 +54,7 @@ class Test
     private Collection $section;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class, orphanRemoval: true)]
-    #[Groups(['main', 'category', 'admin'])]
+    #[Groups(['main', 'category'])]
     private Collection $ticket;
 
     #[Assert\NotNull(
@@ -65,6 +65,12 @@ class Test
 
     #[Groups(['admin'])]
     private ?int $questionCount = null;
+
+    #[Groups(['admin'])]
+    private ?int $sectionCount = null;
+
+    #[Groups(['admin'])]
+    private ?int $ticketCount = null;
 
     /**
      * @return int|null
@@ -81,6 +87,38 @@ class Test
     public function setQuestionCount(?int $questionCount): void
     {
         $this->questionCount = $questionCount;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getSectionCount(): ?int
+    {
+        return $this->sectionCount;
+    }
+
+    /**
+     * @param int|null $sectionCount
+     */
+    public function setSectionCount(?int $sectionCount): void
+    {
+        $this->sectionCount = $sectionCount;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getTicketCount(): ?int
+    {
+        return $this->ticketCount;
+    }
+
+    /**
+     * @param int|null $ticketCount
+     */
+    public function setTicketCount(?int $ticketCount): void
+    {
+        $this->ticketCount = $ticketCount;
     }
 
     public function __construct()

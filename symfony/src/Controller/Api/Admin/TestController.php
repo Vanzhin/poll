@@ -51,6 +51,8 @@ class TestController extends AbstractController
     public function show(Test $test, TestRepository $repository): JsonResponse
     {
         $test->setQuestionCount($repository->getQuestionCount($test));
+        $test->setSectionCount($repository->getSectionCount($test));
+        $test->setTicketCount($repository->getTicketCount($test));
         return $this->json(
             $test,
             200,

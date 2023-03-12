@@ -87,6 +87,28 @@ class TestRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getSectionCount(Test $test): int
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->select('COUNT(se.id)')
+            ->join('te.section', 'se')
+            ->andWhere('te.id = :testId')
+            ->setParameters(['testId' => $test->getId()])
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getTicketCount(Test $test): int
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->select('COUNT(ti.id)')
+            ->join('te.ticket', 'ti')
+            ->andWhere('te.id = :testId')
+            ->setParameters(['testId' => $test->getId()])
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 
 
 
