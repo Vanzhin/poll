@@ -30,14 +30,14 @@
           >
           <div class="custom-radio img_block">
             <textarea rows="1" required
-              :name="operationEdit ? `variant[${answer.id}][title]` : `variant[a${ind}][title]`"
+              :name="`variant[${answer.id}][title]`"
               v-model= "answer.title"
               class="textarea_input" 
             >
             </textarea> 
             <input type="hidden" 
-              :name="operationEdit ? `variant[${answer.id}][correct]` : `variant[a${ind}][correct]`" 
-              :value="answerSelect.includes(operationEdit ? answer.id : ind)"
+              :name="`variant[${answer.id}][correct]`" 
+              :value="answerSelect.includes( answer.id )"
             >
             <i class="bi bi-eraser custom-close" title="Очистить поле"
               @click="answer.title = ''"
@@ -51,20 +51,25 @@
         </div>
         <div class="mb-3 w-100">
           <div class="img_block">
-            <img :src="answer.url"  width="200"
-              v-if="answer.url !== ''"
+            <img :src="answer.image"  width="200"
+              v-if="answer.image !== ''"
               
             /> 
             <!-- v-if="typeof answer.file === 'object'" -->
             <i class="bi bi-x-lg custom-close" title="Удалить изображение"
               @click="answerImgDelete(ind)"
-            v-if="typeof answer.file === 'object'"
+            v-if="answer.image !== ''"
           ></i>
           </div> 
-          <label class="label">Прикрепить изображение </label>
+          <label class="label"
+            v-if="answer.image === ''"
+          >Прикрепить изображение </label>
+          <label class="label"
+            v-else
+          >Изменить изображение</label>
           <input  class="" type="file" accept="image/*"  
             @change="(e)=> changeAnswerImg(e, ind)"
-            :name="operationEdit ? `variantImage[${answer.id}]` : `variantImage[a${ind}]`"
+            :name="`variantImage[${answer.id}]`"
             :value="answer.value"
           >
         </div>
@@ -86,10 +91,10 @@ export default {
       count: 0,
       answerSelect: [],
       answers: [{
-        id:"",
+        id:"a1",
         title:"",
         file:"",
-        url:"",
+        image:"",
         value:""
       }],
       numberAnswers: 1,
@@ -112,7 +117,7 @@ export default {
         return
       }
       if ( this.answers.length < this.numberAnswers) {
-        this.answers.push({id:"", title:"", file:"", url:"", value:""})
+        this.answers.push({id:'a' + (this.answers.length + 1), title:"", file:"", image:"", value:""})
       } else {
         this.answers.pop()
       }
@@ -120,7 +125,7 @@ export default {
     changeAnswerImg(e, ind){
       if (typeof e.target.files[0] === 'object'){
         this.answers[ind].file = e.target.files[0]
-        this.answers[ind].url = URL.createObjectURL(e.target.files[0])
+        this.answers[ind].image = URL.createObjectURL(e.target.files[0])
         this.answers[ind].value = e.target.value
       }
     },
@@ -132,7 +137,7 @@ export default {
     },
     answerImgDelete(ind){
       this.answers[ind].file = ''
-      this.answers[ind].url = ''
+      this.answers[ind].image = ''
       this.answers[ind].value = ''
     },
   },
@@ -147,7 +152,7 @@ export default {
             id: item.id,
             title: item.title,
             file: '',
-            url: item.image ? item.image : '',
+            image: item.image ? item.image : '',
             value: ''
           }
         })

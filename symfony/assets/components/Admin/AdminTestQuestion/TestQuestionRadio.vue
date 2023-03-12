@@ -84,12 +84,12 @@ export default {
     }
   }
   .f_sm {
-      font-size: 0.9rem;
+    font-size: 0.9rem;
   }
   .custom-control-label {
-      position: relative;
-      margin-bottom: 0;
-      margin-left: 10px;
-      word-wrap: break-word;
+    position: relative;
+    margin-bottom: 0;
+    margin-left: 10px;
+    word-wrap: break-word;
   }
 </style>

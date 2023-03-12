@@ -2,6 +2,9 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      />  
       <input type="hidden" 
         :id="'a_' +  question.id"
         :name="question.id" 
@@ -22,7 +25,10 @@
           :dataname="answer.sort"
         >
         <div class="block_drop"  :dataname="answer.sort"></div>
-        
+          <img :src="answer.image" 
+            v-if="answer.image"
+            class="img"
+          />  
           <label 
             v-if="answer!==''"
             class="custom-control-label f_sm" 
@@ -92,7 +98,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  
+  .img{
+    height: 130px;
+    margin: 5px;
+    max-width: 170px;
+  }
   .shadow{
     padding: 5px;
   }

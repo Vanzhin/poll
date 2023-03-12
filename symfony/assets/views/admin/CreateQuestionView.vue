@@ -10,7 +10,9 @@
       <h4
         v-if="operation === 'edit'"
       >Отредактируйте вопрос</h4>
-      <div class="test">
+      <div class="test"
+        v-if="operation === 'create'"
+      >
         <div class="dropdown">
           <button class="dropdown-toggle" 
             type="button" id="dropdownMenuButton1" 
@@ -153,10 +155,13 @@
         let timerId = setInterval(() => {
           if ( !this.getMessage) {
             clearInterval(timerId)
-            if (this.message ){this.selectTypeQuestion = ""}
-            if ( this.operation === 'edit'){
-              this.$router.go(-1)
+            if (this.message){
+              this.selectTypeQuestion = ""
+              if ( this.operation === 'edit'){
+                this.$router.go(-1)
+              }
             }
+            
           }
         }, 200);
         // this.$router.push({ path:'/result'})
@@ -168,6 +173,7 @@
     created(){
      
       if ( this.operation === 'edit'){
+        const typeQuestion = this.getQuestion.type.title ? this.getQuestion.type.title : this.getQuestion.type
         console.log(this.typeQuestions.find(item => item.type = this.getQuestion.type))
         const item = this.typeQuestions.find(item => item.type = this.getQuestion.type)
         this.selectTypeQuestion = {

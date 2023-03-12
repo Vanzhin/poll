@@ -15,9 +15,9 @@
               </div>
             </div>
             <div class="item__card-info">
-              <div class="item__card-info-item">Вопросов: {{item.countQuestion  }} </div>
-              <div class="item__card-info-item">Билетов: {{item.countTicket  }} </div>
-              <div class="item__card-info-item">Секций: {{item.countSection  }} </div>
+              <div class="item__card-info-item">Вопросов: {{item.questionCount  }} </div>
+              <div class="item__card-info-item">Билетов: {{item.ticketCount  }} </div>
+              <div class="item__card-info-item">Секций: {{item.sectionCount  }} </div>
             </div>
           </div>
           <div class="btn-group" >

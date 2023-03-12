@@ -331,7 +331,7 @@ const actions = {
     console.log("id - ",  id)
     let url = ''
     if (id === "rnd20" || id === "rnd20t") {
-      url = `/api/test/${slug}/question/10`
+      url = `/api/test/${slug}/question/20`
     } else if (id === "rnd"){
       const i = Math.floor(Math.random() * (30 - 1) )
       console.log("i - ",  i)

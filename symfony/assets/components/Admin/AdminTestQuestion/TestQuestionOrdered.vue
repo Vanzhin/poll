@@ -12,7 +12,7 @@
           v-for="(answer, ind ) in questionVariant" 
           :key="answer"
         >
-        <div class="block_drop"  :dataname="answer.sort"></div>
+        <div class="block_drop" ></div>
           <img :src="answer.image" 
             v-if="answer.image"
             class="img"
@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-   .img{
+  .img{
     height: 130px;
     margin: 5px;
     max-width: 170px;

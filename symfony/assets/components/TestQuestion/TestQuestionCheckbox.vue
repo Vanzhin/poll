@@ -2,17 +2,15 @@
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
       <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      <img :src="question.image" width="200" 
+        v-if="question.image"
+      />  
       <input type="hidden" 
         :id="'a_' +  question.id"
         :name="question.id" 
         :value="answerSelect">
       <hr>
-      <i class="i"
-        v-if="admin"
-      >Варианты ответов.</i>
-      <i class="i"
-        v-else
-      >Выберите правильные ответы.</i>
+      <i class="i">Выберите правильные ответы.</i>
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in question.variant" 
         :key="answer"
@@ -23,22 +21,26 @@
           :value= "ind "
           v-model="answerSelect"
           v-if="answer!==''"
-          class="custom-control-input"  >
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-          :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
-        </label>
-        
+          class="custom-control-input">
+        <div class=""> 
+          <img :src="answer.image" 
+            v-if="answer.image"
+            class="img"
+          />   
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm" 
+            :for="'q' + (index + 1) + (ind + 1)"
+          >{{ answer.title ? answer.title : answer }}
+          </label>
+        </div>
       </div>
       <br>
-      
     </div>       
   </div>
 </template>
 <script>
-// v-model="answer"
+
 export default {
   props: ['question', 'index', 'admin' ],
   data() {
@@ -66,7 +68,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .img{
+    height: 130px;
+    margin-left: 10px;
+    max-width: 170px;
+  }
   .shadow{
     padding: 5px;
   }
@@ -84,5 +90,6 @@ export default {
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
+      word-wrap: break-word;
   }
 </style>
