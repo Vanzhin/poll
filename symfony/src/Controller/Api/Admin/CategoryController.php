@@ -40,7 +40,13 @@ class CategoryController extends AbstractController
             $test = $parent->getTest();
             if (count($test) > 0) {
                 $pagination = $paginator->getPagination($testRepository->findLastUpdatedByCategoryQuery($parent));
+                foreach ($pagination as $test) {
+                    $test->setQuestionCount($testRepository->getQuestionCount($test));
+                    $test->setSectionCount($testRepository->getSectionCount($test));
+                    $test->setTicketCount($testRepository->getTicketCount($test));
+                }
                 $response['test'] = $pagination;
+
             }
         }
         $response['pagination'] = $paginator->getInfo($pagination);
