@@ -98,7 +98,7 @@
       console.log(this.$route)
       console.log(this.parentId)
       if (this.parentId){
-        await this.getCategorysDB({page: null, parentId: this.parentId})
+        await this.getCategorysDB({page: null, parentId: this.parentId, admin: true})
       } else { 
         await this.getTestsDB({}) 
       }

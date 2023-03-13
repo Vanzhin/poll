@@ -8,8 +8,6 @@
       type="getTestsDB"
     />
   </div>
-
-  
 </template>
  
 <script>
@@ -23,7 +21,6 @@
     },
     data() {
       return {
-        isLoader: true,
       }
     },
     computed:{ 

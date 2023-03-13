@@ -104,7 +104,7 @@
       },
       async categoryRoute({id}){
         this.isLoader = true
-        await this.getCategorysDB({parentId: id})
+        await this.getCategorysDB({parentId: id, admin: true})
         if (this.getTests) {
           console.log('переход к списку тестов - ', this.getTests)
             this.$router.push({name: 'adminsTests', params: {id } })

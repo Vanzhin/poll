@@ -70,7 +70,7 @@
               <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
               <input  class="" type="file" accept="image/*"  
                 @change="(e)=> changeAnswerImg(e, ind)"
-                :name="`variantImage[${answer.id}]`"
+                :name="(answer.value === '')&&(answer.image === '')? '' : `variantImage[${answer.id}]`"
                 :value="answer.value"
               >
             </div>
@@ -97,12 +97,12 @@ export default {
       answers: [{
         id: 'a1',
         title: "",
-        file: "",
         image: "",
         value: "",
         sort: 0,
       }],
       numberAnswers: 1,
+      uniqueNumber: 1,
       showPreviewQuestionImg: false,
       drag: false,
       operation: this.$route.params.operation,
@@ -129,34 +129,38 @@ export default {
         return
       }
       if ( this.answers.length < this.numberAnswers) {
+        ++this.uniqueNumber
         this.answers.push({
-          id: 'a' + (this.answers.length + 1),
+          id: 'a' + (this.uniqueNumber),
           title: "",
-          file: "",
           image: "",
           value: "",
           sort: this.answers.length 
         })
       } else {
+        const arr = this.answerSelect.filter(item =>{ 
+         return item !== this.answers[this.answers.length - 1].id})
+        this.answerSelect = arr
         this.answers.pop()
       }
     },
    
     changeAnswerImg(e, ind){
       if (typeof e.target.files[0] === 'object'){
-        this.answers[ind].file = e.target.files[0]
         this.answers[ind].image = URL.createObjectURL(e.target.files[0])
         this.answers[ind].value = e.target.value
       }
     },
     answerDelete(ind){
       if (this.answers.length > 1){
+        const arr = this.answerSelect.filter(item =>{ 
+          return item !== this.answers[ind].id})
+        this.answerSelect = arr
         this.answers.splice(ind, 1);
         this.numberAnswers = this.answers.length
       }
     },
     answerImgDelete(ind){
-      this.answers[ind].file = ''
       this.answers[ind].image = ''
       this.answers[ind].value = ''
     },
@@ -181,7 +185,7 @@ export default {
     console.log(this.getQuestion)
     if (this.operationEdit) {
       this.answerSelect = this.getQuestion.answer
-      this.numberAnswers = this.getQuestion.variant.length
+      this.uniqueNumber = this.numberAnswers = this.getQuestion.variant.length
       this.answers = this.getQuestion.variant.map(item => 
         {
           return {

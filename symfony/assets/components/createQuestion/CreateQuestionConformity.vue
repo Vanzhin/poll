@@ -67,17 +67,16 @@
                   </div>
                 </div>
               </div>
-              
             </div>
             <div class="mb-3 w-100">
               <div class="img_block">
-                <img :src="answer.url"  width="200"
-                  v-if="typeof answer.file === 'object'"
+                <img :src="answer.image"  width="200"
+                  v-if="answer.image !== ''"
                 /> 
                 <div class="custom-block">
                   <i class="bi bi-x-lg custom-close" title="Удалить изображение"
                     @click="answerImgDelete(ind)"
-                  v-if="typeof answer.file === 'object'"
+                  v-if="answer.image !== ''"
                   ></i>
                 </div>
               </div> 
@@ -86,7 +85,7 @@
               <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
               <input  class="" type="file" accept="image/*"  
                 @change="(e)=> changeAnswerImg(e, ind)"
-                :name="`variantImage[a${ind}]`"
+                :name="(answer.value === '')&&(answer.image === '') ? '' :`variantImage[a${ind}]`"
                 :value="answer.value"
               >
             </div>
@@ -115,9 +114,9 @@ export default {
       count: 0,
       answerSelect: [1],
       answers: [{
+        id:"",
         title: "",
-        file: "",
-        url: "",
+        image: "",
         value: "",
         subTitle: "",
         sort: 0,
@@ -144,9 +143,9 @@ export default {
       }
       if ( this.answers.length < this.numberAnswers) {
         this.answers.push({
+          id:"",
           title: "",
-          file: "",
-          url: "",
+          image: "",
           value: "",
           subTitle: "",
           sort: this.answers.length 
@@ -157,8 +156,7 @@ export default {
     },
     changeAnswerImg(e, ind){
       if (typeof e.target.files[0] === 'object'){
-        this.answers[ind].file = e.target.files[0]
-        this.answers[ind].url = URL.createObjectURL(e.target.files[0])
+        this.answers[ind].image = URL.createObjectURL(e.target.files[0])
         this.answers[ind].value = e.target.value
       }
     },
@@ -169,8 +167,7 @@ export default {
       }
     },
     answerImgDelete(ind){
-      this.answers[ind].file = ''
-      this.answers[ind].url = ''
+      this.answers[ind].image = ''
       this.answers[ind].value = ''
     },
     onDragStart(e , item) {
@@ -188,7 +185,8 @@ export default {
       } else this.answers[item].sort = parseInt(e.toElement.attributes.dataname.value) - 0.5
       this.drag = false
     }
-  } 
+  },
+   
 }
 
 </script>

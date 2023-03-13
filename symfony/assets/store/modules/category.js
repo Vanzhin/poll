@@ -15,22 +15,23 @@ const state = () => ({
 })
 
 const actions = {
-  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null }) {
+  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null }) {
     const config = {
       method: 'get',
-      url: "/api/category",
+      url: `/api${admin ? '/admin': '' }/category`,
       headers: { 
         Accept: 'application/json', 
         // Authorization: `Bearer ${token}`
       }
     };
+
     if (parentId) {
       config.url = config.url + `?parent=${parentId}`
     }
     if (page) {
       config.url = config.url + `${parentId ? "&" : "?"}` + `page=${page}`
     }
-    
+    console.log("getCategoryDB - ",  config)
   try{
     await axios(config)
       .then(({data})=>{

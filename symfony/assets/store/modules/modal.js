@@ -15,7 +15,7 @@ const actions = {
     let message = ''
     if (data.error) {
       console.log("ошибка - ")
-      message = {err: true, mes: `${data.message}!<hr>  ${data.error[0]}`}
+      message = {err: true, mes: `${data.message}!<hr>  ${data.error[0] ? data.error[0]:''}`}
     } else {
       console.log("сообщение - ")
       message = {err: false, mes: data.message}

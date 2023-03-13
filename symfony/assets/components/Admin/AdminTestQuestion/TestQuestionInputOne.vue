@@ -13,9 +13,7 @@
         >Правильный ответ:
         </label>
         <hr>
-        <input type="text" class="input"
-          :value="question.variant[0].title"
-        >
+        <span class="input">{{ question.variant[0].title }}</span>
       </div>
       <br>
     </div>       
