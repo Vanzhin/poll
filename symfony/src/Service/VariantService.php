@@ -50,7 +50,7 @@ class VariantService
             case 'radio':
                 if ($variant->getIsCorrect()) {
                     $answers = [$variant->getId()];
-                    $question->setAnswer($answers);
+                    $question->setAnswer(array_values($answers));
 
                 } else {
                     if (in_array($variant->getId(), $question->getAnswer())) {
@@ -84,7 +84,7 @@ class VariantService
                     });
 
                 }
-                $question->setAnswer($answers);
+                $question->setAnswer(array_values($answers));
 
                 break;
         }
