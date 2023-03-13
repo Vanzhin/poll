@@ -54,7 +54,7 @@ class Test
     private Collection $section;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class, orphanRemoval: true)]
-    #[Groups(['main', 'category', 'admin'])]
+    #[Groups(['main', 'admin'])]
     private Collection $ticket;
 
     #[Assert\NotNull(
@@ -63,13 +63,13 @@ class Test
     #[ORM\ManyToOne(inversedBy: 'test')]
     private ?Category $category = null;
 
-    #[Groups(['admin_test_general'])]
+    #[Groups(['admin_test_general','category'])]
     private ?int $questionCount = null;
 
-    #[Groups(['admin_test_general'])]
+    #[Groups(['admin_test_general', 'category'])]
     private ?int $sectionCount = null;
 
-    #[Groups(['admin_test_general'])]
+    #[Groups(['admin_test_general', 'category'])]
     private ?int $ticketCount = null;
 
     /**
