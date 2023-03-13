@@ -130,7 +130,12 @@
     },
    
     methods: { 
-      ...mapActions(["saveQuestionDb", "setMessageUser"]),
+      ...mapActions([
+        "saveQuestionDb", 
+        "setMessageUser",
+        "getTestIdDb",
+        "getQuestionIdDb"
+      ]),
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       async onSubmit(e){
@@ -170,9 +175,18 @@
     async mounted(){
       
     },
-    created(){
+    async created(){
      
       if ( this.operation === 'edit'){
+        if (!this.getTest) {
+          await this.getTestIdDb({id: this.testId})
+        }
+        if (!this.getQuestion) {
+          await this.getQuestionIdDb ({id: this.questionId})
+        }
+
+        console.log(this.getTest)
+        console.log(this.getQuestion)
         const typeQuestion = this.getQuestion.type.title ? this.getQuestion.type.title : this.getQuestion.type
         console.log(this.typeQuestions.find(item => item.type = this.getQuestion.type))
         const item = this.typeQuestions.find(item => item.type = this.getQuestion.type)

@@ -27,23 +27,25 @@
     <label class="label"
       v-else
     >Изменить изображение</label>
+    
     <input  class="" type="file" accept="image/*"  
       @change="changeQuestionImg" 
-      name="questionImage"
       :value="questionImgValue"
+      :name="(questionImgUrl === '') && (questionImgValue  === '')? '' : 'questionImage'"
     >
   </div>
 </template>
 <script>
+// :name="questionImgFormVisible ? 'questionImage': ''"
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   props: ['question', 'index' ],
   data() {
     return {
       questionTitle:"",
-      questionImgFile:"",
       questionImgUrl:"",
       questionImgValue:"",
+      questionImgFormVisible: true,
       operationEdit: this.$route.params.operation === "edit"
     }
   },
@@ -56,22 +58,23 @@ export default {
   methods: {
     changeQuestionImg(e){
       if (typeof e.target.files[0] === 'object'){
-        this.questionImgFile = e.target.files[0]
+        this.questionImgFormVisible = true
         this.questionImgUrl = URL.createObjectURL(e.target.files[0])
         this.questionImgValue = e.target.value
+       
       }
     },
     questionImgDelete(){
-      this.questionImgFile = ''
       this.questionImgUrl = ''
       this.questionImgValue = ''
+      this.questionImgFormVisible = false
     }
   },
   created(){
     
     if (this.operationEdit){
-      this.questionTitle = this.getQuestion.title
-      this.questionImgUrl = this.getQuestion.image ? this.getQuestion.image :''
+      this.questionTitle = this.getQuestion.title ? this.getQuestion.title : ''
+      this.questionImgUrl = this.getQuestion.image ? this.getQuestion.image : ''
     }
   } 
 }

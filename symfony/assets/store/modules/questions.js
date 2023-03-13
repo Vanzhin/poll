@@ -29,7 +29,7 @@ const state = () => ({
   //     image: null
   //   },
   // ],
-  question:{},
+  question:null,
 
   questions:[
       {title:"На кого распространяются Правила по ",
@@ -380,6 +380,28 @@ const actions = {
         dispatch('setMessageError', e)
     }
   },
+  //получение вороса по его id
+  async getQuestionIdDb({dispatch, commit }, {id}) {
+    console.log("id - ",  id)
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/admin/question/${id}`,
+        headers: { 
+          Accept: 'application/json', 
+          // Authorization: `Bearer ${token}`
+        }
+      };
+      await axios(config)
+        .then(({data})=>{
+          console.log("getQuestionIdDb - ",  data)
+          commit("SET_QUESTION", data);
+          
+        })
+    } catch (e) {
+        dispatch('setMessageError', e)
+    }
+  },
   // отаправка результата прохождения теста на сервер
   async setResultDb({dispatch, commit, state }, {token, userAuth} ){
     console.log(JSON.stringify(state.resultTicketUser))
@@ -466,6 +488,7 @@ const actions = {
       dispatch('setMessageError', e)
     }
   },
+  //импорт вопросов из файла
   async importQuestionsFileDb({ dispatch, commit, state }, {id, token, questionSend} ){
     console.dir(questionSend)
     commit("SET_LOADER_TOGGLE")

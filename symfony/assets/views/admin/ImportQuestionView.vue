@@ -79,8 +79,8 @@
       async onSubmit(e){
         if (!this.testValue) {
           const message = {
-            err: true, 
-            mes: 'Выберите файл!'
+            error: true, 
+            message: 'Выберите файл'
           }
           this.setMessage(message)
           return

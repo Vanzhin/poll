@@ -53,9 +53,7 @@
           <div class="img_block">
             <img :src="answer.image"  width="200"
               v-if="answer.image !== ''"
-              
             /> 
-            <!-- v-if="typeof answer.file === 'object'" -->
             <i class="bi bi-x-lg custom-close" title="Удалить изображение"
               @click="answerImgDelete(ind)"
             v-if="answer.image !== ''"
@@ -69,7 +67,7 @@
           >Изменить изображение</label>
           <input  class="" type="file" accept="image/*"  
             @change="(e)=> changeAnswerImg(e, ind)"
-            :name="`variantImage[${answer.id}]`"
+            :name="(answer.value === '')&&(answer.image === '')? '' : `variantImage[${answer.id}]`"
             :value="answer.value"
           >
         </div>
@@ -93,11 +91,11 @@ export default {
       answers: [{
         id:"a1",
         title:"",
-        file:"",
         image:"",
         value:""
       }],
       numberAnswers: 1,
+      uniqueNumber: 1,
       showPreviewQuestionImg: false,
       operation: this.$route.params.operation,
       operationEdit: this.$route.params.operation === "edit"
@@ -116,27 +114,32 @@ export default {
         this.numberAnswers = 1
         return
       }
-      if ( this.answers.length < this.numberAnswers) {
-        this.answers.push({id:'a' + (this.answers.length + 1), title:"", file:"", image:"", value:""})
+      if (this.answers.length < this.numberAnswers) {
+        ++this.uniqueNumber
+        this.answers.push({id:'a' + (this.uniqueNumber), title:"", image:"", value:""})
       } else {
+        const arr = this.answerSelect.filter(item =>{ 
+         return item !== this.answers[this.answers.length - 1].id})
+        this.answerSelect = arr
         this.answers.pop()
       }
     },
     changeAnswerImg(e, ind){
       if (typeof e.target.files[0] === 'object'){
-        this.answers[ind].file = e.target.files[0]
         this.answers[ind].image = URL.createObjectURL(e.target.files[0])
         this.answers[ind].value = e.target.value
       }
     },
     answerDelete(ind){
       if (this.answers.length > 1){
+        const arr = this.answerSelect.filter(item =>{ 
+          return item !== this.answers[ind].id})
+        this.answerSelect = arr
         this.answers.splice(ind, 1);
         this.numberAnswers = this.answers.length
       }
     },
     answerImgDelete(ind){
-      this.answers[ind].file = ''
       this.answers[ind].image = ''
       this.answers[ind].value = ''
     },
@@ -145,7 +148,7 @@ export default {
     console.log(this.getQuestion)
     if (this.operationEdit) {
       this.answerSelect = this.getQuestion.answer
-      this.numberAnswers = this.getQuestion.variant.length
+      this.uniqueNumber = this.numberAnswers = this.getQuestion.variant.length
       this.answers = this.getQuestion.variant.map(item => 
         {
           return {

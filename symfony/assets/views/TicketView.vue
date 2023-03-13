@@ -25,27 +25,27 @@
             :key="question.id"
           >
             <TestQuestionRadio
-              v-if="question.type === 'radio'"
+              v-if="type(question) === 'radio'"
               :question="question"
               :index="index"
             />
             <TestQuestionCheckbox
-              v-else-if="question.type === 'checkbox'"
+              v-else-if="type(question) === 'checkbox'"
               :question="question"
               :index="index"
             />
             <TestQuestionInputOne
-              v-else-if="question.type === 'input_one'"
+              v-else-if="type(question) === 'input_one'"
               :question="question"
               :index="index"
             />
             <TestQuestionOrdered
-              v-else-if="question.type === 'order'"
+              v-else-if="type(question) === 'order'"
               :question="question"
               :index="index"
             />
             <TestQuestionConformity
-              v-else-if="question.type === 'conformity'"
+              v-else-if="type(question) === 'conformity'"
               :question="question"
               :index="index"
             />
@@ -92,13 +92,13 @@ export default {
   },
   computed:{
     ...mapGetters(["getSlug", "getRandomTicket", "getSelectTicket"]),
-    testName () {
+    testName() {
       return this.$store.getters.getTestTitleActive
     },
-    questions () {
+    questions() {
       return this.$store.getters.getQuestions
     },
-   
+    
   },
    methods: {
     ...mapActions(["getQuestionsDb", "saveResultTicketUser"]),
@@ -111,6 +111,9 @@ export default {
     },
     timerEnd(){ //написать действия при окончании времени таймера
       this.timeEnd = true
+    },
+    type(item) {
+      return item.type.title ? item.type.title : item.type
     }
   },
   async created(){
