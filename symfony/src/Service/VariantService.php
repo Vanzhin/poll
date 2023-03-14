@@ -4,12 +4,14 @@ namespace App\Service;
 
 use App\Entity\Question;
 use App\Entity\Variant;
+use App\Traits\EntityWithImage;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class VariantService
 {
+    use EntityWithImage;
     public function __construct(private readonly EntityManagerInterface $em, private readonly FileUploader $variantImageUploader)
     {
     }
@@ -106,7 +108,7 @@ class VariantService
 
     }
 
-    public function saveResponse(Variant $variant, ?UploadedFile $image): array
+    public function saveResponse(Variant $variant, UploadedFile|bool|null $image): array
     {
         try {
             if ($variant->getId()) {
@@ -114,10 +116,17 @@ class VariantService
             } else {
                 $message = 'Вариант создан';
             }
-
-            if ($image) {
-                $variant->setImage($this->variantImageUploader->uploadImage($image, $variant->getImage()));
-            };
+            switch (gettype($image)) {
+                case 'boolean':
+                    $this->imageUpdate($variant, $this->variantImageUploader, $this->em);
+                    break;
+                case 'NULL':
+                    //nothing to do
+                    break;
+                case 'object':
+                    $this->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
+                    break;
+            }
 
             $this->em->persist($variant);
             if (!$variant->getId()) {

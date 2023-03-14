@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Interfaces\EntityWithImageInterface;
 use App\Repository\VariantRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,12 +12,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: VariantRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(
     fields: ['title', 'question'],
     message: 'variant.title.unique',
 )]
 #[ORM\UniqueConstraint('variant_question_idx', ['title', 'question_id'])]
-class Variant
+class Variant implements EntityWithImageInterface
 {
 
     #[ORM\Id]

@@ -28,10 +28,9 @@ class QuestionHandler
         }
         foreach ($testData as $answerData) {
             $question = $this->entityManager->find(Question::class, $answerData["id"]);
-            $score = $this->getQuestionScore($question, $answerData["answer"]);
-
 
             if ($question) {
+                $score = $this->getQuestionScore($question, $answerData["answer"]);
                 $answer = [
                     "id" => $answerData["id"],
                     "title" => $question->getTitle(),
@@ -62,7 +61,6 @@ class QuestionHandler
             }
             $response[] = $answer;
         }
-
         return $response;
 
     }

@@ -99,6 +99,13 @@ class QuestionController extends AbstractController
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
+        if ($request->files->has('questionImage')) {
+            $image = $request->files->get('questionImage');
+
+        } else {
+            $image = false;
+
+        }
         $response = $questionService->saveResponse($question, $image);
         return $this->json($response['response'],
             $response['status'],

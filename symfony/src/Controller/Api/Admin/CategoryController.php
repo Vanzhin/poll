@@ -68,17 +68,8 @@ class CategoryController extends AbstractController
 
 
     #[Route('/api/admin/category/{id}', name: 'app_api_admin_category_show', methods: ['GET'])]
-    public function show(Category $category, AppUpLoadedAsset $upLoadedAsset): JsonResponse
+    public function show(Category $category, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
-        $dateCallback = function ($key, $innerObject, string $attributeName) use ($upLoadedAsset) {
-            if ($attributeName === 'image' && !is_null($key)) {
-                if ($innerObject instanceof Category) {
-                    return $upLoadedAsset->asset('category_upload_url', $key);
-
-                }
-            };
-        };
-
         return $this->json(
             $category,
             200,
@@ -88,7 +79,7 @@ class CategoryController extends AbstractController
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,
                 AbstractNormalizer::CALLBACKS => [
-                    'image' => $dateCallback,
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
                 ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
@@ -134,6 +125,13 @@ class CategoryController extends AbstractController
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
 
+        if ($request->files->has('categoryImage')) {
+            $image = $request->files->get('categoryImage');
+
+        } else {
+            $image = false;
+
+        }
         $response = $categoryService->saveResponse($category, $image);
         return $this->json($response['response'],
             $response['status'],
@@ -142,10 +140,10 @@ class CategoryController extends AbstractController
     }
 
     #[Route("api/admin/category/{id}/delete", name: 'app_api_admin_category_delete')]
-    public function delete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader): Response
+    public function delete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader, EntityManagerInterface $em): Response
     {
         try {
-            $categoryService->delete($category, $categoryImageUploader);
+            $categoryService->delete($category, $categoryImageUploader, $em);
 
             $response = [
                 'message' => 'Раздел удален',
@@ -164,10 +162,10 @@ class CategoryController extends AbstractController
     }
 
     #[Route("api/admin/category/{id}/image_delete", name: 'app_api_admin_category_image_delete')]
-    public function imageDelete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader): JsonResponse
+    public function imageDelete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader, EntityManagerInterface $em): JsonResponse
     {
         try {
-            $categoryService->imageDelete($category, $categoryImageUploader);
+            $categoryService->imageDelete($category, $categoryImageUploader, $em);
 
             $response = [
                 'message' => 'Фото удалено',

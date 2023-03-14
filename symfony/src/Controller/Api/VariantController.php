@@ -70,7 +70,13 @@ class VariantController extends AbstractController
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
+        if ($request->files->has('variantImage')) {
+            $image = $request->files->get('variantImage');
 
+        } else {
+            $image = false;
+
+        }
         $response = $variantService->saveResponse($variant, $image);
         return $this->json($response['response'],
             $response['status'],

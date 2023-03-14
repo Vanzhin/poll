@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\Category;
 use App\Entity\Question;
+use App\Entity\Test;
+use App\Traits\EntityWithImage;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -13,6 +15,7 @@ class CategoryService
     public function __construct(private readonly EntityManagerInterface $em, private readonly FileUploader $categoryImageUploader)
     {
     }
+    use EntityWithImage;
 
     public function make(Category $category, array $data): Category
     {
@@ -36,7 +39,7 @@ class CategoryService
         return $category;
     }
 
-    public function saveResponse(Category $category, ?UploadedFile $image): array
+    public function saveResponse(Category $category, UploadedFile|bool|null $image): array
     {
         try {
             if ($category->getId()) {
@@ -45,10 +48,17 @@ class CategoryService
                 $message = 'Раздел создан';
 
             }
-
-            if ($image) {
-                $category->setImage($this->categoryImageUploader->uploadImage($image, $category->getImage()));
-            };
+            switch (gettype($image)) {
+                case 'boolean':
+                    $this->imageUpdate($category, $this->categoryImageUploader, $this->em);
+                    break;
+                case 'NULL':
+                    //nothing to do
+                    break;
+                case 'object':
+                    $this->imageUpdate($category, $this->categoryImageUploader, $this->em, $image);
+                    break;
+            }
 
             $this->em->persist($category);
             $this->em->flush();
@@ -69,20 +79,20 @@ class CategoryService
 
     }
 
-    public function delete(Category $category): void
-    {
-
-        $this->categoryImageUploader->delete($category->getImage());
-        $this->em->remove($category);
-        $this->em->flush();
-    }
-
-    public function imageDelete(Category $category): void
-    {
-
-        $this->categoryImageUploader->delete($category->getImage());
-        $category->setImage(null);
-        $this->em->persist($category);
-        $this->em->flush();
-    }
+//    public function delete(Category $category): void
+//    {
+//
+//        $this->categoryImageUploader->delete($category->getImage());
+//        $this->em->remove($category);
+//        $this->em->flush();
+//    }
+//
+//    public function imageDelete(Category $category): void
+//    {
+//
+//        $this->categoryImageUploader->delete($category->getImage());
+//        $category->setImage(null);
+//        $this->em->persist($category);
+//        $this->em->flush();
+//    }
 }

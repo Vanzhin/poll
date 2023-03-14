@@ -8,6 +8,7 @@ use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Entity\Type;
 use App\Entity\Variant;
+use App\Traits\EntityWithImage;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class QuestionService
 {
+
+    use EntityWithImage;
 
     public function __construct(
         private readonly EntityManagerInterface $em,
@@ -105,7 +108,7 @@ class QuestionService
 
     }
 
-    public function saveResponse(Question $question, ?UploadedFile $image): array
+    public function saveResponse(Question $question, UploadedFile|bool|null $image): array
     {
         try {
             if ($question->getId()) {
@@ -114,10 +117,17 @@ class QuestionService
                 $message = 'Вопрос создан';
 
             }
-
-            if ($image) {
-                $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
-            };
+            switch (gettype($image)) {
+                case 'boolean':
+                    $this->imageUpdate($question, $this->questionImageUploader, $this->em);
+                    break;
+                case 'NULL':
+                    //nothing to do
+                    break;
+                case 'object':
+                    $this->imageUpdate($question, $this->questionImageUploader, $this->em, $image);
+                    break;
+            }
 
             $this->em->persist($question);
             $this->em->flush();
@@ -214,14 +224,15 @@ class QuestionService
             $this->em->rollback();
             return [
                 'message' => 'Ошибка при вводе данных',
-                'error' => $errors];
+                'error' => $errors
+            ];
 
         } else {
 
             try {
-                $this->imageAttach($question, $questionImage);
+                $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
                 foreach ($variants as $key => $variant) {
-                    $this->variantService->imageAttach($variant, $variantImages[$key] ?? null);
+                    $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, $variantImages[$key] ?? null);
                 }
                 foreach ($question->getVariant() as $variant) {
                     if (!in_array($variant, $variants)) {

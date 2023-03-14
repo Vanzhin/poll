@@ -85,3 +85,7 @@ services:
             $appName: '%app.name%'
             $defaultFromEmail: '%app.default_from_email%'
             $defaultFromName: '%app.default_from_name%'
+
+#    App\Entity\Variant:
+#        arguments:
+#            $uploader:  '@image_uploader.variant'
