@@ -1,12 +1,15 @@
 <template>
+  <MessageView/>
   <div class="backgraund">
     <RouterView />
   </div>
 </template>
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import MessageView from "../components/ui/MessageView.vue"
 export default {
   components: {
+    MessageView,
   },
 } 
 </script>

@@ -1,12 +1,10 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      
-      <i class="result"
-        :class="{resultTrue: question.result.score }"
-      ><b>{{ index+1 }})</b> {{ question.title }}</i>
-      
-      <hr>
+      <QuestionHeaderQuestion
+        :question='question'
+        :index='index'
+      />
       <div class="row text-center"
         v-if="getUserAnswer"
       >
@@ -44,18 +42,17 @@
           </div>
         </div>
       </div>
-
-
-      
       <br>
-      
     </div>       
   </div>
 </template>
 <script>
-// v-model="answer" question.variant
+import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
 export default {
   props: ['question', 'index' ],
+  components: {
+    QuestionHeaderQuestion
+  },
   data() {
     return {
       count: 0,

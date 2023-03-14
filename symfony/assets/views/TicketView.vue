@@ -11,7 +11,6 @@
         :time="20" 
         @time-end="timerEnd"
       />
-      
       <h2> {{ testName }}</h2>
       <div class="test">
         <p> {{ ticketTitle }}</p>  
@@ -118,7 +117,6 @@ export default {
   },
   async created(){
     if (this.ticketId === "rndb" ) { 
-      
       this.ticketId = await this.getRandomTicket
       console.log("запрос случайного билета ", this.ticketId)
     }

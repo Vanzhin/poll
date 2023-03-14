@@ -89,7 +89,11 @@ export default {
   mounted(){
     if (this.question.variant){
     this.question.variant.forEach((item, index ) => 
-      this.questionVariant.push({id:index, title:item, sort: index})
+      this.questionVariant.push({
+        id:index, 
+        title:item.title ? item.title : item, 
+        image: item.image ? item.image : '',
+        sort: index})
     )} 
     // console.log(this.questionVariant)
   }
