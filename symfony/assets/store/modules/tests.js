@@ -44,8 +44,10 @@ const state = () => ({
       image: null
     },
   ],
-  tests: null,
-  test: null,
+  tests: localStorage.getItem('tests') ?
+  JSON.parse(localStorage.getItem('tests')) : null,
+  test: localStorage.getItem('test') ?
+  JSON.parse(localStorage.getItem('test')) : null,
  
 
 })
@@ -251,10 +253,19 @@ const mutations = {
       return +test.id === +id}) ;
   },
   [SET_TEST] (state, test){
-    return state.test = test
+    console.log(test)
+    const parsed = JSON.stringify(
+      test
+    );
+    localStorage.setItem('test', parsed);
+    state.test = test
   },
   [SET_TESTS] (state, tests){
-    return state.tests = tests
+    if (tests) { 
+      const parsed = JSON.stringify(tests)
+      localStorage.setItem('tests', parsed);
+    } else { localStorage.removeItem('tests')}
+        state.tests = tests
   },
 }
 

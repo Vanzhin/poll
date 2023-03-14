@@ -117,7 +117,6 @@ export default {
   },
   async created(){
     if (this.ticketId === "rndb" ) { 
-      
       this.ticketId = await this.getRandomTicket
       console.log("запрос случайного билета ", this.ticketId)
     }

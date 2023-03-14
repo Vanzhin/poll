@@ -45,9 +45,7 @@
                 required
               />
             </div>
-            <div>
-              <MessageView/>
-            </div>
+            
             <div class="text-login">
               <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
                 <p> Войти по ссылке</p>

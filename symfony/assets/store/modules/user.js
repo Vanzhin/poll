@@ -42,7 +42,7 @@ const actions = {
           console.log("getLogInUser - ", data )
           commit("SET_LOGOUT_LINK_DATE",{
             message: data.data.message,
-            url: data.data.link.url,
+            url: data.data.link ? data.data.link.url : '',
             send: true 
           })
         })
@@ -75,8 +75,8 @@ const actions = {
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)
           dispatch('setMessage',{
-            mes: "Вы успешно авторизовались",
-            err: false
+            message: "Вы успешно авторизовались",
+            
           });
         })
         return false
@@ -102,8 +102,8 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getRegistrationUser - ", data.data.message )
-          dispatch('setMessage', data)
+          console.log("getRegistrationUser - ", data.data )
+          dispatch('setMessage', data.data)
         })
         return false
     } catch (e) {

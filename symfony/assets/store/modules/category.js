@@ -8,10 +8,11 @@ import {
 import axios from 'axios';
 
 const state = () => ({
-  categorys: [],
-  question:{},
+  categorys: localStorage.getItem('categorys') ?
+  JSON.parse(localStorage.getItem('categorys')):[],
   iter: 1,
-  parent: null
+  parent: localStorage.getItem('categoryParent') ?
+  JSON.parse(localStorage.getItem('categoryParent')): null
 })
 
 const actions = {
@@ -151,6 +152,12 @@ const getters = {
 
 const mutations = {
   [SET_CATEGORYS] (state, categorys) {
+    if (categorys) {
+    const parsed = JSON.stringify(categorys)
+    localStorage.setItem('categorys', parsed)
+    } else {
+      localStorage.removeItem('categorys');
+    }
     state.categorys = categorys
   },
   [SET_CATEGORY_TITLE] (state, title){
@@ -160,6 +167,10 @@ const mutations = {
     state.description = description
   },
   [SET_CATEGORYS_PARENT] (state, parent){
+    if (parent) {
+      const parsed = JSON.stringify(parent)
+      localStorage.setItem('categoryParent', parsed)
+    } else localStorage.removeItem('categoryParent');
     state.parent = parent
   },
 }
