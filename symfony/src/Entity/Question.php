@@ -33,14 +33,14 @@ class Question
     private ?string $title = null;
 
     #[ORM\Column]
-    #[Groups(['main','admin_question'])]
+    #[Groups(['main', 'admin_question'])]
     private array $answer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[Assert\NotNull(
         message: 'question.type.invalid'
     )]
-    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket','admin_question'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
@@ -53,10 +53,6 @@ class Question
     #[ORM\Column(nullable: true)]
     #[Groups(['main', 'admin', 'admin_question'])]
     private array $subTitle = [];
-
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
-    #[Groups(['main', 'admin_question'])]
-    private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['main', 'admin', 'admin_question'])]
@@ -79,11 +75,21 @@ class Question
     #[Groups(['admin_question'])]
     private ?\DateTimeInterface $publishedAt = null;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subQuestions')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    private ?self $parent = null;
+
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    private Collection $subQuestions;
+
+    #[ORM\ManyToMany(targetEntity: Variant::class, mappedBy: 'question')]
+    private Collection $variants;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
         $this->answers = new ArrayCollection();
-        $this->variant = new ArrayCollection();
+        $this->variants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,36 +202,6 @@ class Question
         return $this;
     }
 
-    /**
-     * @return Collection<int, Variant>
-     */
-    public function getVariant(): Collection
-    {
-        return $this->variant;
-    }
-
-    public function addVariant(Variant $variant): self
-    {
-        if (!$this->variant->contains($variant)) {
-            $this->variant->add($variant);
-            $variant->setQuestion($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVariant(Variant $variant): self
-    {
-        if ($this->variant->removeElement($variant)) {
-            // set the owning side to null (unless already changed)
-            if ($variant->getQuestion() === $this) {
-                $variant->setQuestion(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -282,6 +258,75 @@ class Question
     public function setPublishedAt(?\DateTimeInterface $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getSubQuestions(): Collection
+    {
+        return $this->subQuestions;
+    }
+
+    public function addSubQuestion(self $subQuestions): self
+    {
+        if (!$this->subQuestions->contains($subQuestions)) {
+            $this->subQuestions->add($subQuestions);
+            $subQuestions->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubQuestion(self $subQuestions): self
+    {
+        if ($this->subQuestions->removeElement($subQuestions)) {
+            // set the owning side to null (unless already changed)
+            if ($subQuestions->getParent() === $this) {
+                $subQuestions->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Variant>
+     */
+    public function getVariants(): Collection
+    {
+        return $this->variants;
+    }
+
+    public function addVariant(Variant $variant): self
+    {
+        if (!$this->variants->contains($variant)) {
+            $this->variants->add($variant);
+            $variant->addQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVariant(Variant $variant): self
+    {
+        if ($this->variants->removeElement($variant)) {
+            $variant->removeQuestion($this);
+        }
 
         return $this;
     }
