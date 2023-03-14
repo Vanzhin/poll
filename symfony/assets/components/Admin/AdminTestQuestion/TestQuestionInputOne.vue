@@ -13,7 +13,7 @@
         >Правильный ответ:
         </label>
         <hr>
-        <span class="input">{{ question.variant[0].title }}</span>
+        <span class="input">{{ question.variant[0].title ? question.variant[0].title:''  }}</span>
       </div>
       <br>
     </div>       

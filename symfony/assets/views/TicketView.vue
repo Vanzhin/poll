@@ -11,7 +11,6 @@
         :time="20" 
         @time-end="timerEnd"
       />
-      
       <h2> {{ testName }}</h2>
       <div class="test">
         <p> {{ ticketTitle }}</p>  

@@ -1,10 +1,10 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i class="result"
-        :class="{resultTrue: question.result.score }"
-      ><b>{{ index+1 }})</b> {{ question.title }}</i>
-      <hr>
+      <QuestionHeaderQuestion
+        :question='question'
+        :index='index'
+      />
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in question.subTitle" 
         :key="answer"
@@ -40,9 +40,12 @@
   </div>
 </template>
 <script>
-
+import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
 export default {
   props: ['question', 'index' ],
+  components: {
+    QuestionHeaderQuestion
+  },
   data() {
     return {
       answerSelect:[]

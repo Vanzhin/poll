@@ -4,19 +4,20 @@
       <i class="result"
         :class="{resultTrue: question.result.score }"
       ><b>{{ index+1 }})</b> {{ question.title }}</i>
-      
-      
-      
+      <div class=""> 
+        <img :src="question.image" 
+          v-if="question.image"
+          class="img"
+        />   
+      </div>
     </div>       
   </div>
 </template>
 <script>
-// v-model="answer"
 export default {
   props: ['question', 'index' ],
   data() {
     return {
-     
     }
   },
   computed:{
@@ -29,10 +30,13 @@ export default {
   methods: {
   } 
 }
-
 </script>
-
 <style lang="scss" scoped>
+  .img{
+    height: 130px;
+    margin: 3px 10px;
+    max-width: 170px;
+  }
   .answer{
     color:rgb(91, 206, 235);
     &-user{
