@@ -22,14 +22,14 @@ class Question
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket', 'admin_question'])]
+    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket', 'admin_question', 'test'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(
         message: 'question.title.not_blank'
     )]
-    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test'])]
     private ?string $title = null;
 
     #[ORM\Column]
@@ -40,7 +40,7 @@ class Question
     #[Assert\NotNull(
         message: 'question.type.invalid'
     )]
-    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket','admin_question'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket','admin_question', 'test'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
@@ -51,11 +51,11 @@ class Question
     private Collection $answers;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test'])]
     private array $subTitle = [];
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
-    #[Groups(['main', 'admin_question'])]
+    #[Groups(['main', 'admin_question', 'test'])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]

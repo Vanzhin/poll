@@ -157,6 +157,7 @@ class QuestionController extends AbstractController
     #[Route('/api/admin/question/{id}/edit_with_variant', name: 'app_api_admin_question_edit_with_variant', methods: 'POST')]
     public function editWithVariant(Question $question, Request $request, QuestionService $questionService, ValidationService $validation, VariantService $variantService, EntityManagerInterface $em,): JsonResponse
     {
+        $question->getVariant()->clear();
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage');
         $variantImages = $request->files->get('variantImage');

@@ -5,12 +5,16 @@ namespace App\Controller\Api;
 use App\Entity\Test;
 use App\Repository\QuestionRepository;
 use App\Repository\TestRepository;
+use App\Service\NormalizerService;
 use App\Service\QuestionHandler;
 use App\Service\SessionService;
+use App\Twig\Extension\AppUpLoadedAsset;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class TestController extends AbstractController
 {
@@ -39,15 +43,38 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_question', methods: ['GET'])]
-    public function getRandomQuestion(Test $test, QuestionRepository $questionRepository, QuestionHandler $questionService, SessionService $sessionService, int $count): JsonResponse
+    public function getRandomQuestion(
+        Test               $test,
+        QuestionRepository $questionRepository,
+        QuestionHandler    $questionService,
+        SessionService     $sessionService,
+        int                $count,
+        AppUpLoadedAsset   $upLoadedAsset,
+        NormalizerService  $normalizerService
+    ): JsonResponse
     {
         try {
             $sessionService->remove(QuestionHandler::SHUFFLED);
-            $questions = $questionService->getPreparedQuestions($questionRepository->getRandomQByTest($test, $count));
+//            $questions = $questionService->getPreparedQuestions($questionRepository->getRandomQByTest($test, $count));
+            $questions = $questionRepository->getRandomQByTest($test, $count);
+//todo убрать костыль
+            foreach ($questions as $question) {
+                $variants = $question->getVariant()->toArray();
+                shuffle($variants);
+                $subtitles = $question->getSubTitle();
+                shuffle($subtitles);
+                $question->setSubtitle($subtitles);
+                $question->getVariant()->clear();
+
+                foreach ($variants as $variant) {
+                    $question->addVariant($variant);
+                }
+            }
             $response = [
                 'test' => $test->getTitle(),
                 'questions' => $questions
             ];
+
             $sessionService->add($questionService->prepareForSession($questions), QuestionHandler::SHUFFLED);
 
             $status = 200;
@@ -58,7 +85,14 @@ class TestController extends AbstractController
             return $this->json($response,
                 $status,
                 ['charset=utf-8'],
-                ['groups' => 'main'],
+                [
+                    'groups' => 'test',
+                    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                    AbstractNormalizer::CALLBACKS => [
+                        'image' => $normalizerService->imageCallback($upLoadedAsset),
+                    ]
+                ],
+
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
     }
