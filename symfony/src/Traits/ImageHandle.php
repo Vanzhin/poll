@@ -6,7 +6,7 @@ use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-trait EntityWithImage
+trait ImageHandle
 {
 
     public function delete(object $entity, FileUploader $imageUploader, EntityManagerInterface $em): void

@@ -27,18 +27,10 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
             switch ($question->getType()->getTitle()) {
                 case 'radio':
-                    $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
-                        ->setTest($this->getRandomReference(Test::class));
-                    break;
-                case 'checkbox':
-                    $question->setTitle($this->faker->realTextBetween(30, 255) . '?');
-
-                    $question
-                        ->setTest($this->getRandomReference(Test::class));
-                    break;
                 case 'input_one':
-                    $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
-                        ->setAnswer([$this->faker->word()])
+                case 'checkbox':
+
+                $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
                         ->setTest($this->getRandomReference(Test::class));
                     break;
                 case 'input_many':
@@ -86,7 +78,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
             }
         });
         $questionsWithVariants = array_filter($this->referenceRepository->getReferencesByClass()[Question::class], function ($question) {
-            return in_array($question->getType()->getTitle(), ['radio', 'checkbox', 'conformity', 'order', 'checkbox_picture']);
+            return in_array($question->getType()->getTitle(), ['radio', 'checkbox', 'conformity', 'order', 'checkbox_picture', 'input_one']);
 
         });
         foreach ($questionsWithVariants as $question) {
@@ -94,6 +86,18 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
                 case 'radio':
                     $this->createMany(Variant::class, $this->faker->numberBetween(2, 5), function (Variant $variant) use ($manager, $question) {
+
+                        $variant
+                            ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
+                            ->setWeight(100)
+                            ->setQuestion($question);
+
+                        $question->addVariant($variant);
+                    });
+                    $question->setAnswer([$this->faker->randomElement($question->getVariant())->getId()]);
+                    break;
+                case 'input_one':
+                    $this->createMany(Variant::class, 1, function (Variant $variant) use ($manager, $question) {
 
                         $variant
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())

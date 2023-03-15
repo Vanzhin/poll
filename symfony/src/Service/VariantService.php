@@ -4,14 +4,14 @@ namespace App\Service;
 
 use App\Entity\Question;
 use App\Entity\Variant;
-use App\Traits\EntityWithImage;
+use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class VariantService
 {
-    use EntityWithImage;
+    use ImageHandle;
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly FileUploader $variantImageUploader)
     {

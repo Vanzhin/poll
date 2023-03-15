@@ -2,10 +2,7 @@
 
 namespace App\EventListener;
 
-use App\Entity\Variant;
-use App\Interfaces\EntityWithImageInterface;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 

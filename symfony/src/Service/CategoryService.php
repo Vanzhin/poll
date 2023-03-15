@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\Category;
 use App\Entity\Question;
 use App\Entity\Test;
-use App\Traits\EntityWithImage;
+use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -15,7 +15,7 @@ class CategoryService
     public function __construct(private readonly EntityManagerInterface $em, private readonly FileUploader $categoryImageUploader)
     {
     }
-    use EntityWithImage;
+    use ImageHandle;
 
     public function make(Category $category, array $data): Category
     {

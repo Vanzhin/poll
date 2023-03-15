@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Interfaces\EntityWithImageInterface;
 use App\Repository\CategoryRepository;
-use App\Traits\EntityWithImage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ignoreNull: false
 )]
 #[ORM\UniqueConstraint('title_lvl_idx', ['title', 'lvl'])]
-class Category
+class Category implements EntityWithImageInterface
 {
     use TimestampableEntity;
 
