@@ -91,11 +91,19 @@ class QuestionHandler
     {
         $answers = [];
         if ($question->getVariant()->count() > 0) {
-            foreach ($userAnswer as $answer) {
+
+            foreach ($userAnswer as $key => $answer) {
                 if (isset($answer, $this->getVariantsToArray($question)[$answer])) {
                     $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $shuffled['variant'][$answer]);
                     $answers[] = $variant->getId();
 
+                }
+                if ($question->getType()->getTitle() === 'input_one') {
+                    $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $answer);
+                    if ($variant) {
+                        $answers[] = $variant->getId();
+
+                    }
                 }
             }
         } else {
@@ -157,7 +165,6 @@ class QuestionHandler
         $userAnswers = $this->answerPrepare($answerData);
         if (isset($this->sessionService->get(self::SHUFFLED)[$question->getId()])) {
             $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, $this->sessionService->get(self::SHUFFLED)[$question->getId()]);
-
         } else {
             $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, ['variant' => $this->getVariantsToArray($question)]);
         }

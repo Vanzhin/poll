@@ -133,8 +133,8 @@ class QuestionController extends AbstractController
     public function createWithVariant(Request $request, QuestionService $questionService, ValidationService $validation, VariantService $variantService, EntityManagerInterface $em,): JsonResponse
     {
         $data = $request->request->all();
-        $questionImage = $request->files->get('questionImage');
-        $variantImages = $request->files->get('variantImage');
+        $questionImage = $request->files->get('questionImage', false);
+        $variantImages = $request->files->get('variantImage', []);
         $response = $questionService->saveWithVariantIfValid(new Question(), $data, $questionImage, $variantImages);
         if (key_exists('error', $response)) {
             $status = 422;

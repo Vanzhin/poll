@@ -62,6 +62,10 @@ class VariantService
                 }
 
                 break;
+            case 'input_one':
+                $answers = [$variant->getId()];
+                $question->setAnswer(array_values($answers));
+                break;
             case 'order':
 //            case 'conformity':
                 $answers = $question->getAnswer();
