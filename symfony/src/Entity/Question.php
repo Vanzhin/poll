@@ -23,14 +23,14 @@ class Question implements EntityWithImageInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket', 'admin_question', 'test'])]
+    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(
         message: 'question.title.not_blank'
     )]
-    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle'])]
     private ?string $title = null;
 
     #[ORM\Column]
@@ -41,7 +41,7 @@ class Question implements EntityWithImageInterface
     #[Assert\NotNull(
         message: 'question.type.invalid'
     )]
-    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket','admin_question', 'test'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket','admin_question', 'test', 'handle'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
@@ -52,15 +52,15 @@ class Question implements EntityWithImageInterface
     private Collection $answers;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question', 'test'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
     private array $subTitle = [];
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
-    #[Groups(['main', 'admin_question', 'test'])]
+    #[Groups(['main', 'admin_question', 'test', 'handle'])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question'])]
+    #[Groups(['main', 'admin', 'admin_question', 'handle'])]
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
@@ -79,6 +79,26 @@ class Question implements EntityWithImageInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['admin_question'])]
     private ?\DateTimeInterface $publishedAt = null;
+
+    #[Groups(['handle'])]
+
+    private ?array $result = null;
+
+    /**
+     * @return array|null
+     */
+    public function getResult(): ?array
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param array|null $result
+     */
+    public function setResult(?array $result): void
+    {
+        $this->result = $result;
+    }
 
     public function __construct()
     {

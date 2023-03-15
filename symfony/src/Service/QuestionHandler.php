@@ -31,35 +31,41 @@ class QuestionHandler
 
             if ($question) {
                 $score = $this->getQuestionScore($question, $answerData["answer"]);
-                $answer = [
-                    "id" => $answerData["id"],
-                    "title" => $question->getTitle(),
-                    "variant" => isset($this->sessionService->get(self::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] : $this->getVariantsToArray($question),
-                    "result" => [
+                $question->setResult([
                         "score" => $score,
-                    ],
-                    "type" => $question->getType()->getTitle()
-                ];
+                    ]);
+                $variantTitles = isset($this->sessionService->get(self::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] : $this->getVariantsToArray($question);
+                $question->getVariant()->clear();
+                foreach($variantTitles as $titles){
+                    $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $titles);
+                    if ($variant){
+                        $question->addVariant($variant);
+                    }
+                };
                 if ($user) {
 
                     $this->resultService->save($user, $question, $this->getShuffledUserAnswers($question, $answerData["answer"], $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? ['variant' => $this->getVariantsToArray($question)]), $score, $result);
-                    $answer["result"] += [
+
+                    
+                    $question->setResult([
+                        "score" => $score,
                         "true_answer" => $this->getShuffledTrueAnswers($question, $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? []),
                         "user_answer" => $answerData["answer"],
-                    ];
+                    ]);
                 }
 
                 if (!empty($question->getSubTitle())) {
-                    $answer["subTitle"] = $this->sessionService->get(self::SHUFFLED)[$question->getId()]['subTitle'] ?? [];
+
+                    $question->setSubTitle($this->sessionService->get(self::SHUFFLED)[$question->getId()]['subTitle'] ?? []);
                 }
 
             } else {
-                $answer = [
+                $question = [
                     "id" => $answerData["id"],
                     "error" => "question not found"
                 ];
             }
-            $response[] = $answer;
+            $response[] = $question;
         }
         return $response;
 

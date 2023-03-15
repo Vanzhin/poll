@@ -98,7 +98,11 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/handle', name: 'app_api_test_handle', methods: ['POST'])]
-    public function handle(Request $request, QuestionHandler $questionService): JsonResponse
+    public function handle(Request           $request,
+                           QuestionHandler   $questionService,
+                           AppUpLoadedAsset  $upLoadedAsset,
+                           NormalizerService $normalizerService
+    ): JsonResponse
     {
 
         $data = json_decode($request->getContent(), true);
@@ -114,7 +118,11 @@ class TestController extends AbstractController
             return $this->json($response,
                 $status,
                 ['charset=utf-8'],
-                ['groups' => 'main'],
+                ['groups' => 'handle',
+                    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                    AbstractNormalizer::CALLBACKS => [
+                        'image' => $normalizerService->imageCallback($upLoadedAsset),
+                    ]],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
     }
@@ -137,7 +145,7 @@ class TestController extends AbstractController
             return $this->json($response,
                 $status,
                 ['charset=utf-8'],
-                ['groups' => 'main'],
+                ['groups' => 'handle'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
     }

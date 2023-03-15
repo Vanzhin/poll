@@ -35,7 +35,7 @@ class Variant implements EntityWithImageInterface
         max: 700,
         maxMessage: 'variant.title.max_length'
     )]
-    #[Groups(['main', 'admin', 'admin_question', 'test'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
