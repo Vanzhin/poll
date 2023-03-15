@@ -66,7 +66,7 @@ export default {
 <style lang="scss" scoped>
   .img{
     height: 130px;
-    margin-left: 10px;
+    margin: 3px 10px;
     max-width: 170px;
   }
   .shadow{
@@ -75,7 +75,7 @@ export default {
   .custom-control {
     position: relative;
     display: flex;
-    align-items:flex-start;
+    align-items:center;
     min-height: 1.5rem;
     padding-left: 1.5rem;
   }

@@ -1,35 +1,37 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
     <div class="card flex-shrink-1 shadow">
-      <i class="result"
-        :class="{resultTrue: question.result.score }"
-      ><b>{{ index+1 }})</b> {{ question.title }}</i>
-      
-      <hr>
-     
-        <div class="custom-control custom-radio"
-          
-          v-for="(answer, ind ) in question.variant" 
-          :key="answer"
-        >
-          
-          <label v-if="answer!==''"
-            class="custom-control-label f_sm " 
-            :class="classAnswer(ind)"
-          >{{ answer }}
-          </label>
-          
+      <QuestionHeaderQuestion
+        :question='question'
+        :index='index'
+      />
+      <div class="custom-control custom-radio"
+        v-for="(answer, ind ) in question.variant" 
+        :key="answer"
+      >
+        <div class=""> 
+          <img :src="answer.image" 
+            v-if="answer.image"
+            class="img"
+          />   
         </div>
-      
+        <label v-if="answer!==''"
+          class="custom-control-label f_sm " 
+          :class="classAnswer(ind)"
+        >{{ answer.title ? answer.title : answer }}
+        </label>
+      </div>
       <br>
-      
     </div>       
   </div>
 </template>
 <script>
-// v-model="answer"
+import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
 export default {
   props: ['question', 'index' ],
+  components: {
+    QuestionHeaderQuestion
+  },
   data() {
     return {
       count: 0,
@@ -38,10 +40,9 @@ export default {
   },
   computed:{
     getUserAnswer(){
-      
       return  this.question.result.user_answer ? 
-          this.question.result.user_answer.length > 0 && this.question.result.user_answer[0] !==''
-          : false
+        this.question.result.user_answer.length > 0 && this.question.result.user_answer[0] !==''
+        : false
     },
   },
   methods: {
@@ -69,6 +70,11 @@ export default {
     &-true{
       color:rgb(17, 196, 47)
     }
+  }
+  .img{
+    height: 130px;
+    margin: 3px 10px;
+    max-width: 170px;
   }
   .shadow{
     padding: 5px;

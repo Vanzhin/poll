@@ -1,6 +1,8 @@
 <template>
   <section class="wrapper">
+     
     <div class="login-page">
+     
       <CloseView/>
       <form @submit.prevent="onSubmit">
           <div class="login-page-text">Вход на сайт</div>
@@ -26,9 +28,7 @@
                 />
               </div>
          
-              <div>
-               <MessageView/>
-              </div>
+             
               <div class="text-login">
                 <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
                   <p> Войти по ссылке</p>
@@ -49,12 +49,12 @@
  
 <script>
   import { RouterLink } from 'vue-router'
-  import MessageView from "../components/ui/MessageView.vue"
+  
   import CloseView from "../components/ui/CloseView.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
-      MessageView, CloseView
+       CloseView
     },
     data() {
       return {
