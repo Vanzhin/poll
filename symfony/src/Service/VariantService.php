@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class VariantService
 {
     use EntityWithImage;
+
     public function __construct(private readonly EntityManagerInterface $em, private readonly FileUploader $variantImageUploader)
     {
     }
@@ -115,25 +116,13 @@ class VariantService
                 $message = 'Вариант обновлен';
             } else {
                 $message = 'Вариант создан';
-            }
-            switch (gettype($image)) {
-                case 'boolean':
-                    $this->imageUpdate($variant, $this->variantImageUploader, $this->em);
-                    break;
-                case 'NULL':
-                    //nothing to do
-                    break;
-                case 'object':
-                    $this->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
-                    break;
-            }
-
-            $this->em->persist($variant);
-            if (!$variant->getId()) {
+                $this->em->persist($variant);
                 $this->em->flush();
+
             }
-            $this->em->persist($this->questionAnswerUpdate($variant));
-            $this->em->flush();
+            $this->em->persist($this->questionAnswerUpdate($variant, true));
+            $this->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
+
             $response = [
                 'message' => $message,
                 'variantId' => $variant->getId()

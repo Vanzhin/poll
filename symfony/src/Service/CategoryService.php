@@ -48,23 +48,11 @@ class CategoryService
                 $message = 'Раздел создан';
 
             }
-            switch (gettype($image)) {
-                case 'boolean':
-                    $this->imageUpdate($category, $this->categoryImageUploader, $this->em);
-                    break;
-                case 'NULL':
-                    //nothing to do
-                    break;
-                case 'object':
-                    $this->imageUpdate($category, $this->categoryImageUploader, $this->em, $image);
-                    break;
-            }
+            $this->imageUpdate($category, $this->categoryImageUploader, $this->em, $image);
 
-            $this->em->persist($category);
-            $this->em->flush();
             $response = [
                 'message' => $message,
-                'questionId' => $category->getId()
+                'categoryId' => $category->getId()
             ];
             $status = 200;
         } catch (\Exception $e) {

@@ -214,8 +214,8 @@ class QuestionHandler
         if (count($questions) > 0) {
             foreach ($questions as $question) {
                 $variants = [];
-                foreach ($question->getVariant() as $variant){
-                    $variants[]= $variant->getTitle();
+                foreach ($question->getVariant() as $variant) {
+                    $variants[] = $variant->getTitle();
                 }
                 $response[$question->getId()] = [
                     "subTitle" => $question->getSubtitle(),

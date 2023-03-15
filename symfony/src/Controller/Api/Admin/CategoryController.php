@@ -14,6 +14,7 @@ use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,9 +114,9 @@ class CategoryController extends AbstractController
     public function edit(Category $category, Request $request, ValidationService $validation, CategoryService $categoryService): JsonResponse
     {
         $data = $request->request->all();
-        $image = $request->files->get('categoryImage');
+        $image = $request->files->get('categoryImage', false);
         $category = $categoryService->make($category, $data);
-        $errors = $validation->entityWithImageValidate($category, $image);
+        $errors = $validation->entityWithImageValidate($category, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -123,14 +124,6 @@ class CategoryController extends AbstractController
                 422,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
-
-        if ($request->files->has('categoryImage')) {
-            $image = $request->files->get('categoryImage');
-
-        } else {
-            $image = false;
-
         }
         $response = $categoryService->saveResponse($category, $image);
         return $this->json($response['response'],

@@ -10,6 +10,7 @@ use App\Service\VariantService;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,10 +59,10 @@ class VariantController extends AbstractController
     public function edit(Variant $variant, Request $request, VariantService $variantService, ValidationService $validation): JsonResponse
     {
         $data = $request->request->all();
-        $image = $request->files->get('variantImage');
+        $image = $request->files->get('variantImage', false);
         $variant = $variantService->make($variant, $data['variant'] ?? []);
 
-        $errors = $validation->entityWithImageValidate($variant, $image);
+        $errors = $validation->entityWithImageValidate($variant, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -69,13 +70,6 @@ class VariantController extends AbstractController
                 422,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
-        if ($request->files->has('variantImage')) {
-            $image = $request->files->get('variantImage');
-
-        } else {
-            $image = false;
-
         }
         $response = $variantService->saveResponse($variant, $image);
         return $this->json($response['response'],

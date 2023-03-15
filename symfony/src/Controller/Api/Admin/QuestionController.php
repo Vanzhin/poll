@@ -12,6 +12,7 @@ use App\Service\VariantService;
 use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -88,9 +89,9 @@ class QuestionController extends AbstractController
     public function edit(Question $question, Request $request, QuestionService $questionService, ValidationService $validation): JsonResponse
     {
         $data = $request->request->all();
-        $image = $request->files->get('questionImage');
+        $image = $request->files->get('questionImage',false);
         $question = $questionService->make($question, $data['question'] ?? []);
-        $errors = $validation->entityWithImageValidate($question, $image);
+        $errors = $validation->entityWithImageValidate($question, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -98,13 +99,6 @@ class QuestionController extends AbstractController
                 422,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
-        if ($request->files->has('questionImage')) {
-            $image = $request->files->get('questionImage');
-
-        } else {
-            $image = false;
-
         }
         $response = $questionService->saveResponse($question, $image);
         return $this->json($response['response'],
@@ -159,8 +153,9 @@ class QuestionController extends AbstractController
     {
         $question->getVariant()->clear();
         $data = $request->request->all();
-        $questionImage = $request->files->get('questionImage');
-        $variantImages = $request->files->get('variantImage');
+        $questionImage = $request->files->get('questionImage', false);
+        $variantImages = $request->files->get('variantImage', []);
+
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages);
         if (key_exists('error', $response)) {
             $status = 422;

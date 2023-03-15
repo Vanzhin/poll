@@ -26,14 +26,19 @@ trait EntityWithImage
         $em->flush();
     }
 
-    public function imageUpdate(object $entity, FileUploader $imageUploader, EntityManagerInterface $em, UploadedFile $image = null): object
+    public function imageUpdate(object $entity, FileUploader $imageUploader, EntityManagerInterface $em, UploadedFile|bool|null $image = null): object
     {
-
-        if ($image) {
-            $entity->setImage($imageUploader->uploadImage($image, $entity->getImage()));
-        }else{
-            $imageUploader->delete($entity->getImage());
-            $entity->setImage(null);
+        switch (gettype($image)) {
+            case 'boolean':
+                $imageUploader->delete($entity->getImage());
+                $entity->setImage(null);
+                break;
+            case 'NULL':
+                //nothing to do
+                break;
+            case 'object':
+                $entity->setImage($imageUploader->uploadImage($image, $entity->getImage()));
+                break;
         }
         $em->persist($entity);
         $em->flush();

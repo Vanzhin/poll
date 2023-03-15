@@ -117,20 +117,7 @@ class QuestionService
                 $message = 'Вопрос создан';
 
             }
-            switch (gettype($image)) {
-                case 'boolean':
-                    $this->imageUpdate($question, $this->questionImageUploader, $this->em);
-                    break;
-                case 'NULL':
-                    //nothing to do
-                    break;
-                case 'object':
-                    $this->imageUpdate($question, $this->questionImageUploader, $this->em, $image);
-                    break;
-            }
-
-            $this->em->persist($question);
-            $this->em->flush();
+            $this->imageUpdate($question, $this->questionImageUploader, $this->em, $image);
             $response = [
                 'message' => $message,
                 'questionId' => $question->getId()
@@ -167,16 +154,15 @@ class QuestionService
         return $question;
     }
 
-    public function saveWithVariantIfValid(Question $question, array $data, $questionImage = null, array $variantImages = null): array
+    public function saveWithVariantIfValid(Question $question, array $data, UploadedFile|bool|null $questionImage = null, array $variantImages = null): array
     {
         if (!$question->getId()) {
             $message = 'Вопрос создан';
         } else {
             $message = 'Вопрос обновлен';
         }
-
         $question = $this->make($question, $data['question'] ?? []);
-        $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage);
+        $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
         $errors = $questionErrors;
         $this->em->beginTransaction();
         $this->em->persist($question);
@@ -194,6 +180,7 @@ class QuestionService
             } else {
                 $image = null;
             }
+
             if ($this->validation->entityWithImageValidate($variant, $image)) {
                 $errors[] = implode(',', $this->validation->entityWithImageValidate($variant, $image));
 
@@ -219,7 +206,6 @@ class QuestionService
             };
 
         }
-
         if (!is_null($errors)) {
             $this->em->rollback();
             return [
@@ -228,12 +214,12 @@ class QuestionService
             ];
 
         } else {
-
             try {
                 $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
                 foreach ($variants as $key => $variant) {
-                    $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, $variantImages[$key] ?? null);
+                    $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, array_key_exists($key, $variantImages) ? $variantImages[$key] : false);
                 }
+
                 foreach ($question->getVariant() as $variant) {
                     if (!in_array($variant, $variants)) {
                         $this->variantService->delete($variant);
