@@ -30,6 +30,7 @@
         </div>
         <Pagination
           type="getCategorysDB"
+          admin= true
         />
       </div>
     </div>
