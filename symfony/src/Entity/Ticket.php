@@ -7,9 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
+#[UniqueEntity(['title', 'test'], 'ticket.title.already_exist')]
+#[ORM\UniqueConstraint('title_test_idx', ['title', 'test_id'])]
 class Ticket
 {
 
@@ -18,22 +23,42 @@ class Ticket
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'category','admin_section', 'admin_ticket', 'admin_question'])]
+    #[Groups(['main', 'category', 'admin_section', 'admin_ticket', 'admin_question'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets', orphanRemoval: true)]
     #[Groups(['main', 'admin_ticket'])]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'ticket.question.not_null',
+    )]
     private Collection $question;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'ticket.title.not_blank'
+    )]
+//    #[Assert\Type(
+//        type: 'int',
+//        message: 'ticket.title.not_int'
+//    )]
+    #[Assert\Positive(
+        message: 'ticket.title.not_int'
+    )]
     #[Groups(['main', 'account', 'admin', 'category', 'admin_section', 'admin_ticket', 'admin_question'])]
-    private ?string $title = null;
+    private ?int $title = null;
 
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class, cascade: ['persist', 'remove'])]
     private Collection $results;
 
     #[ORM\ManyToOne(inversedBy: 'ticket')]
+    #[Assert\NotNull(
+        message: 'ticket.test.not_null'
+    )]
     private ?Test $test = null;
+
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $description = null;
 
     public function __construct()
     {
@@ -70,12 +95,12 @@ class Ticket
         return $this;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): ?int
     {
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?int $title): self
     {
         $this->title = $title;
 
@@ -120,6 +145,18 @@ class Ticket
     public function setTest(?Test $test): self
     {
         $this->test = $test;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

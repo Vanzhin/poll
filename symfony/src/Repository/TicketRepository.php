@@ -6,6 +6,7 @@ use App\Entity\Section;
 use App\Entity\Test;
 use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -48,12 +49,12 @@ class TicketRepository extends ServiceEntityRepository
             ->leftJoin('ti.tests', 't')
             ->leftJoin('t.section', 's');
 
-        if ($section){
+        if ($section) {
             $tests->andWhere('t.section = :section')
                 ->setParameter('section', $section);
         }
 
-        return  $tests
+        return $tests
             ->getQuery()
             ->getResult();
     }
@@ -79,6 +80,21 @@ class TicketRepository extends ServiceEntityRepository
     {
         return $this->lastUpdated()->andWhere('ti.test = :testId')
             ->setParameters(['testId' => $test->getId()]);
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findLastTitleByTest(Test $test)
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->select('ti.title')
+            ->andWhere('ti.test = :testId')
+            ->setParameters(['testId' => $test->getId()])
+            ->setMaxResults(1)
+            ->orderBy('ti.title', 'DESC')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**
