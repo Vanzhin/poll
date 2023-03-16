@@ -12,10 +12,7 @@
       v-else
     />
   </div>
-   
-   
 </template>
-
 <script>
 
 import ResultAutchView from './ResultAutchView.vue'

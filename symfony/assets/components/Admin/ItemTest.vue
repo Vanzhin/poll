@@ -47,14 +47,7 @@
             </div>
           </div>
         </div>
-        
-        <MyConfirm
-          :message="confirmMessage"
-          @yesConfirm="confirmYes"
-          @noConfirm="confirmVisible = false"
-          v-if="confirmVisible"
-        />
-      </div>
+       </div>
       <div class="item__card__child"
         v-if="childVisible"
         @click.stop="childToggle"
@@ -66,20 +59,16 @@
 </template>
 <script>
 import { RouterLink } from 'vue-router'
-import MyConfirm from '../ui/MyConfirm.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   props:['item', 'index'],
   components: {
-    MyConfirm
+   
   },
   data() {
     return {
       id: null,
       childVisible: false,
-      confirmMessage: '',
-      confirmVisible: false,
-      confirmYes: null
     }
   },
   computed:{
@@ -88,13 +77,17 @@ export default {
       "getCategoryParendId", 
       "getMessage", 
       "getTests",
-      "getActivePage"
+      "getActivePage",
+      "getGonfimAction",
+      "getGonfimMessage"
   ]),
   },
   methods:{
     ...mapActions([
       "deleteTestDb", 
-      "setTest"
+      "setTest",
+      "setConfirmMessage",
+      
     ]),
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
@@ -116,13 +109,16 @@ export default {
         activePage: this.getActivePage,
         type: this.$route.meta.type,
       })
-      this.confirmVisible = false
-      this.confirmYes = null
     },
     deleteVisibleConfirm(){
-      this.confirmMessage = "При удалении теста, так же будут удалены все его вопросы. Вы, действительно хотите это сделать?"
-      this.confirmVisible = true
-      this.confirmYes = this.deleteTest
+      this.setConfirmMessage("При удалении теста, так же будут удалены все его вопросы. Вы, действительно хотите это сделать?")
+      let timerId = setInterval(() => {
+        if (this.getGonfimAction) {
+          clearInterval(timerId)
+          if (this.getGonfimAction === "yes" ){this.deleteTest()}
+
+        }{}
+      }, 200);
     },
     importQuestionsFile(){
       this.setTest(this.item)

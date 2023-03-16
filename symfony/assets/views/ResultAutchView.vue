@@ -20,22 +20,22 @@
           <ResultTestQuestionCheckbox
             :question="question"
             :index="index"
-            v-if="question.type==='radio' || question.type==='checkbox'"
+            v-if="questionType(question)==='radio' || questionType(question)==='checkbox'"
           />
           <ResultTestQuestionOrdered
             :question="question"
             :index="index"
-            v-else-if="question.type==='order'"
+            v-else-if="questionType(question)==='order'"
           />
           <ResultTestQuestionInputOne
             :question="question"
             :index="index"
-            v-else-if="question.type==='input_one'"
+            v-else-if="questionType(question)==='input_one'"
           />
           <ResultTestQuestionConformity
             :question="question"
             :index="index"
-            v-else-if="question.type==='conformity'"
+            v-else-if="questionType(question)==='conformity'"
           />
         </div>
       </div>
@@ -69,11 +69,14 @@ export default {
     
   },
   methods: {
-  
+    questionType(question){
+      return question.type.title? question.type.title : question.type
+    }
   },
   mounted(){
     window.scroll(0, 0);
-    console.log("монтирую результат для авторихзованного")
+    console.log("монтирую результат для авторизованного")
+
   }
   
 } 

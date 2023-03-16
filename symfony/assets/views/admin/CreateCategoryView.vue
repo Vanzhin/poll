@@ -39,30 +39,23 @@
         </div>
         <div class="mb-3 w-100">
           <div class="img_block"
-            v-if="typeof imageFile === 'object'"
+            v-if="imageUrl !== ''"
           >
             <img :src="imageUrl"  width="200"/> 
             <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-              @click.stop="imgDelete(ind)"
+              @click.stop="imgDelete()"
             ></i>
           </div> 
-          <div class="img_block"
-            v-else-if="image"
-          >
-            <img :src="image"  width="200"/> 
-            <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-              @click.stop="image = null"
-            ></i>
-          </div> 
+          
           <label class="label"
-            v-if="typeof imageFile === 'object' || image"
+            v-if="imageUrl !== ''"
           >Изменить изображение </label>
           <label class="label"
             v-else
           >Прикрепить изображение </label>
           <input  class="" type="file" accept="image/*"  
             @change="(e)=> changeImg(e)"
-            name="categoryImage"
+            :name="(imageUrl === '') && (imageValue  === '')? '' : 'categoryImage'"
             :value="imageValue"
           >
         </div>
@@ -80,7 +73,6 @@
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
-      
       MessageView
     },
     data() {
@@ -96,7 +88,6 @@
         parentId: undefined,
         title: "",
         description: "",
-        image: "",
         imageFile: "",
         imageUrl: "",
         imageValue: "",
@@ -121,7 +112,6 @@
         
         if ( this.$route.params.operation === 'edit'){
           await this.editCategory({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
-         
         } else if ( this.$route.params.operation === 'create'){
           await this.createCategory({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
         }
@@ -138,13 +128,11 @@
       
       changeImg(e){
         if (typeof e.target.files[0] === 'object'){
-          this.imageFile = e.target.files[0]
           this.imageUrl = URL.createObjectURL(e.target.files[0])
           this.imageValue = e.target.value
         }
       },
       imgDelete(ind){
-        this.imageFile = ''
         this.imageUrl = ''
         this.imageValue = ''
       },
@@ -161,8 +149,8 @@
       if ( this.$route.params.operation === 'edit'){
         // this.parentId = this.$route.params.id
         this.title = this.getCategory.title
-        this.description = this.getCategory.description
-        this.image = this.getCategory.image
+        this.description = this.getCategory.description ? this.getCategory.description : ''
+        this.imageUrl = this.getCategory.image ? this.getCategory.image : ''
       }
       
       
