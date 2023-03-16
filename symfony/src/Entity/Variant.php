@@ -53,7 +53,7 @@ class Variant implements EntityWithImageInterface
     private ?Question $question = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question', 'test'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
     private ?string $image = null;
 
     private bool|null $isCorrect = null;

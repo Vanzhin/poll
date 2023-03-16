@@ -34,14 +34,14 @@ class Question implements EntityWithImageInterface
     private ?string $title = null;
 
     #[ORM\Column]
-    #[Groups(['main','admin_question'])]
+    #[Groups(['main', 'admin_question'])]
     private array $answer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[Assert\NotNull(
         message: 'question.type.invalid'
     )]
-    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket','admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
@@ -60,7 +60,7 @@ class Question implements EntityWithImageInterface
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
@@ -81,7 +81,6 @@ class Question implements EntityWithImageInterface
     private ?\DateTimeInterface $publishedAt = null;
 
     #[Groups(['handle'])]
-
     private ?array $result = null;
 
     /**

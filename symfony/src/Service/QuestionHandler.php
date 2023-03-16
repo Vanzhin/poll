@@ -46,7 +46,7 @@ class QuestionHandler
 
                     $this->resultService->save($user, $question, $this->getShuffledUserAnswers($question, $answerData["answer"], $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? ['variant' => $this->getVariantsToArray($question)]), $score, $result);
 
-                    
+
                     $question->setResult([
                         "score" => $score,
                         "true_answer" => $this->getShuffledTrueAnswers($question, $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? []),
