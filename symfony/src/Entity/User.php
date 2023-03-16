@@ -46,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string|null The hashed password
      */
     #[ORM\Column(nullable: true)]
-    #[Groups(['user'])]
+//    #[Groups(['user'])]
     private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Result::class, orphanRemoval: true)]
