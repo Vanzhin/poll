@@ -71,7 +71,7 @@ class TestController extends AbstractController
     {
         $data = $request->request->all();
 
-        $test = $testService->save(new Test(), $data);
+        $test = $testService->make(new Test(), $data);
         if (count($validation->validate($test)) > 0) {
             return $this->json(
                 [
@@ -107,7 +107,7 @@ class TestController extends AbstractController
     {
         $data = $request->request->all();
 
-        $test = $testService->save($test, $data);
+        $test = $testService->make($test, $data);
 
         if (count($validation->validate($test)) > 0) {
             return $this->json([

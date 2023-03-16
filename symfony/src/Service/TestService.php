@@ -13,7 +13,7 @@ class TestService
     {
     }
 
-    public function save(Test $test, array $data): Test
+    public function make(Test $test, array $data): Test
     {
         foreach ($data as $key => $item) {
             if ($key === 'title') {

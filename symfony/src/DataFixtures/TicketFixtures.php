@@ -16,7 +16,8 @@ class TicketFixtures extends BaseFixtures implements DependentFixtureInterface
     {
         $this->createMany(Ticket::class, 500, function (Ticket $ticket) use ($manager) {
             $ticket
-                ->setTitle('Билет № ' . $this->faker->numberBetween(1, 50))
+                ->setTitle($this->faker->numberBetween(1, 1000))
+                ->setDescription($this->faker->sentence(3))
                 ->setTest($this->getRandomReference(Test::class));
         });
     }
