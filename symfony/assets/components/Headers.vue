@@ -1,5 +1,7 @@
 <template>
   <div class="cont">
+    <MyConfirm/>
+    <MessageView/>
     <div class="container">
       <div
       :class="classObject"> 
@@ -27,7 +29,7 @@
         </div>
       </div>
     </div> 
-    <MessageView/>
+    
   </div> 
 </template>
 
@@ -35,6 +37,7 @@
 import { RouterLink } from 'vue-router'
 import DropDownItems from './ui/DropDownItems.vue';
 import MessageView from "./ui/MessageView.vue"
+import MyConfirm from './ui/MyConfirm.vue'
 export default {
   data() {
     return {
@@ -43,7 +46,8 @@ export default {
   },
   components:{
     DropDownItems,
-    MessageView
+    MessageView,
+    MyConfirm
   },
   computed:{
     classObject() {

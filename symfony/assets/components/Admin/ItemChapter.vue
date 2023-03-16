@@ -42,12 +42,7 @@
             <i class="bi bi-archive"></i>
           </div>
         </div>
-        <MyConfirm
-          :message="confirmMessage"
-          @yesConfirm="confirmYes"
-          @noConfirm="confirmVisible = false"
-          v-if="confirmVisible"
-        />
+        
       </div>
       <div class="item__card__child"
         v-if="childVisible"
@@ -62,27 +57,26 @@
 </template>
 <script>
 import { RouterLink } from 'vue-router'
-import MyConfirm from '../ui/MyConfirm.vue'
+
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   props:['item', 'index'],
   components: {
-    MyConfirm
+    
   },
   data() {
     return {
       id: null,
       childVisible: false,
-      confirmMessage: '',
-      confirmVisible: false,
-      confirmYes: null
+      
     }
   },
   computed:{
-    ...mapGetters(["getIsAutchUser", "getCategoryParendId"]),
+    ...mapGetters(["getIsAutchUser", "getCategoryParendId","getGonfimAction",
+      "getGonfimMessage"]),
   },
   methods:{
-    ...mapActions(["deleteCategoryDb"]),
+    ...mapActions(["deleteCategoryDb", "setConfirmMessage",]),
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
       return img
@@ -95,15 +89,20 @@ export default {
     },
     async deleteCategoty(){
       console.log('Удаляю категорию № - ',this.item.id)
-      this.deleteCategoryDb({id: this.item.id, parentId: this.getCategoryParendId})
-      this.confirmVisible = false
-      this.confirmYes = null
+      this.deleteCategoryDb({id: this.item.id, parentId: this.getCategoryParendId, })
+      
     },
     deleteVisibleConfirm(){
-      this.confirmMessage = "При удалении раздела, так же будут удалены все его внутренние области. Вы, действительно хотите это сделать?"
-      this.confirmVisible = true
-      this.confirmYes = this.deleteCategoty
-    },
+
+      this.setConfirmMessage("При удалении раздела, так же будут удалены все его внутренние области. Вы, действительно хотите это сделать?")
+      let timerId = setInterval(() => {
+        if (this.getGonfimAction) {
+          clearInterval(timerId)
+          if (this.getGonfimAction === "yes"){this.deleteCategoty()}
+          
+        }
+      }, 200);
+     },
     createChildrenCategory(){
       this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id: this.item.id  } })
     },

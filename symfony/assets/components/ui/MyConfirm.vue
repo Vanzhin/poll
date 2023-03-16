@@ -1,43 +1,46 @@
 <template>
-   <div class="cont-message">
-    <div class="confirm__window" >
-      <div  class="confirm__children">
-         {{message}}
-      </div>
-      
-      <div class="confirm__cont-button">
-          <div class="confirm__button"
-          @click.stop="$emit('yesConfirm')"
-          >Да</div> 
-          <div class="confirm__button"
-              @click.stop="$emit('noConfirm')"
-          >Нет</div> 
+   <div class="cont-message"
+   v-if="getGonfimMessage !=='' "
+   >
+    <div class="cont-message-cont">
+      <div class="confirm__window" >
+        <div  class="confirm__children">
+          {{getGonfimMessage}}
+        </div>
+        
+        <div class="confirm__cont-button">
+            <div class="confirm__button"
+              @click.stop="configClick('yes')"
+            >Да</div> 
+            <div class="confirm__button"
+              @click.stop="configClick('no')"
+            >Нет</div> 
+        </div>
       </div>
     </div>
-
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex"
+
+import { mapGetters, mapActions} from "vuex"
 export default {
-  props: ['message',],
   data() {
     return {
     }
   },
   computed:{ 
-    classObject() {
-      const errClass = {
-        error:  !this.getMessage ? false: this.getMessage.err,
-        // message: !this.getMessage.err,
-      }
-      return errClass
-    },
-    ...mapGetters(["getMessage"]),
+    ...mapGetters(["getGonfimMessage","getGonfimVisible" ]),
   },
   methods: {
+    ...mapActions([
+      "setConfirmAction",
+    ]),
+    configClick(action){
+      this.setConfirmAction(action)
+    },
   },
   mounted(){
+    console.log('mount confirm getGonfimMessage -', this.getGonfimMessage)
   },
   unmounted(){
   }
@@ -47,21 +50,26 @@ export default {
 
 <style lang="scss" scoped>
 .cont-message{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
+  position: relative;
   z-index: 21;
-  background-color: rgba(114, 113, 112, 0.63);
+
+  &-cont{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    
+    background-color: rgba(240, 248, 255, 0.267);
+  }
 }
 .confirm{
   &__window{
     width: 50%;
-    height: 110px;
+    min-height: 110px;
     background-color: rgb(253 253 253);
-    border: 3px solid #b37ed6;
+    border: 3px solid rgb(86 153 157);
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -70,7 +78,7 @@ export default {
     animation: vizible 0.1s linear;
   }
    &__cont-button{
-     
+      margin: 10px;
       display: flex;
    }
    &__children{
