@@ -71,7 +71,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("deletCategoryDb - удалено",  data)
-          dispatch("getCategorysDB",  { page: null , parentId: parentId });
+          dispatch("getCategorysDB",  { page: null , parentId: parentId, admin: "admin"  });
           dispatch('setMessage', data)
         })
     } catch (e) {

@@ -36,7 +36,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
-  props: ['type'],
+  props: ['type', 'admin'],
   data() {
     return {
       isActive: false,
@@ -72,7 +72,8 @@ export default {
       const data = {
         page: this.currentPage, 
         parentId: this.$route.params.id||null,
-        id: this.$route.params.id||null
+        id: this.$route.params.id||null,
+        admin: this.admin
       }
       console.log(data)
       await this[this.type](data)

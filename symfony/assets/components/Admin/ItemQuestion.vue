@@ -3,12 +3,7 @@
     class=" flex-shrink-1 shadow flex-row"
   >
     <div class="cont-question">
-      <MyConfirm
-        :message="confirmMessage"
-        @yesConfirm="confirmYes"
-        @noConfirm="confirmVisible = false"
-        v-if="confirmVisible"
-      />
+     
       <TestQuestionRadio
         v-if="questionType(question.type) === 'radio'"
         :question="question"
@@ -30,7 +25,7 @@
         :index="index"
       />
       <TestQuestionConformity
-        v-else-if="questionType(question.type) === 'conformi'"
+        v-else-if="questionType(question.type) === 'conformit'"
         :question="question"
         :index="index"
       />
@@ -66,7 +61,7 @@ import TestQuestionCheckbox from './AdminTestQuestion/TestQuestionCheckbox.vue'
 import TestQuestionOrdered from './AdminTestQuestion/TestQuestionOrdered.vue'
 import TestQuestionInputOne from './AdminTestQuestion/TestQuestionInputOne.vue'
 import TestQuestionConformity from './AdminTestQuestion/TestQuestionConformity.vue'
-import MyConfirm from '../ui/MyConfirm.vue'
+
 import { mapGetters, mapActions, mapMutations} from "vuex"
 
 export default {
@@ -77,32 +72,39 @@ export default {
     TestQuestionOrdered,
     TestQuestionInputOne,
     TestQuestionConformity,
-    MyConfirm
+   
   },
   data() {
     return {
-      confirmMessage: '',
-      confirmVisible: false,
-      confirmYes: null
+     
     }
   },
   computed:{
     ...mapGetters([
       "getTest",
-      "getActivePage"
+      "getActivePage",
+      "getGonfimAction",
+      "getGonfimMessage"
     ]),
   },
   methods: {
     ...mapActions([
-      "deleteQuestionDb", "setQuestion"
+      "deleteQuestionDb", 
+      "setQuestion",
+      "setConfirmMessage",
     ]),
     questionType(question){
       return question.title ? question.title : question
     },
     deleteVisibleConfirm(){
-      this.confirmMessage = "Вы, действительно хотите удалить вопрос?"
-      this.confirmVisible = true
-      this.confirmYes = this.deleteQuestin
+      this.setConfirmMessage("Вы, действительно хотите удалить вопрос?")
+      let timerId = setInterval(() => {
+        if (this.getGonfimAction) {
+          clearInterval(timerId)
+          if (this.getGonfimAction === "yes" ){this.deleteQuestin()}
+        }
+      }, 200);
+      
     },
     async deleteQuestin(){
       console.log('Удаляю вопрос № - ', this.question)

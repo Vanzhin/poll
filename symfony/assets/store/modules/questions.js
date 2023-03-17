@@ -4,7 +4,8 @@ import {
   SET_LOADER_TOGGLE,
   SET_RESULT_TICKET_USER,
   SET_LOADER_STATUS,
-  SET_QUESTION
+  SET_QUESTION,
+  SET_QUESTIONS_IMPORT_ERROR
 } from './mutation-types.js'
 import axios from 'axios';
 
@@ -315,6 +316,7 @@ const state = () => ({
   isLoader: false,//resultTicketUser
   resultTicketUser:localStorage.getItem('resultTicketUser') ?
   JSON.parse(localStorage.getItem('resultTicketUser')): [],
+  questionsImportError: null
   
 })
 
@@ -550,8 +552,14 @@ const actions = {
   },
   saveResultTicketUser({ commit }, ticket){
     commit("SET_RESULT_TICKET_USER", ticket);
+  },
+  setQuestionsImportError({ commit }, error){
+    commit("SET_QUESTIONS_IMPORT_ERROR", error);
   }
 };
+
+
+//questionsImportError
 
 const getters = {
   getQuestions(state) {
@@ -568,7 +576,9 @@ const getters = {
   getQuestion(state) {
     return state.question 
   },
-  
+  getQuestionsImportError(state) {
+    return state.questionsImportError 
+  },
 }
 
 const mutations = {
@@ -597,6 +607,10 @@ const mutations = {
   [SET_QUESTION] (state, question ) {
     console.log("SET_QUESTION", question)
     state.question = question
+  },
+  [SET_QUESTIONS_IMPORT_ERROR](state, error ) {
+    console.log("SET_QUESTIONS_IMPORT_ERROR", error)
+    state.questionsImportError = error
   },
 }
 

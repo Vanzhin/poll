@@ -29,7 +29,7 @@
             v-for="(variant, vInd ) in question.variant"
             :value="vInd" 
           >
-            {{ variant }}
+            {{ variant.title }}
           </option>
         </select>
       </div>

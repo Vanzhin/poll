@@ -156,7 +156,6 @@ export default {
           return {
             id: item.id,
             title: item.title,
-            file: '',
             image: item.image ? item.image : '',
             value: ''
           }

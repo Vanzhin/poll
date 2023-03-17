@@ -11,7 +11,7 @@
     <hr/>
    <div class="container">
       <div class="row">
-        <form @submit.prevent="onSubmit">
+        <form @submit.prevent="onSubmit" class="form-import">
           <div
             v-if="!this.$route.params.id"
           >
@@ -43,6 +43,39 @@
           <button type="submit" class="button">Загрузить</button>
         </form>
       </div>
+      
+      <div class="row"
+        v-if="getQuestionsImportError"
+      >
+      <br/>
+      <hr><br/>
+      <h5>При импорте обнаруженны ошибки в следующих вопросах:</h5>
+      <div 
+        v-for="(item, index) in getQuestionsImportError"
+        class="question-item"
+      >
+      <ul>
+        <li>
+          <div>
+
+            <h6 >{{item.error.variant['0']}}!</h6>
+            <p>Вопрос: {{ item.error.variant.question.title}}</p>
+            <div
+              v-if="item.error.variant.question.variant"
+              class="question-item-variant"
+            >
+              Варинты ответов:
+              <li
+                v-for="(variant, index) in item.error.variant.question.variant"
+              >
+                {{ variant.title }}
+              </li>
+            </div>
+          </div>
+        </li>
+        </ul>
+      </div>
+      </div>
     </div>
   </div>
 </template>
@@ -51,6 +84,7 @@
   import MessageView from "../../components/ui/MessageView.vue"
   import Loader from '../../components/ui/Loader.vue'
   import { mapGetters, mapActions, mapMutations} from "vuex"
+import { onUnmounted } from "vue"
   export default {
     components: {
       Loader,
@@ -69,12 +103,13 @@
       ...mapGetters([
         "getAutchUserToken", 
         "getMessage",
-        "getTests"
+        "getTests",
+        "getQuestionsImportError"
       ]),
     },
    
     methods: { 
-      ...mapActions(["importFileTestDb", "setMessage", "getTestsDB"]),
+      ...mapActions(["importFileTestDb", "setMessage", "getTestsDB", "setQuestionsImportError"]),
       ...mapMutations([]),
       async onSubmit(e){
         if (!this.testValue) {
@@ -128,12 +163,26 @@
       //   await this.getTestsDB({}) 
       // }       
       this.isLoader = false
+    },
+    unmounted(){
+      this.setQuestionsImportError(null)
     }
-   
  } 
  
 </script>
 <style lang="scss" scoped>
+  .form-import{
+    margin-bottom: 15px;
+  }
+  .question-item{
+    margin-top: 10px;
+    h6{
+      color: rgb(223, 62, 62);
+    }
+    &-variant{
+      padding-left: 30px;
+    }
+  }
   .input_file{
     margin-top: 20px;
     margin-bottom: 20px;

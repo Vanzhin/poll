@@ -12,10 +12,7 @@
       v-else
     />
   </div>
-   
-   
 </template>
-
 <script>
 
 import ResultAutchView from './ResultAutchView.vue'
@@ -41,6 +38,10 @@ export default {
   },
   async mounted(){
     console.log('монтирую результат')
+    
+  },
+  async created(){
+    console.log('создаю результат')
     this.loader = true
     window.scroll(0, 0);
     const res = await this.setResultDb( {token: this.getAutchUserToken, userAuth:this.getIsAutchUser})
@@ -51,9 +52,6 @@ export default {
       }
     }
     this.loader = false
-  },
-  created(){
-    console.log('создаю результат')
   },
   unmounted(){
     console.log('размонтирую результат!')

@@ -53,8 +53,16 @@ export default {
   created(){
     console.log(this.getQuestion)
     if (this.operationEdit) {
-      this.answers = this.getQuestion.variant[0].title
-      this.answerId = this.getQuestion.variant[0].id
+      this.answers = this.getQuestion.variant 
+          ? this.getQuestion.variant[0] 
+            ? this.getQuestion.variant[0].title ? this.getQuestion.variant[0].title:''
+            : ''
+          : ''
+      this.answerId = this.getQuestion.variant 
+          ? this.getQuestion.variant[0] 
+            ? this.getQuestion.variant[0].id ? this.getQuestion.variant[0].id:''
+            : ''
+          : ''
     }
   } 
 }
