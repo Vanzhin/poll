@@ -91,7 +91,8 @@ class VariantService
                     });
 
                 }
-                $question->setAnswer(array_values($answers));
+
+            $question->setAnswer(array_values($answers));
 
                 break;
         }
