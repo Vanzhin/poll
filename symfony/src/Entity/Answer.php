@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
 class Answer
@@ -14,10 +15,12 @@ class Answer
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['result'])]
     private array $content = [];
 
     #[ORM\ManyToOne(inversedBy: 'answers')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['result'])]
     private ?Question $question = null;
 
 

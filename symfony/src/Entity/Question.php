@@ -23,7 +23,7 @@ class Question implements EntityWithImageInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle', 'result'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]

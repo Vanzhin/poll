@@ -36,7 +36,7 @@ class Category implements EntityWithImageInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 500)]
-    #[Groups(['main', 'admin', 'category'])]
+    #[Groups(['main', 'admin', 'category', 'result'])]
     #[Assert\NotBlank(
         message: 'category.title.not_blank'
     )]
@@ -68,6 +68,7 @@ class Category implements EntityWithImageInterface
 
 
     #[Gedmo\TreeParent]
+    #[Groups(['result'])]
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private ?self $parent = null;

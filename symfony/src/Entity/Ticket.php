@@ -45,7 +45,7 @@ class Ticket
     #[Assert\Positive(
         message: 'ticket.title.not_int'
     )]
-    #[Groups(['main', 'account', 'admin', 'category', 'admin_section', 'admin_ticket', 'admin_question'])]
+    #[Groups(['main', 'account', 'admin', 'category', 'admin_section', 'admin_ticket', 'admin_question', 'result'])]
     private ?int $title = null;
 
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class, cascade: ['persist', 'remove'])]

@@ -34,7 +34,7 @@ class Test
         maxMessage: 'test.title.max_length',
     )]
     #[ORM\Column(length: 255)]
-    #[Groups(['main', 'category', 'admin', 'admin_test_general'])]
+    #[Groups(['main', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?string $title = null;
 
     #[Assert\NotBlank]
@@ -61,9 +61,10 @@ class Test
         message: 'test.category.exist'
     )]
     #[ORM\ManyToOne(inversedBy: 'test')]
+    #[Groups(['result'])]
     private ?Category $category = null;
 
-    #[Groups(['admin_test_general','category'])]
+    #[Groups(['admin_test_general', 'category'])]
     private ?int $questionCount = null;
 
     #[Groups(['admin_test_general', 'category'])]
@@ -71,6 +72,9 @@ class Test
 
     #[Groups(['admin_test_general', 'category'])]
     private ?int $ticketCount = null;
+
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Result::class)]
+    private Collection $results;
 
     /**
      * @return int|null
@@ -126,6 +130,7 @@ class Test
         $this->question = new ArrayCollection();
         $this->section = new ArrayCollection();
         $this->ticket = new ArrayCollection();
+        $this->results = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -260,6 +265,36 @@ class Test
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Result>
+     */
+    public function getResults(): Collection
+    {
+        return $this->results;
+    }
+
+    public function addResult(Result $result): self
+    {
+        if (!$this->results->contains($result)) {
+            $this->results->add($result);
+            $result->setTest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResult(Result $result): self
+    {
+        if ($this->results->removeElement($result)) {
+            // set the owning side to null (unless already changed)
+            if ($result->getTest() === $this) {
+                $result->setTest(null);
+            }
+        }
 
         return $this;
     }

@@ -9,6 +9,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: ResultRepository::class)]
 class Result
@@ -18,13 +20,15 @@ class Result
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['result'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Groups(['account'])]
+    #[Groups(['account', 'result'])]
     private ?int $score = null;
 
     #[ORM\OneToMany(mappedBy: 'result', targetEntity: Answer::class, orphanRemoval: true)]
+    #[Groups(['result'])]
     private Collection $answers;
 
     #[ORM\ManyToOne(inversedBy: 'results')]
@@ -32,8 +36,25 @@ class Result
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'results')]
-    #[Groups(['account'])]
+    #[Groups(['account', 'result'])]
     private ?Ticket $ticket = null;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['result'])]
+    protected $updatedAt;
+
+    #[ORM\ManyToOne(inversedBy: 'results')]
+    #[Groups(['result'])]
+    private ?Test $test = null;
+
+    #[Groups(['result'])]
+    private ?int $questionCount = null;
 
     public function __construct()
     {
@@ -109,5 +130,33 @@ class Result
         $this->ticket = $ticket;
 
         return $this;
+    }
+
+    public function getTest(): ?Test
+    {
+        return $this->test;
+    }
+
+    public function setTest(?Test $test): self
+    {
+        $this->test = $test;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getQuestionCount(): ?int
+    {
+        return $this->questionCount;
+    }
+
+    /**
+     * @param int|null $questionCount
+     */
+    public function setQuestionCount(?int $questionCount): void
+    {
+        $this->questionCount = $questionCount;
     }
 }

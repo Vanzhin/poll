@@ -15,9 +15,11 @@ class AnswerFixtures extends BaseFixtures implements DependentFixtureInterface
     function loadData(ObjectManager $manager)
     {
         $this->createMany(Answer::class, 500, function (Answer $answer) use ($manager) {
+            $result = $this->getRandomReference(Result::class);
+            $questions = $result->getTest()->getQuestion()->toArray();
             $answer
-                ->setQuestion($this->getRandomReference(Question::class))
-                ->setResult($this->getRandomReference(Result::class));
+                ->setResult($result)
+                ->setQuestion($this->faker->randomElement($questions));
 
             $content = $this->faker->boolean(75) ? $answer->getQuestion()->getAnswer() :
                 ($answer->getQuestion()->getVariant()->count() > 0 ? [$this->faker->randomElement($answer->getQuestion()->getVariant())->getId()] : [$this->faker->randomElement($answer->getQuestion()->getAnswer())]);

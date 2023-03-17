@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Result::class, orphanRemoval: true)]
-    #[Groups(['account'])]
+    #[Groups(['account', 'result'])]
     private Collection $results;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Question::class)]
