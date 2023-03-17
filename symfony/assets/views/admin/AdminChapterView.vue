@@ -19,7 +19,8 @@
     
     <div class="container">
       <div class="row">
-        <div class="tests__block">
+        <div class="tests__block"
+          v-if="getCategorys">
           <ItemChapter
             v-for="(item, index) in getCategorys" 
             :key="item.id"
@@ -28,6 +29,11 @@
             @click.stop="categoryRoute({id:item.id})"
           />
         </div>
+        <div class="tests__block"
+          v-else>
+        <h4>Создайте раздел.</h4>
+        </div>
+
         <Pagination
           type="getCategorysDB"
           admin= true

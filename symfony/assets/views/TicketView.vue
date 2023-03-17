@@ -101,11 +101,11 @@ export default {
   },
    methods: {
     ...mapActions(["getQuestionsDb", "saveResultTicketUser"]),
-    onSubmit(e){
+    async onSubmit(e){
       const ticket = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
         .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
       
-      this.saveResultTicketUser(ticket)
+      await this.saveResultTicketUser(ticket)
       this.$router.push({ path:'/result'})
     },
     timerEnd(){ //написать действия при окончании времени таймера

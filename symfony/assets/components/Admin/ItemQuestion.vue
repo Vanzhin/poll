@@ -25,7 +25,7 @@
         :index="index"
       />
       <TestQuestionConformity
-        v-else-if="questionType(question.type) === 'conformity'"
+        v-else-if="questionType(question.type) === 'conformit'"
         :question="question"
         :index="index"
       />
