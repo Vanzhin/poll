@@ -99,7 +99,7 @@ class TestController extends AbstractController
 
     #[Route('/api/test/handle', name: 'app_api_test_handle', methods: ['POST'])]
     public function handle(Request           $request,
-                           QuestionHandler   $questionService,
+                           QuestionHandler   $questionHandler,
                            AppUpLoadedAsset  $upLoadedAsset,
                            NormalizerService $normalizerService
     ): JsonResponse
@@ -107,7 +107,7 @@ class TestController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
         try {
-            $response = $questionService->handle($data);
+            $response = $questionHandler->handle($data);
             $status = 200;
 
         } catch (\Exception $e) {
@@ -131,7 +131,7 @@ class TestController extends AbstractController
 
     #[Route('/api/auth/test/handle', name: 'app_api_auth_test_handle', methods: ['POST'])]
     public function handleByUser(Request           $request,
-                                 QuestionHandler   $questionService,
+                                 QuestionHandler   $questionHandler,
                                  SessionService    $sessionService,
                                  AppUpLoadedAsset  $upLoadedAsset,
                                  NormalizerService $normalizerService
@@ -140,7 +140,7 @@ class TestController extends AbstractController
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
         try {
-            $response = $questionService->handle($data, $user);
+            $response = $questionHandler->handle($data, $user);
             $status = 200;
 
         } catch (\Exception $e) {
