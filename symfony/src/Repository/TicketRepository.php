@@ -7,6 +7,7 @@ use App\Entity\Test;
 use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -85,16 +86,20 @@ class TicketRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findLastTitleByTest(Test $test)
+    public function findLastTitleByTest(Test $test): mixed
     {
-        return $this->getOrCreateQueryBuilder()
-            ->select('ti.title')
-            ->andWhere('ti.test = :testId')
-            ->setParameters(['testId' => $test->getId()])
-            ->setMaxResults(1)
-            ->orderBy('ti.title', 'DESC')
-            ->getQuery()
-            ->getOneOrNullResult();
+        try {
+            return $this->getOrCreateQueryBuilder()
+                ->select('ti.title')
+                ->andWhere('ti.test = :testId')
+                ->setParameters(['testId' => $test->getId()])
+                ->setMaxResults(1)
+                ->orderBy('ti.title', 'DESC')
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException $e) {
+            return null;
+        }
     }
 
 //    /**

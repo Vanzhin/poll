@@ -31,9 +31,17 @@ class TicketBuilder
                     break;
                 case 'test':
                     $ticket->setTest(null);
-                    if ($this->em->find(Test::class, $item)) {
-                        $ticket->setTest($this->em->find(Test::class, $item));
+                    $test = $this->em->find(Test::class, $item);
+                    if ($test) {
+                        $ticket->setTest($test);
+                        $lastTicketTitle = $this->em->getRepository(Ticket::class)->findLastTitleByTest($test);
+                        if($lastTicketTitle){
+                            $ticket->setTitle(++$lastTicketTitle);
+                        }else{
+                            $ticket->setTitle(1);
+                        }
                     };
+
                     break;
                 case 'question':
                     $ticket->getQuestion()->clear();
