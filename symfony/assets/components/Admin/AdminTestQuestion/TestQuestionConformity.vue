@@ -97,6 +97,7 @@ export default {
     min-height: 1.5rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+    margin-top: 3px;
   }
   .f_sm {
       font-size: 0.9rem;

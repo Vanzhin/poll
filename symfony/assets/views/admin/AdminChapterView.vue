@@ -73,7 +73,7 @@
       },
       async categoryRoute({id}){
         this.isLoader = true
-        await this.getCategorysDB({parentId: id, admin: true})
+        await this.getCategorysDB({parentId: id, admin: true, token: this.getAutchUserToken})
         if (this.getTests) {
           console.log('переход к списку тестов - ', this.getTests)
             this.$router.push({name: 'adminsTests', params: {id } })
@@ -87,7 +87,7 @@
       },
     },
     async created(){
-      await this.getCategorysDB({admin: true})
+      await this.getCategorysDB({admin: true, token: this.getAutchUserToken})
       this.isLoader = false
     },
     

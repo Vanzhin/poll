@@ -13,7 +13,7 @@
         </label>
         <label v-if="getUserAnswer && !question.result.score"
           class="custom-control-label f_sm answer-true" 
-        > - {{ question.variant.length > 0 ? question.variant.length[0].title ? question.variant.length[0].title:"":""}}
+        > - {{ question.variant.length > 0 ? question.variant[0].title ? question.variant[0].title:"":""}}
         </label>
       </div>
       <br>

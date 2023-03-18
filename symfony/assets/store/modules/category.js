@@ -16,7 +16,7 @@ const state = () => ({
 })
 
 const actions = {
-  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null }) {
+  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null, token = null }) {
     const config = {
       method: 'get',
       url: `/api${admin ? '/admin': '' }/category`,
