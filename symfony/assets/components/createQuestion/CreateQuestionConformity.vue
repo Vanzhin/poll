@@ -33,7 +33,7 @@
               <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <div class="d-flex align-items-center">
                   <textarea rows="1" required
-                    :name="`question[subTitle][a${ind}]`"
+                    :name="`question[subTitle][${answer.id}]`"
                     v-model= "answer.subTitle"
                     class="textarea_input" 
                   >
@@ -49,7 +49,7 @@
               <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <div class="row d-flex align-items-center">
                   <input required
-                    :name="`variant[a${ind}][title]`"
+                    :name="`variant[${answer.id}][title]`"
                     v-model= "answer.title"
                     class="input" 
                   >
@@ -85,7 +85,7 @@
               <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
               <input  class="" type="file" accept="image/*"  
                 @change="(e)=> changeAnswerImg(e, ind)"
-                :name="(answer.value === '')&&(answer.image === '') ? '' :`variantImage[a${ind}]`"
+                :name="(answer.value === '')&&(answer.image === '') ? '' :`variantImage[${answer.id}]`"
                 :value="answer.value"
               >
             </div>
@@ -95,7 +95,7 @@
       </div>
 <!-- /// -->
      <ConformityRichtAdd
-      :richtVariant="answers.length"
+      :richtVariant="uniqueNumber"
      />
     </div>       
   </div>
@@ -104,6 +104,7 @@
 
 import  ConformityRichtAdd from './ConformityRichtAdd.vue';
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
     ConformityRichtAdd,
@@ -114,7 +115,7 @@ export default {
       count: 0,
       answerSelect: [1],
       answers: [{
-        id:"",
+        id:"a1",
         title: "",
         image: "",
         value: "",
@@ -122,11 +123,17 @@ export default {
         sort: 0,
       }],
       numberAnswers: 1,
-      showPreviewQuestionImg: false,
+      uniqueNumber: 1,
       drag: false,
+      operation: this.$route.params.operation,
+      operationEdit: this.$route.params.operation === "edit"
     }
   },
   computed:{
+    ...mapGetters([
+      "getTest",
+      "getQuestion"
+    ]),
     questionVariantSort(){
       this.answers.sort((a,b) => a.sort-b.sort)
       this.answers.forEach((item, index ) => {
@@ -142,8 +149,9 @@ export default {
         return
       }
       if ( this.answers.length < this.numberAnswers) {
+        ++this.uniqueNumber
         this.answers.push({
-          id:"",
+          id:'a' + (this.uniqueNumber),
           title: "",
           image: "",
           value: "",
@@ -186,6 +194,25 @@ export default {
       this.drag = false
     }
   },
+  created(){
+    if (this.operationEdit) {
+     
+      this.uniqueNumber = this.numberAnswers = this.getQuestion.subTitle.length
+      this.answers = this.getQuestion.subTitle.map((item, index) => 
+        {
+          const variantItem = this.getQuestion.variant[index]
+          return {
+            id:  variantItem.id,
+            title: variantItem.title ? variantItem.title: '',
+            image: variantItem.image ? variantItem.image: '',
+            value: "",
+            subTitle: item,
+            sort: index, 
+          }
+        })
+      console.log("this.answers -",this.answers )
+    }
+  } 
    
 }
 

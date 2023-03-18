@@ -10,7 +10,8 @@ const state = () => ({
   paginVisible: 10,
   paginLeft: 1,
   paginRight: 10,
-  totalPages: 1
+  totalPages: 1,
+  totalItem: null
 })
 
 const actions = {
@@ -33,6 +34,9 @@ const getters = {
   getTotalPage(state) {
     return state.totalPages 
   },
+  getTotalItem(state) {
+    return state.totalItem 
+  },
 }
 
 const mutations = {
@@ -47,6 +51,7 @@ const mutations = {
       state.totalItemsPage = pagination.limit
       state.activePage = pagination.currentPage
       state.totalPages = pagination.totalPages
+      state.totalItem = pagination.totalItem
       if (pagination.totalPages <= state.paginVisible){
         const len =  pagination.totalPages
         state.paginRight = pagination.totalPages

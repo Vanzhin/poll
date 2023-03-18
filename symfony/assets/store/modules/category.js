@@ -16,7 +16,7 @@ const state = () => ({
 })
 
 const actions = {
-  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null }) {
+  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null, token = null }) {
     const config = {
       method: 'get',
       url: `/api${admin ? '/admin': '' }/category`,
@@ -71,7 +71,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("deletCategoryDb - удалено",  data)
-          dispatch("getCategorysDB",  { page: null , parentId: parentId });
+          dispatch("getCategorysDB",  { page: null , parentId: parentId, admin: "admin"  });
           dispatch('setMessage', data)
         })
     } catch (e) {

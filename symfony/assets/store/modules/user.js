@@ -5,7 +5,8 @@ import {
   SET_DELETE_USER_TOKEN,
   SET_AUTH_ACCOUNT,
   SET_LOGOUT_LINK_DATE,
-  SET_MESSAGE_REQUEST
+  SET_MESSAGE_REQUEST,
+  SET_AUTCH_USER_ROLE
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -22,7 +23,8 @@ const state = () => ({
   password: '',
   result: [],
   logoutLinkDate: {},
-  message: null
+  message: null,
+  role: ""
 })
 
 const actions = {
@@ -71,7 +73,9 @@ const actions = {
           // const base64 = decodeURIComponent(atob(base64Url).split('').map(function(c) {
           //   return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
           // }).join(''));
-          const base64 = atob(base64Url)
+          const base64 = JSON.parse(atob(base64Url))
+          console.log( base64)
+          commit("SET_AUTCH_USER_ROLE", base64.roles[0]);
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)
           dispatch('setMessage',{
@@ -169,8 +173,8 @@ const actions = {
   async getAuthRefresh({commit, state }, refresh_token) {
     let data = ''
     if (refresh_token) {
-       data = JSON.stringify({"refresh_token":refresh_token})
-    } else { data = JSON.stringify({"refresh_token":state.refresh_token})}
+       data = JSON.stringify({"refresh_token": refresh_token})
+    } else { data = JSON.stringify({"refresh_token": state.refresh_token})}
     console.log(data)
     try {
       const config = {
@@ -197,7 +201,10 @@ const actions = {
   },
   setIsAutchUser ({ commit }, pr) {
     commit("SET_IS_AUTCH_USER", pr)
-  }
+  },
+  getAutchUserTokenAction({state}) {
+    return state.token
+  },
   
 };
 
@@ -224,6 +231,9 @@ const getters = {
   getMessageLogin(state) {
     return state.message
   },
+  getUserRole(state) {
+    return state.role
+  }
 }
 
 const mutations = {
@@ -267,6 +277,10 @@ const mutations = {
     console.log("SET_MESSAGE_REQUEST", message)
     state.message = message
   },
+  [SET_AUTCH_USER_ROLE] (state, role) {
+    console.log("SET_AUTCH_USER_ROLE", role)
+    state.role = role
+  }
 }
 export default {
   namespaced: false,

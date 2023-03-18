@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      meta: {loyout: 'page', autch: false},
+      meta: {loyout: 'page', autch: false },
       component: () => import('../views/SectionsView.vue')
       // meta: {loyout: 'admin', autch: true, admin: true},
       // component: () => import('../views/admin/AdminChapterView.vue')
@@ -201,7 +201,9 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   const requireAuth = to.meta.autch
+  const requireRole = to.meta.admin
   const userAutch = store.getters.getIsAutchUser
+  const role = store.getters.getUserRole
   // console.log('userAutch', userAutch)
   // console.log(store)
   // console.log(from.name)
@@ -217,7 +219,15 @@ router.beforeEach((to, from, next) => {
   if (requireAuth && !userAutch) {
     next('/logout')
   } else {
-    next()
+      if (requireRole ){
+        if (role === "ROLE_ADMIN") {
+          next()
+        } else alert( "у вас нет прав доступа.")
+        next('/')
+      } else {
+        next()
+      }
+      
   }
 })
 

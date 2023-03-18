@@ -18,7 +18,7 @@
         class="sub-item"
       >
         <input required
-          :name="`variant[a${richtVariant +ind}][title]`"
+          :name="`variant[${subTitle.id}][title]`"
           v-model= "subTitle.title"
           class="sub-item-input" 
         >
@@ -38,19 +38,32 @@
 
 <script>
 
-
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   props: ['richtVariant',  ],
   data() {
     return {
       subTitles:[],
       numberSubTitles: 0,
+      uniqueNumber: 100,
+      operation: this.$route.params.operation,
+      operationEdit: this.$route.params.operation === "edit"
     }
+  },
+  computed:{
+    ...mapGetters([
+      "getTest",
+      "getQuestion"
+    ]),
   },
   methods: {
     changeNumberSubTitles(){
       if ( this.subTitles.length < this.numberSubTitles) {
-        this.subTitles.push({title:""})
+        ++this.uniqueNumber
+        this.subTitles.push({
+          id: 'a' + this.uniqueNumber,
+          title:""
+        })
       } else {
         this.subTitles.pop()
       }
@@ -61,7 +74,22 @@ export default {
         this.numberSubTitles = this.subTitles.length
       }
     },
-  }
+  },
+  created(){
+    
+    if (this.operationEdit) {
+      const sub = this.getQuestion.variant.slice(this.getQuestion.subTitle.length, this.getQuestion.variant.length)
+      this.subTitles = sub.map((item, index) => 
+        {
+          return {
+            id: item.id,
+            title: item.title ? item.title: '',
+          }
+        })
+      this.numberSubTitles = this.subTitles.length
+      console.log("this.subTitles -",this.subTitles )
+    }
+  } 
 
 }
 

@@ -18,14 +18,14 @@
             v-if="question.result.user_answer[ind] && question.result.user_answer[ind]!==''"
             class="custom-control-label f_sm answer " 
             :class="classAnswer(ind)"
-          >{{ question.variant[question.result.user_answer[ind]] }}
+          >{{ question.variant[question.result.user_answer[ind]].title }}
           </label>
         
           <label 
             v-if="
                 +question.result.user_answer[ind] !== question.result.true_answer[ind]"
             class="custom-control-label f_sm " 
-          >{{ question.variant[question.result.true_answer[ind]] }}
+          >{{ question.variant[question.result.true_answer[ind]].title }}
           </label>
           <label 
             v-else

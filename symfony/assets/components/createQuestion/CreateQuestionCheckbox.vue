@@ -24,7 +24,7 @@
       >
         <div class="custom-radio" >
           <input type="checkbox" 
-            :value= "operationEdit ? answer.id : ind"
+            :value= "answer.id "
             v-model="answerSelect"
             class="custom-control-input"  
           >
@@ -154,7 +154,6 @@ export default {
           return {
             id: item.id,
             title: item.title,
-            file: '',
             image: item.image ? item.image : '',
             value: ''
           }

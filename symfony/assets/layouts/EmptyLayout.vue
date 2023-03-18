@@ -1,5 +1,6 @@
 <template>
   <MessageView/>
+  <MyConfirm/>
   <div class="backgraund">
     <RouterView />
   </div>
@@ -7,9 +8,11 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import MessageView from "../components/ui/MessageView.vue"
+import MyConfirm from '../components/ui/MyConfirm.vue'
 export default {
   components: {
     MessageView,
+    MyConfirm
   },
 } 
 </script>

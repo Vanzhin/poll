@@ -11,18 +11,23 @@
         v-for="(answer, ind ) in question.subTitle" 
         :key="answer"
       >
-        <label 
-          v-if="answer!==''"
-          class="custom-control-label f_sm" 
-          
-        >{{ answer }}
-        </label>
-        <select>
-          disabled
-          <option>
-            {{ variantConformity(ind) }}
-          </option>
-        </select>
+        <div>
+          <img :src="variantConformity(ind).image"  width="200" height="135" 
+            v-if="variantConformity(ind).image !== ''"
+          /> 
+          <label 
+            v-if="answer!==''"
+            class="custom-control-label f_sm" 
+          >{{ answer }}
+          </label>
+        </div>
+          <select>
+            disabled
+            <option>
+              {{ variantConformity(ind).title }}
+            </option>
+          </select>
+        
       </div>
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in additionalVariants" 
@@ -31,7 +36,6 @@
         <label 
           v-if="answer!==''"
           class="custom-control-label f_sm" 
-          
         >
         </label>
         <select>
@@ -61,16 +65,16 @@ export default {
   },
   methods: {
     variantConformity(ind){
-      return this.question.variant.find(elem => elem.id === this.question.answer[ind]).title
+      return this.question.variant.find(elem => elem.id === this.question.answer[ind])
     }
   },
   mounted(){
     if (this.question.answer){
       this.additionalVariants = this.question.variant
       this.question.answer.forEach((item, index ) =>{ 
-      let arr = [...this.additionalVariants]
-      
-      this.additionalVariants = arr.filter(elem => elem.id !== item)}
+        let arr = [...this.additionalVariants]
+        this.additionalVariants = arr.filter(elem => elem.id !== item)
+      }
      
     )} 
     
@@ -87,11 +91,13 @@ export default {
   .custom-control {
     position: relative;
     display: flex;
-    align-items:flex-start;
+    align-items:center;
     justify-content: space-between;
+    flex-wrap: wrap;
     min-height: 1.5rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+    margin-top: 3px;
   }
   .f_sm {
       font-size: 0.9rem;

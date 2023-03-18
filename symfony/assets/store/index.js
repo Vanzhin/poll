@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
-import state from "./state";
+import state from "./state"
 import modal from './modules/modal'
 import questions from './modules/questions'
 import tests from './modules/tests'
@@ -10,8 +10,9 @@ import user from './modules/user'
 import sections from './modules/sections'
 import areas from './modules/areas'
 import tickets from './modules/tickets'
-import category from './modules/category';
+import category from './modules/category'
 import pagination from './modules/pagination'
+import confirm from './modules/confirm'
 export default createStore({
   state,
   mutations,
@@ -26,6 +27,7 @@ export default createStore({
     areas,
     tickets,
     category,
-    pagination
+    pagination,
+    confirm
   },
 })

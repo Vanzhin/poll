@@ -6,9 +6,19 @@
     v-else
   >
     <div class="title">
-      <h2>Тест: {{ testName }}</h2>
-      <div class="test">
-        <p> {{ ticketTitle }}</p>  
+      <div>
+        <h2>Тест: {{ testName }}</h2>
+        <div class="test">
+          <p>Всего вопросов в тесте: {{ getTotalItem }}</p>  
+        </div>
+      </div>
+      <div class="btn-group " >
+        <div class="btn btn-outline-primary btn-center"
+          title="Добавить вопрос"
+          @click.stop="addQuestion"
+        >
+          <i class="bi bi-plus create-plus"></i>
+        </div>
       </div>
     </div>
     
@@ -48,8 +58,8 @@ export default {
   data() {
     return {
       isLoader: true,
-      ticketId: this.$route.params.id,
-      ticketTitle:"",
+      testId: this.$route.params.id,
+      testTitle:"",
       confirmMessage: '',
       confirmVisible: false,
       confirmYes: null
@@ -62,7 +72,8 @@ export default {
       "getSelectTicket",
       "getTest",
       "getActivePage",
-      "getTotalItemsPage"
+      "getTotalItemsPage",
+      "getTotalItem"
     ]),
     testName () {
       return this.$store.getters.getTestTitleActive
@@ -76,9 +87,20 @@ export default {
     numQuestion(index){
       return index + (this.getActivePage - 1) * this.getTotalItemsPage
     },
+    addQuestion(){
+     
+      this.$router.push({
+        name: 'adminsQuestionsCreate', 
+        params: {
+          testId: this.testId,
+          questionId: 0,
+          operation: "create"
+        }
+      })
+    }
   },
   async created(){
-    await this.getQuestionsTestIdDb({id: this.ticketId})
+    await this.getQuestionsTestIdDb({id: this.testId})
     this.isLoader = false
   },
  
@@ -91,6 +113,8 @@ export default {
     padding: 10px ;
   }
   .title{
+    display: flex;
+    justify-content: space-between;
     margin: 10px;
     & h2{
       font-size: 1.4rem;

@@ -14,12 +14,15 @@
             <div class="custom-control custom-radio"
               v-for="(answer, ind ) in question.result.user_answer" 
               :key="answer"
-              
             >
+              <img :src="question.variant[answer].image" 
+                v-if="question.variant[answer].image"
+                class="img"
+              />  
               <label v-if="answer!==''"
                 class="custom-control-label f_sm " 
                 :class="classAnswer(ind)"
-              >{{ question.variant[answer] }}
+              >{{ question.variant[+answer].title }}
               </label>
             </div>
           </div>
@@ -32,12 +35,14 @@
               v-for="(answer) in question.result.true_answer" 
               :key="answer"
             >
+              <img :src="question.variant[answer].image" 
+                v-if="question.variant[answer].image"
+                class="img"
+              />  
               <label v-if="answer!==''"
                 class="custom-control-label f_sm " 
-                
-              >{{ question.variant[answer] }}
+              >{{ question.variant[answer].title }}
               </label>
-              
             </div>
           </div>
         </div>
@@ -68,8 +73,7 @@ export default {
   methods: {
     classAnswer(ind){
       return  {
-        "answer-true":  +this.question.result.user_answer[ind] === this.question.result.true_answer[ind]
-,
+        "answer-true":  +this.question.result.user_answer[ind] === this.question.result.true_answer[ind],
         "answer-user":  !this.question.result.score,
       }
     },
@@ -83,6 +87,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .img{
+    height: 130px;
+    margin: 5px;
+    max-width: 170px;
+  }
   .answer{
     color:rgb(91, 206, 235);
     &-user{
