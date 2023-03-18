@@ -168,7 +168,7 @@ class QuestionService
         $this->em->persist($question);
         $this->em->flush();
         $variants = [];
-        foreach ($data['variant'] as $key => $variantData) {
+        foreach ($data['variant'] ?? [] as $key => $variantData) {
             $variantData['questionId'] = $question->getId();
             if ($this->em->find(Variant::class, $key)) {
                 $variant = $this->variantService->make($this->em->find(Variant::class, $key), $variantData);
