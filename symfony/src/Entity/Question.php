@@ -305,4 +305,5 @@ class Question implements EntityWithImageInterface
 
         return $this;
     }
+
 }

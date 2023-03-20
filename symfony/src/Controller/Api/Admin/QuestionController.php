@@ -45,7 +45,6 @@ class QuestionController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-
     #[Route('/api/admin/question/{id}', name: 'app_api_admin_question_show', methods: ['GET'])]
     public function show(Question $question, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {

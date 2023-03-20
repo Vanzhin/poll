@@ -88,11 +88,11 @@ class QuestionService
 
     public function delete(Question $question): void
     {
-        foreach ($question->getVariant() as $variant) {
-            $this->variantImageUploader->delete($variant->getImage());
-        };
-
-        $this->questionImageUploader->delete($question->getImage());
+//        foreach ($question->getVariant() as $variant) {
+//            $this->variantImageUploader->delete($variant->getImage());
+//        };
+//
+//        $this->questionImageUploader->delete($question->getImage());
         $this->em->remove($question);
         $this->em->flush();
     }
