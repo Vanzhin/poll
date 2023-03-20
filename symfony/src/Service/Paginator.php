@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class Paginator
 {
+    const LIMIT_PER_PAGE = 5;
+
     private PaginatorInterface $paginator;
     private RequestStack $requestStack;
 
@@ -21,13 +23,13 @@ class Paginator
         $this->requestStack = $requestStack;
     }
 
-    public function getPagination(QueryBuilder $query, int $limit = 5, string $itemName = 'page', $default = 1): PaginationInterface
+    public function getPagination(QueryBuilder $query, string $itemName = 'page', $default = 1): PaginationInterface
     {
-
+        $limit = $this->requestStack->getCurrentRequest()->get('limit', static::LIMIT_PER_PAGE);
         return $this->paginator->paginate(
             $query, /* query NOT result */
             $this->requestStack->getCurrentRequest()->query->getInt($itemName, $default)/*page number*/,
-            $limit/*limit per page*/
+            intval($limit) > 0 ? $limit : static::LIMIT_PER_PAGE/*limit per page*/
         );
 
     }
