@@ -90,7 +90,7 @@ export default {
     addQuestion(){
      
       this.$router.push({
-        name: 'adminsQuestionsCreate', 
+        name: 'adminQuestionsCreate', 
         params: {
           testId: this.testId,
           questionId: 0,

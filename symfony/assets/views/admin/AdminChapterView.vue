@@ -69,14 +69,14 @@
       ...mapActions(["getCategorysDB", "setMessage"]),
       ...mapMutations([]),
       createCategory(){
-        this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id: 0  } })
+        this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: 0  } })
       },
       async categoryRoute({id}){
         this.isLoader = true
         await this.getCategorysDB({parentId: id, admin: true, token: this.getAutchUserToken})
         if (this.getTests) {
           console.log('переход к списку тестов - ', this.getTests)
-            this.$router.push({name: 'adminsTests', params: {id } })
+            this.$router.push({name: 'adminTests', params: {id } })
             setTimeout(() => this.isLoader = false, 200)
           return
         } 

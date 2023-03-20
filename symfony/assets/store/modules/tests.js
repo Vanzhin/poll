@@ -53,16 +53,16 @@ const state = () => ({
 })
 
 const actions = {
-  async getTestsDB({dispatch ,commit}, {page = null, token = null}){
+  async getTestsDB({dispatch ,commit}, {page = null}){
+    const token = await dispatch("getAutchUserTokenAction")
     const config = {
       method: 'get',
       url: `/api/admin/test`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     }
-
     if (page) {
       config.url = config.url + `?page=${page}`
     }
@@ -74,27 +74,33 @@ const actions = {
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getTestsDB', {page})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
   setTestTitle ({dispatch, commit}, {title}) {
     commit("SET_TEST_TITLE", title );
   },
-  async importFileTestDb({ dispatch, commit, state }, {id, token, testFile} ){
+  async importFileTestDb({ dispatch, commit, state }, {id, testFile} ){
+    const token = await dispatch("getAutchUserTokenAction")
     console.dir(testFile)
     commit("SET_LOADER_TOGGLE")
     try{
       // Array.from(questionSend).filter(inp => inp.name !== "")
       const data = new FormData(testFile);
       for(let [name, value] of data) {
-        console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+        console.dir(`${name} = ${value}`); 
       }
       const config = {
         method: 'post',
         url: `/api/admin/test/${id}/upload`,
         headers: { 
           Accept: 'application/json', 
-          // Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         data:  data
       };
@@ -107,12 +113,16 @@ const actions = {
           // commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-      const regexp = new RegExp("422", 'i');
-
       console.log(" ошибка загруки - ", e)
-      // regexp.test(e.message)
-      dispatch('setQuestionsImportError', e.response.data)
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('importFileTestDb', {id, testFile})
+      } else {
+        const regexp = new RegExp("422", 'i');
+        // regexp.test(e.message)
+        dispatch('setQuestionsImportError', e.response.data)
+        dispatch('setMessageError', e)
+      }
     }
   },
   setTest({dispatch ,commit}, test) {
@@ -133,39 +143,43 @@ const actions = {
     dispatch("setTest", test)
   },
   async getTestIdDb({dispatch ,commit}, {id}){
+    const token = await dispatch("getAutchUserTokenAction")
     const config = {
       method: 'get',
       url: `/api/admin/test/${id}`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     }
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("getTestDb - ",  data)
           dispatch("setTest", data)
-          
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getTestIdDb', {id})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
-  async deleteTestDb({dispatch, commit}, {id, parentId, token, page, type}){
+  async deleteTestDb({dispatch, commit}, {id, parentId, page, type}){
+    const token = await dispatch("getAutchUserTokenAction")
     const config = {
       method: 'get',
       url: `/api/admin/test/${id}/delete`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     };
     try{
       await axios(config)
         .then(({data})=>{
           console.log("deleteTestDb - удалено",  data)
-        
           if ( type === "test") {
             dispatch("getTestsDB",  { page })
           } else {
@@ -174,20 +188,26 @@ const actions = {
           dispatch('setMessage', data)
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('deleteTestDb', {id, parentId, page, type})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
-  async createTest ({dispatch, commit}, {questionSend, token}){
+  async createTest ({dispatch, commit}, {questionSend}){
+    const token = await dispatch("getAutchUserTokenAction")
     const data = new FormData(questionSend);
     for(let [name, value] of data) {
-      console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+      console.dir(`${name} = ${value}`)
     }
     const config = {
       method: 'post',
       url: `/api/admin/test/create`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       data: data
     };
@@ -199,20 +219,26 @@ const actions = {
           // dispatch("getCategorysDB",  { page: null , parentId: id });
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('createTest', {id, questionSend})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
-  async editTest ({dispatch, commit}, {id, questionSend, token}){
+  async editTest ({dispatch, commit}, {id, questionSend}){
+    const token = await dispatch("getAutchUserTokenAction")
     const data = new FormData(questionSend);
     for(let [name, value] of data) {
-      console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+      console.dir(`${name} = ${value}`); 
     }
     const config = {
       method: 'post',
       url: `/api/admin/test/${id}/edit`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       data: data
     };
@@ -224,7 +250,12 @@ const actions = {
           // dispatch("getCategorysDB", { page: null , parentId: id });
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('editTest', {id, questionSend})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
 };

@@ -82,7 +82,6 @@ const actions = {
           commit("SET_IS_AUTCH_USER", true)
           dispatch('setMessage',{
             message: "Вы успешно авторизовались",
-            
           });
         })
         return false
