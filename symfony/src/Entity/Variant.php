@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: VariantRepository::class)]
-#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(
     fields: ['title', 'question'],
     message: 'variant.title.unique',

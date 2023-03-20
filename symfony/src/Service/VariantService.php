@@ -92,7 +92,7 @@ class VariantService
 
                 }
 
-            $question->setAnswer(array_values($answers));
+                $question->setAnswer(array_values($answers));
 
                 break;
         }
@@ -151,7 +151,7 @@ class VariantService
             return $variantId !== $variant->getId();
         });
         $question = $variant->getQuestion()->setAnswer(array_values($answers));
-        $this->variantImageUploader->delete($variant->getImage());
+//        $this->variantImageUploader->delete($variant->getImage());
         $this->em->persist($question);
         $this->em->remove($variant);
         $this->em->flush();

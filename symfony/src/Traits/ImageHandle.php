@@ -9,22 +9,22 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 trait ImageHandle
 {
 
-    public function delete(object $entity, FileUploader $imageUploader, EntityManagerInterface $em): void
-    {
-
-        $imageUploader->delete($entity->getImage());
-        $em->remove($entity);
-        $em->flush();
-    }
-
-    public function imageDelete(object $entity, FileUploader $imageUploader, EntityManagerInterface $em): void
-    {
-
-        $imageUploader->delete($entity->getImage());
-        $entity->setImage(null);
-        $em->persist($entity);
-        $em->flush();
-    }
+//    public function delete(object $entity, FileUploader $imageUploader, EntityManagerInterface $em): void
+//    {
+//
+//        $imageUploader->delete($entity->getImage());
+//        $em->remove($entity);
+//        $em->flush();
+//    }
+//
+//    public function imageDelete(object $entity, FileUploader $imageUploader, EntityManagerInterface $em): void
+//    {
+//
+//        $imageUploader->delete($entity->getImage());
+//        $entity->setImage(null);
+//        $em->persist($entity);
+//        $em->flush();
+//    }
 
     public function imageUpdate(object $entity, FileUploader $imageUploader, EntityManagerInterface $em, UploadedFile|bool|null $image = null): object
     {
