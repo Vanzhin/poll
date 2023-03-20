@@ -219,8 +219,8 @@ class QuestionService
                 foreach ($variants as $key => $variant) {
                     $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, array_key_exists($key, $variantImages) ? $variantImages[$key] : false);
                 }
-
                 foreach ($question->getVariant() as $variant) {
+
                     if (!in_array($variant, $variants)) {
                         $this->variantService->delete($variant);
                     };
