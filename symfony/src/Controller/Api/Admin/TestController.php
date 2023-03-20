@@ -30,7 +30,7 @@ class TestController extends AbstractController
     #[Route('/api/admin/test', name: 'app_api_admin_test')]
     public function index(Paginator $paginator, TestRepository $repository): JsonResponse
     {
-        $pagination = $paginator->getPagination($repository->findLastUpdatedQuery(), 10);
+        $pagination = $paginator->getPagination($repository->findLastUpdatedQuery());
         if ($pagination->count() > 0) {
             $response['test'] = $pagination;
 
@@ -230,7 +230,7 @@ class TestController extends AbstractController
     #[Route('/api/admin/test/{id}/question', name: 'app_api_admin_test_question', methods: 'GET')]
     public function getQuestion(Test $test, Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
-        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test), 5);
+        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test));
         if ($pagination->count() > 0) {
             $response['question'] = $pagination;
 
@@ -253,7 +253,7 @@ class TestController extends AbstractController
     #[Route('/api/admin/test/{id}/ticket', name: 'app_api_admin_test_ticket', methods: 'GET')]
     public function getTicket(Test $test, Paginator $paginator, TicketRepository $repository): JsonResponse
     {
-        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test), 5);
+        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test));
         if ($pagination->count() > 0) {
             $response['ticket'] = $pagination;
 

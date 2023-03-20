@@ -25,7 +25,7 @@ class QuestionController extends AbstractController
     #[Route('/api/admin/question', name: 'app_api_admin_question_index', methods: ['GET'])]
     public function index(Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
-        $pagination = $paginator->getPagination($repository->findLastUpdatedQuery(), 10);
+        $pagination = $paginator->getPagination($repository->findLastUpdatedQuery());
         if ($pagination->count() > 0) {
             $response['question'] = $pagination;
 
