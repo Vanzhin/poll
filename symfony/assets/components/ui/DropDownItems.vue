@@ -10,7 +10,7 @@
       <div v-if="getIsAutchUser">
         <li><RouterLink class="dropdown-item" :to="{ name: 'statistics'}">Статистика</RouterLink></li>
         <li><RouterLink class="dropdown-item" :to="{ name: 'createQuestion'}">Добавить вопрос</RouterLink></li>
-        <li><RouterLink class="dropdown-item" :to="{ name: 'admins'}">Админка</RouterLink></li>
+        <li><RouterLink class="dropdown-item" :to="{ name: 'admin'}">Админка</RouterLink></li>
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-item menu-item" @click="logOut" >Выйти</li>
       </div> 

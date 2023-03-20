@@ -12,19 +12,25 @@ const state = () => ({
   JSON.parse(localStorage.getItem('categorys')):[],
   iter: 1,
   parent: localStorage.getItem('categoryParent') ?
-  JSON.parse(localStorage.getItem('categoryParent')): null
+  JSON.parse(localStorage.getItem('categoryParent')): null,
+ 
 })
 
 const actions = {
-  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null, token = null }) {
+  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null }) {
+    const token = await dispatch("getAutchUserTokenAction")
+    console.log("token - ",token)
     const config = {
       method: 'get',
       url: `/api${admin ? '/admin': '' }/category`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
       }
     };
+    console.log(admin)
+    if (admin) { 
+      config.headers.Authorization = `Bearer ${token}`
+    }
 
     if (parentId) {
       config.url = config.url + `?parent=${parentId}`
@@ -45,11 +51,16 @@ const actions = {
         // if (data.pagination) commit("SET_PAGINATION", data.pagination);
       })
   } catch (e) {
-    console.log(e);
-    dispatch("setTests", null)
-    commit("SET_CATEGORYS", null);
-    commit("SET_CATEGORYS_PARENT", null);
-    dispatch("setPagination", null);
+    if (e.response.data.message === "Expired JWT Token") {
+      await dispatch('getAuthRefresh')
+      await dispatch('getCategorysDB', {page, parentId, admin})
+    } else {
+      dispatch("setTests", null)
+      commit("SET_CATEGORYS", null);
+      commit("SET_CATEGORYS_PARENT", null);
+      dispatch("setPagination", null);
+      dispatch('setMessageError', e)
+    }
   }
   },
   setCategoryTitle({commit}, title){
@@ -58,37 +69,44 @@ const actions = {
   setCategoryDescription({commit}, description){
     commit("SET_CATEGORY_DESCRIPTION", description);
   },
-  async deleteCategoryDb({dispatch, commit}, {id, parentId, token, page}){
+  async deleteCategoryDb({dispatch}, {id, parentId}){
+    const token = await dispatch("getAutchUserTokenAction")
     const config = {
       method: 'get',
       url: `/api/admin/category/${id}/delete`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     };
     try{
       await axios(config)
         .then(({data})=>{
           console.log("deletCategoryDb - удалено",  data)
-          dispatch("getCategorysDB",  { page: null , parentId: parentId, admin: "admin"  });
+          dispatch("getCategorysDB",  { page: null , parentId: parentId, admin: true  });
           dispatch('setMessage', data)
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('deleteCategoryDb', {id, parentId})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
-  async createCategory ({dispatch, commit}, {id, questionSend, token}){
+  async createCategory ({dispatch, commit}, {id, questionSend}){
+    const token = await dispatch("getAutchUserTokenAction")
     const data = new FormData(questionSend);
     for(let [name, value] of data) {
-      console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+      console.dir(`${name} = ${value}`); 
     }
     const config = {
       method: 'post',
       url: `/api/admin/category/create`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       data: data
     };
@@ -100,21 +118,26 @@ const actions = {
           // dispatch("getCategorysDB",  { page: null , parentId: id });
         })
     } catch (e) {
-      console.log("Ошибка при создании",e);
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('createCategory', {id, questionSend})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
-  async editCategory ({dispatch, commit}, {id, questionSend, token}){
-    const data = new FormData(questionSend);
+  async editCategory ({dispatch, commit}, {id, questionSend}){
+    const token = await dispatch("getAutchUserTokenAction")
+    const data = new FormData(questionSend)
     for(let [name, value] of data) {
-      console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
+      console.dir(`${name} = ${value}`)
     }
     const config = {
       method: 'post',
       url: `/api/admin/category/${id}/edit`,
       headers: { 
         Accept: 'application/json', 
-        // Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       data: data
     };
@@ -126,8 +149,12 @@ const actions = {
           dispatch("getCategorysDB", { page: null , parentId: id });
         })
     } catch (e) {
-      console.log("Ошибка при изменении:", e);
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('editCategory', {id, questionSend})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
 };

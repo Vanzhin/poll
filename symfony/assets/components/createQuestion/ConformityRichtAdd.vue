@@ -58,6 +58,11 @@ export default {
   },
   methods: {
     changeNumberSubTitles(){
+      if (this.numberSubTitles < 0) {
+        this.numberSubTitles = 0
+        this.subTitles = []
+        return
+      }
       if ( this.subTitles.length < this.numberSubTitles) {
         ++this.uniqueNumber
         this.subTitles.push({
@@ -65,6 +70,7 @@ export default {
           title:""
         })
       } else {
+        this.numberSubTitles
         this.subTitles.pop()
       }
     },

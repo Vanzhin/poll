@@ -97,17 +97,17 @@
     methods: { 
       ...mapActions(["getCategorysDB", "saveQuestionDb", "setMessage"]),
       createCategory(){
-        this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id:  this.$route.params.id  } })
+        this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id:  this.$route.params.id  } })
       },
       createTest(){
-        this.$router.push({name: 'adminsTestCreate', params: {operation:"create", id:  this.$route.params.id  } })
+        this.$router.push({name: 'adminTestCreate', params: {operation:"create", id:  this.$route.params.id  } })
       },
       async categoryRoute({id}){
         this.isLoader = true
         await this.getCategorysDB({parentId: id, admin: true})
         if (this.getTests) {
           console.log('переход к списку тестов - ', this.getTests)
-            this.$router.push({name: 'adminsTests', params: {id } })
+            this.$router.push({name: 'adminTests', params: {id } })
             setTimeout(() => this.isLoader = false, 200)
           return
         } 

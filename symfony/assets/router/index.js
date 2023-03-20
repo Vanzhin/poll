@@ -112,88 +112,88 @@ const router = createRouter({
       component: () => import('../views/admin/CreateQuestionView.vue')
     },
     {
-      path: '/admins',
-      name: 'admins',
+      path: '/admin',
+      name: 'admin',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminHomeView.vue')
     },
     {
-      path: '/admins/chapters',
-      name: 'adminsChapters',
+      path: '/admin/chapters',
+      name: 'adminChapters',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminChapterView.vue')
     },
     {
-      path: '/admins/sections',
-      name: 'adminsSections',
+      path: '/admin/sections',
+      name: 'adminSections',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminSectionView.vue')
     },
     {
-      path: '/admins/tests',
-      name: 'adminsTestsList',
+      path: '/admin/tests',
+      name: 'adminTestsList',
       meta: {loyout: 'admin', autch: true, admin: true, type: "test"},
       component: () => import('../views/admin/AdminTestsListView.vue')
     },
     {
-      path: '/admins/category/:id/tests',
-      name: 'adminsTests',
+      path: '/admin/category/:id/tests',
+      name: 'adminTests',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminTestsView.vue')
     },
     {
-      path: '/admins/questions',
-      name: 'adminsQuestions',
+      path: '/admin/questions',
+      name: 'adminQuestions',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateQuestionView.vue')
     },
     {
-      path: '/admins/import',
-      name: 'adminsImport',
+      path: '/admin/import',
+      name: 'adminImport',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/ImportQuestionView.vue'),
       children: [{ 
         path: ':id', 
-        name: 'adminsImportId', 
+        name: 'adminImportId', 
         meta: {loyout: 'admin', autch: true, admin: true},
         component: () => import('../views/admin/ImportQuestionView.vue') 
       }],
 
     },
     {
-      path: '/admins/users',
-      name: 'adminsUsers',
+      path: '/admin/users',
+      name: 'adminUsers',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminUsersView.vue')
     },
     {
-      path: '/admins/category/:id/:operation',
-      name: 'adminsCategoryCreate',
+      path: '/admin/category/:id/:operation',
+      name: 'adminCategoryCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateCategoryView.vue')
     },
     {
-      path: '/admins/iter/:num/group/:id',
+      path: '/admin/iter/:num/group/:id',
       name: 'adminIter',
       meta: {loyout: 'admin', autch: true, admin: true,  type: "category"},
       component: () => import('../views/admin/AdminIterView.vue')
     },
     {
-      path: '/admins/test/:id',
-      name: 'adminsTest',
+      path: '/admin/test/:id',
+      name: 'adminTest',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminTestView.vue'),
       children: []
     },
     { 
-      path: '/admins/test/:id/:operation',
-      name: 'adminsTestCreate',
+      path: '/admin/test/:id/:operation',
+      name: 'adminTestCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateTestView.vue')
     },
     {
-      path: '/admins/test/:testId/question/:questionId/:operation',
-      name: 'adminsQuestionsCreate',
+      path: '/admin/test/:testId/question/:questionId/:operation',
+      name: 'adminQuestionsCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateQuestionView.vue')
     },
@@ -222,8 +222,8 @@ router.beforeEach((to, from, next) => {
       if (requireRole ){
         if (role === "ROLE_ADMIN") {
           next()
-        } else alert( "у вас нет прав доступа.")
-        next('/')
+        } else {alert( "у вас нет прав доступа.")
+        next('/')}
       } else {
         next()
       }

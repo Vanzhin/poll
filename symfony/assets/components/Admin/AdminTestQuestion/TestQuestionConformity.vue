@@ -13,7 +13,7 @@
       >
         <div>
           <img :src="variantConformity(ind).image"  width="200" height="135" 
-            v-if="variantConformity(ind).image !== ''"
+            v-if="variantConformity(ind).image && variantConformity(ind).image !== ''"
           /> 
           <label 
             v-if="answer!==''"

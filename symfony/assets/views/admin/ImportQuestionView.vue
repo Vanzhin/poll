@@ -133,11 +133,11 @@ import { onUnmounted } from "vue"
         let timerId = setInterval(() => {
           if ( !this.getMessage ) {
             clearInterval(timerId)
-            // if (this.message){this.$router.go(-1)} adminsTest
+            // if (this.message){this.$router.go(-1)} adminTest
             if (this.message)
             {
               this.$router.push({
-                name: 'adminsTest', 
+                name: 'adminTest', 
                 params: {id:  this.$route.params.id} 
               })
             }

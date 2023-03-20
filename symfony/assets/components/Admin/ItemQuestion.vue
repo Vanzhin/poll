@@ -122,7 +122,7 @@ export default {
       console.log('тест № - ', this.getTest)
       this.setQuestion(this.question)
       this.$router.push({
-        name: 'adminsQuestionsCreate', 
+        name: 'adminQuestionsCreate', 
         params: {
           testId: this.getTest.id,
           questionId: this.question.id,

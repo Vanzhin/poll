@@ -87,10 +87,16 @@
       ...mapMutations([]),
       async testRoute(item){
         await this.setTestItem(item)
-        this.$router.push({name: 'adminsTest', params: { id: item.id }})
+        this.$router.push({name: 'adminTest', params: { id: item.id }})
       },
       createTest(){
-        this.$router.push({name: 'adminsTestCreate', params: {operation:"create", id: this.parentId  } })
+        this.$router.push({
+          name: 'adminTestCreate', 
+          params: { 
+            operation: "create", 
+            id: this.parentId, 
+            token: this.getAutchUserToken 
+          }})
       },
     },
     async mounted(){},

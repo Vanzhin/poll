@@ -98,7 +98,7 @@ export default {
     },
     editTest(){
       console.log()
-      this.$router.push({name: 'adminsTestCreate', params: {operation:"edit" , id: this.item.id } })
+      this.$router.push({name: 'adminTestCreate', params: {operation:"edit" , id: this.item.id } })
     },
     async deleteTest(){
       console.log('Удаляю тест № - ', this.item.id)
@@ -122,12 +122,12 @@ export default {
     },
     importQuestionsFile(){
       this.setTest(this.item)
-      this.$router.push({name: 'adminsImportId',  params: {id: this.item.id}})
+      this.$router.push({name: 'adminImportId',  params: {id: this.item.id}})
     },
     addQuestion(){
       this.setTest(this.item)
       this.$router.push({
-        name: 'adminsQuestionsCreate', 
+        name: 'adminQuestionsCreate', 
         params: {
           testId: this.item.id,
           questionId:0,

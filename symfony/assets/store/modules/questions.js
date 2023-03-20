@@ -362,13 +362,14 @@ const actions = {
   //запрос на получение вопросов теста по его id для админки
   async getQuestionsTestIdDb({dispatch, commit }, {id, page=null}) {
     console.log("id - ",  id)
+    const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
         method: 'get',
         url: `/api/admin/test/${id}/question`,
         headers: { 
           Accept: 'application/json', 
-          // Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       };
       if (page) {config.url = config.url + `?page=${page}`}
@@ -384,6 +385,7 @@ const actions = {
   },
   //получение вороса по его id
   async getQuestionIdDb({dispatch, commit }, {id}) {
+    const token = await dispatch("getAutchUserTokenAction")
     console.log("id - ",  id)
     try{
       const config = {
@@ -391,14 +393,13 @@ const actions = {
         url: `/api/admin/question/${id}`,
         headers: { 
           Accept: 'application/json', 
-          // Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       };
       await axios(config)
         .then(({data})=>{
           console.log("getQuestionIdDb - ",  data)
           commit("SET_QUESTION", data);
-          
         })
     } catch (e) {
         dispatch('setMessageError', e)
@@ -412,11 +413,9 @@ const actions = {
       const config = {
         method: 'post',
         url: '/api/test/handle',
-        // url: '/api/auth/test/handle',
         headers: { 
           Accept: 'application/json', 
           'Content-Type': 'application/json'
-          // Authorization: `Bearer ${token}`
         },
         data:  JSON.stringify(state.resultTicketUser)
       };
@@ -447,9 +446,10 @@ const actions = {
   },
 
   //сохранение нового вопроса в базу
-  async saveQuestionDb({ dispatch, commit, state }, {token, questionSend, id = null} ){
+  async saveQuestionDb({ dispatch, commit, state }, {questionSend, id = null} ){
     console.dir(questionSend)
     commit("SET_LOADER_TOGGLE")
+    const token = await dispatch("getAutchUserTokenAction")
     try{
       // Array.from(questionSend).filter(inp => inp.name !== "")
       
@@ -472,7 +472,7 @@ const actions = {
         url: '/api/admin/question/create_with_variant',
         headers: { 
           Accept: 'application/json', 
-          // Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         data:  data
       };
@@ -491,9 +491,10 @@ const actions = {
     }
   },
   //импорт вопросов из файла
-  async importQuestionsFileDb({ dispatch, commit, state }, {id, token, questionSend} ){
+  async importQuestionsFileDb({ dispatch, commit, state }, {id, questionSend} ){
     console.dir(questionSend)
     commit("SET_LOADER_TOGGLE")
+    const token = await dispatch("getAutchUserTokenAction")
     try{
       const data = new FormData(questionSend);
       for(let [name, value] of data) {
@@ -506,7 +507,7 @@ const actions = {
         url: `/api/admin/test/${id}/upload`,
         headers: { 
           Accept: 'application/json', 
-          // Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         data:  data
       };
@@ -522,17 +523,18 @@ const actions = {
     }
   },
 
-  async deleteQuestionDb({ dispatch, commit, state }, {token, id, testId, page= null} ){
-    try{
-      const config = {
+  async deleteQuestionDb({ dispatch, commit, state }, { id, testId, page = null} ){
+    const token = await dispatch("getAutchUserTokenAction")
+    const config = {
         method: 'get',
         url: `/api/admin/question/${id}/delete`,
         headers: { 
           Accept: 'application/json', 
-          // Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
       };
       console.log(config)
+    try{
       await axios(config)
         .then(({data})=>{
           dispatch('getQuestionsTestIdDb', {id: testId, page})
@@ -559,7 +561,7 @@ const actions = {
 };
 
 
-//questionsImportError
+
 
 const getters = {
   getQuestions(state) {

@@ -85,7 +85,7 @@ export default {
       this.childVisible = !this.childVisible
     },
     editCategory(){
-      this.$router.push({name: 'adminsCategoryCreate', params: {operation:"edit" , id: this.item.id } })
+      this.$router.push({name: 'adminCategoryCreate', params: {operation:"edit" , id: this.item.id } })
     },
     async deleteCategoty(){
       console.log('Удаляю категорию № - ',this.item.id)
@@ -104,10 +104,10 @@ export default {
       }, 200);
      },
     createChildrenCategory(){
-      this.$router.push({name: 'adminsCategoryCreate', params: {operation:"create", id: this.item.id  } })
+      this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: this.item.id  } })
     },
     createChildrenTest(){
-      this.$router.push({name: 'adminsTestCreate', params: {operation:"create", id: this.item.id  } })
+      this.$router.push({name: 'adminTestCreate', params: {operation:"create", id: this.item.id  } })
     }
   }
 } 
