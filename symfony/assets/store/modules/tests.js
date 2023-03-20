@@ -108,8 +108,9 @@ const actions = {
         })
     } catch (e) {
       const regexp = new RegExp("422", 'i');
-      console.log(" ошибка загруки - ",  regexp.test(e.message))
-      
+
+      console.log(" ошибка загруки - ", e)
+      // regexp.test(e.message)
       dispatch('setQuestionsImportError', e.response.data)
       dispatch('setMessageError', e)
     }

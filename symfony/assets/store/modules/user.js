@@ -13,18 +13,19 @@ import axios from 'axios';
 
 const state = () => ({
   token: localStorage.getItem('token') ?
-     JSON.parse(localStorage.getItem('token')).token: "",
+    JSON.parse(localStorage.getItem('token')).token: "",
   refresh_token: localStorage.getItem('token') ?
-      JSON.parse(localStorage.getItem('token')).refresh_token: "",
+    JSON.parse(localStorage.getItem('token')).refresh_token: "",
   isAutchUser: localStorage.getItem('token') ? true : false,
   page: localStorage.getItem('pageLink') ?
-   localStorage.getItem('pageLink'):"",
+    localStorage.getItem('pageLink'):"",
   email: '',
   password: '',
   result: [],
   logoutLinkDate: {},
   message: null,
-  role: ""
+  role: localStorage.getItem('token') ?
+    JSON.parse(atob(JSON.parse(localStorage.getItem('token')).token.split('.')[1])).roles[0]: "",
 })
 
 const actions = {
@@ -75,6 +76,7 @@ const actions = {
           // }).join(''));
           const base64 = JSON.parse(atob(base64Url))
           console.log( base64)
+         
           commit("SET_AUTCH_USER_ROLE", base64.roles[0]);
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)

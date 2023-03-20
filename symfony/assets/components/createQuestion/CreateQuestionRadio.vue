@@ -134,9 +134,7 @@ export default {
     },
     answerDelete(ind){
       if (this.answers.length > 1){
-        const arr = this.answerSelect.filter(item =>{ 
-          return item !== this.answers[ind].id})
-        this.answerSelect = arr
+        if (this.answerSelect === this.answers[ind].id) this.answerSelect = null 
         this.answers.splice(ind, 1);
         this.numberAnswers = this.answers.length
       }
