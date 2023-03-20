@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Mode;
 use App\Repository\ResultRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ResultRepository::class)]
@@ -51,10 +53,15 @@ class Result
 
     #[ORM\ManyToOne(inversedBy: 'results')]
     #[Groups(['result'])]
+    #[Assert\NotNull(message: 'result.test.not_null')]
     private ?Test $test = null;
 
     #[Groups(['result'])]
     private ?int $questionCount = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\NotNull(message: 'result.mode.not_null')]
+    private ?string $mode = null;
 
     public function __construct()
     {
@@ -158,5 +165,17 @@ class Result
     public function setQuestionCount(?int $questionCount): void
     {
         $this->questionCount = $questionCount;
+    }
+
+    public function getMode(): ?string
+    {
+        return $this->mode;
+    }
+
+    public function setMode(?string $mode): self
+    {
+        $this->mode = $mode;
+
+        return $this;
     }
 }

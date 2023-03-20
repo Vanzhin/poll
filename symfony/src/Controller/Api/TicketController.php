@@ -2,9 +2,7 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Test;
 use App\Entity\Ticket;
-use App\Repository\QuestionRepository;
 use App\Service\QuestionHandler;
 use App\Service\SessionService;
 use Doctrine\DBAL\Exception;

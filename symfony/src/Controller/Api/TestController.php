@@ -8,6 +8,7 @@ use App\Repository\TestRepository;
 use App\Service\NormalizerService;
 use App\Service\QuestionHandler;
 use App\Service\SessionService;
+use App\Service\TestService;
 use App\Twig\Extension\AppUpLoadedAsset;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,14 +44,13 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/test/{slug}/question/{count}', name: 'app_api_test_question', methods: ['GET'])]
-    public function getRandomQuestion(
-        Test               $test,
-        QuestionRepository $questionRepository,
-        QuestionHandler    $questionService,
-        SessionService     $sessionService,
-        int                $count,
-        AppUpLoadedAsset   $upLoadedAsset,
-        NormalizerService  $normalizerService
+    public function getRandomQuestion(Test               $test,
+                                      QuestionRepository $questionRepository,
+                                      QuestionHandler    $questionService,
+                                      SessionService     $sessionService,
+                                      int                $count,
+                                      AppUpLoadedAsset   $upLoadedAsset,
+                                      NormalizerService  $normalizerService
     ): JsonResponse
     {
         try {
@@ -99,67 +99,48 @@ class TestController extends AbstractController
 
     #[Route('/api/test/handle', name: 'app_api_test_handle', methods: ['POST'])]
     public function handle(Request           $request,
-                           QuestionHandler   $questionHandler,
                            AppUpLoadedAsset  $upLoadedAsset,
-                           NormalizerService $normalizerService
+                           NormalizerService $normalizerService,
+                           TestService       $testService
     ): JsonResponse
     {
 
         $data = json_decode($request->getContent(), true);
-        try {
-            $response = $questionHandler->handle($data);
-            $status = 200;
 
-        } catch (\Exception $e) {
-            $response = ["error" => $e->getTrace()];
-            $status = 422;
-
-        } finally {
-            return $this->json($response,
-                $status,
-                ['charset=utf-8'],
-                [
-                    'groups' => 'handle',
-                    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-                    AbstractNormalizer::CALLBACKS => [
-                        'image' => $normalizerService->imageCallback($upLoadedAsset),
-                    ]
-                ],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
+        $response = $testService->handle($data);
+        return $this->json($response['response'],
+            $response['status'],
+            ['charset=utf-8'],
+            [
+                'groups' => 'handle',
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractNormalizer::CALLBACKS => [
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
+                ]
+            ],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
     #[Route('/api/auth/test/handle', name: 'app_api_auth_test_handle', methods: ['POST'])]
     public function handleByUser(Request           $request,
-                                 QuestionHandler   $questionHandler,
-                                 SessionService    $sessionService,
                                  AppUpLoadedAsset  $upLoadedAsset,
-                                 NormalizerService $normalizerService
+                                 NormalizerService $normalizerService,
+                                 TestService       $testService
     ): JsonResponse
     {
-        $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
-        try {
-            $response = $questionHandler->handle($data, $user);
-            $status = 200;
 
-        } catch (\Exception $e) {
-            $response = ["error" => $e->getTrace()];
-            $status = 422;
-
-        } finally {
-            $sessionService->remove(QuestionHandler::SHUFFLED);
-            return $this->json($response,
-                $status,
-                ['charset=utf-8'],
-                [
-                    'groups' => 'handle',
-                    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-                    AbstractNormalizer::CALLBACKS => [
-                        'image' => $normalizerService->imageCallback($upLoadedAsset),
-                    ]
-                ],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
+        $response = $testService->handle($data, $this->getUser());
+        return $this->json($response['response'],
+            $response['status'],
+            ['charset=utf-8'],
+            [
+                'groups' => 'handle',
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractNormalizer::CALLBACKS => [
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
+                ]
+            ],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 }

@@ -3,8 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Question;
-use App\Entity\Result;
-use App\Entity\User;
 use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -15,59 +13,32 @@ class QuestionHandler
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SessionService         $sessionService,
-        private readonly ResultService          $resultService)
+    )
     {
     }
 
-    public function handle(array $testData, User $user = null): array
+    public function handle(array $answerData, Question $question): Question
     {
-        $response = [];
 
-        if ($user) {
-            $result = new Result();
-        }
-        foreach ($testData as $answerData) {
-            $question = $this->entityManager->find(Question::class, $answerData["id"]);
-
-            if ($question) {
                 $score = $this->getQuestionScore($question, $answerData["answer"]);
                 $question->setResult([
-                        "score" => $score,
-                    ]);
+                    "correct" => $score,
+                ]);
                 $variantTitles = isset($this->sessionService->get(self::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] : $this->getVariantsToArray($question);
                 $question->getVariant()->clear();
-                foreach($variantTitles as $titles){
+                foreach ($variantTitles as $titles) {
                     $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $titles);
-                    if ($variant){
+                    if ($variant) {
                         $question->addVariant($variant);
                     }
                 };
-                if ($user) {
-
-                    $this->resultService->save($user, $question, $this->getShuffledUserAnswers($question, $answerData["answer"], $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? ['variant' => $this->getVariantsToArray($question)]), $score, $result);
-
-
-                    $question->setResult([
-                        "score" => $score,
-                        "true_answer" => $this->getShuffledTrueAnswers($question, $this->sessionService->get(self::SHUFFLED)[$question->getId()] ?? []),
-                        "user_answer" => $answerData["answer"],
-                    ]);
-                }
 
                 if (!empty($question->getSubTitle())) {
 
                     $question->setSubTitle($this->sessionService->get(self::SHUFFLED)[$question->getId()]['subTitle'] ?? []);
                 }
 
-            } else {
-                $question = [
-                    "id" => $answerData["id"],
-                    "error" => "question not found"
-                ];
-            }
-            $response[] = $question;
-        }
-        return $response;
+        return $question;
 
     }
 
@@ -93,7 +64,7 @@ class QuestionHandler
     }
 
 
-    private function getShuffledUserAnswers(Question $question, array $userAnswer, array $shuffled): array
+    public function getShuffledUserAnswers(Question $question, array $userAnswer, array $shuffled): array
     {
         $answers = [];
         if ($question->getVariant()->count() > 0) {
@@ -108,6 +79,9 @@ class QuestionHandler
                     $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $answer);
                     if ($variant) {
                         $answers[] = $variant->getId();
+
+                    }else{
+                        $answers[] = $answer;
 
                     }
                 }
@@ -128,7 +102,7 @@ class QuestionHandler
         return $answers;
     }
 
-    private function getShuffledTrueAnswers(Question $question, array $shuffled): array
+    public function getShuffledTrueAnswers(Question $question, array $shuffled): array
     {
         $trueShufflesAnswers = [];
         if (isset($shuffled['variant']) && count($shuffled['variant']) > 0) {
@@ -161,11 +135,16 @@ class QuestionHandler
             $trueShufflesAnswers = $answers;
 
         }
+
+        if($question->getType()->getTitle() === 'input_one'){
+            $trueShufflesAnswers = [$question->getVariant()->first()->getTitle()];
+        }
+
         return $trueShufflesAnswers;
 
     }
 
-    private function getQuestionScore(Question $question, array $answerData): bool
+    public function getQuestionScore(Question $question, array $answerData): bool
     {
         $score = false;
         $userAnswers = $this->answerPrepare($answerData);
@@ -208,7 +187,7 @@ class QuestionHandler
         }, $answers);
     }
 
-    private function getVariantsToArray(Question $question): array
+    public function getVariantsToArray(Question $question): array
     {
 
         if ($question->getVariant()->count() > 0) {
