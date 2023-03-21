@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Admin;
 
 use App\Entity\Category;
+use App\Factory\Category\CategoryFactory;
 use App\Repository\CategoryRepository;
 use App\Repository\TestRepository;
 use App\Service\CategoryService;
@@ -66,7 +67,6 @@ class CategoryController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-
     #[Route('/api/admin/category/{id}', name: 'app_api_admin_category_show', methods: ['GET'])]
     public function show(Category $category, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
@@ -85,13 +85,12 @@ class CategoryController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-
     #[Route('/api/admin/category/create', name: 'app_api_admin_category_create', methods: 'POST')]
-    public function create(Request $request, ValidationService $validation, CategoryService $categoryService): JsonResponse
+    public function create(Request $request, ValidationService $validation, CategoryService $categoryService, CategoryFactory $factory): JsonResponse
     {
         $data = $request->request->all();
         $image = $request->files->get('categoryImage');
-        $category = $categoryService->make(new Category(), $data);
+        $category = $factory->createBuilder()->buildCategory($data);
         $errors = $validation->entityWithImageValidate($category, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
@@ -110,11 +109,11 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/api/admin/category/{id}/edit', name: 'app_api_admin_category_update', methods: 'POST')]
-    public function edit(Category $category, Request $request, ValidationService $validation, CategoryService $categoryService): JsonResponse
+    public function edit(Category $category, Request $request, ValidationService $validation, CategoryService $categoryService, CategoryFactory $factory ): JsonResponse
     {
         $data = $request->request->all();
         $image = $request->files->get('categoryImage', false);
-        $category = $categoryService->make($category, $data);
+        $category = $factory->createBuilder()->buildCategory($data, $category);
         $errors = $validation->entityWithImageValidate($category, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
@@ -139,28 +138,6 @@ class CategoryController extends AbstractController
 
             $response = [
                 'message' => 'Раздел удален',
-            ];
-            $status = 200;
-        } catch (\Exception $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } finally {
-            return $this->json($response,
-                $status,
-                ['charset=utf-8'],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
-
-    }
-
-    #[Route("api/admin/category/{id}/image_delete", name: 'app_api_admin_category_image_delete')]
-    public function imageDelete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader, EntityManagerInterface $em): JsonResponse
-    {
-        try {
-            $categoryService->imageUpdate($category, $categoryImageUploader, $em);
-
-            $response = [
-                'message' => 'Фото удалено',
             ];
             $status = 200;
         } catch (\Exception $e) {
