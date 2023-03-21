@@ -135,10 +135,10 @@ class QuestionHandler
             $trueShufflesAnswers = $answers;
 
         }
-
-        if($question->getType()->getTitle() === 'input_one'){
-            $trueShufflesAnswers = [$question->getVariant()->first()->getTitle()];
-        }
+//
+//        if($question->getType()->getTitle() === 'input_one'){
+//            $trueShufflesAnswers = [$question->getVariant()->first()->getTitle()];
+//        }
 
         return $trueShufflesAnswers;
 
