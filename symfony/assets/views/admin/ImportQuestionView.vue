@@ -58,15 +58,15 @@
         <li>
           <div>
 
-            <h6 >{{item.error.variant['0']}}!</h6>
-            <p>Вопрос: {{ item.error.variant.question.title}}</p>
+            <h6 >{{item.variant['0']}}!</h6>
+            <p>Вопрос: {{ item.variant.question.title}}</p>
             <div
-              v-if="item.error.variant.question.variant"
+              v-if="item.variant.question.variant"
               class="question-item-variant"
             >
               Варинты ответов:
               <li
-                v-for="(variant, index) in item.error.variant.question.variant"
+                v-for="(variant, index) in item.variant.question.variant"
               >
                 {{ variant.title }}
               </li>
@@ -109,7 +109,7 @@ import { onUnmounted } from "vue"
     },
    
     methods: { 
-      ...mapActions(["importFileTestDb", "setMessage", "getTestsDB", "setQuestionsImportError"]),
+      ...mapActions(["importQuestionsFileDb", "setMessage", "getTestsDB", "setQuestionsImportError"]),
       ...mapMutations([]),
       async onSubmit(e){
         if (!this.testValue) {
@@ -121,15 +121,9 @@ import { onUnmounted } from "vue"
           return
         }
         const testFile = e.target
-        this.isLoader = true
-        await this.importFileTestDb({id: this.$route.params.id, testFile, token: this.getAutchUserToken})
+        await this.importQuestionsFileDb({id: this.$route.params.id, testFile})
         this.message = !this.getMessage.err
-        
-          this.testFileDelete()
-        
-
-        this.isLoader = false
-        
+        this.testFileDelete()
         let timerId = setInterval(() => {
           if ( !this.getMessage ) {
             clearInterval(timerId)
@@ -148,6 +142,7 @@ import { onUnmounted } from "vue"
         if (typeof e.target.files[0] === 'object'){
           this.testFile = e.target.files[0]
           this.testValue = e.target.value
+          this.setQuestionsImportError(null)
         }
       },
       testFileDelete(){

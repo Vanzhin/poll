@@ -1,22 +1,31 @@
 <template>
-  <div class="container">
-            <div class="loader">
-            </div>
-        </div>
+  <div 
+    v-if="getIsLoaderQuestions"
+    class="container-loader"
+  >
+    <div class="loader">
+    </div>
+  </div>
 </template>
 <script>
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
+  computed:{ 
+      ...mapGetters(["getIsLoaderQuestions"]),
+    },
 }
 </script>
 
 <style lang="scss" scoped>
-  .container{
+  .container-loader{
     width: 100%;
-    min-height: 300px;
-    
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    z-index: 30;
+    background-color: #ced5d352;
 }
 
 .loader {

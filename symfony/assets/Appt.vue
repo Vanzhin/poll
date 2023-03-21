@@ -8,6 +8,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import EmptyLayout from './layouts/EmptyLayout.vue'
 import PageLayout from './layouts/PageLayout.vue'
 import AdminLayout from './layouts/AdminLayout.vue'
+
 export default {
   data() {
     return {

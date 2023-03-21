@@ -1,9 +1,7 @@
 <template>
-  <Loader
-    v-if="isLoader"
-  />
+  <Loader/>
   <div class="block"
-    v-else
+    v-if="!getIsLoaderQuestions"
   >
     <div class="title">
       <Timer
@@ -77,7 +75,7 @@ export default {
   },
   data() {
     return {
-      isLoader: true,
+      
       timeTicket: false,
       timeEnd: false,
       ticketId: this.$route.params.id,
@@ -87,10 +85,17 @@ export default {
         rnd20:"Случайный набор из 20 вопросов",
         rnd20t:"Случайный набор из 20 вопросов на время"
       },
+      info:{}
     }
   },
   computed:{
-    ...mapGetters(["getSlug", "getRandomTicket", "getSelectTicket"]),
+    ...mapGetters([
+      "getSlug", 
+      "getRandomTicket", 
+      "getSelectTicket", 
+      "getTestId",
+      "getIsLoaderQuestions"
+    ]),
     testName() {
       return this.$store.getters.getTestTitleActive
     },
@@ -100,11 +105,15 @@ export default {
     
   },
    methods: {
-    ...mapActions(["getQuestionsDb", "saveResultTicketUser"]),
+    ...mapActions(["getQuestionsDb", "saveResultTicketUser", "setIsLoaderStatus"]),
     async onSubmit(e){
-      const ticket = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
+      const question = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
         .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-      
+        
+      const ticket = {
+        question,
+        info: this.info
+      } 
       await this.saveResultTicketUser(ticket)
       this.$router.push({ path:'/result'})
     },
@@ -116,6 +125,7 @@ export default {
     }
   },
   async created(){
+    this.setIsLoaderStatus({status: true})
     if (this.ticketId === "rndb" ) { 
       this.ticketId = await this.getRandomTicket
       console.log("запрос случайного билета ", this.ticketId)
@@ -123,17 +133,20 @@ export default {
     console.log("this.ticketId - ", this.ticketId)
     
     const regexp = new RegExp("rnd", 'i');
-                
                
     console.log(" regexp.test(this.ticketId) - ",  regexp.test(this.ticketId))
     if ( regexp.test(this.ticketId)){
-        this.ticketTitle = this.rnd[this.ticketId]
-      } else {
-        this.ticketTitle = this.getSelectTicket(+this.ticketId).title
-      }
+      this.ticketTitle = this.rnd[this.ticketId]
+      this.info.mode = this.ticketId
+    } else {
+      this.ticketTitle = this.getSelectTicket(+this.ticketId).title
+      this.info.ticket = +this.ticketId
+    }
+    this.info.test= this.getTestId
+    
     await this.getQuestionsDb({id: this.ticketId, slug: this.getSlug})
     if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
-    this.isLoader = false
+    this.setIsLoaderStatus({status: false})
   }
 } 
 

@@ -57,7 +57,7 @@ const actions = {
     const token = await dispatch("getAutchUserTokenAction")
     const config = {
       method: 'get',
-      url: `/api/admin/test`,
+      url: `/api/admin/test?limit=10`,
       headers: { 
         Accept: 'application/json', 
         Authorization: `Bearer ${token}`
@@ -84,46 +84,6 @@ const actions = {
   },
   setTestTitle ({dispatch, commit}, {title}) {
     commit("SET_TEST_TITLE", title );
-  },
-  async importFileTestDb({ dispatch, commit, state }, {id, testFile} ){
-    const token = await dispatch("getAutchUserTokenAction")
-    console.dir(testFile)
-    commit("SET_LOADER_TOGGLE")
-    try{
-      // Array.from(questionSend).filter(inp => inp.name !== "")
-      const data = new FormData(testFile);
-      for(let [name, value] of data) {
-        console.dir(`${name} = ${value}`); 
-      }
-      const config = {
-        method: 'post',
-        url: `/api/admin/test/${id}/upload`,
-        headers: { 
-          Accept: 'application/json', 
-          Authorization: `Bearer ${token}`
-        },
-        data:  data
-      };
-      console.log("importFileTestDb - ",  config)
-      await axios(config)
-        .then(({data})=>{
-          console.log("importFileTestDb - ",  data)
-          
-          dispatch('setMessage', data)
-          // commit("SET_LOADER_TOGGLE")
-        })
-    } catch (e) {
-      console.log(" ошибка загруки - ", e)
-      if (e.response.data.message === "Expired JWT Token") {
-        await dispatch('getAuthRefresh')
-        await dispatch('importFileTestDb', {id, testFile})
-      } else {
-        const regexp = new RegExp("422", 'i');
-        // regexp.test(e.message)
-        dispatch('setQuestionsImportError', e.response.data)
-        dispatch('setMessageError', e)
-      }
-    }
   },
   setTest({dispatch ,commit}, test) {
     if (test) dispatch("setTickets", test.ticket)
@@ -276,6 +236,9 @@ const getters = {
   },
   getSlug(state) {
     return state.test.slug
+  },
+  getTestId(state) {
+    return state.test.id
   },
 }
 
