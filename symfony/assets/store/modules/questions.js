@@ -1,9 +1,7 @@
 import { 
   SET_QUESTIONS, 
   SET_QUESTIONS_RESULT, 
-  SET_LOADER_TOGGLE,
   SET_RESULT_TICKET_USER,
-  SET_LOADER_STATUS,
   SET_QUESTION,
   SET_QUESTIONS_IMPORT_ERROR
 } from './mutation-types.js'
@@ -313,7 +311,7 @@ const state = () => ({
     // },
     
   ],
-  isLoader: false,//resultTicketUser
+  
   resultTicketUser:localStorage.getItem('resultTicketUser') ?
   JSON.parse(localStorage.getItem('resultTicketUser')): [],
   questionsImportError: null
@@ -366,7 +364,7 @@ const actions = {
     try{
       const config = {
         method: 'get',
-        url: `/api/admin/test/${id}/question`,
+        url: `/api/admin/test/${id}/question?limit=10`,
         headers: { 
           Accept: 'application/json', 
           Authorization: `Bearer ${token}`
@@ -380,7 +378,12 @@ const actions = {
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getQuestionsTestIdDb', {id, page})
+      } else {
         dispatch('setMessageError', e)
+      }
     }
   },
   //получение вороса по его id
@@ -402,11 +405,17 @@ const actions = {
           commit("SET_QUESTION", data);
         })
     } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getQuestionIdDb', {id})
+      } else {
         dispatch('setMessageError', e)
+      }
     }
   },
   // отаправка результата прохождения теста на сервер
-  async setResultDb({dispatch, commit, state }, {token, userAuth} ){
+  async setResultDb({dispatch, commit, state }, {userAuth} ){
+    const token = await dispatch("getAutchUserTokenAction")
     console.log(JSON.stringify(state.resultTicketUser))
     commit("SET_LOADER_STATUS", true)
     try{
@@ -448,25 +457,13 @@ const actions = {
   //сохранение нового вопроса в базу
   async saveQuestionDb({ dispatch, commit, state }, {questionSend, id = null} ){
     console.dir(questionSend)
-    commit("SET_LOADER_TOGGLE")
+    dispatch("setIsLoaderStatus", {status: true})
     const token = await dispatch("getAutchUserTokenAction")
     try{
-      // Array.from(questionSend).filter(inp => inp.name !== "")
-      
       const data = new FormData(questionSend);
       for(let [name, value] of data) {
-        console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
-
+        console.dir(`${name} = ${value}`)
       }
-      // questionSend.forEach((element,key) => {
-      //   const regexp = new RegExp('img', 'i');
-      //   if (regexp.test(element.name) ) {
-      //     data.append(`${element.name}`, element.files[0])
-      //   } else {
-      //     data.append(`${element.name}`, element.value)
-      //   }
-      // });
-      // questionSend.forEach((element,key) => data.append(`${element.name}`, element.value) );
       const config = {
         method: 'post',
         url: '/api/admin/question/create_with_variant',
@@ -483,27 +480,30 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
+          dispatch("setIsLoaderStatus", {status: false})
           dispatch('setMessage', data)
-          commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('saveQuestionDb', {id, questionSend})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
   //импорт вопросов из файла
-  async importQuestionsFileDb({ dispatch, commit, state }, {id, questionSend} ){
-    console.dir(questionSend)
-    commit("SET_LOADER_TOGGLE")
+  async importQuestionsFileDb({ dispatch, commit, state }, {id, testFile} ){
+    commit("SET_QUESTIONS_IMPORT_ERROR", null)
+    dispatch("setIsLoaderStatus", {status: true})
     const token = await dispatch("getAutchUserTokenAction")
     try{
-      const data = new FormData(questionSend);
+      const data = new FormData(testFile);
       for(let [name, value] of data) {
         console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
-
       }
       const config = {
         method: 'post',
-        // url: '/api/auth/create/question',
         url: `/api/admin/test/${id}/upload`,
         headers: { 
           Accept: 'application/json', 
@@ -515,11 +515,21 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
+          dispatch("setIsLoaderStatus", {status: false})
           dispatch('setMessage',  data)
-          commit("SET_LOADER_TOGGLE")
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('importQuestionsFileDb', {id, testFile})
+      } else {
+        if (e.response.status === 422){
+          // dispatch('setQuestionsImportError', e.response.data.error)
+          commit("SET_QUESTIONS_IMPORT_ERROR", e.response.data.error)
+        }
+        dispatch('setMessageError', e)
+        dispatch("setIsLoaderStatus", {status: false})
+      }
     }
   },
 
@@ -542,13 +552,16 @@ const actions = {
           
         })
     } catch (e) {
-      dispatch('setMessageError', e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('deleteQuestionDb', {id, testId, page })
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
 
-  setIsLoader({ commit }){
-    commit("SET_LOADER_TOGGLE")
-  },
+  
   setQuestion({ commit }, question){
     commit("SET_QUESTION", question)
   },
@@ -571,10 +584,6 @@ const getters = {
     console.log("resultQuestions ", state.resultQuestions)
     return state.resultQuestions 
   },
-  getIsLoaderQuestions(state) {
-    console.log("isLoader ", state.isLoader)
-    return state.isLoader 
-  },
   getQuestion(state) {
     return state.question 
   },
@@ -592,14 +601,6 @@ const mutations = {
     console.log("SET_QUESTIONS_RESULT", questions)
     state.resultQuestions = questions
     // localStorage.setItem('resultQuestions', JSON.stringify(questions));
-  },
-  [SET_LOADER_TOGGLE] (state, ) {
-    console.log("SET_LOADER_TOGGLE", state.isLoader)
-    state.isLoader = !state.isLoader
-  },
-  [SET_LOADER_STATUS] (state, status) {
-    console.log("SET_LOADER_TOGGLE", state.isLoader)
-    state.isLoader = status
   },
   [SET_RESULT_TICKET_USER] (state, ticket) {
     console.log("SET_RESULT_TICKET_USER", )

@@ -19,10 +19,10 @@ const state = () => ({
 const actions = {
   async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null }) {
     const token = await dispatch("getAutchUserTokenAction")
-    console.log("token - ",token)
+    
     const config = {
       method: 'get',
-      url: `/api${admin ? '/admin': '' }/category`,
+      url: `/api${admin ? '/admin': '' }/category?limit=6`,
       headers: { 
         Accept: 'application/json', 
       }
@@ -33,10 +33,13 @@ const actions = {
     }
 
     if (parentId) {
-      config.url = config.url + `?parent=${parentId}`
+      config.url = config.url + `&parent=${parentId}`
     }
+    // if (page) {
+    //   config.url = config.url + `${parentId ? "&" : "?"}` + `page=${page}`
+    // }
     if (page) {
-      config.url = config.url + `${parentId ? "&" : "?"}` + `page=${page}`
+      config.url = config.url + `&page=${page}`
     }
     console.log("getCategoryDB - ",  config)
   try{

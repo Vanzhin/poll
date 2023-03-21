@@ -13,6 +13,7 @@ import tickets from './modules/tickets'
 import category from './modules/category'
 import pagination from './modules/pagination'
 import confirm from './modules/confirm'
+import loader from './modules/loader'
 export default createStore({
   state,
   mutations,
@@ -28,6 +29,7 @@ export default createStore({
     tickets,
     category,
     pagination,
-    confirm
+    confirm,
+    loader
   },
 })
