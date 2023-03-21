@@ -3,8 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Category;
-use App\Entity\Question;
-use App\Entity\Test;
 use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
@@ -67,13 +65,12 @@ class CategoryService
 
     }
 
-//    public function delete(Category $category): void
-//    {
-//
-//        $this->categoryImageUploader->delete($category->getImage());
-//        $this->em->remove($category);
-//        $this->em->flush();
-//    }
+    public function delete(Category $category): void
+    {
+
+        $this->em->remove($category);
+        $this->em->flush();
+    }
 //
 //    public function imageDelete(Category $category): void
 //    {

@@ -176,7 +176,7 @@ class TestController extends AbstractController
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
                 'error' => $errors],
-                422,
+                423,
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
@@ -188,15 +188,16 @@ class TestController extends AbstractController
                 $data['test'] = $test->getId();
                 $question = $questionService->make(new Question(), $data);
                 if ($validation->validate($question)) {
-                    $total[$key]['error']['question'] = $validation->validate($question);
+                    $total['error'][$key]['question'] = $validation->validate($question);
                 }
                 if ($validation->manyVariantsValidate($data)) {
-                    $total[$key]['error']['variant'] = $validation->manyVariantsValidate($data);
-                    $total[$key]['error']['variant']['question'] = $data;
+                    $total['error'][$key]['variant'] = $validation->manyVariantsValidate($data);
+                    $total['error'][$key]['variant']['question'] = $data;
                 }
 
             }
             if ($total) {
+                $total['message'] = 'Ошибка при создании вопроса';
                 $response = $total;
                 $status = 422;
             } else {

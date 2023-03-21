@@ -132,10 +132,10 @@ class CategoryController extends AbstractController
     }
 
     #[Route("api/admin/category/{id}/delete", name: 'app_api_admin_category_delete')]
-    public function delete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader, EntityManagerInterface $em): Response
+    public function delete(Category $category, CategoryService $categoryService): Response
     {
         try {
-            $categoryService->delete($category, $categoryImageUploader, $em);
+            $categoryService->delete($category);
 
             $response = [
                 'message' => 'Раздел удален',
@@ -157,7 +157,7 @@ class CategoryController extends AbstractController
     public function imageDelete(Category $category, CategoryService $categoryService, FileUploader $categoryImageUploader, EntityManagerInterface $em): JsonResponse
     {
         try {
-            $categoryService->imageDelete($category, $categoryImageUploader, $em);
+            $categoryService->imageUpdate($category, $categoryImageUploader, $em);
 
             $response = [
                 'message' => 'Фото удалено',
