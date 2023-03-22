@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SubtitleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SubtitleRepository::class)]
 class Subtitle
@@ -14,6 +15,7 @@ class Subtitle
     private ?int $id = null;
 
     #[ORM\Column(length: 500)]
+    #[Groups(['test', 'handle'])]
     private ?string $title = null;
 
     #[ORM\ManyToOne(inversedBy: 'subtitles')]

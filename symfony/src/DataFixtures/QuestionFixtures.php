@@ -174,12 +174,12 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
                 case 'order':
                     $this->createMany(Variant::class, $this->faker->numberBetween(3, 8), function (Variant $variant) use ($manager, $question) {
-                    static $i=0;
+                        static $i = 0;
                         $variant
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
                             ->setWeight(100)
                             ->setQuestion($question)
-                        ->setCorrect($i++);
+                            ->setCorrect($i++);
 
                         $question->addVariant($variant);
 
@@ -202,7 +202,7 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
         $questionsWithSubtitles = array_filter($this->referenceRepository->getReferencesByClass()[Question::class], function ($question) {
             return in_array($question->getType()->getTitle(), ['conformity']);
         });
-        foreach ($questionsWithSubtitles as $question){
+        foreach ($questionsWithSubtitles as $question) {
             $this->createMany(Subtitle::class, $this->faker->numberBetween(2, 5), function (Subtitle $subtitle) use ($manager, $question) {
 
                 $subtitle->setTitle($this->faker->realTextBetween(30, 255) . '?')

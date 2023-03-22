@@ -35,7 +35,7 @@ class Question implements EntityWithImageInterface
 
 //    #[ORM\Column]
 //    #[Groups(['main', 'admin_question'])]
-//    private array $answer = [];
+    private array $trueAnswer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[Assert\NotNull(
@@ -84,6 +84,7 @@ class Question implements EntityWithImageInterface
     private ?array $result = null;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, orphanRemoval: true)]
+    #[Groups(['test', 'handle'])]
     private Collection $subtitles;
 
     /**
@@ -127,17 +128,41 @@ class Question implements EntityWithImageInterface
         return $this;
     }
 
-//    public function getAnswer(): array
-//    {
-//        return $this->answer;
-//    }
-//
-//    public function setAnswer(array $answer): self
-//    {
-//        $this->answer = $answer;
-//
-//        return $this;
-//    }
+    public function getTrueAnswer(): array
+    {
+        $answer = [];
+
+        switch ($this->getType()->getTitle()) {
+            case 'radio':
+            case 'input_one':
+            case 'checkbox':
+                foreach ($this->getVariant() as $variant) {
+                    if (!is_null($variant->getCorrect())) {
+                        $answer[] = $variant->getId();
+                    }
+                }
+                break;
+            case 'conformity':
+                foreach ($this->getSubtitles() as $subtitle) {
+                    $answer[] = $subtitle->getCorrect()->getId();
+                }
+
+                break;
+            case 'order':
+                foreach ($this->getVariant() as $variant) {
+
+                    if (!is_null($variant->getCorrect())) {
+                        $answer[$variant->getCorrect()] = $variant->getId();
+                    }
+                }
+                break;
+//            case 'input_many':
+//            case 'blank':
+
+        }
+        return $answer;
+    }
+
 
     public function getType(): ?Type
     {
@@ -207,18 +232,6 @@ class Question implements EntityWithImageInterface
 
         return $this;
     }
-
-//    public function getSubTitle(): array
-//    {
-//        return $this->subTitle;
-//    }
-//
-//    public function setSubTitle(?array $subTitle): self
-//    {
-//        $this->subTitle = $subTitle;
-//
-//        return $this;
-//    }
 
     /**
      * @return Collection<int, Variant>

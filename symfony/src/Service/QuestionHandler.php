@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Question;
+use App\Entity\Subtitle;
 use App\Entity\Variant;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -20,23 +21,25 @@ class QuestionHandler
     public function handle(array $answerData, Question $question): Question
     {
 
-                $score = $this->getQuestionScore($question, $answerData["answer"]);
-                $question->setResult([
-                    "correct" => $score,
-                ]);
-                $variantTitles = isset($this->sessionService->get(self::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] : $this->getVariantsToArray($question);
-                $question->getVariant()->clear();
-                foreach ($variantTitles as $titles) {
-                    $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $titles);
-                    if ($variant) {
-                        $question->addVariant($variant);
-                    }
-                };
+        $score = $this->getQuestionScore($question, $answerData["answer"]);
+        $question->setResult([
+            "correct" => $score,
+        ]);
+        $variantTitles = isset($this->sessionService->get(self::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(self::SHUFFLED)[$question->getId()]['variant'] : $this->getVariantsToArray($question);
+        $question->getVariant()->clear();
+        foreach ($variantTitles as $titles) {
+            $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $titles);
+            if ($variant) {
+                $question->addVariant($variant);
+            }
+        };
 
-                if (!empty($question->getSubTitle())) {
-
-                    $question->setSubTitle($this->sessionService->get(self::SHUFFLED)[$question->getId()]['subTitle'] ?? []);
-                }
+        if ($question->getSubtitles()->count() > 0 && count($this->sessionService->get(self::SHUFFLED)[$question->getId()]['subTitle'] ?? []) > 0) {
+            $question->getSubtitles()->clear();
+            foreach ($this->sessionService->get(self::SHUFFLED)[$question->getId()]['subTitle'] ?? [] as $subtitleId) {
+                $question->addSubtitle($this->entityManager->find(Subtitle::class, $subtitleId));
+            }
+        }
 
         return $question;
 
@@ -68,7 +71,6 @@ class QuestionHandler
     {
         $answers = [];
         if ($question->getVariant()->count() > 0) {
-
             foreach ($userAnswer as $key => $answer) {
                 if (isset($answer, $this->getVariantsToArray($question)[$answer])) {
                     $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $shuffled['variant'][$answer]);
@@ -80,7 +82,7 @@ class QuestionHandler
                     if ($variant) {
                         $answers[] = $variant->getId();
 
-                    }else{
+                    } else {
                         $answers[] = $answer;
 
                     }
@@ -89,11 +91,11 @@ class QuestionHandler
         } else {
             $answers = $userAnswer;
         }
-        if (count($question->getSubTitle()) > 1 && isset($shuffled['subTitle'])) {
+        if ($question->getSubtitles()->count() > 1 && isset($shuffled['subTitle'])) {
             $shuffledUserAnswer = [];
-            foreach ($question->getSubTitle() as $subTitle) {
-                if (isset($answers[array_search($subTitle, $shuffled['subTitle'])])) {
-                    $shuffledUserAnswer[] = $answers[array_search($subTitle, $shuffled['subTitle'])];
+            foreach ($question->getSubtitles() as $subTitle) {
+                if (isset($answers[array_search($subTitle->getId(), $shuffled['subTitle'])])) {
+                    $shuffledUserAnswer[] = $answers[array_search($subTitle->getId(), $shuffled['subTitle'])];
 
                 }
             }
@@ -106,7 +108,7 @@ class QuestionHandler
     {
         $trueShufflesAnswers = [];
         if (isset($shuffled['variant']) && count($shuffled['variant']) > 0) {
-            foreach ($question->getAnswer() as $answer) {
+            foreach ($question->getTrueAnswer() as $answer) {
 
                 $variant = $this->entityManager->getRepository(Variant::class)->find($answer);
                 if (!is_null($variant)) {
@@ -115,7 +117,7 @@ class QuestionHandler
 
             }
         } else if ($question->getVariant()->count() > 0) {
-            foreach ($question->getAnswer() as $answer) {
+            foreach ($question->getTrueAnswer() as $answer) {
 
                 $variant = $this->entityManager->getRepository(Variant::class)->find($answer);
                 if (!is_null($variant)) {
@@ -123,13 +125,13 @@ class QuestionHandler
                 }
             }
         } else {
-            $trueShufflesAnswers = $question->getAnswer();
+            $trueShufflesAnswers = $question->getTrueAnswer();
         }
         if (isset($shuffled['subTitle']) && count($shuffled['subTitle']) > 1) {
-
             $answers = [];
-            foreach ($shuffled['subTitle'] as $subTitle) {
-                $answers[] = $trueShufflesAnswers[array_search($subTitle, $question->getSubTitle())];
+            foreach ($shuffled['subTitle'] as $subTitleId) {
+                $answers[] = $trueShufflesAnswers[array_search($this->entityManager->find(Subtitle::class, $subTitleId), $question->getSubtitles()->toArray())];
+
             }
 
             $trueShufflesAnswers = $answers;
@@ -157,19 +159,19 @@ class QuestionHandler
             case 'radio':
             case 'order':
             case 'input_one':
-                if ($userShuffledAnswers == $question->getAnswer()) {
+                if ($userShuffledAnswers == $question->getTrueAnswer()) {
                     $score = true;
                 };
                 break;
             case 'conformity':
-                if ($userShuffledAnswers === $question->getAnswer()) {
+                if ($userShuffledAnswers === $question->getTrueAnswer()) {
                     $score = true;
                 };
                 break;
             case 'checkbox':
             case 'checkbox_picture':
 
-                if (count(array_diff($question->getAnswer(), $userShuffledAnswers)) === 0) {
+                if (count(array_diff($question->getTrueAnswer(), $userShuffledAnswers)) === 0) {
                     $score = true;
                 }
                 break;
@@ -206,11 +208,16 @@ class QuestionHandler
         if (count($questions) > 0) {
             foreach ($questions as $question) {
                 $variants = [];
+                $subtitles = [];
+
                 foreach ($question->getVariant() as $variant) {
                     $variants[] = $variant->getTitle();
                 }
+                foreach ($question->getSubtitles() as $subtitle) {
+                    $subtitles[] = $subtitle->getId();
+                }
                 $response[$question->getId()] = [
-                    "subTitle" => $question->getSubtitle(),
+                    "subTitle" => $subtitles,
                     "variant" => $variants
                 ];
             }

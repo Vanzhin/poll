@@ -49,7 +49,6 @@ class TestService
         $response['response'] = [];
 
         $response['status'] = 200;
-        $status = 200;
         if ($user) {
             $result = $this->resultFactory->createBuilder()->buildResult($data['info'] ?? [], $user);
             $errors = $this->validation->validate($result);
