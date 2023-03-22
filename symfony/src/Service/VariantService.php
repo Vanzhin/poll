@@ -125,7 +125,6 @@ class VariantService
                 $this->em->flush();
 
             }
-            $this->em->persist($this->questionAnswerUpdate($variant, true));
             $this->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
 
             $response = [
@@ -147,12 +146,12 @@ class VariantService
 
     public function delete(Variant $variant): void
     {
-        $answers = array_filter($variant->getQuestion()->getAnswer(), function ($variantId) use ($variant) {
-            return $variantId !== $variant->getId();
-        });
-        $question = $variant->getQuestion()->setAnswer(array_values($answers));
+//        $answers = array_filter($variant->getQuestion()->getAnswer(), function ($variantId) use ($variant) {
+//            return $variantId !== $variant->getId();
+//        });
+//        $question = $variant->getQuestion()->setAnswer(array_values($answers));
 //        $this->variantImageUploader->delete($variant->getImage());
-        $this->em->persist($question);
+//        $this->em->persist($question);
         $this->em->remove($variant);
         $this->em->flush();
     }

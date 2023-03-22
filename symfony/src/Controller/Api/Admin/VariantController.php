@@ -4,6 +4,7 @@ namespace App\Controller\Api\Admin;
 
 use App\Entity\Question;
 use App\Entity\Variant;
+use App\Factory\Variant\VariantFactory;
 use App\Service\NormalizerService;
 use App\Service\QuestionService;
 use App\Service\ValidationService;
@@ -40,12 +41,11 @@ class VariantController extends AbstractController
     }
 
     #[Route('/api/admin/variant/create', name: 'app_api_admin_variant_create', methods: 'POST')]
-    public function create(Request $request, VariantService $variantService, ValidationService $validation, EntityManagerInterface $em, QuestionService $questionService): JsonResponse
+    public function create(Request $request, VariantService $variantService, ValidationService $validation, VariantFactory $factory): JsonResponse
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage');
-        $variant = $variantService->make(new Variant(), $data['variant'] ?? []);
-
+        $variant = $factory->createBuilder()->buildVariant($data['variant']);
         $errors = $validation->entityWithImageValidate($variant, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
@@ -65,11 +65,11 @@ class VariantController extends AbstractController
     }
 
     #[Route('/api/admin/variant/{id}/edit', name: 'app_api_admin_variant_edit', methods: 'POST')]
-    public function edit(Variant $variant, Request $request, VariantService $variantService, ValidationService $validation): JsonResponse
+    public function edit(Variant $variant, Request $request, VariantService $variantService, ValidationService $validation, VariantFactory $factory): JsonResponse
     {
         $data = $request->request->all();
         $image = $request->files->get('variantImage', false);
-        $variant = $variantService->make($variant, $data['variant'] ?? []);
+        $variant = $factory->createBuilder()->buildVariant($data['variant'], $variant);
 
         $errors = $validation->entityWithImageValidate($variant, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {

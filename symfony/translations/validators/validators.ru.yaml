@@ -17,6 +17,7 @@ variant.weight.greater_than: Вес вопроса не может быть бо
 variant.correct: Не верный формат ответа
 variant.title.unique: Вариант с таким названием уже существует для этого вопроса
 variant.test.not_null: Вопрос с таким идентификатором не найден
+variant.correct.not_integer: Должно быть положительным числом
 
 category.title.not_blank: Название раздела не может быть пустым
 category.parent.exist: Такого раздела нет

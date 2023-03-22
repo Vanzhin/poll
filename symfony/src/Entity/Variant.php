@@ -63,6 +63,14 @@ class Variant implements EntityWithImageInterface
     private Collection $subtitles;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Assert\AtLeastOneOf([
+        new Assert\IsNull(),
+        new Assert\Sequentially([
+                new Assert\Type('integer', message: 'variant.correct'),
+                new Assert\PositiveOrZero(message: 'variant.correct.not_integer')
+            ]
+        ),
+    ])]
     private ?int $correct = null;
 
     public function __construct()
