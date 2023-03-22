@@ -176,7 +176,7 @@ const actions = {
     if (refresh_token) {
        data = JSON.stringify({"refresh_token": refresh_token})
     } else { data = JSON.stringify({"refresh_token": state.refresh_token})}
-    console.log(data)
+    
     try {
       const config = {
         method: 'post',
@@ -234,6 +234,9 @@ const getters = {
   },
   getUserRole(state) {
     return state.role
+  },
+  getUserAdmin(state) {
+    return state.role === "ROLE_ADMIN"
   }
 }
 

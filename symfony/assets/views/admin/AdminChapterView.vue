@@ -46,7 +46,7 @@
 <script>
   import MessageView from "../../components/ui/MessageView.vue"
   import ItemChapter from "../../components/Admin/ItemChapter.vue"
-  import Loader from '../../components/ui/Loader.vue'
+  import Loader from '../../components/ui/LoaderView.vue'
   import Pagination from "../../components/Pagination.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {

@@ -1,4 +1,14 @@
 <template>
+  <div class="block">
+    <div class="title">
+      <h1>Результат:</h1>  
+      <h2> {{ getTestTitleActive }}</h2>
+      <div class="test">
+        <p>Билет №: {{ getTicketTitle }}</p>  
+      </div>
+    </div>
+  
+  
   <Loader
     v-if="loader"
   />
@@ -11,13 +21,14 @@
     <ResultNoAutchView
       v-else
     />
+  </div> 
   </div>
 </template>
 <script>
 
 import ResultAutchView from './ResultAutchView.vue'
 import ResultNoAutchView from './ResultNoAutchView.vue'
-import Loader from '../components/ui/Loader.vue'
+import Loader from '../components/ui/LoaderView.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
@@ -31,7 +42,12 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getIsAutchUser", "getAutchUserToken"]),
+    ...mapGetters([
+      "getIsAutchUser", 
+      "getAutchUserToken", 
+      "getTicketTitle",
+      "getTestTitleActive",
+    ]),
   },
   methods: {
     ...mapActions(["getQuestionsDb", "setResultDb", "getAuthRefresh"]),
@@ -61,5 +77,19 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-
+    .block{
+    background-color: rgb(207 207 199);
+    padding: 10px ;
+    
+  }
+  .title{
+    margin: 10px;
+    & h2{
+      font-size: 1.4rem;
+      color: #697a3f;
+    }
+  }
+  .test{
+    display: flex;
+  }
 </style>

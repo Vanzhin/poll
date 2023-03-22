@@ -1,5 +1,5 @@
 import { 
-  
+  SET_TICKET_TITLE,
   SET_TICKETS
  } from './mutation-types.js'
  import axios from 'axios';
@@ -7,22 +7,17 @@ import {
 const state = () => ({
   tickets: [],
   question:{},
+  ticketTitle: ''
 })
 
 const actions = {
-  getCources({ commit }) {
-    axios
-      .get("/api/cources")
-      .then((res) => {
-        commit("GET_COURCES", res.data.raw);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },
+  
   getQuestion(){},
   setTickets ({dispatch, commit}, tickets) {
     commit("SET_TICKETS", tickets)
+  },
+  setTicketTitle ({dispatch, commit}, title) {
+    commit("SET_TICKET_TITLE", title)
   }
 };
 
@@ -39,7 +34,10 @@ const getters = {
   getSelectTicket:(state)=>(id) =>{
     return state.tickets.find(ticket => {
       return +ticket.id === +id}) 
-  }
+  },
+  getTicketTitle(state) {
+    return state.title
+  },
 }
 
 const mutations = {
@@ -50,6 +48,9 @@ const mutations = {
   },
   [SET_TICKETS] (state, tickets){
     state.tickets = tickets
+  },
+  [SET_TICKET_TITLE] (state, title){
+    state.title = title
   },
 }
 export default {

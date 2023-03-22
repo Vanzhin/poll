@@ -181,7 +181,7 @@ const actions = {
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
-        await dispatch('createTest', {id, questionSend})
+        await dispatch('createTest', {questionSend})
       } else {
         dispatch('setMessageError', e)
       }

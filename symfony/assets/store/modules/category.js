@@ -66,8 +66,14 @@ const actions = {
     }
   }
   },
+  setCategorys({commit}, categorys){
+    commit("SET_CATEGORYS", categorys);
+  },
   setCategoryTitle({commit}, title){
     commit("SET_CATEGORY_TITLE", title);
+  },
+  setCategoryParent({commit}, parent){
+    commit("SET_CATEGORYS_PARENT", parent);
   },
   setCategoryDescription({commit}, description){
     commit("SET_CATEGORY_DESCRIPTION", description);
@@ -170,7 +176,7 @@ const getters = {
     return state.parent ? state.parent.title : null
   },
   getCategoryDescription(state) {
-    return state.parent.description
+    return state.parent ? state.parent.description : null
   },
   getCategoryParendId(state) {
     return state.parent ? state.parent.id : null

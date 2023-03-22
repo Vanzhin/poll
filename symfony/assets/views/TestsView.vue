@@ -1,5 +1,8 @@
 <template>
-  <div class="">
+  <Loader
+    v-if="isLoader"
+  />
+  <div class=""  v-else>
     <div class="tests__block">
       <h4>{{ areaTitle }}</h4>
       <h5>Выберите тест:</h5>
@@ -23,20 +26,27 @@
         >
           {{ test.id }} - {{ test.title }}
         </div>
-        
       </div>
     </div> 
-         
-     
+    <Pagination
+        type="getTestsDB"
+      />
   </div>
 </template>
 <script>
 import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
+import Loader from '../components/ui/LoaderView.vue'
+import Pagination from '../components/Pagination.vue'
 export default {
+  components: {
+    Loader,
+    Pagination
+  },
   data() {
+    
     return {
-      count: 0
+      isLoader: false,
     }
   },
   computed:{
@@ -48,6 +58,14 @@ export default {
       return this.$store.getters.getTests
     },
   },
+  methods: {
+    ...mapActions(["getCategorysDB"]),
+  },
+  async created(){
+    if (!this.tests) {this.isLoader = true}
+    await this.getCategorysDB({page:null, parentId: this.$route.params.id})
+    this.isLoader = false
+  }
 } 
 
 </script>

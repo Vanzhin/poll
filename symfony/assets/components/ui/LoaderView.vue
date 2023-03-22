@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="loader-container">
     <div 
-      class="container-loader"
+      class="loader-block"
     >
       <div class="loader">
       </div>
@@ -18,15 +18,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .container-loader{
+.loader-container{
+    position: relative;
+}
+
+  .loader-block{
     width: 100%;
-    height: 90vh;
+    height: 70vh;
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     z-index: 30;
-    background-color: #ced5d352;
+    
 }
 
 .loader {
@@ -41,8 +45,11 @@ export default {
     from {
         transform: rotate(0deg) scale(1);
     }
+    50%{
+      transform: rotate(360deg) scale(1.4);
+    }
     to {
-        transform: rotate(360deg) scale(1.4);
+        transform: rotate(720deg) scale(1);
     }
 }
 </style>
