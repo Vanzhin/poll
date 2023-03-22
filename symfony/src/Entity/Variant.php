@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Interfaces\EntityWithImageInterface;
 use App\Repository\VariantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -56,6 +58,17 @@ class Variant implements EntityWithImageInterface
     private ?string $image = null;
 
     private bool|null $isCorrect = null;
+
+    #[ORM\OneToMany(mappedBy: 'correct', targetEntity: Subtitle::class)]
+    private Collection $subtitles;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $correct = null;
+
+    public function __construct()
+    {
+        $this->subtitles = new ArrayCollection();
+    }
 
     /**
      * @return bool|null
@@ -123,6 +136,48 @@ class Variant implements EntityWithImageInterface
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subtitle>
+     */
+    public function getSubtitles(): Collection
+    {
+        return $this->subtitles;
+    }
+
+    public function addSubtitle(Subtitle $subtitle): self
+    {
+        if (!$this->subtitles->contains($subtitle)) {
+            $this->subtitles->add($subtitle);
+            $subtitle->setCorrect($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubtitle(Subtitle $subtitle): self
+    {
+        if ($this->subtitles->removeElement($subtitle)) {
+            // set the owning side to null (unless already changed)
+            if ($subtitle->getCorrect() === $this) {
+                $subtitle->setCorrect(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCorrect(): ?int
+    {
+        return $this->correct;
+    }
+
+    public function setCorrect(?int $correct): self
+    {
+        $this->correct = $correct;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Question;
+use App\Entity\Subtitle;
 use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Entity\Type;
@@ -22,55 +23,58 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
             $question
                 ->setType($this->getRandomReference(Type::class))
-            ->addTicket($this->getRandomReference(Ticket::class));
+                ->addTicket($this->getRandomReference(Ticket::class));
 
 
             switch ($question->getType()->getTitle()) {
                 case 'radio':
                 case 'input_one':
                 case 'checkbox':
-
-                $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
-                        ->setTest($this->getRandomReference(Test::class));
-                    break;
-                case 'input_many':
-                case 'blank':
-                    $answers = $this->faker->words($this->faker->numberBetween(2, 5));
-                    $title = $this->faker->realTextBetween(10, 50) . '?' . static::QUESTION_SEPARATOR;
-                    $inputs = [];
-                    foreach ($answers as $answer) {
-                        $inputs[] = $this->faker->realTextBetween(10, 35) . '?' . static::BLANK_FIELD;
-                    }
-
-                    $question->setTitle($title . implode('', $inputs))
-                        ->setAnswer($answers)
-                        ->setTest($this->getRandomReference(Test::class));
-                    break;
                 case 'conformity':
-                    $subTitles = [];
-                    for ($i = 0; $i < $this->faker->numberBetween(2, 5); $i++) {
-                        $subTitles[] = $this->faker->realTextBetween(10, 50) . '?';
-                    }
-                    $title = $this->faker->realTextBetween(10, 50) . '?';
-                    $question->setTitle($title)
-                        ->setSubTitle($subTitles);
-                    $question
-                        ->setTest($this->getRandomReference(Test::class));
-                    break;
                 case 'order':
-                    $title = $this->faker->realTextBetween(10, 50);
-                    $question->setTitle($title)
+
+
+                    $question->setTitle($this->faker->realTextBetween(30, 255) . '?')
                         ->setTest($this->getRandomReference(Test::class));
                     break;
-                case 'checkbox_picture':
-                    $variants = $this->faker->words($this->faker->numberBetween(2, 5));
-                    $pictures = [];
-                    foreach ($variants as $variant) {
-                        $pictures[] = static::PICTURE_MARK . 'picture' . $this->faker->numberBetween(1, 10) . '.jpeg' . static::PICTURE_MARK;
-                    }
-                    $question->setTitle($this->faker->realTextBetween(30, 255) . '?' . static::QUESTION_SEPARATOR . implode('', $pictures))
-                        ->setTest($this->getRandomReference(Test::class));
-                    break;
+//                case 'input_many':
+//                case 'blank':
+//                    $answers = $this->faker->words($this->faker->numberBetween(2, 5));
+//                    $title = $this->faker->realTextBetween(10, 50) . '?' . static::QUESTION_SEPARATOR;
+//                    $inputs = [];
+//                    foreach ($answers as $answer) {
+//                        $inputs[] = $this->faker->realTextBetween(10, 35) . '?' . static::BLANK_FIELD;
+//                    }
+//
+//                    $question->setTitle($title . implode('', $inputs))
+//                        ->setAnswer($answers)
+//                        ->setTest($this->getRandomReference(Test::class));
+//                    break;
+//                case 'conformity':
+//                    $subTitles = [];
+//                    for ($i = 0; $i < $this->faker->numberBetween(2, 5); $i++) {
+//                        $subTitles[] = $this->faker->realTextBetween(10, 50) . '?';
+//                    }
+//                    $title = $this->faker->realTextBetween(10, 50) . '?';
+//                    $question->setTitle($title)
+//                        ->setSubTitle($subTitles);
+//                    $question
+//                        ->setTest($this->getRandomReference(Test::class));
+//                    break;
+//                case 'order':
+//                    $title = $this->faker->realTextBetween(10, 50);
+//                    $question->setTitle($title)
+//                        ->setTest($this->getRandomReference(Test::class));
+//                    break;
+//                case 'checkbox_picture':
+//                    $variants = $this->faker->words($this->faker->numberBetween(2, 5));
+//                    $pictures = [];
+//                    foreach ($variants as $variant) {
+//                        $pictures[] = static::PICTURE_MARK . 'picture' . $this->faker->numberBetween(1, 10) . '.jpeg' . static::PICTURE_MARK;
+//                    }
+//                    $question->setTitle($this->faker->realTextBetween(30, 255) . '?' . static::QUESTION_SEPARATOR . implode('', $pictures))
+//                        ->setTest($this->getRandomReference(Test::class));
+//                    break;
                 case 'textarea':
                     $question->setTitle($this->faker->realTextBetween(10, 50) . '?')
                         ->setTest($this->getRandomReference(Test::class));
@@ -94,7 +98,13 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
 
                         $question->addVariant($variant);
                     });
-                    $question->setAnswer([$this->faker->randomElement($question->getVariant())->getId()]);
+                    $correct = $this->faker->randomElement($question->getVariant()->toArray());
+                    $correct->setCorrect(1);
+                    $manager->persist($correct);
+                    $manager->flush();
+//                    dd($correct);
+//
+//                    $question->setAnswer([$this->faker->randomElement($question->getVariant())->getId()]);
                     break;
                 case 'input_one':
                     $this->createMany(Variant::class, 1, function (Variant $variant) use ($manager, $question) {
@@ -102,11 +112,14 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                         $variant
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
                             ->setWeight(100)
-                            ->setQuestion($question);
+                            ->setQuestion($question)
+                            ->setCorrect(1);
 
                         $question->addVariant($variant);
                     });
-                    $question->setAnswer([$this->faker->randomElement($question->getVariant())->getId()]);
+//                    $correct = $this->faker->randomElement($question->getVariant()->toArray());
+//                    dd($correct);
+//                    $question->setAnswer([$this->faker->randomElement($question->getVariant())->getId()]);
                     break;
                 case 'checkbox':
                 case 'checkbox_picture':
@@ -117,18 +130,22 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
                             ->setWeight(100)
                             ->setQuestion($question);
-
+                        if ($this->faker->boolean(45)) {
+                            $variant->setCorrect(1);
+                        }
                         $question->addVariant($variant);
 
                     });
-
-                    $variants = $question->getVariant()->toArray();
-                    $answers = $this->faker->randomElements($variants, $this->faker->numberBetween(1, $question->getVariant()->count()));
-                    $answerIds = [];
-                    foreach ($answers as $answer) {
-                        $answerIds[] = $answer->getId();
-                    }
-                    $question->setAnswer($answerIds);
+//                    $correctVariants = $this->faker->randomElement($question->getVariant()->toArray());
+//
+//                    dd($correct);
+//                    $variants = $question->getVariant()->toArray();
+//                    $answers = $this->faker->randomElements($variants, $this->faker->numberBetween(1, $question->getVariant()->count()));
+//                    $answerIds = [];
+//                    foreach ($answers as $answer) {
+//                        $answerIds[] = $answer->getId();
+//                    }
+//                    $question->setAnswer($answerIds);
 
                     break;
 
@@ -143,38 +160,55 @@ class QuestionFixtures extends BaseFixtures implements DependentFixtureInterface
                         $question->addVariant($variant);
 
                     });
-                    $variants = $question->getVariant()->toArray();
-                    $answers = $this->faker->randomElements($variants, count($question->getSubTitle()), true);
-                    $answerIds = [];
-                    foreach ($answers as $answer) {
-                        $answerIds[] = $answer->getId();
-                    }
-                    $question->setAnswer($answerIds);
+//                    $correct = $this->faker->randomElement($question->getVariant()->toArray());
+//                    dd($correct);
+//                    $variants = $question->getVariant()->toArray();
+//                    $answers = $this->faker->randomElements($variants, count($question->getSubTitle()), true);
+//                    $answerIds = [];
+//                    foreach ($answers as $answer) {
+//                        $answerIds[] = $answer->getId();
+//                    }
+//                    $question->setAnswer($answerIds);
 
                     break;
 
                 case 'order':
                     $this->createMany(Variant::class, $this->faker->numberBetween(3, 8), function (Variant $variant) use ($manager, $question) {
-//
+                    static $i=0;
                         $variant
                             ->setTitle($this->faker->word() . ' ' . $this->faker->realTextBetween(5, 10) . $this->faker->word())
                             ->setWeight(100)
-                            ->setQuestion($question);
+                            ->setQuestion($question)
+                        ->setCorrect($i++);
 
                         $question->addVariant($variant);
 
                     });
-                    $variants = $question->getVariant()->toArray();
-                    shuffle($variants);
-                    $answerIds = [];
-                    foreach ($variants as $answer) {
-                        $answerIds[] = $answer->getId();
-                    }
-                    $question->setAnswer($answerIds);
+
+//                    $correct = $this->faker->randomElement($question->getVariant()->toArray());
+//                    dd($question->getVariant()->count());
+//                    $variants = $question->getVariant()->toArray();
+//                    shuffle($variants);
+//                    $answerIds = [];
+//                    foreach ($variants as $answer) {
+//                        $answerIds[] = $answer->getId();
+//                    }
+//                    $question->setAnswer($answerIds);
 
                     break;
             }
 
+        };
+        $questionsWithSubtitles = array_filter($this->referenceRepository->getReferencesByClass()[Question::class], function ($question) {
+            return in_array($question->getType()->getTitle(), ['conformity']);
+        });
+        foreach ($questionsWithSubtitles as $question){
+            $this->createMany(Subtitle::class, $this->faker->numberBetween(2, 5), function (Subtitle $subtitle) use ($manager, $question) {
+
+                $subtitle->setTitle($this->faker->realTextBetween(30, 255) . '?')
+                    ->setQuestion($question)
+                    ->setCorrect($this->faker->randomElement($question->getVariant()->toArray()));
+            });
         }
     }
 

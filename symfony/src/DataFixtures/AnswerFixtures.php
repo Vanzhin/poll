@@ -21,25 +21,25 @@ class AnswerFixtures extends BaseFixtures implements DependentFixtureInterface
                 ->setResult($result)
                 ->setQuestion($this->faker->randomElement($questions));
 
-            $content = $this->faker->boolean(75) ? $answer->getQuestion()->getAnswer() :
-                ($answer->getQuestion()->getVariant()->count() > 0 ? [$this->faker->randomElement($answer->getQuestion()->getVariant())->getId()] : [$this->faker->randomElement($answer->getQuestion()->getAnswer())]);
-            $answer->setContent($content);
+//            $content = $this->faker->boolean(75) ? $answer->getQuestion()->getAnswer() :
+//                ($answer->getQuestion()->getVariant()->count() > 0 ? [$this->faker->randomElement($answer->getQuestion()->getVariant())->getId()] : [$this->faker->randomElement($answer->getQuestion()->getAnswer())]);
+//            $answer->setContent($content);
 
         });
         foreach ($this->referenceRepository->getReferencesByClass()[Result::class] as $resultReference) {
             $score = 0;
             $tickets = [];
 
-            foreach ($resultReference->getAnswers() as $answer) {
-//                todo сделать проверку, ввиду того что часть ответов идет индексами нужно доработать логику начисления баллов
-                if ($answer->getContent() === $answer->getQuestion()->getAnswer()) {
-                    $score++;
-                }
-                foreach ($answer->getQuestion()->getTickets() as $ticket) {
-                    $tickets[] = $ticket->getId();
-                }
-
-            }
+//            foreach ($resultReference->getAnswers() as $answer) {
+////                todo сделать проверку, ввиду того что часть ответов идет индексами нужно доработать логику начисления баллов
+//                if ($answer->getContent() === $answer->getQuestion()->getAnswer()) {
+//                    $score++;
+//                }
+//                foreach ($answer->getQuestion()->getTickets() as $ticket) {
+//                    $tickets[] = $ticket->getId();
+//                }
+//
+//            }
             $result = $manager->find(Result::class, $resultReference->getId());
 
             if (count(array_unique($tickets)) === 1) {
