@@ -71,6 +71,7 @@ class Variant implements EntityWithImageInterface
             ]
         ),
     ])]
+    #[Groups(['main', 'admin', 'admin_question'])]
     private ?int $correct = null;
 
     public function __construct()

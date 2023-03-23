@@ -57,6 +57,7 @@ class Question implements EntityWithImageInterface
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
     #[Groups(['main', 'admin_question', 'test', 'handle'])]
+    #[ORM\OrderBy(["correct" => "ASC"])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -84,7 +85,7 @@ class Question implements EntityWithImageInterface
     private ?array $result = null;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, orphanRemoval: true)]
-    #[Groups(['test', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
     private Collection $subtitles;
 
     /**
