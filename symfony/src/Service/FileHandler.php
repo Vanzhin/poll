@@ -41,7 +41,7 @@ class FileHandler
                     } else {
                         //
                         if (str_starts_with($lower, '*')) {
-                            $response[$questionKey]['variant'][$variantKey]['correct'] = "true";
+                            $response[$questionKey]['variant'][$variantKey]['correct'] = 1;
                             $line = str_replace('*', '', $line);
                         }
                         $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/(^([[:digit:]])?(?)[).]+)|((([.:;]|[[:space:]])*)$)/iu", "", $line));
@@ -63,7 +63,7 @@ class FileHandler
         foreach ($response as $key => $question) {
             $correctCount = 0;
             foreach ($question['variant'] as $variant) {
-                if (isset($variant['correct']) && $variant['correct'] === "true") {
+                if (isset($variant['correct']) && $variant['correct'] === 1) {
                     $correctCount++;
                 }
             }

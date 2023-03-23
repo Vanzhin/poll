@@ -4,10 +4,14 @@ namespace App\Service;
 
 use App\Entity\Question;
 use App\Entity\Section;
+use App\Entity\Subtitle;
 use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Entity\Type;
 use App\Entity\Variant;
+use App\Factory\Question\QuestionFactory;
+use App\Factory\Subtitle\SubtitleFactory;
+use App\Factory\Variant\VariantFactory;
 use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
@@ -24,7 +28,10 @@ class QuestionService
         private readonly FileUploader           $questionImageUploader,
         private readonly FileUploader           $variantImageUploader,
         private readonly VariantService         $variantService,
-        private readonly ValidationService      $validation
+        private readonly ValidationService      $validation,
+        private readonly QuestionFactory        $questionFactory,
+        private readonly VariantFactory         $variantFactory,
+        private readonly SubtitleFactory        $subtitleFactory
     )
     {
     }
@@ -137,17 +144,19 @@ class QuestionService
 
     public function saveWithVariant(Question $question, ?array $questionData, ?array $variantData, UploadedFile $questionImage = null, array $variantImages = []): Question
     {
-        $question = $this->make($question, $questionData ?? [], $questionImage);
+        $question = $this->questionFactory->createBuilder()->buildQuestion($questionData ?? [], $question);
+        $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
+
         $this->em->persist($question);
         $this->em->flush();
 
         foreach ($variantData as $key => $variantItem) {
-            $image = $variantImages[$key] ?? null;
+            $image = array_key_exists($key, $variantImages) ? $variantImages[$key] : false;
             $variantItem['questionId'] = $question->getId();
-            $variant = $this->variantService->make(new Variant(), $variantItem ?? [], $image);
+            $variant = $this->variantFactory->createBuilder()->buildVariant($variantItem ?? []);
+            $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
             $this->em->persist($variant);
             $this->em->flush();
-            $this->variantService->questionAnswerUpdate($variant, true);
 
         }
 
@@ -161,20 +170,20 @@ class QuestionService
         } else {
             $message = 'Вопрос обновлен';
         }
-        $question = $this->make($question, $data['question'] ?? []);
+        $question = $this->questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $question);
         $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
         $errors = $questionErrors;
         $this->em->beginTransaction();
         $this->em->persist($question);
         $this->em->flush();
         $variants = [];
+        static $i = 0;
         foreach ($data['variant'] ?? [] as $key => $variantData) {
             $variantData['questionId'] = $question->getId();
-            if ($this->em->find(Variant::class, $key)) {
-                $variant = $this->variantService->make($this->em->find(Variant::class, $key), $variantData);
-            } else {
-                $variant = $this->variantService->make(new Variant(), $variantData);
+            if ($question->getType()->getTitle() === 'order') {
+                $variantData['correct'] = $i++;
             }
+            $variant = $this->variantFactory->createBuilder()->buildVariant($variantData, $this->em->find(Variant::class, $key));
             if (!is_null($variantImages) && isset($variantImages[$key])) {
                 $image = $variantImages[$key];
             } else {
@@ -188,24 +197,46 @@ class QuestionService
                 $variants[$key] = $variant;
                 $this->em->persist($variant);
                 $this->em->flush();
-                $this->variantService->questionAnswerUpdate($variant, true);
+
+//                $this->variantService->questionAnswerUpdate($variant, true);
             }
         }
-        //todo убрать костыль
-        if ($question->getType()->getTitle() === 'conformity') {
-            if (isset($data['question']['subTitle'])) {
-                $subtitles = $data['question']['subTitle'];
-                $answers = [];
-                foreach ($subtitles as $key => $subtitle) {
-                    $answers[] = $variants[$key]->getId();
 
-                }
-                $question->setAnswer($answers);
-                $this->em->persist($question);
+        foreach ($question->getVariant() as $variant) {
+            if (!key_exists($variant->getId(), $variants)) {
+                $this->em->remove($variant);
                 $this->em->flush();
             };
-
         }
+
+//        if($question->getType()->getTitle() === 'conformity'){
+//            foreach ($variants as $key=>$variantId){
+//
+//            }
+//        }
+//        dd($question->getVariant()->count());
+//      todo with subtitles
+//        foreach ($data['subTitle'] ?? [] as $key => $subTitleData) {
+//            $subTitleData['questionId'] = $question->getId();
+//            $this->subtitleFactory->createBuilder()->buildSubtitle($subTitleData['title'],$this->em->find(Subtitle::class,$key));
+//
+//            if (!is_null($variantImages) && isset($variantImages[$key])) {
+//                $image = $variantImages[$key];
+//            } else {
+//                $image = null;
+//            }
+//
+//            if ($this->validation->entityWithImageValidate($variant, $image)) {
+//                $errors[] = implode(',', $this->validation->entityWithImageValidate($variant, $image));
+//
+//            } else {
+//                $variants[$key] = $variant;
+//                $this->em->persist($variant);
+//                $this->em->flush();
+////                $this->variantService->questionAnswerUpdate($variant, true);
+//            }
+//        }
+
         if (!is_null($errors)) {
             $this->em->rollback();
             return [
@@ -218,12 +249,6 @@ class QuestionService
                 $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
                 foreach ($variants as $key => $variant) {
                     $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, array_key_exists($key, $variantImages) ? $variantImages[$key] : false);
-                }
-                foreach ($question->getVariant() as $variant) {
-
-                    if (!in_array($variant, $variants)) {
-                        $this->variantService->delete($variant);
-                    };
                 }
                 $response = [
                     'message' => $message,

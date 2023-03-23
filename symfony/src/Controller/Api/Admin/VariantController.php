@@ -111,6 +111,7 @@ class VariantController extends AbstractController
     #[Route('/api/admin/variant/create_many', name: 'app_api_admin_variant_create_many', methods: 'POST')]
     public function createMany(Request $request, VariantService $variantService, ValidationService $validation, EntityManagerInterface $em): JsonResponse
     {
+//        todo
         $data = $request->request->all();
         $images = $request->files->get('variantImage');
         $errors = $validation->manyVariantsValidate($data ?? [], $images);

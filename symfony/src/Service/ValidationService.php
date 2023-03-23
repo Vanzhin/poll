@@ -170,7 +170,7 @@ class ValidationService
 
                 }
                 if ($key === 'correct') {
-                    $violations = $this->validator->validate($value === 'true' || $value === 'false', [
+                    $violations = $this->validator->validate($value === null || is_numeric($value), [
                         new IsTrue([
                             'message' => 'variant.correct'
                         ]),
@@ -193,7 +193,6 @@ class ValidationService
             if (count($errors) === 0) {
                 return null;
             }
-
             return $errors;
         }
 
@@ -223,7 +222,6 @@ class ValidationService
         if (count($errors) === 0) {
             return null;
         }
-
         return $errors;
     }
 
