@@ -73,7 +73,7 @@ class Test
     #[Groups(['admin_test_general', 'category'])]
     private ?int $ticketCount = null;
 
-    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Result::class)]
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Result::class, orphanRemoval: true)]
     private Collection $results;
 
     /**

@@ -74,7 +74,7 @@ class Category implements EntityWithImageInterface
     private ?self $parent = null;
 
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Category::class)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Category::class, orphanRemoval: true)]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     #[Groups(['admin', 'category'])]
     #[MaxDepth(1)]
@@ -88,7 +88,7 @@ class Category implements EntityWithImageInterface
     #[Groups(['main', 'admin', 'category'])]
     private ?string $image = null;
 
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Test::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Test::class, orphanRemoval: true)]
     #[Groups(['category'])]
     private Collection $test;
 
