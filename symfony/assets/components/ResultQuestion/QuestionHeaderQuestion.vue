@@ -1,6 +1,6 @@
 <template>
   <i class="result"
-      :class="{resultTrue: question.result.score }"
+      :class="{resultTrue: question.result.correct }"
   ><b>{{ index+1 }})</b> {{ question.title }}</i>
   <div class=""> 
     <img :src="question.image" 

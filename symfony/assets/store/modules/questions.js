@@ -581,7 +581,6 @@ const getters = {
     return state.questions 
   },
   getResultQuestions(state) {
-    console.log("resultQuestions ", state.resultQuestions)
     return state.resultQuestions 
   },
   getQuestion(state) {

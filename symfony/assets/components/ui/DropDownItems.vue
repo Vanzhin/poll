@@ -9,8 +9,13 @@
     >
       <div v-if="getIsAutchUser">
         <li><RouterLink class="dropdown-item" :to="{ name: 'statistics'}">Статистика</RouterLink></li>
-        <li><RouterLink class="dropdown-item" :to="{ name: 'createQuestion'}">Добавить вопрос</RouterLink></li>
-        <li><RouterLink class="dropdown-item" :to="{ name: 'admin'}">Админка</RouterLink></li>
+        <li
+          v-if="getUserAdmin"
+        ><RouterLink class="dropdown-item" :to="{ name: 'createQuestion'}">Добавить вопрос</RouterLink></li>
+        <li
+          v-if="getUserAdmin"
+        ><RouterLink class="dropdown-item" :to="{ name: 'admin'}">Админка</RouterLink>
+        </li>
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-item menu-item" @click="logOut" >Выйти</li>
       </div> 
@@ -27,7 +32,7 @@ import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions } from "vuex"
 export default {
   computed:{
-    ...mapGetters(["getIsAutchUser"]),
+    ...mapGetters(["getIsAutchUser", "getUserAdmin"]),
   },
   methods:{
     ...mapActions(["getLogOutUser"]),

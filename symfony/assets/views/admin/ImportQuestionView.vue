@@ -1,10 +1,6 @@
 <template>
-   <Loader
-    v-if="isLoader"
-  />
-  <div class="block"
-    v-else
-  >
+  
+  <div class="block">
     <div class="title">
       <h2>Импортировать тест из файла</h2>
     </div>
@@ -81,20 +77,19 @@
 </template>
  
 <script>
-  import MessageView from "../../components/ui/MessageView.vue"
-  import Loader from '../../components/ui/Loader.vue'
+  
+  
   import { mapGetters, mapActions, mapMutations} from "vuex"
-import { onUnmounted } from "vue"
+  import { onUnmounted } from "vue"
   export default {
     components: {
-      Loader,
-      MessageView
+     
+     
     },
     data() {
       return {
         testFile: '',
         testValue: null,
-        isLoader: true,
         selectedId: null,
         message: null
       }
@@ -123,7 +118,7 @@ import { onUnmounted } from "vue"
         const testFile = e.target
         await this.importQuestionsFileDb({id: this.$route.params.id, testFile})
         this.message = !this.getMessage.err
-        this.testFileDelete()
+        // this.testFileDelete()
         let timerId = setInterval(() => {
           if ( !this.getMessage ) {
             clearInterval(timerId)
@@ -157,7 +152,7 @@ import { onUnmounted } from "vue"
       // if (!(this.getMessage.length > 0)){
       //   await this.getTestsDB({}) 
       // }       
-      this.isLoader = false
+      
     },
     unmounted(){
       this.setQuestionsImportError(null)

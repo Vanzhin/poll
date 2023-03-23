@@ -38,22 +38,16 @@
       </div>
     </div>
   </div>
-
-  <!-- <Pagination
-        type="getCategorysDB"
-        /> -->
 </template>
  
 <script>
  
-  import Loader from '../../components/ui/Loader.vue'
-  import Pagination from "../../components/Pagination.vue"
+  import Loader from '../../components/ui/LoaderView.vue'
   import ItemTest from "../../components/Admin/ItemTest.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      Pagination,
       ItemTest
     },
     data() {
@@ -108,10 +102,8 @@
       } else { 
         await this.getTestsDB({}) 
       }
-      
       this.isLoader = false
     }
-   
  } 
  
 </script>

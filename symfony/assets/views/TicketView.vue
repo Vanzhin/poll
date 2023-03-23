@@ -1,7 +1,9 @@
 <template>
-  <Loader/>
+  <Loader
+    v-if="isLoader"
+  />
   <div class="block"
-    v-if="!getIsLoaderQuestions"
+    v-else
   >
     <div class="title">
       <Timer
@@ -61,7 +63,7 @@ import TestQuestionOrdered from '../components/TestQuestion/TestQuestionOrdered.
 import TestQuestionInputOne from '../components/TestQuestion/TestQuestionInputOne.vue'
 import TestQuestionConformity from '../components/TestQuestion/TestQuestionConformity.vue'
 import Timer from '../components/ui/Timer.vue'
-import Loader from '../components/ui/Loader.vue'
+import Loader from '../components/ui/LoaderView.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
@@ -75,7 +77,7 @@ export default {
   },
   data() {
     return {
-      
+      isLoader: false,
       timeTicket: false,
       timeEnd: false,
       ticketId: this.$route.params.id,
@@ -94,7 +96,7 @@ export default {
       "getRandomTicket", 
       "getSelectTicket", 
       "getTestId",
-      "getIsLoaderQuestions"
+      
     ]),
     testName() {
       return this.$store.getters.getTestTitleActive
@@ -105,7 +107,12 @@ export default {
     
   },
    methods: {
-    ...mapActions(["getQuestionsDb", "saveResultTicketUser", "setIsLoaderStatus"]),
+    ...mapActions([
+      "getQuestionsDb", 
+      "saveResultTicketUser", 
+      "setIsLoaderStatus",
+      "setTicketTitle"
+    ]),
     async onSubmit(e){
       const question = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
         .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
@@ -125,7 +132,7 @@ export default {
     }
   },
   async created(){
-    this.setIsLoaderStatus({status: true})
+    this.isLoader = true
     if (this.ticketId === "rndb" ) { 
       this.ticketId = await this.getRandomTicket
       console.log("запрос случайного билета ", this.ticketId)
@@ -138,15 +145,17 @@ export default {
     if ( regexp.test(this.ticketId)){
       this.ticketTitle = this.rnd[this.ticketId]
       this.info.mode = this.ticketId
+      this.setTicketTitle(this.rnd[this.ticketId])
     } else {
       this.ticketTitle = this.getSelectTicket(+this.ticketId).title
       this.info.ticket = +this.ticketId
+      this.setTicketTitle(+this.ticketId) 
     }
     this.info.test= this.getTestId
     
     await this.getQuestionsDb({id: this.ticketId, slug: this.getSlug})
     if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
-    this.setIsLoaderStatus({status: false})
+    this.isLoader = false
   }
 } 
 

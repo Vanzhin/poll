@@ -1,7 +1,8 @@
 <template>
-    <Loader />
+    <Loader 
+      v-if="getIsLoaderQuestions"
+    />
   <div class="app-main-layout" >
-    
     <Headers/>
     <Sidebar v-model="isOpen" />
     <main class="app-content" :class="{full: !isOpen}">
@@ -16,6 +17,7 @@
   import Headers from '../components/Headers.vue'
   import Loader from '../components/ui/Loader.vue';
   import Sidebar from '../components/Admin/Sidebar.vue';
+  import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     data: () => ({
       isOpen: true,
@@ -23,6 +25,9 @@
     }),
     components: {
       Headers, Loader, Sidebar
+    },
+    computed:{ 
+      ...mapGetters(["getIsLoaderQuestions"]),
     },
   } 
 </script>

@@ -12,7 +12,7 @@ const actions = {
     commit("SET_LOADER_TOGGLE")
   },
   setIsLoaderStatus({ commit }, {status}){
-    commit("SET_LOADER_TOGGLE", status)
+    commit("SET_LOADER_STATUS", status)
   },
 }
 
@@ -28,7 +28,7 @@ const mutations = {
     state.isLoader = !state.isLoader
   },
   [SET_LOADER_STATUS] (state, status) {
-    console.log("SET_LOADER_TOGGLE", state.isLoader)
+    console.log("SET_LOADER_STATUS", state.isLoader)
     state.isLoader = status
   },
 }

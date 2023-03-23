@@ -1,5 +1,5 @@
 <template>
-   <Loader
+  <Loader
     v-if="isLoader"
   />
   <div class="" v-else>
@@ -14,7 +14,7 @@
         >
           <div
             class="link"
-            @click="categoryUpdate({id: section.id})"
+            @click="categoryUpdate({section})"
           ><!-- @click="categoryUpdate(section.id)" -->
             <div class="card-header flex-shrink-1">
                 <h5 class="my-0 font-weight-normal">{{ section.title }}</h5>
@@ -41,7 +41,7 @@
 <script>
 import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
-import Loader from '../components/ui/Loader.vue'
+import Loader from '../components/ui/LoaderView.vue'
 import Pagination from '../components/Pagination.vue'
 export default {
   components: {
@@ -51,11 +51,6 @@ export default {
   data() {
     return {
       isLoader: true,
-      count: 0,
-      //  testName:''
-      //  url:'http://test2-open/assets/img/',
-      urlCss: 'url(http://localhost:8080/build/img/',
-      urlCss: 'url(../img/'
     }
   },
   computed:{
@@ -63,22 +58,27 @@ export default {
     sections () {
       return this.$store.getters.getCategorys
     },
-    
   },
   
   methods: {
-    ...mapActions(["getCategorysDB", "setCategoryTitle"]),
-    async categoryUpdate({id}){
-      await this.getCategorysDB({page:null, parentId: id})
-      if (this.getTests) {
-        this.$router.push({name: 'area', params: {id } })
+    ...mapActions([
+      "getCategorysDB",
+      "setTests", 
+      "setPagination", 
+      "setCategoryParent",
+      "setCategorys"
+    ]),
+    async categoryUpdate({section}){
+      this.setCategoryParent(section)
+      this.setPagination(null)
+      this.getCategorysDB({page:null, parentId: section.id})
+      if (section.test.length > 0) {
+        this.setTests(section.test)
+        this.$router.push({name: 'area', params: {id: section.id } })
         return
       } 
-      this.$router.push({name: 'iter', params: { num: 1, id:id } })
-      // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
-      
-    
-    
+      this.setCategorys(section.children)
+      this.$router.push({name: 'iter', params: { num: 1, id: section.id } })
     },
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''

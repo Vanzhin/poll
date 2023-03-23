@@ -18,7 +18,7 @@
         
         <div class="test__card"
           v-if="getIsAutchUser || index < 3"
-          @click="categoryUpdate({id: area.id, title: area.title})"
+          @click="categoryUpdate({ area })"
         >
           <div>
             {{ area.id }} - {{ area.title }}
@@ -46,7 +46,7 @@
  
 <script>
   import { mapGetters, mapActions, mapMutations} from "vuex"
-  import Loader from '../components/ui/Loader.vue'
+  import Loader from '../components/ui/LoaderView.vue'
   import Pagination from '../components/Pagination.vue'
   export default {
     components: {
@@ -55,7 +55,7 @@
     },
     data() {
       return {
-        isLoader: true,
+        isLoader: false,
         iter: this.$route.params.num,
         parentId: this.$route.params.id,
       }
@@ -68,7 +68,7 @@
         return this.$store.getters.getSectionTitle(this.$route.params.id)
       },
       areas () {
-        return this.$store.getters.getCategorys || []
+        return this.getCategorys || []
       },
     },
     // watch:{
@@ -84,22 +84,27 @@
       }
     },
     methods: {
-      ...mapActions(["getCategorysDB", "setCategoryTitle"]),
-      async categoryUpdate({id}){
-        this.isLoader = true
+      ...mapActions([
+        "getCategorysDB", 
+        "setCategoryTitle",
+        "setTests",
+        "setPagination", 
+        "setCategoryParent",
+        "setCategorys"
         
-        this.iter = this.$route.params.num
-        console.log(this.iter)
-        await this.getCategorysDB({page:null, parentId: id})
-        console.log('this.getTests - ', this.getTests)
-        ++this.iter
-        
-        if (this.getTests) {
+      ]),
+      async categoryUpdate({area}){
+        this.getCategorysDB({page:null, parentId: area.id})
+        this.setCategoryParent(area)
+        this.setPagination(null)
+        if (area.test.length > 0) {
+          this.setTests(area.test)
           this.$router.push({name: 'area', params: {id } })
           return
         } 
-        this.$router.push({name: 'iter', params: { num: this.iter, id }})
-        this.isLoader = false
+        this.iter = this.$route.params.num
+        this.setCategorys(area.children)
+        this.$router.push({name: 'iter', params: { num: ++this.iter, id: area.id }})
       },
       async categoryUpdateStory(parentId) {
         this.isLoader = true
@@ -110,6 +115,7 @@
     },
     async mounted() {},
     async created() {
+      if (!this.getCategorys) {this.isLoader = true}
       await this.getCategorysDB({page: null, parentId: this.parentId})
       this.isLoader = false
     }
