@@ -34,8 +34,8 @@ class Question implements EntityWithImageInterface
     private ?string $title = null;
 
 //    #[ORM\Column]
-//    #[Groups(['main', 'admin_question'])]
-    private array $trueAnswer = [];
+    #[Groups(['admin_question'])]
+    private array $answer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
     #[Assert\NotNull(
@@ -50,10 +50,6 @@ class Question implements EntityWithImageInterface
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
-
-//    #[ORM\Column(nullable: true)]
-//    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
-//    private array $subTitle = [];
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
     #[Groups(['main', 'admin_question', 'test', 'handle'])]
@@ -129,7 +125,7 @@ class Question implements EntityWithImageInterface
         return $this;
     }
 
-    public function getTrueAnswer(): array
+    public function getAnswer(): array
     {
         $answer = [];
 
@@ -156,6 +152,7 @@ class Question implements EntityWithImageInterface
                         $answer[$variant->getCorrect()] = $variant->getId();
                     }
                 }
+                ksort($answer);
                 break;
 //            case 'input_many':
 //            case 'blank':

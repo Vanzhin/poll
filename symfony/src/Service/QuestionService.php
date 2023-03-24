@@ -177,6 +177,7 @@ class QuestionService
         $this->em->persist($question);
         $this->em->flush();
         $variants = [];
+        $hasCorrectVariant = [];
         static $i = 0;
         foreach ($data['variant'] ?? [] as $key => $variantData) {
             $variantData['questionId'] = $question->getId();
@@ -184,6 +185,9 @@ class QuestionService
                 $variantData['correct'] = $i++;
             }
             $variant = $this->variantFactory->createBuilder()->buildVariant($variantData, $this->em->find(Variant::class, $key));
+            if ($variant->getCorrect()) {
+                $hasCorrectVariant[] = $variant->getId();
+            }
             if (!is_null($variantImages) && isset($variantImages[$key])) {
                 $image = $variantImages[$key];
             } else {
@@ -234,6 +238,15 @@ class QuestionService
                 $this->em->flush();
             };
         }
+
+        if (count($hasCorrectVariant) < 1 && $question->getType()->getTitle() !== 'input_one')  {
+            $errors[] = 'Необходимо выбрать хотя бы один верный ответ';
+        }
+        if (count($hasCorrectVariant) > 1 && $question->getType()->getTitle() === 'radio') {
+            $errors[] = 'Необходимо выбрать только один верный ответ';
+        }
+
+
         if (!is_null($errors)) {
             $this->em->rollback();
             return [

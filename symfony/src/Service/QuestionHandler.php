@@ -107,9 +107,10 @@ class QuestionHandler
     public function getShuffledTrueAnswers(Question $question, array $shuffled): array
     {
         $trueShufflesAnswers = [];
-        if (isset($shuffled['variant']) && count($shuffled['variant']) > 0) {
-            foreach ($question->getTrueAnswer() as $answer) {
 
+        if (isset($shuffled['variant']) && count($shuffled['variant']) > 0) {
+
+            foreach ($question->getAnswer() as $answer) {
                 $variant = $this->entityManager->getRepository(Variant::class)->find($answer);
                 if (!is_null($variant)) {
                     $trueShufflesAnswers[] = array_search($variant->getTitle(), $shuffled['variant']);
@@ -117,7 +118,7 @@ class QuestionHandler
 
             }
         } else if ($question->getVariant()->count() > 0) {
-            foreach ($question->getTrueAnswer() as $answer) {
+            foreach ($question->getAnswer() as $answer) {
 
                 $variant = $this->entityManager->getRepository(Variant::class)->find($answer);
                 if (!is_null($variant)) {
@@ -125,7 +126,7 @@ class QuestionHandler
                 }
             }
         } else {
-            $trueShufflesAnswers = $question->getTrueAnswer();
+            $trueShufflesAnswers = $question->getAnswer();
         }
         if (isset($shuffled['subTitle']) && count($shuffled['subTitle']) > 1) {
             $answers = [];
@@ -159,19 +160,19 @@ class QuestionHandler
             case 'radio':
             case 'order':
             case 'input_one':
-                if ($userShuffledAnswers == $question->getTrueAnswer()) {
+                if ($userShuffledAnswers == $question->getAnswer()) {
                     $score = true;
                 };
                 break;
             case 'conformity':
-                if ($userShuffledAnswers === $question->getTrueAnswer()) {
+                if ($userShuffledAnswers === $question->getAnswer()) {
                     $score = true;
                 };
                 break;
             case 'checkbox':
             case 'checkbox_picture':
 
-                if (count(array_diff($question->getTrueAnswer(), $userShuffledAnswers)) === 0) {
+                if (count(array_diff($question->getAnswer(), $userShuffledAnswers)) === 0) {
                     $score = true;
                 }
                 break;
