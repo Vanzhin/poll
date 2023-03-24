@@ -228,7 +228,6 @@ const getters = {
     return state.test.title
   },
   getTestTitleActive(state) {
-    console.log(state.test)
     return state.test ? state.test.title : ''
   },
   getTest(state) {

@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       count: 0,
-      answerSelect: this.question.answer[0]
+      answerSelect: this.question.answer[0] 
     }
   },
   computed:{

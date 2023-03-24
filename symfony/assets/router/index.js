@@ -183,7 +183,20 @@ const router = createRouter({
       name: 'adminTest',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminTestView.vue'),
-      children: []
+      children: [
+        {path: 'questions',
+        name: 'adminTestQuestions',
+         meta: {autch: true, admin: true},
+        component: () => import('../views/admin/AdminTestQuestionsView.vue'),},
+        {path: 'tickets',
+        name: 'adminTestTickets',
+         meta: {autch: true, admin: true},
+        component: () => import('../views/admin/AdminTestTicketsView.vue'),},
+        {path: 'sections',
+        name: 'adminTestSections',
+         meta: {autch: true, admin: true},
+        component: () => import('../views/admin/AdminTestSectionsView.vue'),}
+      ]
     },
     { 
       path: '/admin/test/:id/:operation',
@@ -194,6 +207,12 @@ const router = createRouter({
     {
       path: '/admin/test/:testId/question/:questionId/:operation',
       name: 'adminQuestionsCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateQuestionView.vue')
+    },
+    {
+      path: '/admin/test/:testId/ticket/:ticketId/:operation',
+      name: 'adminTicketCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateQuestionView.vue')
     },
