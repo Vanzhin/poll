@@ -45,6 +45,7 @@ class Subtitle implements EntityWithImageInterface
     private ?Variant $correct = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['admin_question'])]
     private ?string $image = null;
 
     public function getId(): ?int
