@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Question;
 use App\Entity\Variant;
+use App\Interfaces\EntityWithImageInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints\File as FileConstraint;
@@ -83,7 +84,7 @@ class ValidationService
 
     }
 
-    public function entityWithImageValidate(object $entity, File $image = null, string $imageSize = '1M'): ?array
+    public function entityWithImageValidate(EntityWithImageInterface $entity, File $image = null, string $imageSize = '1M'): ?array
     {
         $errors = $this->validate($entity);
         if ($image) {

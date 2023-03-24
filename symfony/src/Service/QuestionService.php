@@ -163,7 +163,7 @@ class QuestionService
         return $question;
     }
 
-    public function saveWithVariantIfValid(Question $question, array $data, UploadedFile|bool|null $questionImage = null, array $variantImages = null): array
+    public function saveWithVariantIfValid(Question $question, array $data, UploadedFile|bool|null $questionImage = null, array $variantImages = null, array $subtitleImages = null): array
     {
         if (!$question->getId()) {
             $message = 'Вопрос создан';
@@ -197,8 +197,6 @@ class QuestionService
                 $variants[$key] = $variant;
                 $this->em->persist($variant);
                 $this->em->flush();
-
-//                $this->variantService->questionAnswerUpdate($variant, true);
             }
         }
 
@@ -208,35 +206,34 @@ class QuestionService
                 $this->em->flush();
             };
         }
+        $subtitles = [];
 
-//        if($question->getType()->getTitle() === 'conformity'){
-//            foreach ($variants as $key=>$variantId){
-//
-//            }
-//        }
-//        dd($question->getVariant()->count());
-//      todo with subtitles
-//        foreach ($data['subTitle'] ?? [] as $key => $subTitleData) {
-//            $subTitleData['questionId'] = $question->getId();
-//            $this->subtitleFactory->createBuilder()->buildSubtitle($subTitleData['title'],$this->em->find(Subtitle::class,$key));
-//
-//            if (!is_null($variantImages) && isset($variantImages[$key])) {
-//                $image = $variantImages[$key];
-//            } else {
-//                $image = null;
-//            }
-//
-//            if ($this->validation->entityWithImageValidate($variant, $image)) {
-//                $errors[] = implode(',', $this->validation->entityWithImageValidate($variant, $image));
-//
-//            } else {
-//                $variants[$key] = $variant;
-//                $this->em->persist($variant);
-//                $this->em->flush();
-////                $this->variantService->questionAnswerUpdate($variant, true);
-//            }
-//        }
+        if ($question->getType()->getTitle() === 'conformity') {
+            foreach ($data['subTitle'] ?? [] as $key => $subtitleData) {
+                $subtitle = $this->subtitleFactory->createBuilder()->buildSubtitle($subtitleData['title'], $question, isset($subtitleData['variant']) ? $variants[$subtitleData['variant']] : null, $this->em->find(Subtitle::class, $key));
+                if (!is_null($subtitleImages) && isset($subtitleImages[$key])) {
+                    $image = $subtitleImages[$key];
+                } else {
+                    $image = null;
+                }
 
+                if ($this->validation->entityWithImageValidate($subtitle, $image)) {
+                    $errors[] = implode(',', $this->validation->entityWithImageValidate($subtitle, $image));
+
+                } else {
+                    $subtitles[$key] = $subtitle;
+
+                    $this->em->persist($subtitle);
+                    $this->em->flush();
+                }
+            }
+        }
+        foreach ($question->getSubtitles() as $subtitle) {
+            if (!key_exists($subtitle->getId(), $subtitles)) {
+                $this->em->remove($subtitle);
+                $this->em->flush();
+            };
+        }
         if (!is_null($errors)) {
             $this->em->rollback();
             return [
@@ -249,6 +246,9 @@ class QuestionService
                 $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
                 foreach ($variants as $key => $variant) {
                     $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, array_key_exists($key, $variantImages) ? $variantImages[$key] : false);
+                }
+                foreach ($subtitles as $key => $subtitle) {
+                    $this->variantService->imageUpdate($subtitle, $this->variantImageUploader, $this->em, array_key_exists($key, $subtitleImages) ? $subtitleImages[$key] : false);
                 }
                 $response = [
                     'message' => $message,

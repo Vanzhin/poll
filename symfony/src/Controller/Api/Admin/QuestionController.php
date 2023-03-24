@@ -135,7 +135,9 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
-        $response = $questionService->saveWithVariantIfValid(new Question(), $data, $questionImage, $variantImages);
+        $subtitleImages = $request->files->get('subTitleImage', []);
+
+        $response = $questionService->saveWithVariantIfValid(new Question(), $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {
             $status = 422;
         } else {
@@ -155,8 +157,9 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
+        $subtitleImages = $request->files->get('subTitleImage', []);
 
-        $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages);
+        $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {
             $status = 422;
         } else {

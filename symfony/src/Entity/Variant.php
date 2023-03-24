@@ -59,7 +59,7 @@ class Variant implements EntityWithImageInterface
 
     private bool|null $isCorrect = null;
 
-    #[ORM\OneToMany(mappedBy: 'correct', targetEntity: Subtitle::class)]
+    #[ORM\OneToMany(mappedBy: 'correct', targetEntity: Subtitle::class, orphanRemoval: true)]
     private Collection $subtitles;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]

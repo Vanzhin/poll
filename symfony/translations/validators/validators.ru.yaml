@@ -37,5 +37,9 @@ ticket.test.not_null: Теста с таким идентификатором н
 ticket.title.already_exist: Билет с таким названием уже существует
 ticket.question.not_null: Билет должен содержать хотя бы один вопрос
 
+subtitle.title.unique: Подвопрос с таким названием уже существует для этого вопроса
+subtitle.title.not_blank: Содержание подвопроса не может быть пустым
+subtitle.title.max_length: Название подвопроса не может быть длиннее {{ limit }} символов
+
 result.mode.not_null: Не верный формат прохождения теста
 result.test.not_null: Теста с таким идентификатором не найдено
