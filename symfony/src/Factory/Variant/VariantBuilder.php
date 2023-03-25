@@ -14,6 +14,7 @@ class VariantBuilder
 
     public function buildVariant(array $data, Variant $variant = null): Variant
     {
+
         if (!$variant) {
             $variant = new Variant();
         }
@@ -23,7 +24,6 @@ class VariantBuilder
         } else {
             $question = $variant->getQuestion();
         }
-
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $variant->setTitle($item);
@@ -31,12 +31,22 @@ class VariantBuilder
             };
             if ($key === 'correct') {
                 $variant->setIsCorrect(true);
-                if (is_numeric($item)){
+                if (is_numeric($item)) {
                     $variant->setCorrect($item);
 
-                }else{
-                    $variant->setCorrect(-1);
+                } else {
+//                    todo
+                    if (strlen($item) > 0) {
+                        if ($item === 'true') {
+                            $variant->setCorrect(1);
 
+                        } elseif ($item === 'false') {
+                            $variant->setCorrect(null);
+
+                        } else {
+                            $variant->setCorrect(-1);
+                        }
+                    }
                 }
                 continue;
             };
