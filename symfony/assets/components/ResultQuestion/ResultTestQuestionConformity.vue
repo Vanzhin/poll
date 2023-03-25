@@ -6,12 +6,15 @@
         :index='index'
       />
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in question.subTitle" 
+        v-for="(answer, ind ) in question.subtitles" 
         :key="answer"
       >
+        <img :src="answer.image" width="200" 
+          v-if="answer.image"
+        />  
         <label v-if="answer!==''"
           class="custom-control-label f_sm " 
-        >{{ answer }}
+        >{{ answer.title }}
         </label>
         <div v-if="getUserAnswer"  class="custom-control-label d-flex">
           <label 

@@ -64,7 +64,7 @@ const actions = {
       }
     }
     if (page) {
-      config.url = config.url + `?page=${page}`
+      config.url = config.url + `&page=${page}`
     }
     try{
       await axios(config)
