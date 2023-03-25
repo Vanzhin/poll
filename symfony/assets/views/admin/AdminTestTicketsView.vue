@@ -70,19 +70,20 @@ export default {
   computed:{
     ...mapGetters([
       "getTickets"
-      
-      
-      
-      
-      
-      
+    
     ]),
   
   },
    methods: {
     ...mapActions(["getTicketsTestIdDb", ]),
     addTicket(){
-
+      this.$router.push({
+          name: 'adminTicketCreate', 
+          params: { 
+            operation: "create", 
+            testId: this.testId, 
+            ticketId: 0 
+          }})
     }
   },
   async created(){

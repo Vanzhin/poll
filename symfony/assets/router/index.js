@@ -214,7 +214,7 @@ const router = createRouter({
       path: '/admin/test/:testId/ticket/:ticketId/:operation',
       name: 'adminTicketCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
-      component: () => import('../views/admin/CreateQuestionView.vue')
+      component: () => import('../views/admin/CreateTicketView.vue')
     },
   ]
 })
