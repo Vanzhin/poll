@@ -45,12 +45,12 @@ export default {
     ]),
 
     testName () {
-      return this.$store.getters.getTestTitleActive
+      return this.$store.getters.getTest.title
     },
     
   },
    methods: {
-    ...mapActions(["getQuestionsTestIdDb", ]),
+    ...mapActions(["getQuestionsTestIdDb", "getTestIdDb"]),
     activeTogge(index) {
       this.navs =[ ...this.navs.map((nav, ind) => {
         index === ind ? nav.active = true: nav.active = false
@@ -59,24 +59,29 @@ export default {
     },
  },
   async created(){
-    console.log('this.getTest - ', this.getTest.sectionCount)
+    console.log('this.getTest - ', this.$route.params.id)
+    console.log(this.$route)
+    //  this.getTestIdDb({id: +this.$route.params.id})
+    const url = this.$route.path
+   
+    
     this.navs = [
         {
           title: `Вопросы `,
           link: 'questions',
-          active: true,
+          active: (new RegExp("questions", 'i')).test(url),
           count: this.getTest.questionCount || ''
         },
         {
           title: `Билеты `,
           link: 'tickets',
-          active: false,
+          active: (new RegExp("tickets", 'i')).test(url),
           count: this.getTest.ticketCount || ''
         },
         {
           title: `Секции `,
           link: 'sections',
-          active: false,
+          active: (new RegExp("sections", 'i')).test(url),
           count: this.getTest.sectionCount || ''
         }
       ]

@@ -53,6 +53,7 @@ const state = () => ({
 })
 
 const actions = {
+  //запрос на получение всех тестов 
   async getTestsDB({dispatch ,commit}, {page = null}){
     const token = await dispatch("getAutchUserTokenAction")
     const config = {
@@ -102,6 +103,7 @@ const actions = {
     console.log("выбранный тест - ",  test)
     dispatch("setTest", test)
   },
+  //получение информации теста по его id
   async getTestIdDb({dispatch ,commit}, {id}){
     const token = await dispatch("getAutchUserTokenAction")
     const config = {
@@ -112,10 +114,12 @@ const actions = {
         Authorization: `Bearer ${token}`
       }
     }
+    console.log(config)
     try{
       await axios(config)
         .then(({data})=>{
-          dispatch("setTest", data)
+          console.log(data)
+          commit("SET_TEST", data)
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
