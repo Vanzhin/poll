@@ -32,14 +32,14 @@ class TestController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    #[Route('/api/test/{slug}', name: 'app_api_test_show', methods: ['GET'])]
+    #[Route('/api/test/{id}', name: 'app_api_test_show', methods: ['GET'])]
     public function show(Test $test): JsonResponse
     {
         return $this->json(
             $test,
             200,
             ['charset=utf-8'],
-            ['groups' => 'main'],
+            ['groups' => 'main_test'],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
@@ -146,4 +146,5 @@ class TestController extends AbstractController
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
+
 }
