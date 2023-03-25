@@ -138,7 +138,9 @@ const actions = {
         })
     } catch (e) {
       console.log("ошибка - ",e.response.data.message)
-      if (e.response.data.message === "No refresh_token found.") {
+      if (e.response.data.message === "No refresh_token found." ||
+      e.response.data.message === "JWT Refresh Token Not Found"
+      ) {
         commit("SET_DELETE_USER_TOKEN", '');
         commit("SET_IS_AUTCH_USER", false)
       }
@@ -195,6 +197,12 @@ const actions = {
         })
     } catch (e) {
       console.log("ошибка - ", e)
+      if (e.response.data.message === "No refresh_token found." ||
+      e.response.data.message === "JWT Refresh Token Not Found"
+      ) {
+        commit("SET_DELETE_USER_TOKEN", '');
+        commit("SET_IS_AUTCH_USER", false)
+      }
     }
   },
   setPage ({ commit }, page) {

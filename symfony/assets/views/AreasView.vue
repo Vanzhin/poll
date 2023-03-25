@@ -99,7 +99,7 @@
         this.setPagination(null)
         if (area.test.length > 0) {
           this.setTests(area.test)
-          this.$router.push({name: 'area', params: {id } })
+          this.$router.push({name: 'area', params: {id: area.id } })
           return
         } 
         this.iter = this.$route.params.num

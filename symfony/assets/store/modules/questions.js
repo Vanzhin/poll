@@ -370,7 +370,7 @@ const actions = {
           Authorization: `Bearer ${token}`
         }
       };
-      if (page) {config.url = config.url + `?page=${page}`}
+      if (page) {config.url = config.url + `&page=${page}`}
       await axios(config)
         .then(({data})=>{
           console.log("getQuestionsTestIdDb - ",  data.question)
