@@ -114,7 +114,7 @@ class QuestionService
         static $i = 0;
         foreach ($data['variant'] ?? [] as $key => $variantData) {
             $variantData['questionId'] = $question->getId();
-            if ($question->getType()->getTitle() === 'order') {
+            if (!is_null($question->getType()) && $question->getType()->getTitle() === 'order') {
                 $variantData['correct'] = $i++;
             }
             $variant = $this->variantFactory->createBuilder()->buildVariant($variantData, $this->em->find(Variant::class, $key));
@@ -136,7 +136,6 @@ class QuestionService
                 $this->em->flush();
             }
         }
-
         foreach ($question->getVariant() as $variant) {
             if (!key_exists($variant->getId(), $variants)) {
                 $this->em->remove($variant);
@@ -146,7 +145,7 @@ class QuestionService
 
         $subtitles = [];
 
-        if ($question->getType()->getTitle() === 'conformity') {
+        if (!is_null($question->getType()) && $question->getType()->getTitle() === 'conformity') {
             foreach ($data['subTitle'] ?? [] as $key => $subtitleData) {
                 $subtitle = $this->subtitleFactory->createBuilder()->buildSubtitle($subtitleData['title'], $question, isset($subtitleData['variant']) ? $variants[$subtitleData['variant']] : null, $this->em->find(Subtitle::class, $key));
                 if (!is_null($subtitleImages) && isset($subtitleImages[$key])) {

@@ -55,8 +55,8 @@ class TestController extends AbstractController
     {
         try {
             $sessionService->remove(QuestionHandler::SHUFFLED);
-//            $questions = $questionService->getPreparedQuestions($questionRepository->getRandomQByTest($test, $count));
             $questions = $questionRepository->getRandomQByTest($test, $count);
+
 //todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
             foreach ($questions as $question) {
                 $variants = $question->getVariant()->toArray();
