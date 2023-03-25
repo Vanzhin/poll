@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Factory;
+namespace App\Factory\Ticket;
 
 use App\Entity\Question;
 use App\Entity\Test;

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Factory;
+namespace App\Factory\Question;
 
 use Doctrine\ORM\EntityManagerInterface;
 
-class TicketFactory
+class QuestionFactory
 {
     public function __construct(private readonly EntityManagerInterface $em)
     {
     }
-    public function createBuilder(): TicketBuilder
+    public function createBuilder(): QuestionBuilder
     {
-        return new TicketBuilder($this->em);
+        return new QuestionBuilder($this->em);
     }
 
 }

@@ -57,17 +57,20 @@ class TestController extends AbstractController
             $sessionService->remove(QuestionHandler::SHUFFLED);
 //            $questions = $questionService->getPreparedQuestions($questionRepository->getRandomQByTest($test, $count));
             $questions = $questionRepository->getRandomQByTest($test, $count);
-//todo убрать костыль
+//todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
             foreach ($questions as $question) {
                 $variants = $question->getVariant()->toArray();
                 shuffle($variants);
-                $subtitles = $question->getSubTitle();
+                $subtitles = $question->getSubTitles()->toArray();
                 shuffle($subtitles);
-                $question->setSubtitle($subtitles);
+                $question->getSubtitles()->clear();
                 $question->getVariant()->clear();
 
                 foreach ($variants as $variant) {
                     $question->addVariant($variant);
+                }
+                foreach ($subtitles as $subtitle) {
+                    $question->addSubtitle($subtitle);
                 }
             }
             $response = [

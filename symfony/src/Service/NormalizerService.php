@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Category;
 use App\Entity\Question;
+use App\Entity\Subtitle;
 use App\Entity\Variant;
 use App\Twig\Extension\AppUpLoadedAsset;
 
@@ -22,7 +23,7 @@ class NormalizerService
                     return $upLoadedAsset->asset('question_upload_url', $key);
 
                 }
-                if ($innerObject instanceof Variant) {
+                if ($innerObject instanceof Variant || $innerObject instanceof Subtitle) {
                     return $upLoadedAsset->asset('variant_upload_url', $key);
 
                 }

@@ -33,8 +33,8 @@ class Question implements EntityWithImageInterface
     #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle'])]
     private ?string $title = null;
 
-    #[ORM\Column]
-    #[Groups(['main', 'admin_question'])]
+//    #[ORM\Column]
+    #[Groups(['admin_question'])]
     private array $answer = [];
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
@@ -51,12 +51,9 @@ class Question implements EntityWithImageInterface
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class, orphanRemoval: true)]
     private Collection $answers;
 
-    #[ORM\Column(nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
-    private array $subTitle = [];
-
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
     #[Groups(['main', 'admin_question', 'test', 'handle'])]
+    #[ORM\OrderBy(["correct" => "ASC"])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -83,6 +80,10 @@ class Question implements EntityWithImageInterface
     #[Groups(['handle'])]
     private ?array $result = null;
 
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, orphanRemoval: true)]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
+    private Collection $subtitles;
+
     /**
      * @return array|null
      */
@@ -104,6 +105,7 @@ class Question implements EntityWithImageInterface
         $this->tickets = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->variant = new ArrayCollection();
+        $this->subtitles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,15 +127,40 @@ class Question implements EntityWithImageInterface
 
     public function getAnswer(): array
     {
-        return $this->answer;
+        $answer = [];
+
+        switch ($this->getType()->getTitle()) {
+            case 'radio':
+            case 'input_one':
+            case 'checkbox':
+                foreach ($this->getVariant() as $variant) {
+                    if (!is_null($variant->getCorrect())) {
+                        $answer[] = $variant->getId();
+                    }
+                }
+                break;
+            case 'conformity':
+                foreach ($this->getSubtitles() as $subtitle) {
+                    $answer[] = $subtitle->getCorrect()->getId();
+                }
+
+                break;
+            case 'order':
+                foreach ($this->getVariant() as $variant) {
+
+                    if (!is_null($variant->getCorrect())) {
+                        $answer[$variant->getCorrect()] = $variant->getId();
+                    }
+                }
+                ksort($answer);
+                break;
+//            case 'input_many':
+//            case 'blank':
+
+        }
+        return $answer;
     }
 
-    public function setAnswer(array $answer): self
-    {
-        $this->answer = $answer;
-
-        return $this;
-    }
 
     public function getType(): ?Type
     {
@@ -200,18 +227,6 @@ class Question implements EntityWithImageInterface
                 $answer->setQuestion(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getSubTitle(): array
-    {
-        return $this->subTitle;
-    }
-
-    public function setSubTitle(?array $subTitle): self
-    {
-        $this->subTitle = $subTitle;
 
         return $this;
     }
@@ -302,6 +317,36 @@ class Question implements EntityWithImageInterface
     public function setPublishedAt(?\DateTimeInterface $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subtitle>
+     */
+    public function getSubtitles(): Collection
+    {
+        return $this->subtitles;
+    }
+
+    public function addSubtitle(Subtitle $subtitle): self
+    {
+        if (!$this->subtitles->contains($subtitle)) {
+            $this->subtitles->add($subtitle);
+            $subtitle->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubtitle(Subtitle $subtitle): self
+    {
+        if ($this->subtitles->removeElement($subtitle)) {
+            // set the owning side to null (unless already changed)
+            if ($subtitle->getQuestion() === $this) {
+                $subtitle->setQuestion(null);
+            }
+        }
 
         return $this;
     }

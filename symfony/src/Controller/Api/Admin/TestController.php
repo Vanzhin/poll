@@ -4,6 +4,7 @@ namespace App\Controller\Api\Admin;
 
 use App\Entity\Question;
 use App\Entity\Test;
+use App\Factory\Question\QuestionFactory;
 use App\Repository\QuestionRepository;
 use App\Repository\SectionRepository;
 use App\Repository\TestRepository;
@@ -166,7 +167,8 @@ class TestController extends AbstractController
                            ValidationService $validation,
                            FileHandler       $handler,
                            QuestionService   $questionService,
-                           SectionService    $sectionService
+                           SectionService    $sectionService,
+                           QuestionFactory   $questionFactory
     ): JsonResponse
     {
 
@@ -186,9 +188,9 @@ class TestController extends AbstractController
             $total = [];
             foreach ($questionData as $key => $data) {
                 $data['test'] = $test->getId();
-                $question = $questionService->make(new Question(), $data);
-                if ($validation->validate($question)) {
-                    $total['error'][$key]['question'] = $validation->validate($question);
+                $question = $questionFactory->createBuilder()->buildQuestion($data);
+                if ($validation->entityWithImageValidate($question)) {
+                    $total['error'][$key]['question'] = $validation->entityWithImageValidate($question);
                 }
                 if ($validation->manyVariantsValidate($data)) {
                     $total['error'][$key]['variant'] = $validation->manyVariantsValidate($data);
@@ -242,7 +244,7 @@ class TestController extends AbstractController
             200,
             ['charset=utf-8'],
             [
-                'groups' => 'admin_question',
+                'groups' => ['admin_question'],
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
                 AbstractNormalizer::CALLBACKS => [
                     'image' => $normalizerService->imageCallback($upLoadedAsset),

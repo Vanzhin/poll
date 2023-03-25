@@ -4,7 +4,7 @@ namespace App\Controller\Api\Admin;
 
 use App\Entity\Test;
 use App\Entity\Ticket;
-use App\Factory\TicketFactory;
+use App\Factory\Ticket\TicketFactory;
 use App\Repository\TicketRepository;
 use App\Service\TicketService;
 use Doctrine\ORM\NonUniqueResultException;

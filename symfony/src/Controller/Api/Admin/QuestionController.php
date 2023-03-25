@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Admin;
 
 use App\Entity\Question;
+use App\Factory\Question\QuestionFactory;
 use App\Repository\QuestionRepository;
 use App\Service\NormalizerService;
 use App\Service\Paginator;
@@ -63,11 +64,11 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/admin/question/create', name: 'app_api_admin_question_create', methods: 'POST')]
-    public function create(Request $request, QuestionService $questionService, ValidationService $validation): JsonResponse
+    public function create(Request $request, QuestionService $questionService, ValidationService $validation, QuestionFactory $factory): JsonResponse
     {
         $data = $request->request->all();
         $image = $request->files->get('questionImage');
-        $question = $questionService->make(new Question(), $data['question'] ?? []);
+        $question = $factory->createBuilder()->buildQuestion($data['question']);
         $errors = $validation->entityWithImageValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
@@ -85,11 +86,11 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/admin/question/{id}/edit', name: 'app_api_admin_question_edit', methods: 'POST')]
-    public function edit(Question $question, Request $request, QuestionService $questionService, ValidationService $validation): JsonResponse
+    public function edit(Question $question, Request $request, QuestionService $questionService, ValidationService $validation, QuestionFactory $factory): JsonResponse
     {
         $data = $request->request->all();
         $image = $request->files->get('questionImage',false);
-        $question = $questionService->make($question, $data['question'] ?? []);
+        $question = $factory->createBuilder()->buildQuestion($data['question'], $question);
         $errors = $validation->entityWithImageValidate($question, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
@@ -134,7 +135,9 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
-        $response = $questionService->saveWithVariantIfValid(new Question(), $data, $questionImage, $variantImages);
+        $subtitleImages = $request->files->get('subTitleImage', []);
+
+        $response = $questionService->saveWithVariantIfValid(new Question(), $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {
             $status = 422;
         } else {
@@ -154,8 +157,9 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
+        $subtitleImages = $request->files->get('subTitleImage', []);
 
-        $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages);
+        $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {
             $status = 422;
         } else {
