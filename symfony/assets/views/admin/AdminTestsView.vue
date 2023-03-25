@@ -1,5 +1,5 @@
 <template>
-   <Loader
+  <Loader
     v-if="isLoader"
   />
   <div class="block"
@@ -81,7 +81,7 @@
       ...mapMutations([]),
       async testRoute(item){
         await this.setTestItem(item)
-        this.$router.push({name: 'adminTest', params: { id: item.id }})
+        this.$router.push({name: 'adminTestQuestions', params: { id: item.id }})
       },
       createTest(){
         this.$router.push({

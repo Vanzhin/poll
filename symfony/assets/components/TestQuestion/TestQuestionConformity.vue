@@ -12,14 +12,17 @@
       <hr>
       <i class="i">Выберите ответы из выпадающего списка.</i>
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in question.subTitle" 
+        v-for="(answer, ind ) in question.subtitles" 
         :key="answer"
       >
+        <img :src="answer.image" width="200" 
+          v-if="answer.image"
+        />  
         <label 
           v-if="answer!==''"
           class="custom-control-label f_sm" 
           :for="'q' + (index + 1) + (ind + 1)"
-        >{{ answer }}
+        >{{ answer.title }}
         </label>
         <select 
           v-model="answerSelect[ind]"

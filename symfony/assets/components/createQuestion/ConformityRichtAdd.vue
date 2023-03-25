@@ -52,7 +52,7 @@ export default {
   },
   computed:{
     ...mapGetters([
-      "getTest",
+      
       "getQuestion"
     ]),
   },
@@ -84,14 +84,7 @@ export default {
   created(){
     
     if (this.operationEdit) {
-      const sub = this.getQuestion.variant.slice(this.getQuestion.subTitle.length, this.getQuestion.variant.length)
-      this.subTitles = sub.map((item, index) => 
-        {
-          return {
-            id: item.id,
-            title: item.title ? item.title: '',
-          }
-        })
+      this.subTitles = this.richtVariant
       this.numberSubTitles = this.subTitles.length
       console.log("this.subTitles -",this.subTitles )
     }

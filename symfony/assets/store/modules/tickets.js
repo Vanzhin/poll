@@ -11,8 +11,35 @@ const state = () => ({
 })
 
 const actions = {
+  async getTicketsTestIdDb({dispatch, commit}, {id, page = null, limit = 10 }){
+    console.log("id - ",  id)
+    const token = await dispatch("getAutchUserTokenAction")
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/admin/test/${id}/ticket?limit=${limit}`,
+        headers: { 
+          Accept: 'application/json', 
+          Authorization: `Bearer ${token}`
+        }
+      };
+      if (page) {config.url = config.url + `?page=${page}`}
+      await axios(config)
+        .then(({data})=>{
+          console.log("getTicketsTestIdDb - ",  data.question)
+          commit("SET_TICKETS", data.ticket);
+          dispatch("setPagination", data.pagination);
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getTicketsTestIdDb', {id, page, limit})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
   
-  getQuestion(){},
   setTickets ({dispatch, commit}, tickets) {
     commit("SET_TICKETS", tickets)
   },

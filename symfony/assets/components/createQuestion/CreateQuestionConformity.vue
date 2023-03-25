@@ -33,30 +33,41 @@
               <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <div class="d-flex align-items-center">
                   <textarea rows="1" required
-                    :name="`question[subTitle][${answer.id}]`"
-                    v-model= "answer.subTitle"
+                    :name="`subTitle[${answer.id}][title]`"
+                    v-model= "answer.title"
                     class="textarea_input" 
                   >
                   </textarea> 
                   <div class="custom-block">
                     <i class="bi bi-eraser custom-close" title="Очистить поле"
                       @click="answer.title = ''"
-                      v-if="answer.subTitle !== ''"
+                      v-if="answer.title !== ''"
                     ></i>
                   </div>
+                  <input type="hidden" 
+                    :name="`subTitle[${answer.id}][variant]`"
+                    :value="answer.variantId"
+                  >
                 </div>
               </div>
               <div class="col-6 col-sm-6 col-md-6 col-lg-6" >
                 <div class="row d-flex align-items-center">
                   <input required
-                    :name="`variant[${answer.id}][title]`"
-                    v-model= "answer.title"
+                    :name="`variant[${answer.variantId}][title]`"
+                    v-model= "answer.variantTitle"
                     class="input" 
+                  >
+                  <input type="hidden" 
+                    :name="`variant[${answer.variantId}][weight]`"
+                    :value="10"
+                  >
+                  <input type="hidden" 
+                    :name="`variant[${answer.variantId}][correct]`"
                   >
                   <div class="custom-block">
                     <i class="bi bi-eraser custom-close" title="Очистить поле"
-                      @click="answer.title = ''"
-                      v-if="answer.title !== ''"
+                      @click="answer.variantTitle = ''"
+                      v-if="answer.variantTitle !== ''"
                     ></i>
                   </div> 
                   <div class="custom-block">
@@ -85,7 +96,7 @@
               <!-- <img src={`${avatarURL}${article.image}`} width="100%"/>} -->
               <input  class="" type="file" accept="image/*"  
                 @change="(e)=> changeAnswerImg(e, ind)"
-                :name="(answer.value === '')&&(answer.image === '') ? '' :`variantImage[${answer.id}]`"
+                :name="(answer.value === '')&&(answer.image === '') ? '' :`subTitleImage[${answer.id}]`"
                 :value="answer.value"
               >
             </div>
@@ -95,7 +106,7 @@
       </div>
 <!-- /// -->
      <ConformityRichtAdd
-      :richtVariant="uniqueNumber"
+      :richtVariant="richtVariants"
      />
     </div>       
   </div>
@@ -116,6 +127,8 @@ export default {
       answerSelect: [1],
       answers: [{
         id:"a1",
+        variantId: "a1",
+        variantTitle: "",
         title: "",
         image: "",
         value: "",
@@ -126,7 +139,8 @@ export default {
       uniqueNumber: 1,
       drag: false,
       operation: this.$route.params.operation,
-      operationEdit: this.$route.params.operation === "edit"
+      operationEdit: this.$route.params.operation === "edit",
+      richtVariants:[]
     }
   },
   computed:{
@@ -152,6 +166,8 @@ export default {
         ++this.uniqueNumber
         this.answers.push({
           id:'a' + (this.uniqueNumber),
+          variantId:'a' + (this.uniqueNumber),
+          variantTitle: "",
           title: "",
           image: "",
           value: "",
@@ -196,15 +212,18 @@ export default {
   },
   created(){
     if (this.operationEdit) {
-     
-      this.uniqueNumber = this.numberAnswers = this.getQuestion.subTitle.length
-      this.answers = this.getQuestion.subTitle.map((item, index) => 
+      console.log("this.getQuestion - ", this.getQuestion)
+      this.uniqueNumber = this.numberAnswers = this.getQuestion.subtitles.length
+      this.richtVariants = this.getQuestion.variant
+      this.answers = this.getQuestion.subtitles.map((item, index) => 
         {
-          const variantItem = this.getQuestion.variant[index]
+          this.richtVariants = [...this.richtVariants.filter(variant=> variant.id !== item.correct.id)]
           return {
-            id:  variantItem.id,
-            title: variantItem.title ? variantItem.title: '',
-            image: variantItem.image ? variantItem.image: '',
+            id:  item.id,
+            title: item.title ? item.title: '',
+            image: item.image ? item.image: '',
+            variantId: item.correct.id,
+            variantTitle: item.correct.title,
             value: "",
             subTitle: item,
             sort: index, 

@@ -8,23 +8,23 @@
       <hr>
       <i class="i">Варианты ответов:</i>
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in question.subTitle" 
+        v-for="(answer, ind ) in question.subtitles" 
         :key="answer"
       >
         <div>
-          <img :src="variantConformity(ind).image"  width="200" height="135" 
-            v-if="variantConformity(ind).image && variantConformity(ind).image !== ''"
+          <img :src="answer.image"  width="200" height="135" 
+            v-if="answer.image && answer.image !== ''"
           /> 
           <label 
             v-if="answer!==''"
             class="custom-control-label f_sm" 
-          >{{ answer }}
+          >{{ answer.title }}
           </label>
         </div>
           <select>
             disabled
             <option>
-              {{ variantConformity(ind).title }}
+              {{ answer.correct.title }}
             </option>
           </select>
         

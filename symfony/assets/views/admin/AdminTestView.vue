@@ -1,107 +1,86 @@
 <template>
-  <Loader
-    v-if="isLoader"
-  />
-  <div class="block"
-    v-else
-  >
+ 
+  <div class="block">
     <div class="title">
-      <div>
-        <h2>Тест: {{ testName }}</h2>
-        <div class="test">
-          <p>Всего вопросов в тесте: {{ getTotalItem }}</p>  
-        </div>
-      </div>
-      <div class="btn-group " >
-        <div class="btn btn-outline-primary btn-center"
-          title="Добавить вопрос"
-          @click.stop="addQuestion"
-        >
-          <i class="bi bi-plus create-plus"></i>
-        </div>
-      </div>
+      <h2>Тест: {{ testName }}</h2>
     </div>
-    
-    <div class="container">
-      <div class="row">
-        <div v-for="(question, index ) in questions" 
-          :key="question.id"
-        >
-          <ItemQuestion
-            :question="question"
-            :index="numQuestion(index)"
-          />
-        </div>
-        <Pagination
-          type="getQuestionsTestIdDb"
-        />
-      </div>
-    </div>
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation"
+        v-for="(nav, index ) in navs" 
+          :key="nav.title"
+      >
+        <RouterLink class="nav-link" :class="{active: nav.active}"  
+          @click="activeTogge(index)"
+          :to="{ path: nav.link}" >{{ nav.title }} {{ nav.count }}</RouterLink>
+      </li>
+     
+    </ul>
   </div>
+  <RouterView/>
 </template>
 
-<script>
 
-import ItemQuestion from '../../components/Admin/ItemQuestion.vue'
-import Pagination from "../../components/Pagination.vue"
-import MyConfirm from '../../components/ui/MyConfirm.vue'
-import Loader from '../../components/ui/Loader.vue'
+<script>
+import { RouterLink,  RouterView } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 
 export default {
   components: {
-    ItemQuestion,
-    Loader,
-    Pagination,
-    MyConfirm
+  
   },
   data() {
     return {
-      isLoader: true,
+      
       testId: this.$route.params.id,
-      testTitle:"",
-      confirmMessage: '',
-      confirmVisible: false,
-      confirmYes: null
+      test: null,
+      classObject: {
+        active: true,
+      },
+      navs:[]
     }
   },
   computed:{
     ...mapGetters([
-      "getSlug", 
-      "getRandomTicket", 
-      "getSelectTicket",
-      "getTest",
-      "getActivePage",
-      "getTotalItemsPage",
-      "getTotalItem"
+      "getTest"
     ]),
+
     testName () {
       return this.$store.getters.getTestTitleActive
     },
-    questions () {
-      return this.$store.getters.getQuestions
-    }
+    
   },
    methods: {
     ...mapActions(["getQuestionsTestIdDb", ]),
-    numQuestion(index){
-      return index + (this.getActivePage - 1) * this.getTotalItemsPage
+    activeTogge(index) {
+      this.navs =[ ...this.navs.map((nav, ind) => {
+        index === ind ? nav.active = true: nav.active = false
+        return nav
+      })]
     },
-    addQuestion(){
-     
-      this.$router.push({
-        name: 'adminQuestionsCreate', 
-        params: {
-          testId: this.testId,
-          questionId: 0,
-          operation: "create"
-        }
-      })
-    }
-  },
+ },
   async created(){
-    await this.getQuestionsTestIdDb({id: this.testId})
-    this.isLoader = false
+    console.log('this.getTest - ', this.getTest.sectionCount)
+    this.navs = [
+        {
+          title: `Вопросы `,
+          link: 'questions',
+          active: true,
+          count: this.getTest.questionCount || ''
+        },
+        {
+          title: `Билеты `,
+          link: 'tickets',
+          active: false,
+          count: this.getTest.ticketCount || ''
+        },
+        {
+          title: `Секции `,
+          link: 'sections',
+          active: false,
+          count: this.getTest.sectionCount || ''
+        }
+      ]
+    this.test = this.getTest
   },
  
 } 
@@ -130,18 +109,7 @@ export default {
   padding-left: 7px;
   margin-bottom: 10px;
   }
-  .button{
-    border: 1px solid rgb(171 171 171);
-    padding: 5px 10px;
-    border-radius: 5px;
-    &:hover{
-      background-color: rgb(225 225 221);
-    }
-  }
-  .btn-center{
-    display: flex;
-    align-items: center;
-  }  
+  
 @media (min-width: 1024px) {
  
 }
