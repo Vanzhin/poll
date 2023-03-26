@@ -172,7 +172,7 @@ class QuestionService
             };
         }
 
-        if (count($hasCorrectVariant) < 1 && !in_array($question->getType()->getTitle(), ['input_one', 'conformity']))  {
+        if (count($hasCorrectVariant) < 1 && !in_array($question->getType()->getTitle(), ['input_one', 'conformity'])) {
             $errors[] = 'Необходимо выбрать хотя бы один верный ответ';
         }
         if (count($hasCorrectVariant) > 1 && $question->getType()->getTitle() === 'radio') {

@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Test;
+use App\Entity\Ticket;
 use App\Repository\QuestionRepository;
 use App\Repository\TestRepository;
 use App\Service\NormalizerService;
@@ -10,6 +11,7 @@ use App\Service\QuestionHandler;
 use App\Service\SessionService;
 use App\Service\TestService;
 use App\Twig\Extension\AppUpLoadedAsset;
+use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,29 +52,16 @@ class TestController extends AbstractController
                                       SessionService     $sessionService,
                                       int                $count,
                                       AppUpLoadedAsset   $upLoadedAsset,
-                                      NormalizerService  $normalizerService
+                                      NormalizerService  $normalizerService,
+                                      TestService        $testService
     ): JsonResponse
     {
         try {
             $sessionService->remove(QuestionHandler::SHUFFLED);
-            $questions = $questionRepository->getRandomQByTest($test, $count);
+            //todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
 
-//todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
-            foreach ($questions as $question) {
-                $variants = $question->getVariant()->toArray();
-                shuffle($variants);
-                $subtitles = $question->getSubTitles()->toArray();
-                shuffle($subtitles);
-                $question->getSubtitles()->clear();
-                $question->getVariant()->clear();
+            $questions = $testService->getQuestionForResponse($questionRepository->getRandomQByTest($test, $count));
 
-                foreach ($variants as $variant) {
-                    $question->addVariant($variant);
-                }
-                foreach ($subtitles as $subtitle) {
-                    $question->addSubtitle($subtitle);
-                }
-            }
             $response = [
                 'test' => $test->getTitle(),
                 'questions' => $questions
@@ -145,6 +134,48 @@ class TestController extends AbstractController
                 ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
+
+    #[Route('/api/ticket/{id}/question', name: 'app_api_test_question_ticket', methods: ['GET'])]
+    public function getTicketQuestion(Ticket            $ticket,
+                                      QuestionHandler   $questionService,
+                                      SessionService    $sessionService,
+                                      AppUpLoadedAsset  $upLoadedAsset,
+                                      NormalizerService $normalizerService,
+                                      TestService       $testService
+    ): JsonResponse
+    {
+        try {
+            $sessionService->remove(QuestionHandler::SHUFFLED);
+            //todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
+
+            $questions = $testService->getQuestionForResponse($ticket->getQuestion()->toArray());
+
+            $response = [
+                'test' => $ticket->getTest()->getTitle(),
+                'questions' => $questions
+            ];
+
+            $sessionService->add($questionService->prepareForSession($questions), QuestionHandler::SHUFFLED);
+
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 422;
+        } finally {
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+                [
+                    'groups' => 'test',
+                    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                    AbstractNormalizer::CALLBACKS => [
+                        'image' => $normalizerService->imageCallback($upLoadedAsset),
+                    ]
+                ],
+
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
     }
 
 }

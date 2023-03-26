@@ -89,7 +89,7 @@ class QuestionController extends AbstractController
     public function edit(Question $question, Request $request, QuestionService $questionService, ValidationService $validation, QuestionFactory $factory): JsonResponse
     {
         $data = $request->request->all();
-        $image = $request->files->get('questionImage',false);
+        $image = $request->files->get('questionImage', false);
         $question = $factory->createBuilder()->buildQuestion($data['question'], $question);
         $errors = $validation->entityWithImageValidate($question, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {

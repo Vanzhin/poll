@@ -8,7 +8,10 @@ use App\Entity\Test;
 use App\Entity\User;
 use App\Factory\Answer\AnswerFactory;
 use App\Factory\Result\ResultFactory;
+use App\Repository\QuestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class TestService
 {
@@ -17,7 +20,8 @@ class TestService
                                 private readonly ValidationService      $validation,
                                 private readonly QuestionHandler        $questionHandler,
                                 private readonly AnswerFactory          $answerFactory,
-                                private readonly SessionService         $sessionService)
+                                private readonly SessionService         $sessionService,
+    )
     {
     }
 
@@ -98,6 +102,28 @@ class TestService
         }
 
         return $response;
+
+    }
+
+    public function getQuestionForResponse(array $questions): array
+    {
+        foreach ($questions as $question) {
+            $variants = $question->getVariant()->toArray();
+            shuffle($variants);
+            $subtitles = $question->getSubTitles()->toArray();
+            shuffle($subtitles);
+            $question->getSubtitles()->clear();
+            $question->getVariant()->clear();
+
+            foreach ($variants as $variant) {
+                $question->addVariant($variant);
+            }
+            foreach ($subtitles as $subtitle) {
+                $question->addSubtitle($subtitle);
+            }
+        }
+
+        return $questions;
 
     }
 }
