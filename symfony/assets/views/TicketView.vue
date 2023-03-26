@@ -143,11 +143,11 @@ export default {
                
     console.log(" regexp.test(this.ticketId) - ",  regexp.test(this.ticketId))
     if ( regexp.test(this.ticketId)){
-      this.ticketTitle = this.rnd[this.ticketId]
+      this.ticketTitle =this.rnd[this.ticketId]
       this.info.mode = this.ticketId
       this.setTicketTitle(this.rnd[this.ticketId])
     } else {
-      this.ticketTitle = this.getSelectTicket(+this.ticketId).title
+      this.ticketTitle ='Билет № ' + this.getSelectTicket(+this.ticketId).title
       this.info.ticket = +this.ticketId
       this.setTicketTitle(+this.ticketId) 
     }

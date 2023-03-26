@@ -43,7 +43,7 @@
         > 
           <div class="card flex-shrink-1 shadow">
             <RouterLink :to="{ name: 'ticket', params: { id: ticket.id } }" class="py-2 link">
-              {{ ticket.title }}
+              Билет № {{ ticket.title }}
             </RouterLink>
           </div>
         </div>
@@ -65,6 +65,8 @@ export default {
     }
   },
    computed:{
+    ...mapGetters(["getTickets"]),
+    
       testName () {
         return this.$store.getters.getTestTitleActive
       },
@@ -73,13 +75,15 @@ export default {
       },
     },
     methods: {
-     ...mapActions(["selectTestId"])
+     ...mapActions(["selectTestId","getTicketsTestIdNoAuthDb"])
     },
     mounted(){
       // this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
     },
-    async created() {
+    async created() { 
       await this.selectTestId({id : this.$route.params.id})
+      await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
+     
       this.isLoader = false
     }
   

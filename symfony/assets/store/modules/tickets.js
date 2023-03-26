@@ -70,7 +70,7 @@ const actions = {
         dispatch('setMessageError', e)
       }
     }
-  },///api/admin/ticket/create
+  },
   async createTicket({dispatch, commit}, {id, ticket}){
     console.log("id - ",  id)
     const token = await dispatch("getAutchUserTokenAction")
@@ -98,6 +98,27 @@ const actions = {
       } else {
         dispatch('setMessageError', e)
       }
+    }
+  },
+  async getTicketsTestIdNoAuthDb({dispatch, commit}, {id}){
+    console.log("id - ",  id)
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/test/${id}`,
+        headers: { 
+          Accept: 'application/json', 
+        }
+      };
+     
+      await axios(config)
+        .then(({data})=>{
+          console.log("getTicketsTestIdNoAuthDb - ",  data)
+          commit("SET_TICKETS", data.ticket);
+         
+        })
+    } catch (e) {
+      dispatch('setMessageError', e)
     }
   },
   setTickets ({dispatch, commit}, tickets) {
@@ -128,11 +149,7 @@ const getters = {
 }
 
 const mutations = {
-  GET_COURCES(state, cources) {
-    state.cources = {
-      active: 0, list: cources, isLoaded: true
-    }
-  },
+  
   [SET_TICKETS] (state, tickets){
     state.tickets = tickets
   },
