@@ -87,7 +87,11 @@ export default {
         rnd20:"Случайный набор из 20 вопросов",
         rnd20t:"Случайный набор из 20 вопросов на время"
       },
-      info:{}
+      info:{
+        ticket:'',
+        mode:'',
+        test:''
+      }
     }
   },
   computed:{
@@ -143,11 +147,11 @@ export default {
                
     console.log(" regexp.test(this.ticketId) - ",  regexp.test(this.ticketId))
     if ( regexp.test(this.ticketId)){
-      this.ticketTitle = this.rnd[this.ticketId]
+      this.ticketTitle =this.rnd[this.ticketId]
       this.info.mode = this.ticketId
       this.setTicketTitle(this.rnd[this.ticketId])
     } else {
-      this.ticketTitle = this.getSelectTicket(+this.ticketId).title
+      this.ticketTitle ='Билет № ' + this.getSelectTicket(+this.ticketId).title
       this.info.ticket = +this.ticketId
       this.setTicketTitle(+this.ticketId) 
     }

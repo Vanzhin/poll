@@ -6,44 +6,7 @@ import {
 import axios from 'axios';
 
 const state = () => ({
-  testsTest: [
-    { 
-      id: 1,
-      title: "ЭБ 1344.2. Проверка знаний электротехнического персонала организаций, осуществляющего эксплуатацию оборудования кабельных линий электросетевого хозяйства потребителей (III группа по электробезопасности до 1000 В)",
-      type_responses : "one",
-      image: null
-    },
-    { 
-      id: 2,
-      title: "ЭБ 1345.2. Проверка знаний электротехнического персонала организаций, осуществляющего эксплуатацию оборудования кабельных линий электросетевого хозяйства потребителей (III группа по электробезопасности выше 1000 В)",
-      type_responses : "one",
-      image: null
-    },
-    { 
-      id: 3,
-      title: "ЭБ 1346.2. Проверка знаний электротехнического персонала организаций, осуществляющего эксплуатацию оборудования кабельных линий электросетевого хозяйства потребителей (IV группа по электробезопасности до 1000 В)",
-      type_responses : "one",
-      image: null
-    },
-    { 
-      id: 4,
-      title: "ЭБ 1347.2. Проверка знаний электротехнического персонала организаций, осуществляющего эксплуатацию оборудования кабельных линий электросетевого хозяйства потребителей (IV группа по электробезопасности выше 1000 В)",
-      type_responses : "one",
-      image: null
-    },
-    { 
-      id: 5,
-      title: "ЭБ 1348.2. Проверка знаний электротехнического персонала организаций, осуществляющего эксплуатацию оборудования кабельных линий электросетевого хозяйства потребителей (V группа по электробезопасности)",
-      type_responses : "one",
-      image: null
-    },
-    { 
-      id: 6,
-      title:  "Проверка знаний норм и правил в области энергетического надзора",
-      type_responses : "one",
-      image: null
-    },
-  ],
+  testsTest: [],
   tests: localStorage.getItem('tests') ?
   JSON.parse(localStorage.getItem('tests')) : null,
   test: localStorage.getItem('test') ?
@@ -53,6 +16,7 @@ const state = () => ({
 })
 
 const actions = {
+  //запрос на получение всех тестов 
   async getTestsDB({dispatch ,commit}, {page = null}){
     const token = await dispatch("getAutchUserTokenAction")
     const config = {
@@ -102,6 +66,7 @@ const actions = {
     console.log("выбранный тест - ",  test)
     dispatch("setTest", test)
   },
+  //получение информации теста по его id
   async getTestIdDb({dispatch ,commit}, {id}){
     const token = await dispatch("getAutchUserTokenAction")
     const config = {
@@ -112,10 +77,12 @@ const actions = {
         Authorization: `Bearer ${token}`
       }
     }
+    console.log(config)
     try{
       await axios(config)
         .then(({data})=>{
-          dispatch("setTest", data)
+          console.log(data)
+          commit("SET_TEST", data)
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {

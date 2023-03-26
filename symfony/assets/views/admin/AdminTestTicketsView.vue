@@ -30,7 +30,7 @@
           >
             <ItemTicket
               :ticket="ticket"
-              :index="numQuestion(index)"
+              
             />
           </div>
           <Pagination

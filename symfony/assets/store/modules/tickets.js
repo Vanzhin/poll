@@ -26,7 +26,7 @@ const actions = {
       if (page) {config.url = config.url + `?page=${page}`}
       await axios(config)
         .then(({data})=>{
-          console.log("getTicketsTestIdDb - ",  data.question)
+          console.log("getTicketsTestIdDb - ",  data)
           commit("SET_TICKETS", data.ticket);
           dispatch("setPagination", data.pagination);
         })
@@ -39,7 +39,88 @@ const actions = {
       }
     }
   },
-  
+  async deleteTicketIdDb({dispatch, commit}, {id, testId, activePage }){
+    console.log("id - ",  id)
+    const token = await dispatch("getAutchUserTokenAction")
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/admin/ticket/${id}/delete`,
+        headers: { 
+          Accept: 'application/json', 
+          Authorization: `Bearer ${token}`
+        }
+      };
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log(data)
+          dispatch('getTicketsTestIdDb', {
+            id: testId,
+            // page: activePage,
+          })
+          
+          dispatch('setMessage', data)
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('deleteTicketIdDb', {id, page, limit})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  async createTicket({dispatch, commit}, {id, ticket}){
+    console.log("id - ",  id)
+    const token = await dispatch("getAutchUserTokenAction")
+    try{
+      const config = {
+        method: 'post',
+        url: `/api/admin/ticket/create`,
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json', 
+          Authorization: `Bearer ${token}`
+        },
+        data: ticket
+      };
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log(data)
+          dispatch('setMessage', data)
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('deleteTicketIdDb', {id, page, limit})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  async getTicketsTestIdNoAuthDb({dispatch, commit}, {id}){
+    console.log("id - ",  id)
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/test/${id}`,
+        headers: { 
+          Accept: 'application/json', 
+        }
+      };
+     
+      await axios(config)
+        .then(({data})=>{
+          console.log("getTicketsTestIdNoAuthDb - ",  data)
+          commit("SET_TICKETS", data.ticket);
+         
+        })
+    } catch (e) {
+      dispatch('setMessageError', e)
+    }
+  },
   setTickets ({dispatch, commit}, tickets) {
     commit("SET_TICKETS", tickets)
   },
@@ -68,11 +149,7 @@ const getters = {
 }
 
 const mutations = {
-  GET_COURCES(state, cources) {
-    state.cources = {
-      active: 0, list: cources, isLoaded: true
-    }
-  },
+  
   [SET_TICKETS] (state, tickets){
     state.tickets = tickets
   },

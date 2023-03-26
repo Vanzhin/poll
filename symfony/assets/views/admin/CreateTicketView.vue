@@ -17,7 +17,7 @@
           name="category" 
           :value="testId"
         >
-        <p class="label"><b>Билет: </b></p>
+        <p class="label"><b>Билет №: </b></p>
         <div class="custom-radio img_block">
           <input required
             name="title"
@@ -30,25 +30,24 @@
           ></i>
         </div>
         <div class="block_number">
-          <label for="number" class="label"> Количество ответов</label>
-          <input id="number" type="number"
-            v-model="numberQuestions"
-            @change="changeNumberQuestions"
-          >
+          <label for="number" class="label"> Количество вопросов:</label>
+          <label for="number" class="label"> {{ numberQuestions }}</label>
         </div>
-        <div class="custom-radio img_block">  
-          <textarea rows="1" required
-            name="description"
-            v-model= "description"
-            class="textarea_input" 
-          ></textarea> 
-          <i class="bi bi-eraser custom-close" title="Очистить поле"
-            @click="description = ''"
-            v-if="description !== ''"
-          ></i>
+        <div class="questions-block">  
+          <div class="questions-item"
+            
+            v-for="(question, index ) in questions"
+            :key="question.id"
+            :title="question.title"
+            @click="selectQuestion({question, index })"
+            :class="{'questions-item-select': question.select}"
+            >  
+            {{ index + 1 }}
+          </div>
         </div>
         <br> 
-          
+        {{ ticketQuestions }}  
+        <br> 
         <button type="submit" class="button">Сохранить</button>
       </form>
     </div>
@@ -56,7 +55,7 @@
 </template>
  
 <script>
-  import Loader from '../../components/ui/Loader.vue'
+  import Loader from '../../components/ui/LoaderView.vue'
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
@@ -64,31 +63,26 @@
     },
     data() {
       return {
-        typeQuestions:[
-          {id: 1, 
-            type: "radio",
-            title: "Один из многих",
-          },
-        ],
-        selectTypeQuestion: '',
         testId: undefined,
         title: "",
         description: "",
         message: null,
         isLoader: true,
         operation: this.$route.params.operation,
-        numberQuestions: 10,
-        questions:[]
+        numberQuestions: 0,
+        questions:[],
+        ticketQuestions: []
       }
     },
     computed:{ 
       ...mapGetters([
-        "getAutchUserToken", 
         "getMessage", 
-        "getCategoryParendId", 
+        "getQuestions", 
         "getTest",
+        "getTestId",
+        "getTickets",
+        "getQuestionsTicket",
         
-        "getTickets"
     ]),
       getTest () {
         const test = this.$store.getters.getTest
@@ -98,60 +92,76 @@
     },
    
     methods: { 
-      ...mapActions(["editTest", "createTest" ,"setMessage", "selectTestId", "getTestIdDb"]),
+      ...mapActions([
+        "editTicket", 
+        "createTicket" ,
+        "setMessage", 
+        "selectTestId", 
+        "getQuestionsTestIdDb",
+        "getQuestionsTickeetIdDb"
+      ]),
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       async onSubmit(e){
         const questionSend = e.target
-        
+        const ticket = {
+          "title": +this.title,
+          "test": +this.testId, 
+          "question": [...this.ticketQuestions]
+        }
         if ( this.operation === 'edit'){
-          await this.editTest({questionSend, token: this.getAutchUserToken, id:+this.$route.params.id})
+          await this.editTicket({questionSend, id:+this.$route.params.id})
         } else if ( this.operation === 'create'){
-          await this.createTest({questionSend, token: this.getAutchUserToken, })
-         
+          await this.createTicket({ticket})
         }
         this.message = !this.getMessage.err
         let timerId = setInterval(() => {
-          if ( !this.getMessage) {
+          if ( !this.getMessage ) {
             clearInterval(timerId)
             if (this.message ){this.$router.go(-1)}
           }
         }, 200);
       
       },
-      changeNumberQuestions(){
-        if (this.numberQuestions < 1) {
-        this.numberQuestions = 1
-        return
-      }
-      if ( this.questions.length < this.numberQuestions) {
-        ++this.uniqueNumber
-        // this.questions.push({id:'a' + (this.uniqueNumber), title:"", image:"", value:""})
-        
-      } else {
-        // const arr = this.answerSelect.filter(item =>{ 
-        //  return item !== this.answers[this.answers.length - 1].id})
-        // this.answerSelect = arr
-        // this.answers.pop()
-      }
+      
+      selectQuestion({question,index }){
+        if (question.select) {
+          question.select = false
+          this.ticketQuestions=[...this.ticketQuestions.filter(
+            item => item !== question.id
+          )] 
+        } else {
+          question.select = true
+          this.ticketQuestions.push(question.id)
+        }
+        this.numberQuestions = this.ticketQuestions.length
       }
     },
     async mounted(){
       
     },
     async created() {
+      this.isLoader = true
+      this.testId = this.$route.params.testId
+      await this.getQuestionsTestIdDb({id: this.testId, limit: 100})
+      this.questions = [...this.getQuestions]
+
+      this.testId = this.$route.params.testId
       if ( this.$route.params.operation === 'create'){
-        this.testId = this.$route.params.id
-        this.title = `Билет № ${this.getTickets.length + 1}`
+        this.title = `${(this.getTickets ? this.getTickets.length: 0) + 1}`
       } 
-      
-      
-      // if ( this.$route.params.operation === 'edit'){
-      //   // await this.selectTestId({id: +this.$route.params.id})
-      //   await this.getTestIdDb({id: +this.$route.params.id})
-      //   this.title = this.getTest.title
-      //   this.description = this.getTest.description
-      // }
+      if ( this.$route.params.operation === 'edit'){
+        await this.getQuestionsTickeetIdDb({id: +this.$route.params.ticketId})
+        console.log('getQuestionsTicket -', this.getQuestionsTicket)
+        this.title = this.$route.params.ticketId
+        this.ticketQuestions = this.getQuestionsTicket.map((question)=>{
+            const num = this.questions.findIndex((item)=>item.id === question.id)
+            this.questions[num].select = true
+            return question.id
+          }
+        )
+        this.numberQuestions = this.ticketQuestions.length
+      }
       this.isLoader = false
       
     }
@@ -180,16 +190,26 @@
     padding-left: 10px;
     margin: 5px;
   }
-  .img_block{
-    display: flex;
-    align-items: flex-start;
-    & i {
-      margin: 10px;
-      transition: all 0.5s ease-out;
+  .questions{
+    &-block{
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    &-item{
+      width: 45px;
+      height: 30px;
+      border-radius: 6px;
+      background-color: rgb(141 135 135);
+      border: 2px solid rgb(141 135 135);
+      margin: 3px;
+      text-align: center;
       &:hover{
-        color: rgb(185, 48, 14);
-        transform: scale(1.25);
+        border: 2px solid rgb(36, 34, 34);
         cursor: pointer;
+      }
+      &-select{
+        background-color: rgb(139, 118, 72);
       }
     }
   }

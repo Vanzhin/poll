@@ -1,29 +1,27 @@
 <template>
   <div
     class="item__block"
+    @click.stop="childToggle"
   >
     <div class="">
       <div class="item__card">
         <div class="item__card-row" >
           <div class="item__card-header"> 
             <div class="item__card-block">
-              <img :src="item.image" alt="" class="item__card__img"
-                v-if="item.image"
-              >
+             
               <div class="item__card-title">
-                {{ item.id }} - {{ item.title }}
+                {{ ticket.id }} - Билет №{{ ticket.title }}
+              </div>
+              <div class="item__card-title">
+                Вопросов в билете - {{ ticket.question.length }}
               </div>
             </div>
-            <div class="item__card-info">
-              <div class="item__card-info-item">Вопросов: {{item.questionCount  }} </div>
-              <div class="item__card-info-item">Билетов: {{item.ticketCount  }} </div>
-              <div class="item__card-info-item">Секций: {{item.sectionCount  }} </div>
-            </div>
+           
           </div>
           <div class="btn-group" >
             <div class="btn btn-outline-primary btn-center"
               title="Редактировать"
-              @click.stop="editTest"
+              @click.stop="editTicket"
             >
               <i class="bi bi-pencil"></i>
             </div>
@@ -33,18 +31,8 @@
             >
               <i class="bi bi-trash3"></i>
             </div>
-            <div class="btn btn-outline-primary btn-center"
-              title="Добавить вопрос"
-              @click.stop="addQuestion"
-            >
-              <i class="bi bi-question-square"></i>
-            </div>
-            <div class="btn btn-outline-primary btn-center"
-              title="Импортировать вопросы из файла"
-              @click.stop="importQuestionsFile"
-            >
-              <i class="bi bi-cloud-arrow-down"></i>
-            </div>
+            
+            
           </div>
         </div>
        </div>
@@ -61,7 +49,7 @@
 import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
-  props:['item', 'index'],
+  props:['ticket', 'index'],
   components: {
    
   },
@@ -84,57 +72,37 @@ export default {
   },
   methods:{
     ...mapActions([
-      "deleteTestDb", 
-      "setTest",
+      "deleteTicketIdDb", 
       "setConfirmMessage",
-      
+      "getTestId"
     ]),
-    img(item){
-      const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
-      return img
-    },
+    
     childToggle(){
+      
       this.childVisible = !this.childVisible
     },
-    editTest(){
-      console.log()
-      this.$router.push({name: 'adminTestCreate', params: {operation:"edit" , id: this.item.id } })
+    editTicket(){
+      this.$router.push({name: 'adminTicketCreate', params: {operation:"edit" ,testId: this.$route.params.id , ticketId: this.ticket.id } })
     },
-    async deleteTest(){
-      console.log('Удаляю тест № - ', this.item.id)
+    async deleteTicket(){
+      console.log('Удаляю тест № - ', this.ticket.id)
       console.log('Удаляю тест № - ', this.$route)
-      await this.deleteTestDb({
-        id: this.item.id, 
-        parentId: this.getCategoryParendId, 
+      await this.deleteTicketIdDb({
+        id: this.ticket.id, 
+        testId: this.$route.params.id,
         activePage: this.getActivePage,
-        type: this.$route.meta.type,
       })
     },
     deleteVisibleConfirm(){
-      this.setConfirmMessage("При удалении теста, так же будут удалены все его вопросы. Вы, действительно хотите это сделать?")
+      this.setConfirmMessage(`Вы, действительно хотите удалить Билет № ${this.ticket.title}?`)
       let timerId = setInterval(() => {
         if (this.getGonfimAction) {
           clearInterval(timerId)
-          if (this.getGonfimAction === "yes" ){this.deleteTest()}
-
+          if (this.getGonfimAction === "yes" ){this.deleteTicket()}
         }{}
       }, 200);
     },
-    importQuestionsFile(){
-      this.setTest(this.item)
-      this.$router.push({name: 'adminImportId',  params: {id: this.item.id}})
-    },
-    addQuestion(){
-      this.setTest(this.item)
-      this.$router.push({
-        name: 'adminQuestionsCreate', 
-        params: {
-          testId: this.item.id,
-          questionId:0,
-          operation: "create"
-        }
-      })
-    }
+    
   }
 } 
 
@@ -159,6 +127,7 @@ export default {
       
     }
     &-title{
+      margin-left: 10px;
       min-height: 40px;
     }
     &-info{
@@ -193,7 +162,7 @@ export default {
     }
     &-block{
       display: flex;
-      justify-content: space-between;
+      
       align-items: center;
       flex-wrap: wrap;
     }
