@@ -51,7 +51,7 @@ class TestService
     {
         $response = [];
         $response['response'] = [];
-
+        $score = 0;
         $response['status'] = 200;
         if ($user) {
             $result = $this->resultFactory->createBuilder()->buildResult($data['info'] ?? [], $user);
@@ -77,7 +77,14 @@ class TestService
         foreach ($data['question'] ?? [] as $answerData) {
             $question = $this->em->find(Question::class, $answerData["id"]);
             if ($question) {
-                $response['response'][] = $this->questionHandler->handle($answerData, $question);
+                $preparedQuestion = $this->questionHandler->handle($answerData, $question);
+                $response['response'][] = $preparedQuestion;
+
+                //todo начисление очков
+                if($preparedQuestion->getResult()['correct']?? null){
+                    $score++;
+                }
+
                 if ($result) {
                     $content = (isset($this->sessionService->get(QuestionHandler::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(QuestionHandler::SHUFFLED)[$question->getId()] : null);
                     $answer = $this->answerFactory->createBuilder()->buildAnswer($this->questionHandler->getShuffledUserAnswers($question, $answerData['answer'], $content ?? ['variant' => $this->questionHandler->getVariantsToArray($question)]), $question, $result);
@@ -99,6 +106,11 @@ class TestService
                 ];
             }
 
+        }
+        if ($result){
+            $result->setScore($score);
+            $this->em->persist($result);
+            $this->em->flush();
         }
 
         return $response;

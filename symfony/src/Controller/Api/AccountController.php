@@ -40,12 +40,7 @@ class AccountController extends AbstractController
     public function getResult(AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService, Paginator $paginator, ResultRepository $resultRepository): JsonResponse
     {
         $pagination = $paginator->getPagination($resultRepository->findLastUpdatedByUserQuery($this->getUser()), 10);
-        if ($pagination->count() > 0) {
-            foreach ($pagination as $result) {
-                $result->setQuestionCount($result->getAnswers()->count());
-            }
-            $response['results'] = $pagination;
-        }
+        $response['results'] = $pagination;
 
         $response['pagination'] = $paginator->getInfo($pagination);
         return $this->json(

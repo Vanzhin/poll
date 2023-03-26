@@ -156,15 +156,7 @@ class Result
      */
     public function getQuestionCount(): ?int
     {
-        return $this->questionCount;
-    }
-
-    /**
-     * @param int|null $questionCount
-     */
-    public function setQuestionCount(?int $questionCount): void
-    {
-        $this->questionCount = $questionCount;
+        return $this->getAnswers()->count();
     }
 
     public function getMode(): ?string
