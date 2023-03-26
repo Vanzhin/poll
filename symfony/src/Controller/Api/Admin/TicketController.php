@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 class TicketController extends AbstractController
 {
 
-    #[Route('/api/admin/ticket/{id}', name: 'app_api_admin_test_show', methods: 'GET')]
+    #[Route('/api/admin/ticket/{id}', name: 'app_api_admin_ticket_show', methods: 'GET')]
     public function show(Ticket $ticket): JsonResponse
     {
         return $this->json(

@@ -160,7 +160,6 @@ class TestController extends AbstractController
         }
     }
 
-
     #[Route('/api/admin/test/{id}/upload', name: 'app_api_admin_test_upload', methods: 'POST')]
     public function upload(Test              $test,
                            Request           $request,
