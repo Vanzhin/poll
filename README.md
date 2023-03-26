@@ -8,13 +8,16 @@
         - yarn install
     - для подключения Vue ( см ссылку https://symfony.com/doc/current/frontend/encore/vuejs.html)
         - yarn encore dev-server
-    - скомпилировать фронт  командой
+    - скомпилировать фронт командой
         - yarn run dev
     - перейти в контейнер symfony и выполнить миграции командой
         - php bin/console doctrine:migrations:migrate
+      - для тестового заполнения
         - php bin/console doctrine:fixtures:load
-      - посмотреть маршруты
-        - php bin/console debug:router
+      - для тестового заполнения только типов вопросов и пользователей
+        - php bin/console doctrine:fixtures:load --group=prod
+    - посмотреть маршруты
+      - php bin/console debug:router
 
   приложение запускается на https://localhost:8000 
 

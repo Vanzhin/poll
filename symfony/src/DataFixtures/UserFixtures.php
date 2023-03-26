@@ -3,10 +3,11 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserFixtures extends BaseFixtures
+class UserFixtures extends BaseFixtures implements FixtureGroupInterface
 {
 
 
@@ -34,5 +35,10 @@ class UserFixtures extends BaseFixtures
                 ->setPassword($this->hasher->hashPassword($user, '123456789'));
 
         });
+    }
+
+    public static function getGroups(): array
+    {
+        return ['prod'];
     }
 }
