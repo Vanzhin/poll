@@ -60,7 +60,7 @@ class Result
     private ?int $questionCount = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Assert\NotNull(message: 'result.mode.not_null')]
+//    #[Assert\NotNull(message: 'result.mode.not_null')]
     private ?string $mode = null;
 
     public function __construct()
