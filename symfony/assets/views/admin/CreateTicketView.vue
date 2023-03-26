@@ -153,9 +153,14 @@
       if ( this.$route.params.operation === 'edit'){
         await this.getQuestionsTickeetIdDb({id: +this.$route.params.ticketId})
         console.log('getQuestionsTicket -', this.getQuestionsTicket)
-        this.title = this.getTest.title
-        
-
+        this.title = this.$route.params.ticketId
+        this.ticketQuestions = this.getQuestionsTicket.map((question)=>{
+            const num = this.questions.findIndex((item)=>item.id === question.id)
+            this.questions[num].select = true
+            return question.id
+          }
+        )
+        this.numberQuestions = this.ticketQuestions.length
       }
       this.isLoader = false
       

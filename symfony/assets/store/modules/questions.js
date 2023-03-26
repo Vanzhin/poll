@@ -74,8 +74,8 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          console.log("getQuestionsDb - ",  data)
-          commit("SET_QUESTIONS_TICKET", data);
+          console.log("getQuestionsTickeetIdD - ",  data)
+          commit("SET_QUESTIONS_TICKET", data.questions);
         })
     } catch (e) {
         console.log(e);
@@ -142,7 +142,7 @@ const actions = {
   async setResultDb({dispatch, commit, state }, {userAuth} ){
     const token = await dispatch("getAutchUserTokenAction")
     console.log(JSON.stringify(state.resultTicketUser))
-    commit("SET_LOADER_STATUS", true)
+    
     try{
       const config = {
         method: 'post',
@@ -154,28 +154,28 @@ const actions = {
         data:  JSON.stringify(state.resultTicketUser)
       };
       if (userAuth) {
-        console.log('авторизовался')
+        console.log('авторизован')
         config.url = '/api/auth/test/handle'
         config.headers.Authorization = `Bearer ${token}`
       }
-      console.log(config)
-     
+      console.log(config) 
       await axios(config)
         .then(({data})=>{
           console.log("setResultDb - ",  data)
           commit("SET_QUESTIONS_RESULT", data);
-          commit("SET_LOADER_STATUS", false)
         })
         const err = {
           errPrizn: false
         }
        return err
     } catch (e) {
-        const err = {
-          mes: e.response.data.message,
-          errPrizn: true
+        if (e.response.data.message === "Expired JWT Token") {
+          await dispatch('getAuthRefresh')
+          await dispatch('setResultDb', {userAuth})
+        } else {
+          dispatch('setMessageError', e)
         }
-       return err
+        
     }
   },
 
@@ -343,7 +343,7 @@ const mutations = {
     state.questionsImportError = error
   },
   [SET_QUESTIONS_TICKET](state, questions ) {
-    console.log("SET_QUESTIONS_TICKET", error)
+    console.log("SET_QUESTIONS_TICKET", questions)
     state.questionsTicket = questions
   },
 }
