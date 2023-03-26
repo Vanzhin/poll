@@ -36,11 +36,6 @@ class TestController extends AbstractController
             $response['test'] = $pagination;
 
         }
-        foreach ($pagination as $test) {
-            $test->setQuestionCount($repository->getQuestionCount($test));
-            $test->setSectionCount($repository->getSectionCount($test));
-            $test->setTicketCount($repository->getTicketCount($test));
-        }
         $response['pagination'] = $paginator->getInfo($pagination);
         return $this->json(
             $response,
@@ -61,7 +56,7 @@ class TestController extends AbstractController
             200,
             ['charset=utf-8'],
             [
-                'groups' => 'admin',
+                'groups' => 'admin_test_general',
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);

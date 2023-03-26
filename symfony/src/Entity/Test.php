@@ -82,7 +82,7 @@ class Test
 
     public function getQuestionCount(): ?int
     {
-        return $this->questionCount;
+        return $this->getQuestion()->count();
     }
 
     /**
@@ -98,7 +98,7 @@ class Test
      */
     public function getSectionCount(): ?int
     {
-        return $this->sectionCount;
+        return $this->getSection()->count();
     }
 
     /**
@@ -114,7 +114,7 @@ class Test
      */
     public function getTicketCount(): ?int
     {
-        return $this->ticketCount;
+        return $this->getTicket()->count();
     }
 
     /**
