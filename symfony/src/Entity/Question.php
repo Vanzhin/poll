@@ -23,7 +23,18 @@ class Question implements EntityWithImageInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'create', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle', 'result'])]
+    #[Groups([
+        'main',
+        'admin',
+        'create',
+        'admin_section',
+        'admin_ticket',
+        'admin_question',
+        'test',
+        'handle',
+        'result',
+        'admin_section'
+    ])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -61,6 +72,8 @@ class Question implements EntityWithImageInterface
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[ORM\JoinColumn(name:"section_id", referencedColumnName:"id", nullable:true, onDelete:"SET NULL")]
+
     #[Groups(['admin', 'admin_ticket', 'admin_question'])]
     private ?Section $section = null;
 

@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Admin;
 
 use App\Entity\Question;
+use App\Entity\Section;
 use App\Factory\Question\QuestionFactory;
 use App\Repository\QuestionRepository;
 use App\Service\NormalizerService;
@@ -197,6 +198,28 @@ class QuestionController extends AbstractController
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
+    }
 
+    #[Route('/api/admin/question/section/{id}', name: 'app_api_admin_question_section', methods: ['GET'])]
+    public function showAllBySection(Section $section, Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
+    {
+        $pagination = $paginator->getPagination($repository->findLastUpdatedBySectionQuery($section));
+        if ($pagination->count() > 0) {
+            $response['question'] = $pagination;
+
+        }
+        $response['pagination'] = $paginator->getInfo($pagination);
+        return $this->json(
+            $response,
+            200,
+            ['charset=utf-8'],
+            [
+                'groups' => 'admin_question',
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractNormalizer::CALLBACKS => [
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
+                ]
+            ],
+        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 }

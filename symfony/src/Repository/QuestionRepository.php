@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Question;
+use App\Entity\Section;
 use App\Entity\Test;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,7 +47,7 @@ class QuestionRepository extends ServiceEntityRepository
     {
         return $this->getOrCreateQueryBuilder()
             ->andWhere('qu.test = :testId')
-            ->setParameters(['testId'=>$test->getId()])
+            ->setParameters(['testId' => $test->getId()])
             ->setMaxResults($limit)
             ->addSelect('RAND() as HIDDEN rand')
             ->orderBy('rand')
@@ -84,6 +84,14 @@ class QuestionRepository extends ServiceEntityRepository
         return
             $this->lastUpdated($queryBuilder);
     }
+
+    public function findLastUpdatedBySectionQuery(Section $section): QueryBuilder
+    {
+        return $this->lastUpdated()->andWhere('qu.section = :sectionId')
+            ->setParameters(['sectionId' => $section]);
+    }
+
+
 
 //    /**
 //     * @return Question[] Returns an array of Question objects
