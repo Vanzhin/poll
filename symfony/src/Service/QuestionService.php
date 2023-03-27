@@ -103,6 +103,8 @@ class QuestionService
         } else {
             $message = 'Вопрос обновлен';
         }
+        //        todo сделать опцией
+        $data['question']['published'] = true;
         $question = $this->questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $question);
         $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
         $errors = $questionErrors;
@@ -217,6 +219,21 @@ class QuestionService
         $info['message'] = 'Загружено ' . count($questions) . ' вопросов(а)';
         return $info;
 
+    }
+
+    public function makePublish(array $questionIds): array
+    {
+        $response = [];
+        foreach($questionIds as $id){
+            $question = $this->em->find(Question::class,$id);
+            if ($question){
+                $question->setPublishedAt(new \DateTime('now'));
+                $this->em->persist($question);
+                $response[]=$question->getId();
+            }
+        };
+        $this->em->flush();
+        return $response;
     }
 
 

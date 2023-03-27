@@ -68,6 +68,8 @@ class QuestionController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('questionImage');
+//        todo сделать опцией
+        $data['question']['published'] = true;
         $question = $factory->createBuilder()->buildQuestion($data['question']);
         $errors = $validation->entityWithImageValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
@@ -90,6 +92,9 @@ class QuestionController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('questionImage', false);
+//        todo сделать опцией
+        $data['question']['published'] = true;
+
         $question = $factory->createBuilder()->buildQuestion($data['question'], $question);
         $errors = $validation->entityWithImageValidate($question, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {
@@ -170,5 +175,28 @@ class QuestionController extends AbstractController
             ['charset=utf-8'],
             ['groups' => 'create',]
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
+
+    #[Route('/api/admin/question/publish', name: 'app_api_admin_question_publish', methods: 'POST')]
+    public function publish(Request $request, QuestionService $questionService): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $questionIds = key_exists('questionIds', $data) ? $data['questionIds'] : [];
+        try {
+            $published = $questionService->makePublish($questionIds);
+            $response = [
+                'message' => sprintf('Опубликовано %d вопросов(а).', count($published))
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+
     }
 }
