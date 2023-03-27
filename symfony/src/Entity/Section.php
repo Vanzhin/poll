@@ -7,10 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SectionRepository::class)]
+#[UniqueEntity(['title', 'test'], 'section.title.already_exist')]
+#[ORM\UniqueConstraint('title_test_idx', ['title', 'test_id'])]
 class Section
 {
     use TimestampableEntity;
@@ -18,11 +21,14 @@ class Section
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question'])]
+    #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question', 'admin_test_section'])]
     private ?int $id = null;
 
-    #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question'])]
+    #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question', 'admin_test_section'])]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'section.title.not_blank'
+    )]
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'section', targetEntity: Question::class)]
@@ -31,7 +37,22 @@ class Section
 
     #[ORM\ManyToOne(inversedBy: 'section')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(
+        message: 'section.test.not_null'
+    )]
     private ?Test $test = null;
+
+    #[Groups(['admin_test_section'])]
+    private ?int $questionCount = null;
+
+    /**
+     * @return int|null
+     */
+    #[Groups(['admin_test_section'])]
+    public function getQuestionCount(): ?int
+    {
+        return $this->getQuestions()->count();
+    }
 
     public function __construct()
     {

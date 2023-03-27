@@ -2,12 +2,9 @@
 
 namespace App\Controller\Api\Admin;
 
-use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Factory\Ticket\TicketFactory;
-use App\Repository\TicketRepository;
 use App\Service\TicketService;
-use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,20 +37,6 @@ class TicketController extends AbstractController
         $response = $ticketService->saveIfValid($ticket);
         return $this->json($response['response'],
             $response['status'],
-            ['charset=utf-8'],
-        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     */
-    #[Route('/api/admin/ticket/test/{id}/get_last_title', name: 'app_api_admin_ticket_get_last_title', methods: 'GET')]
-    public function getLastTitleByTest(Test $test, TicketRepository $repository): JsonResponse
-    {
-        $ticket = $repository->findLastTitleByTest($test);
-
-        return $this->json($ticket,
-            200,
             ['charset=utf-8'],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
