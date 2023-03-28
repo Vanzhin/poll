@@ -222,9 +222,19 @@ class QuestionHandler
                     "variant" => $variants
                 ];
             }
-
         }
         return $response;
+    }
+    public function isAnswerCorrect(Question $question, array $answerContent): bool
+    {
+        $correct = false;
+
+
+        if ($question->getAnswer() === $question->getAnswer()) {
+            $correct = true;
+        };
+
+        return $correct;
     }
 
 

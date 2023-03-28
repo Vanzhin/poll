@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Answer;
+use App\Entity\Result;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +40,37 @@ class AnswerRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    private function latest(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('an.createdAt', 'DESC');
+
+    }
+
+    private function lastUpdated(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('an.updatedAt', 'DESC');
+
+    }
+
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('an');
+    }
+
+    public function findAllByResult(Result $result): mixed
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('an.result = :result')
+            ->setParameters(['result' => $result])
+            ->join('an.question', 'qu')
+            ->addSelect('qu')
+            ->join('qu.variant', 'va')
+            ->addSelect('va')
+            ->getQuery()
+            ->getResult();
+
     }
 
 //    /**

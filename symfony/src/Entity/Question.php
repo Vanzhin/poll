@@ -33,7 +33,8 @@ class Question implements EntityWithImageInterface
         'test',
         'handle',
         'result',
-        'admin_section'
+        'admin_section',
+        'result_answer'
     ])]
     private ?int $id = null;
 
@@ -41,7 +42,7 @@ class Question implements EntityWithImageInterface
     #[Assert\NotBlank(
         message: 'question.title.not_blank'
     )]
-    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
     private ?string $title = null;
 
 //    #[ORM\Column]
@@ -52,7 +53,7 @@ class Question implements EntityWithImageInterface
     #[Assert\NotNull(
         message: 'question.type.invalid'
     )]
-    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
     private ?Type $type = null;
 
     #[ORM\ManyToMany(targetEntity: Ticket::class, mappedBy: 'question')]
@@ -63,17 +64,16 @@ class Question implements EntityWithImageInterface
     private Collection $answers;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
-    #[Groups(['main', 'admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
     #[ORM\OrderBy(["correct" => "ASC"])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result'])]
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
-    #[ORM\JoinColumn(name:"section_id", referencedColumnName:"id", nullable:true, onDelete:"SET NULL")]
-
+    #[ORM\JoinColumn(name: "section_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
     #[Groups(['admin', 'admin_ticket', 'admin_question'])]
     private ?Section $section = null;
 
@@ -90,7 +90,7 @@ class Question implements EntityWithImageInterface
     #[Groups(['admin_question'])]
     private ?\DateTimeInterface $publishedAt = null;
 
-    #[Groups(['handle'])]
+    #[Groups(['handle', 'result', 'result_answer'])]
     private ?array $result = null;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, orphanRemoval: true)]
@@ -143,8 +143,11 @@ class Question implements EntityWithImageInterface
         $answer = [];
 
         switch ($this->getType()->getTitle()) {
-            case 'radio':
             case 'input_one':
+                $answer[] = $this->getVariant()->first()->getId();
+                break;
+
+            case 'radio':
             case 'checkbox':
                 foreach ($this->getVariant() as $variant) {
                     if (!is_null($variant->getCorrect())) {
