@@ -184,13 +184,13 @@ class TestController extends AbstractController
                 $data['test'] = $test->getId();
                 $question = $questionFactory->createBuilder()->buildQuestion($data);
                 if ($validation->entityWithImageValidate($question)) {
-                    $total['error'][$key]['question'] = $validation->entityWithImageValidate($question);
-                    $total['error'][$key]['question']['question'] = $data;
+                    $total['error'][$key]['type'][] = implode(',', $validation->entityWithImageValidate($question));
+                    $total['error'][$key]['question'] = $data;
 
                 }
                 if ($validation->manyVariantsValidate($data)) {
-                    $total['error'][$key]['variant'] = $validation->manyVariantsValidate($data);
-                    $total['error'][$key]['variant']['question'] = $data;
+                    $total['error'][$key]['type'][] = implode(',', $validation->manyVariantsValidate($data));
+                    $total['error'][$key]['question'] = $data;
                 }
 
             }
