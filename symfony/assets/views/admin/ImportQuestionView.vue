@@ -15,10 +15,12 @@
             <select  name="hero" v-model="selectedId">
               <option disabled>Выберите тест</option>
               <option 
-              v-for="(item, index) in getTests"
-              :value="item.id" 
+                v-for="(item, index) in getTests"
+                :value="item.id" 
               >{{item.title}}</option>
             </select>
+
+            {{ selectedId }}
           </div>
           <label class="label">Выберите файл для импорта</label>
           <br>
@@ -43,34 +45,39 @@
       <div class="row"
         v-if="getQuestionsImportError"
       >
-      <br/>
-      <hr><br/>
-      <h5>При импорте обнаруженны ошибки в следующих вопросах:</h5>
-      <div 
-        v-for="(item, index) in getQuestionsImportError"
-        class="question-item"
-      >
-      <ul>
-        <li>
-          <div>
+        <br/>
+        <hr><br/>
+        <h5>При импорте обнаруженны ошибки в следующих вопросах:</h5>
+        <div 
+          v-for="(item, index) in getQuestionsImportError"
+          class="question-item"
+        >
+          <ul>
+            <li>
+              <div>
 
-            <h6 >{{item.variant['0']}}!</h6>
-            <p>Вопрос: {{ item.variant.question.title}}</p>
-            <div
-              v-if="item.variant.question.variant"
-              class="question-item-variant"
-            >
-              Варинты ответов:
-              <li
-                v-for="(variant, index) in item.variant.question.variant"
-              >
-                {{ variant.title }}
-              </li>
-            </div>
-          </div>
-        </li>
-        </ul>
-      </div>
+                <h6 
+                  v-if="typeof item.type === 'object'"
+                  v-for="(type) in item.type"
+
+                >{{type}}!</h6>
+                <h6 v-else>{{item.type}}!</h6>
+                <p>Вопрос: {{ item.question.title}}</p>
+                <div
+                  v-if="item.question.variant"
+                  class="question-item-variant"
+                >
+                  Варинты ответов:
+                  <li
+                    v-for="(variant, index) in item.question.variant"
+                  >
+                    {{ variant.title }}
+                  </li>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -116,7 +123,21 @@
           return
         }
         const testFile = e.target
-        await this.importQuestionsFileDb({id: this.$route.params.id, testFile})
+        let testId = ''
+        if (this.$route.params.id) {
+          testId = this.$route.params.id
+        } else if (!this.selectedId) {
+          const message = {
+            error: true, 
+            message: 'Укажите тест для импорта'
+          }
+            this.setMessage(message)
+          return
+        } else {
+          testId = this.selectedId
+        }
+         
+        await this.importQuestionsFileDb({id: testId, testFile})
         this.message = !this.getMessage.err
         // this.testFileDelete()
         let timerId = setInterval(() => {
@@ -127,7 +148,7 @@
             {
               this.$router.push({
                 name: 'adminTestQuestions', 
-                params: {id:  this.$route.params.id} 
+                params: {id:  this.selectedId} 
               })
             }
           }
