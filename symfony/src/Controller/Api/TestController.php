@@ -123,6 +123,7 @@ class TestController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $response = $testService->handle($data, $this->getUser());
+
         return $this->json($response['response'],
             $response['status'],
             ['charset=utf-8'],

@@ -2,6 +2,10 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Answer;
+use App\Entity\Question;
+use App\Entity\Result;
+use App\Repository\AnswerRepository;
 use App\Repository\ResultRepository;
 use App\Service\NormalizerService;
 use App\Service\Paginator;
@@ -40,8 +44,8 @@ class AccountController extends AbstractController
     public function getResult(AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService, Paginator $paginator, ResultRepository $resultRepository): JsonResponse
     {
         $pagination = $paginator->getPagination($resultRepository->findLastUpdatedByUserQuery($this->getUser()), 10);
-        $response['results'] = $pagination;
 
+        $response['results'] = $pagination;
         $response['pagination'] = $paginator->getInfo($pagination);
         return $this->json(
             $response,
@@ -55,6 +59,39 @@ class AccountController extends AbstractController
                 ]
             ],
         );
-
     }
+
+    #[Route('/api/auth/result/{id}/answer', name: 'app_api_auth_result_answer')]
+    public function getAnswersByResult(Result $result, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService, AnswerRepository $answerRepository): JsonResponse
+    {
+//        todo добавить ограничения если не админ или не результат пользователя
+        $answers = $answerRepository->findAllByResult($result);
+        /** @var Answer $answer */
+        foreach ($answers as $answer) {
+
+            /** @var Question $question */
+            $question = $answer->getQuestion();
+
+            $question->setResult([
+                    "user_answer" => $answer->getContent(),
+                    "true_answer" => $question->getAnswer(),
+                    "correct" => $answer->getCorrect(),
+                ]
+            );
+        }
+
+        return $this->json(
+            $answers,
+            200,
+            ['charset=utf-8'],
+            [
+                'groups' => 'result_answer',
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractNormalizer::CALLBACKS => [
+                    'image' => $normalizerService->imageCallback($upLoadedAsset),
+                ]
+            ],
+        );
+    }
+
 }

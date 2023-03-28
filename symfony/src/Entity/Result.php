@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Enum\Mode;
 use App\Repository\ResultRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -58,6 +57,9 @@ class Result
 
     #[Groups(['result'])]
     private ?int $questionCount = null;
+
+    #[Groups(['result'])]
+    private ?int $correctQuestionCount = null;
 
     #[ORM\Column(length: 100, nullable: true)]
 //    #[Assert\NotNull(message: 'result.mode.not_null')]
@@ -170,5 +172,15 @@ class Result
         $this->mode = $mode;
 
         return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCorrectQuestionCount(): ?int
+    {
+        return $this->getAnswers()->filter(function (Answer $answer) {
+            return $answer->getCorrect();
+        })->count();
     }
 }

@@ -72,8 +72,7 @@ class ResultRepository extends ServiceEntityRepository
             ->join('te.category', 'ca')
             ->addSelect('ca')
             ->leftJoin('re.ticket', 'ti')
-            ->addSelect('ti')
-            ;
+            ->addSelect('ti');
 
     }
 

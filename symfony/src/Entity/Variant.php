@@ -25,7 +25,7 @@ class Variant implements EntityWithImageInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'admin_question'])]
+    #[Groups(['main', 'admin', 'admin_question', 'result'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 700)]
@@ -36,7 +36,7 @@ class Variant implements EntityWithImageInterface
         max: 700,
         maxMessage: 'variant.title.max_length'
     )]
-    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
@@ -54,7 +54,7 @@ class Variant implements EntityWithImageInterface
     private ?Question $question = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result'])]
     private ?string $image = null;
 
     private bool|null $isCorrect = null;
