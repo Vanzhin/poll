@@ -45,16 +45,24 @@
           <i class="bi bi-trash3"></i>
         </div>
         <div class="btn btn-outline-primary btn-center"
+          :class="{published: !question.publishedAt}"
           title="Утвердить"
-          @click.stop="addQuestion"
+          @click.stop="approveQuestion"
+          v-if="!question.publishedAt"
         >
           <i class="bi bi-file-check"></i>
         </div>
       </div>
+      <div class="info"
+        v-if="!question.publishedAt"
+      >
+        корректность вопроса необходимо подтвердить
+
+      </div>
     </div>
   </div>
 </template>
-<!-- conformity -->
+<!--  published-->
 <script>
 import TestQuestionRadio from './AdminTestQuestion/TestQuestionRadio.vue'
 import TestQuestionCheckbox from './AdminTestQuestion/TestQuestionCheckbox.vue'
@@ -92,6 +100,7 @@ export default {
       "deleteQuestionDb", 
       "setQuestion",
       "setConfirmMessage",
+      "approveQuestionDb",
     ]),
     questionType(question){
       return question.title ? question.title : question
@@ -129,6 +138,10 @@ export default {
           operation: 'edit'
         }
       })
+    },
+    async approveQuestion(){
+      await this.approveQuestionDb({questionSend: [this.question.id]})
+      this.question.publishedAt = true
     }
   },
   async created(){
@@ -175,6 +188,19 @@ export default {
   }  
   .cont-question{
     position: relative;
+  }
+  .published{
+    background-color: rgb(167, 72, 69);
+    &:hover{
+      background-color: rgb(168, 108, 106);
+    }
+  }
+  .info{
+    display: inline-flex;
+    background-color: rgb(167, 72, 69);
+    margin-left: 20px;
+    color: aliceblue;
+    padding: 0 5px;
   }
 @media (min-width: 1024px) {
  

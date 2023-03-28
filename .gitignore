@@ -5,3 +5,6 @@
 docker/nginx/nginx_log/
 symfony/public/.htaccess
 symfony/.env
+symfony/.env copy.local
+symfony/vendor.zip
+symfony/yarn.zip

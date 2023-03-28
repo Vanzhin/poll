@@ -1,13 +1,17 @@
 import { 
   SET_TICKET_TITLE,
-  SET_TICKETS
+  SET_TICKETS,
+  SET_TICKET
  } from './mutation-types.js'
  import axios from 'axios';
 
 const state = () => ({
   tickets: [],
   question:{},
-  ticketTitle: ''
+  title: localStorage.getItem('ticketTitle') ?
+  localStorage.getItem('ticketTitle'):"",
+  ticket: localStorage.getItem('ticket') ?
+  JSON.parse(localStorage.getItem('ticket')):"",
 })
 
 const actions = {
@@ -126,6 +130,9 @@ const actions = {
   },
   setTicketTitle ({dispatch, commit}, title) {
     commit("SET_TICKET_TITLE", title)
+  },
+  saveSelectTicketStore({dispatch, commit},{ticket}){
+    commit("SET_TICKET", ticket)
   }
 };
 
@@ -144,7 +151,11 @@ const getters = {
       return +ticket.id === +id}) 
   },
   getTicketTitle(state) {
+    console.log(state.title)
     return state.title
+  },
+  getTicket(state) {
+    return state.ticket
   },
 }
 
@@ -154,7 +165,14 @@ const mutations = {
     state.tickets = tickets
   },
   [SET_TICKET_TITLE] (state, title){
+    
+    localStorage.setItem('ticketTitle',title);
     state.title = title
+  }, 
+  [SET_TICKET] (state, ticket){
+    const parsed = JSON.stringify(ticket)
+    localStorage.setItem('ticket', parsed);
+    state.ticket = ticket
   },
 }
 export default {

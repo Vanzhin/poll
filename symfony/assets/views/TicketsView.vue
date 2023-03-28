@@ -8,6 +8,14 @@
     </div>
     <div class="container">
       <div class="row text-center">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12"> 
+          <div class="card flex-shrink-1 shadow">
+            <RouterLink :to="{ name: 'ticket', params: { id: 'rndmax' } }" class="py-2 link">
+              Тестирование по всем вопросам
+            </RouterLink>
+            
+          </div>
+        </div>
         <div class="col-6 col-sm-6 col-md-6 col-lg-6"> 
           <div class="card flex-shrink-1 shadow">
             <RouterLink :to="{ name: 'ticket', params: { id: 'rndb' } }" class="py-2 link">
@@ -42,7 +50,9 @@
           :key="ticket.id"
         > 
           <div class="card flex-shrink-1 shadow">
-            <RouterLink :to="{ name: 'ticket', params: { id: ticket.id } }" class="py-2 link">
+            <RouterLink :to="{ name: 'ticket', params: { id: ticket.id } }" class="py-2 link"
+            @click="saveSelectTicket({ticket})"
+            >
               Билет № {{ ticket.title }}
             </RouterLink>
           </div>
@@ -75,7 +85,10 @@ export default {
       },
     },
     methods: {
-     ...mapActions(["selectTestId","getTicketsTestIdNoAuthDb"])
+     ...mapActions(["selectTestId","getTicketsTestIdNoAuthDb","saveSelectTicketStore"]),
+     saveSelectTicket({ticket}){
+      this.saveSelectTicketStore({ticket})
+     }
     },
     mounted(){
       // this.$store.dispatch('setTestTitle',{id : this.$route.params.id})

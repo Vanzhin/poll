@@ -40,9 +40,14 @@ const actions = {
       const i = Math.floor(Math.random() * (30 - 1) )
       console.log("i - ",  i)
       url = `/api/test/${slug}/question/${i}`
+    } else if (id === "rndmax"){
+      const i = await dispatch("getCountQuestionsTest")
+      console.log("i rndmax - ",  i)
+      url = `/api/test/${slug}/question/${i}`
     } else {
       url = `/api/ticket/${id}/question`
     }
+    //getCountQuestionsTest
     try{
       const config = {
         method: 'get',
@@ -179,14 +184,14 @@ const actions = {
     }
   },
 
-  //сохранение нового вопроса в базу
+  //сохранение нового вопроса в базу. если передается id - вносятся изменения
   async saveQuestionDb({ dispatch, commit, state }, {questionSend, id = null} ){
     console.dir(questionSend)
-    dispatch("setIsLoaderStatus", {status: true})
+    // dispatch("setIsLoaderStatus", {status: true})
     const token = await dispatch("getAutchUserTokenAction")
     try{
-      const data = new FormData(questionSend);
-      for(let [name, value] of data) {
+      // const data = new FormData(questionSend);
+      for(let [name, value] of questionSend) {
         console.dir(`${name} = ${value}`)
       }
       const config = {
@@ -196,7 +201,7 @@ const actions = {
           Accept: 'application/json', 
           Authorization: `Bearer ${token}`
         },
-        data:  data
+        data:  questionSend
       };
       if (id) {
         config.url = `/api/admin/question/${id}/edit_with_variant`
@@ -212,6 +217,38 @@ const actions = {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('saveQuestionDb', {id, questionSend})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  //утверждение вопроса
+  async approveQuestionDb({ dispatch, commit, state }, {questionSend} ){
+    console.log(questionSend)
+    const token = await dispatch("getAutchUserTokenAction")
+    try{
+      const config = {
+        method: 'post',
+        url: `/api/admin/question/publish`,
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        data:  JSON.stringify({"questionIds": questionSend})
+      };
+      
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("saveQuestionDb - ",  data)
+          // dispatch("setIsLoaderStatus", {status: false})
+          dispatch('setMessage', data)
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('approveQuestionDb', {questionSend})
       } else {
         dispatch('setMessageError', e)
       }

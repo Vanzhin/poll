@@ -27,7 +27,7 @@
         </div>
         <label class="label"><b>Описание действий:</b> </label>
         <div class="custom-radio img_block">  
-          <textarea rows="1" required
+          <textarea rows="1" 
             name="description"
             v-model= "description"
             class="textarea_input" 

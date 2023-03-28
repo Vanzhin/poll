@@ -1,6 +1,9 @@
 <template>
   
   <div class="block">
+    <CloseVue
+      :toLink="{name: 'adminTestTickets', params: {id: $route.params.testId }  }"
+    />
     <div class="title">
       <h2>Форма редактирования билетов</h2>
     </div>
@@ -56,10 +59,13 @@
  
 <script>
   import Loader from '../../components/ui/LoaderView.vue'
+  import CloseVue from '../../components/ui/Close.vue'
+  import { RouterLink } from 'vue-router'
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
+      CloseVue
     },
     data() {
       return {
@@ -143,7 +149,7 @@
     async created() {
       this.isLoader = true
       this.testId = this.$route.params.testId
-      await this.getQuestionsTestIdDb({id: this.testId, limit: 100})
+      await this.getQuestionsTestIdDb({id: this.testId, limit: 1000})
       this.questions = [...this.getQuestions]
 
       this.testId = this.$route.params.testId
@@ -156,7 +162,9 @@
         this.title = this.$route.params.ticketId
         this.ticketQuestions = this.getQuestionsTicket.map((question)=>{
             const num = this.questions.findIndex((item)=>item.id === question.id)
-            this.questions[num].select = true
+            console.log(num)
+            console.log(this.questions[num])
+            if (num > 0) {this.questions[num].select = true}
             return question.id
           }
         )

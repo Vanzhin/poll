@@ -4,7 +4,7 @@
       <h1>Результат:</h1>  
       <h2> {{ getTestTitleActive }}</h2>
       <div class="test">
-        <p>Билет №: {{ getTicketTitle }}</p>  
+        <p > {{ getTicketTitle  }}</p>  
       </div>
     </div>
   

@@ -58,13 +58,13 @@ export default {
       })]
     },
  },
+
   async created(){
     console.log('this.getTest - ', this.$route.params.id)
     console.log(this.$route)
-    //  this.getTestIdDb({id: +this.$route.params.id})
-    const url = this.$route.path
-   
     
+    await this.getTestIdDb({id: +this.$route.params.id})
+    const url = this.$route.path
     this.navs = [
         {
           title: `Вопросы `,

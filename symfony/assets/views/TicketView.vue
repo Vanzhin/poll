@@ -85,7 +85,8 @@ export default {
       rnd: {
         rnd:"Случайный набор вопросов",
         rnd20:"Случайный набор из 20 вопросов",
-        rnd20t:"Случайный набор из 20 вопросов на время"
+        rnd20t:"Случайный набор из 20 вопросов на время",
+        rndmax:"Режим тотальной проверки знаний"
       },
       info:{
         ticket:'',
@@ -100,6 +101,7 @@ export default {
       "getRandomTicket", 
       "getSelectTicket", 
       "getTestId",
+      "getTicket"
       
     ]),
     testName() {
@@ -151,9 +153,9 @@ export default {
       this.info.mode = this.ticketId
       this.setTicketTitle(this.rnd[this.ticketId])
     } else {
-      this.ticketTitle ='Билет № ' + this.getSelectTicket(+this.ticketId).title
+      this.ticketTitle ='Билет № ' + this.getTicket.title
       this.info.ticket = +this.ticketId
-      this.setTicketTitle(+this.ticketId) 
+      this.setTicketTitle(this.ticketTitle) 
     }
     this.info.test= this.getTestId
     

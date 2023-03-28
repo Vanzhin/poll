@@ -18,6 +18,20 @@
         >
           <i class="bi bi-plus create-plus"></i>
         </div>
+        <div class="btn btn-outline-primary btn-center"
+              title="Импортировать вопросы из файла"
+              @click.stop="importQuestionsFile"
+            >
+              <i class="bi bi-cloud-arrow-down"></i>
+            </div>
+        <div class="btn btn-outline-primary btn-center"
+          :class="{published: questionsPublished.length > 0}"
+          title="Утвердить все вопросы"
+          @click.stop="approveQuestions"
+          v-if="questionsPublished.length > 0"
+        >
+          <i class="bi bi-file-check"></i>
+        </div>
       </div>
     </div>
     
@@ -81,22 +95,32 @@ export default {
       "getTest",
       "getActivePage",
       "getTotalItemsPage",
-      "getTotalItem"
+      "getTotalItem",
+      
     ]),
     testName () {
       return this.$store.getters.getTestTitleActive
     },
     questions () {
       return this.$store.getters.getQuestions
+    },
+    questionsPublished(){
+      let publishedAt = []
+      if (!this.questions) { return []}
+      this.questions.forEach((question)=>{
+        if (!question.publishedAt) {
+          publishedAt.push( question.id)}
+      })
+      console.log(publishedAt)
+      return publishedAt
     }
   },
    methods: {
-    ...mapActions(["getQuestionsTestIdDb", ]),
+    ...mapActions(["getQuestionsTestIdDb", "approveQuestionDb"]),
     numQuestion(index){
       return index + (this.getActivePage - 1) * this.getTotalItemsPage
     },
     addQuestion(){
-     
       this.$router.push({
         name: 'adminQuestionsCreate', 
         params: {
@@ -105,10 +129,20 @@ export default {
           operation: "create"
         }
       })
+    },
+    async approveQuestions(){
+      this.isLoader = true
+      await this.approveQuestionDb({questionSend: this.questionsPublished})
+      await this.getQuestionsTestIdDb({id: this.testId})
+      this.isLoader = false
+    },
+    importQuestionsFile(){
+      this.$router.push({name: 'adminImportId',  params: {id: this.$route.params.id}})
     }
   },
   async created(){
     await this.getQuestionsTestIdDb({id: this.testId})
+    
     this.isLoader = false
   },
  
@@ -150,6 +184,12 @@ export default {
     display: flex;
     align-items: center;
   }  
+  .published{
+    background-color: rgb(167, 72, 69);
+    &:hover{
+      background-color: rgb(168, 108, 106);
+    }
+  }
 @media (min-width: 1024px) {
  
 }
