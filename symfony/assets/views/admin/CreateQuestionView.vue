@@ -148,8 +148,8 @@
           this.setMessageUser(message)
           return
         }
-        const questionSend = e.target
-       
+        const questionSend = new FormData(e.target);
+        
         if ( this.operation === 'edit'){
           await this.saveQuestionDb({questionSend, token: this.getAutchUserToken, id:+this.questionId})
         } else if ( this.operation === 'create'){

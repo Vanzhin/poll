@@ -126,7 +126,7 @@
             if (this.message)
             {
               this.$router.push({
-                name: 'adminTest', 
+                name: 'adminTestQuestions', 
                 params: {id:  this.$route.params.id} 
               })
             }

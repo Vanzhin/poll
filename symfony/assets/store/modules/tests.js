@@ -185,6 +185,9 @@ const actions = {
       }
     }
   },
+  getCountQuestionsTest({state}) {
+    return state.test.questionCount ?? 1
+  },
 };
 
 const getters = {
