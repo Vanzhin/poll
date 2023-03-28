@@ -61,6 +61,7 @@ class Result
 
     #[ORM\Column(length: 100, nullable: true)]
 //    #[Assert\NotNull(message: 'result.mode.not_null')]
+    #[Groups(['result'])]
     private ?string $mode = null;
 
     public function __construct()

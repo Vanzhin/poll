@@ -60,8 +60,21 @@ class ResultRepository extends ServiceEntityRepository
 
     public function findLastUpdatedByUserQuery(User $user): QueryBuilder
     {
-        return $this->lastUpdated()->andWhere('re.user = :user')
-            ->setParameters(['user' => $user]);
+        return $this->lastUpdated()
+            ->andWhere('re.user = :user')
+            ->setParameters(['user' => $user])
+            ->join('re.answers', 'an')
+            ->addSelect('an')
+            ->join('an.question', 'qu')
+            ->addSelect('qu')
+            ->join('re.test', 'te')
+            ->addSelect('te')
+            ->join('te.category', 'ca')
+            ->addSelect('ca')
+            ->leftJoin('re.ticket', 'ti')
+            ->addSelect('ti')
+            ;
+
     }
 
 
