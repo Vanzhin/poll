@@ -140,9 +140,8 @@ export default {
       })
     },
     async approveQuestion(){
-      let questionSend = new FormData();
-      questionSend.append("publishedAt", "trye")
-      await this.approveQuestionDb({questionSend, id: this.question.id})
+      await this.approveQuestionDb({questionSend: [this.question.id]})
+      this.question.publishedAt = true
     }
   },
   async created(){

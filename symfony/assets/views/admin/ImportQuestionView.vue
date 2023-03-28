@@ -111,7 +111,13 @@
     },
    
     methods: { 
-      ...mapActions(["importQuestionsFileDb", "setMessage", "getTestsDB", "setQuestionsImportError"]),
+      ...mapActions([
+        "importQuestionsFileDb", 
+        "setMessage", 
+        "getTestsDB", 
+        "setQuestionsImportError",
+        
+      ]),
       ...mapMutations([]),
       async onSubmit(e){
         if (!this.testValue) {
@@ -148,7 +154,7 @@
             {
               this.$router.push({
                 name: 'adminTestQuestions', 
-                params: {id:  this.selectedId} 
+                params: {id:  this.$route.params.id} 
               })
             }
           }
@@ -171,7 +177,7 @@
       console.log(this.$route)
       console.log(this.parentId)
       // if (!(this.getMessage.length > 0)){
-      //   await this.getTestsDB({}) 
+        await this.getTestsDB({limitMax:true}) 
       // }       
       
     },

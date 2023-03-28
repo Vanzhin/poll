@@ -19,6 +19,9 @@ const actions = {
     console.log("pagination -", pagination)
     commit("SET_PAGINATION",pagination);
   },
+  getTotalItemAction({state}) {
+    return state.totalItem 
+  },
 };
 
 const getters = {

@@ -63,7 +63,7 @@ export default {
     console.log('this.getTest - ', this.$route.params.id)
     console.log(this.$route)
     
-    this.getTestIdDb({id: +this.$route.params.id})
+    await this.getTestIdDb({id: +this.$route.params.id})
     const url = this.$route.path
     this.navs = [
         {

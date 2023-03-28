@@ -17,11 +17,11 @@ const state = () => ({
 
 const actions = {
   //запрос на получение всех тестов 
-  async getTestsDB({dispatch ,commit}, {page = null}){
+  async getTestsDB({dispatch ,commit}, {page = null, limit = 10, limitMax = false}){
     const token = await dispatch("getAutchUserTokenAction")
     const config = {
       method: 'get',
-      url: `/api/admin/test?limit=10`,
+      url: `/api/admin/test?limit=${limit}`,
       headers: { 
         Accept: 'application/json', 
         Authorization: `Bearer ${token}`
@@ -36,11 +36,16 @@ const actions = {
           console.log("getTestsDb - ",  data)
           dispatch("setTests", data.test)
           dispatch("setPagination", data.pagination);
+
         })
+      if (limitMax) {
+        const limit = await dispatch('getTotalItemAction')
+        await dispatch('getTestsDB', { limit })
+      }
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
-        await dispatch('getTestsDB', {page})
+        await dispatch('getTestsDB', {page, limit, limitMax})
       } else {
         dispatch('setMessageError', e)
       }

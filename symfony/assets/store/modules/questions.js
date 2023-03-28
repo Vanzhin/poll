@@ -223,36 +223,32 @@ const actions = {
     }
   },
   //утверждение вопроса
-  async approveQuestionDb({ dispatch, commit, state }, {questionSend, id = null} ){
-    console.dir(questionSend)
-    
+  async approveQuestionDb({ dispatch, commit, state }, {questionSend} ){
+    console.log(questionSend)
     const token = await dispatch("getAutchUserTokenAction")
     try{
-      
-      for(let [name, value] of questionSend) {
-        console.dir(`${name} = ${value}`)
-      }
       const config = {
         method: 'post',
-        url: `/api/admin/question/${id}/edit`,
+        url: `/api/admin/question/publish`,
         headers: { 
           Accept: 'application/json', 
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        data:  questionSend
+        data:  JSON.stringify({"questionIds": questionSend})
       };
       
       console.log(config)
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
-          dispatch("setIsLoaderStatus", {status: false})
+          // dispatch("setIsLoaderStatus", {status: false})
           dispatch('setMessage', data)
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
-        await dispatch('approveQuestionDb', {id, questionSend})
+        await dispatch('approveQuestionDb', {questionSend})
       } else {
         dispatch('setMessageError', e)
       }
