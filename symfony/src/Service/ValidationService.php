@@ -220,6 +220,11 @@ class ValidationService
             $errors[] = 'Название вариантов не может быть одинаковым';
         }
 
+        if(count($variantTitles)===0){
+            $errors[] = 'Нет соответствующих вариантов ответа';
+
+        }
+
         if (count($errors) === 0) {
             return null;
         }
