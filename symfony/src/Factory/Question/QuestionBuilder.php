@@ -30,13 +30,6 @@ class QuestionBuilder
                 continue;
 
             };
-//            if ($key === 'answer' && $question->getType()) {
-//                if (in_array($question->getType()->getTitle(), ['input_one', 'input_many'])) {
-//                    $question->setAnswer($item);
-//                }
-//                continue;
-//
-//            };
             if ($key === 'ticket') {
                 foreach ($question->getTickets() as $ticket) {
                     $question->removeTicket($ticket);
@@ -51,11 +44,6 @@ class QuestionBuilder
                 continue;
 
             }
-//            if ($key === 'subTitle') {
-//                $question->setSubTitle(array_values($item));
-//                continue;
-//
-//            }
             if ($key === 'section') {
                 $question->setSection($this->em->getRepository(Section::class)->find($item));
                 continue;
