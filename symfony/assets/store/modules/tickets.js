@@ -27,7 +27,7 @@ const actions = {
           Authorization: `Bearer ${token}`
         }
       };
-      if (page) {config.url = config.url + `?page=${page}`}
+      if (page) {config.url = config.url + `&page=${page}`}
       await axios(config)
         .then(({data})=>{
           console.log("getTicketsTestIdDb - ",  data)
@@ -75,7 +75,7 @@ const actions = {
       }
     }
   },
-  async createTicket({dispatch, commit}, {id, ticket}){
+  async createTicket({dispatch, commit}, {id, ticket, operation}){
     console.log("id - ",  id)
     const token = await dispatch("getAutchUserTokenAction")
     try{
@@ -89,6 +89,9 @@ const actions = {
         },
         data: ticket
       };
+      if (operation === 'edit') {
+        config.url = `/api/admin/ticket/${id}/edit`
+      }
       console.log(config)
       await axios(config)
         .then(({data})=>{
@@ -98,12 +101,13 @@ const actions = {
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
-        await dispatch('deleteTicketIdDb', {id, page, limit})
+        await dispatch('createTicket', {id, ticket, operation})
       } else {
         dispatch('setMessageError', e)
       }
     }
   },
+  
   async getTicketsTestIdNoAuthDb({dispatch, commit}, {id}){
     console.log("id - ",  id)
     try{

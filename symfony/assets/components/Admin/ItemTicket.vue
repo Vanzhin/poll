@@ -74,15 +74,23 @@ export default {
     ...mapActions([
       "deleteTicketIdDb", 
       "setConfirmMessage",
-      "getTestId"
+      "getTestId",
+      "saveSelectTicketStore"
     ]),
     
     childToggle(){
-      
       this.childVisible = !this.childVisible
     },
     editTicket(){
-      this.$router.push({name: 'adminTicketCreate', params: {operation:"edit" ,testId: this.$route.params.id , ticketId: this.ticket.id } })
+      this.saveSelectTicketStore({ticket: this.ticket})
+      this.$router.push({
+        name: 'adminTicketCreate', 
+        params: {
+          operation:"edit" ,
+          testId: this.$route.params.id , 
+          ticketId: this.ticket.id 
+        }
+      })
     },
     async deleteTicket(){
       console.log('Удаляю тест № - ', this.ticket.id)
