@@ -34,12 +34,14 @@
 <style lang="scss">
 .app{
   &-page{
-    padding:2rem;
+    overflow: hidden ;
+    padding: 0 ;
     background-color: rgb(237 237 237);
-    min-height: 91%;
+    min-height: 92%;
     z-index: 15;
   };
   &-content{
+    overflow: hidden ;
     padding-top:80px;
     padding-left:250px;
     transition:padding-left .3s;
@@ -51,8 +53,8 @@
   };
   &-main-layout{
     position:relative;
-    min-height:100vh;
-    overflow-y:auto;
+    height:100vh;
+    overflow:hidden;
   };
 
 }

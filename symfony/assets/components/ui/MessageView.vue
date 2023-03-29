@@ -1,6 +1,7 @@
 <template>
    <div class="cont-message"
       v-if="getMessage"
+      @click.stop="visibleFalse"
     >
     <div class="cont-message-cont">
       <div class="cont-message-view">
@@ -14,7 +15,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters, mapActions} from "vuex"
 export default {
   props: ['message'],
   data() {
@@ -32,6 +33,11 @@ export default {
     ...mapGetters(["getMessage"]),
   },
   methods: {
+    ...mapActions(["setMessageVisibleFalse"]),
+
+    visibleFalse(){
+      this.setMessageVisibleFalse
+    }
   },
   mounted(){
   },
