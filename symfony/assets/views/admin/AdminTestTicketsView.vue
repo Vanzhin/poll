@@ -34,7 +34,7 @@
             />
           </div>
           <Pagination
-            type="getQuestionsTestIdDb"
+            type="getTicketsTestIdDb"
           />
         </div>
         <div
@@ -70,7 +70,6 @@ export default {
   computed:{
     ...mapGetters([
       "getTickets"
-    
     ]),
   
   },

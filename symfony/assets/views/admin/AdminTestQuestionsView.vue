@@ -5,48 +5,70 @@
   <div class="block"
     v-else
   >
-    <div class="title">
-      <div>
-        <div class="test">
-          <p>Всего вопросов в тесте: {{ getTotalItem }}</p>  
-        </div>
-      </div>
-      <div class="btn-group " >
-        <div class="btn btn-outline-primary btn-center"
-          title="Добавить вопрос"
-          @click.stop="addQuestion"
-        >
-          <i class="bi bi-plus create-plus"></i>
-        </div>
-        <div class="btn btn-outline-primary btn-center"
-              title="Импортировать вопросы из файла"
-              @click.stop="importQuestionsFile"
-            >
-              <i class="bi bi-cloud-arrow-down"></i>
+    <div class="container">
+      <div class="row">
+        <div class="title">
+          <div>
+            <div class="test">
+              <p>Всего вопросов в тесте: {{ getTotalItem }}</p>  
             </div>
-        <div class="btn btn-outline-primary btn-center"
-          :class="{published: questionsPublished.length > 0}"
-          title="Утвердить все вопросы"
-          @click.stop="approveQuestions"
-          v-if="questionsPublished.length > 0"
-        >
-          <i class="bi bi-file-check"></i>
-        </div>
+          </div>
+          <div class="btn-group " >
+            <div class="btn btn-outline-primary btn-center"
+              title="Добавить вопрос"
+              @click.stop="addQuestion"
+            >
+              <i class="bi bi-plus create-plus"></i>
+            </div>
+            <div class="btn btn-outline-primary btn-center"
+                  title="Импортировать вопросы из файла"
+                  @click.stop="importQuestionsFile"
+                >
+                  <i class="bi bi-cloud-arrow-down"></i>
+                </div>
+            <div class="btn btn-outline-primary btn-center"
+              :class="{published: questionsPublished.length > 0}"
+              title="Утвердить все вопросы на странице"
+              @click.stop="visibleConfirm(massege.approvePageQuestions)"
+              v-if="questionsPublished.length > 0"
+            >
+              <i class="bi bi-file-check"></i>
+            </div>
+            <div class="btn btn-outline-primary btn-center"
+              :class="{published: true}"
+              title="Утвердить все вопросы теста"
+              @click.stop="visibleConfirm(massege.approveTestQuestions)"
+             
+            >
+              <i class="bi bi-file-arrow-down"></i>
+            </div>
+            <div class="btn btn-outline-primary btn-center"
+              :class="{published: true}"
+              title="Скрыть все вопросы теста"
+              @click.stop="visibleConfirm(massege.hideTestQuestions)"
+              
+            >
+            <i class="bi bi-file-arrow-up"></i>
+            </div>
+          </div>
+        </div> 
       </div>
     </div>
     
     <div class="container">
       <div class="row">
-        <div
+        <div 
           v-if="questions"
         >
-          <div v-for="(question, index ) in questions" 
-            :key="question.id"
-          >
-            <ItemQuestion
-              :question="question"
-              :index="numQuestion(index)"
-            />
+          <div class="question-blok">
+            <div v-for="(question, index ) in questions" 
+              :key="question.id"
+            >
+              <ItemQuestion
+                :question="question"
+                :index="numQuestion(index)"
+              />
+            </div>
           </div>
           <Pagination
             type="getQuestionsTestIdDb"
@@ -66,7 +88,6 @@
 
 import ItemQuestion from '../../components/Admin/ItemQuestion.vue'
 import Pagination from "../../components/Pagination.vue"
-import MyConfirm from '../../components/ui/MyConfirm.vue'
 import Loader from '../../components/ui/LoaderView.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 
@@ -75,16 +96,29 @@ export default {
     ItemQuestion,
     Loader,
     Pagination,
-    MyConfirm
   },
   data() {
     return {
       isLoader: true,
       testId: this.$route.params.id,
       testTitle:"",
-      confirmMessage: '',
-      confirmVisible: false,
-      confirmYes: null
+      massege:{
+        approveTestQuestions:{
+          massege:`Вы хотите утвердить все вопросы теста. <br>
+          Подтвердите свои действия.`,
+          func:'questionsAllPublished'
+        },
+        approvePageQuestions:{
+          massege:`Вы хотите утвердить все вопросы на странице. <br>
+          Подтвердите свои действия.`,
+          func:'approveQuestions'
+        },
+        hideTestQuestions:{
+          massege:`Вы хотите скрыть все вопросы теста. <br>
+          Подтвердите свои действия.`,
+          func:'questionsAllNoPublished'
+        },
+      }
     }
   },
   computed:{
@@ -96,6 +130,7 @@ export default {
       "getActivePage",
       "getTotalItemsPage",
       "getTotalItem",
+      "getGonfimAction",
       
     ]),
     testName () {
@@ -113,10 +148,15 @@ export default {
       })
       console.log(publishedAt)
       return publishedAt
-    }
+    },
+    
   },
    methods: {
-    ...mapActions(["getQuestionsTestIdDb", "approveQuestionDb"]),
+    ...mapActions([
+      "getQuestionsTestIdDb", 
+      "approveQuestionDb",
+      "setConfirmMessage"
+    ]),
     numQuestion(index){
       return index + (this.getActivePage - 1) * this.getTotalItemsPage
     },
@@ -138,7 +178,22 @@ export default {
     },
     importQuestionsFile(){
       this.$router.push({name: 'adminImportId',  params: {id: this.$route.params.id}})
-    }
+    },
+    visibleConfirm(activity){
+      this.setConfirmMessage(activity.massege)
+      let timerId = setInterval(() => {
+        if (this.getGonfimAction) {
+          clearInterval(timerId)
+          if (this.getGonfimAction === "yes" ){this[activity.func]()}
+        }
+      }, 200);
+    },
+    questionsAllPublished(){
+      console.log('вопросы на публикацию')
+    },
+    questionsAllNoPublished(){
+      console.log('вопросы скрыть')
+    },
   },
   async created(){
     await this.getQuestionsTestIdDb({id: this.testId})
@@ -152,12 +207,12 @@ export default {
 <style lang="scss" scoped>
   .block{
     background-color: rgb(207 207 199);
-    padding: 10px ;
   }
   .title{
     display: flex;
     justify-content: space-between;
-    margin: 10px;
+    align-items: center;
+    margin:0 10px 5px 10px;
     & h2{
       font-size: 1.4rem;
       color: #697a3f;
@@ -165,12 +220,19 @@ export default {
   }
   .test{
     display: flex;
+    p{
+      margin: 0;
+    }
   }
   [class*="col-"] {
   padding-top: 7px;
   padding-right: 7px;
   padding-left: 7px;
   margin-bottom: 10px;
+  }
+  .question-blok{
+    height: 68vh;
+    overflow-y:auto;
   }
   .button{
     border: 1px solid rgb(171 171 171);

@@ -1,11 +1,14 @@
 <template>
-  
-  <div class="block">
-    <CloseVue
-      :toLink="{name: 'adminTestTickets', params: {id: $route.params.testId }  }"
-    />
-    <div class="title">
-      <h2>Форма редактирования билетов</h2>
+  <div class="container">
+    <div class="row">
+      <div class="block">
+        <CloseVue
+          :toLink="{name: 'adminTestTickets', params: {id: $route.params.testId }  }"
+        />
+        <div class="title">
+          <h2>Форма редактирования билетов</h2>
+        </div>
+      </div>
     </div>
   </div>
   <Loader
@@ -88,8 +91,9 @@
         "getTestId",
         "getTickets",
         "getQuestionsTicket",
+        "getTicket"
         
-    ]),
+      ]),
       getTest () {
         const test = this.$store.getters.getTest
         console.log(test)
@@ -116,7 +120,11 @@
           "question": [...this.ticketQuestions]
         }
         if ( this.operation === 'edit'){
-          await this.editTicket({questionSend, id:+this.$route.params.id})
+          await this.createTicket({
+            ticket, 
+            id: +this.$route.params.ticketId, 
+            operation: 'edit'
+          })
         } else if ( this.operation === 'create'){
           await this.createTicket({ticket})
         }
@@ -159,7 +167,7 @@
       if ( this.$route.params.operation === 'edit'){
         await this.getQuestionsTickeetIdDb({id: +this.$route.params.ticketId})
         console.log('getQuestionsTicket -', this.getQuestionsTicket)
-        this.title = this.$route.params.ticketId
+        this.title = this.getTicket.title
         this.ticketQuestions = this.getQuestionsTicket.map((question)=>{
             const num = this.questions.findIndex((item)=>item.id === question.id)
             console.log(num)
@@ -178,6 +186,9 @@
  
 </script>
 <style lang="scss" scoped>
+.block{
+  margin-top: 10px;
+}
 .block_number{
     display: flex;
   }
