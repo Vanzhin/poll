@@ -1,6 +1,6 @@
 <template>
-  <div class="block">
-    <div class="title">
+  <div class="container">
+    <div class="row">
       <h2>Тесты</h2>
     </div>
     <AdminTestsView/>

@@ -5,18 +5,21 @@
   <div class="block"
     v-else
   >
-    <div class="title">
-      <h2>Разделы</h2>
-      <div class="btn-group " >
-        <div class="btn btn-outline-primary create"
-          title="Добавить новую категорию"
-          @click.stop="createCategory"
-        >
-          <i class="bi bi-plus create-plus"></i>
+    <div class="container">
+      <div class="row">
+        <div class="title">
+          <h2>Разделы</h2>
+          <div class="btn-group " >
+            <div class="btn btn-outline-primary create"
+              title="Добавить новую категорию"
+              @click.stop="createCategory"
+            >
+              <i class="bi bi-plus create-plus"></i>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    
     <div class="container">
       <div class="row">
         <div class="tests__block"
@@ -99,7 +102,7 @@
   .title{
     display: flex;
     justify-content: space-between;
-   
+    margin-top: 10px;
   }
   .create{
     display: flex;

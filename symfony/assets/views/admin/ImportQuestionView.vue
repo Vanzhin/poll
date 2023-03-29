@@ -154,7 +154,7 @@
             {
               this.$router.push({
                 name: 'adminTestQuestions', 
-                params: {id:  this.$route.params.id} 
+                params: {id: testId} 
               })
             }
           }

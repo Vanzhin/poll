@@ -5,9 +5,10 @@
     <div class="block-pagination">
       <div class="block-pagination-element"
         @click = "paginate('-1')"
+        v-if="parseInt(getPagination[0].label) > 1"
       >
         <span>
-          &laquo; Предыдущая
+          &laquo; Назад
         </span>
       </div>
 
@@ -25,9 +26,10 @@
       
       <div class="block-pagination-element"
         @click = "paginate('+1')"
+        v-if="nextTotalPriznak"
       >
         <span>
-          Следующая &raquo;
+          Вперед &raquo;
         </span>
       </div>
     </div>
@@ -45,21 +47,34 @@ export default {
   },
   computed:{
     ...mapGetters(["getPagination", "getTotalPage"]),
+    nextTotalPriznak(){
+      return (this.getTotalPage > 10) ? 
+      (parseInt( this.getPagination[9].label) < this.getTotalPage) ? true : false
+      : false
+    }
   },
   methods: {
-    ...mapActions(["getCategorysDB", "getTestsDB", "getQuestionsTestIdDb"]),
+    ...mapActions([
+      "getCategorysDB", 
+      "getTestsDB", 
+      "getQuestionsTestIdDb",
+      "setIsLoaderStatus",
+      "getTicketsTestIdDb"
+    ]),
     async paginate (page){
       switch (page) {
         case '-1' : {
           if (this.currentPage > 1) {
-            --this.currentPage
+            console.log(this.getPagination[0].label)
+            this.currentPage = parseInt(this.getPagination[0].label) - 1
+            console.log(this.currentPage)
           } else { return }
         break;
         }
         case '+1' : {
           console.log(this.getTotalPage)
-          if  (this.currentPage < this.getTotalPage) {
-            ++this.currentPage
+          if  (this.currentPage = parseInt(this.getPagination[9].label) < this.getTotalPage) {
+            this.currentPage = this.currentPage = parseInt(this.getPagination[9].label) + 1
           } else { return }
         break;
         }
@@ -67,6 +82,7 @@ export default {
           this.currentPage = page 
         }
       }
+      this.setIsLoaderStatus({status:true})
       console.log(this.type)
      
       const data = {
@@ -77,6 +93,7 @@ export default {
       }
       console.log(data)
       await this[this.type](data)
+      this.setIsLoaderStatus({status:false})
     }
   }, 
 } 
@@ -84,7 +101,7 @@ export default {
 <style lang="scss" scoped>
 .block{
   margin-top: 20px;
-  margin-bottom: 20px;
+ 
   &-pagination{
       display: flex;
       justify-content: center;
@@ -96,6 +113,7 @@ export default {
          min-width: 10px;
          &.active {
             border-color: rgb(45, 56, 207);
+            background-color: rgb(134 161 152);
          }
          &:hover{
             cursor: pointer;

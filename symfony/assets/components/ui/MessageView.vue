@@ -1,6 +1,7 @@
 <template>
    <div class="cont-message"
       v-if="getMessage"
+      @click.stop="visibleFalse"
     >
     <div class="cont-message-cont">
       <div class="cont-message-view">
@@ -14,7 +15,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters, mapActions} from "vuex"
 export default {
   props: ['message'],
   data() {
@@ -32,6 +33,11 @@ export default {
     ...mapGetters(["getMessage"]),
   },
   methods: {
+    ...mapActions(["setMessageVisibleFalse"]),
+
+    visibleFalse(){
+      this.setMessageVisibleFalse()
+    }
   },
   mounted(){
   },
@@ -68,9 +74,9 @@ export default {
     align-items: center;
     background-color: #9ac7c7;
     border-radius: 10px;
-    animation: move 3s 1 linear;
+    animation: move 0.3s linear;
     text-align: center;
-    transform: scaleY(0);
+    
     padding: 15px;
     p{
       margin: 0;
@@ -85,17 +91,9 @@ export default {
         transform: scaleY(0.5);
         opacity:  0.5;
     }
-    5% {
-        transform: scaleY(1);
-        opacity:  1;
-      }
-    80% {
-        transform: scaleY(1);
-        opacity:  1;
-      }  
     100% {
-        transform: scaleY(0);
-        opacity:  0;
+        transform: scaleY(1);
+        opacity:  1;
     }
   }
 </style>
