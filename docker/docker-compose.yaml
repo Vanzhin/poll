@@ -1,85 +1,98 @@
+---
 version: '3'
 
 networks:
-  symfony-network:
+  symfony:
     driver: bridge
 
 services:
+  symfony:
+    container_name: symfony
+    image: docker.io/bitnami/symfony:latest
+    ports:
+      - '9000:9000'
+    environment:
+      - SYMFONY_PROJECT_SKELETON=symfony/skeleton:"6.2.*"
+      - SYMFONY_DATABASE_HOST=mysql
+      - SYMFONY_DATABASE_PORT_NUMBER=3306
+      - SYMFONY_DATABASE_USER=symfony_master
+      - SYMFONY_DATABASE_NAME=poll
+      - SYMFONY_DATABASE_PASSWORD_FILE=/run/secrets/user.pwd
+      - PHP_FPM_LISTEN_ADDRESS=0.0.0.0:9000
+      - PHP_DATE_TIMEZONE=Asia/Yekaterinburg
+    command: /opt/bitnami/scripts/php/run.sh
+    volumes:
+      - '../symfony:/app:rw'
+      - ./db/secrets/user.pwd:/run/secrets/user.pwd:ro
+      - ./scripts/symfony/entrypoint.sh:/opt/bitnami/scripts/symfony/entrypoint.sh:ro
+      - ./scripts/symfony/init.sh:/opt/bitnami/scripts/symfony/init.sh:ro
+    networks:
+      - symfony
+    depends_on:
+      - mysql
 
-        symfony:
-            container_name: symfony
-            build:
-                context: ./php-fpm
-                args:
-                    - timezone=${TZ}
-            networks:
-                - symfony-network
-            ports:
-                - "8000:8000"
-            volumes:
-                - ./../symfony:/symfony:rw,cached
-                - symfony_log:/symfony/var/log
-            env_file:
-                - .env
-            depends_on:
-                - db_master
+  node:
+    container_name: node
+    tty: true # Enables debugging capabilities when attached to this container.
+    image: docker.io/bitnami/node:16
+    command: sh -c 'npm install reactstrap --legacy-peer-deps && npm run dev; exit 0'
+    ports:
+      - 3000:3000
+    volumes:
+      - '../symfony:/app:rw'
+    depends_on:
+      - symfony
 
+  nginx:
+    container_name: nginx
+    image: bitnami/nginx:latest
+    ports:
+      - "81:80"
+      - "443:8443"
+    networks:
+      - symfony
+    depends_on:
+      - symfony
+    volumes:
+      - ./../symfony/public:/app/public
+      - ./nginx/server_blocks:/opt/bitnami/nginx/conf/server_blocks:ro
+      - ./nginx/logs:/opt/bitnami/nginx/logs
 
-        nginx:
-            container_name: nginx
-            build:
-                context: ./nginx
-                args:
-                    - timezone=${TZ}
-            ports:
-                - "81:80"
-                - "443:443"
-            networks:
-                - symfony-network
-            depends_on:
-                - symfony
-            volumes:
-                - ./../symfony/public:/symfony/public
-                - ./nginx/ssl:/etc/nginx/ssl
-                - ./nginx/conf.d:/etc/nginx/conf.d
-                - ./nginx/nginx_log:/var/log/nginx
-                - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-            env_file:
-                - .env
-            command: /bin/bash -c "exec nginx -g 'daemon off;'"
+  mysql:
+    container_name: mysql
+    image: bitnami/mariadb:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/root.pwd
+      - MARIADB_PASSWORD_FILE=/run/secrets/user.pwd
+      - MARIADB_REPLICATION_PASSWORD_FILE=/run/secrets/replica.pwd
+      - MARIADB_USER=symfony_master
+      - MARIADB_DATABASE=poll
+      - MARIADB_COLLATE=utf8mb4_unicode_ci
+      - MARIADB_CHARACTER_SET=utf8mb4
+      - MARIADB_REPLICATION_USER=slave_read_user
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./db/secrets:/run/secrets:ro
+      - ./db/mysql:/bitnami/mariadb:rw
+    networks:
+      - symfony
 
-        db_master:
-            container_name: db_master
-            image: mysql:latest
-            env_file:
-                - ./db/master/.env.master
-            ports:
-                - "3307:3306"
-            volumes:
-                - ./db/master/master.sql:/docker-entrypoint-initdb.d/start.sql
-                - ./db/master/mysql.master.cnf:/etc/mysql/conf.d/mysql.master.cnf
-                - ./db/master/.data/mysql:/var/lib/mysql:rw
-            networks:
-                - symfony-network
-
-        mailhog:
-            container_name: mailhog
-            image: mailhog/mailhog
-            restart: always
-            ports:
-                - "8025:8025"
-                - "1025:1025"
-
-            depends_on:
-                - symfony
-                - db_master
-            networks:
-                - symfony-network
-
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    depends_on:
+      - symfony
+      - mysql
+    networks:
+      - symfony
 
 volumes:
-    nginx_log:
-    symfony_log:
-    db:
-        driver: local
-
+  nginx_log:
+  symfony_log:
+  db:
+    driver: local

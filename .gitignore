@@ -8,3 +8,10 @@ symfony/.env
 symfony/.env copy.local
 symfony/vendor.zip
 symfony/yarn.zip
+symfony/.firstrun_php
+symfony/composer.lock
+symfony/package-lock.json
+symfony/symfony.lock
+symfony/yarn.lock
+symfony/node_modules
+symfony/config/jwt
