@@ -231,7 +231,7 @@ class TestController extends AbstractController
     #[Route('/api/admin/test/{id}/question', name: 'app_api_admin_test_question', methods: 'GET')]
     public function getQuestion(Test $test, Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
-        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test));
+        $pagination = $paginator->getPagination($repository->findLastUnPublishedByTestQuery($test));
         if ($pagination->count() > 0) {
             $response['question'] = $pagination;
 

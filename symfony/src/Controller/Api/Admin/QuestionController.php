@@ -192,7 +192,7 @@ class QuestionController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $questionIds = key_exists('questionIds', $data) ? $data['questionIds'] : [];
         try {
-            $published = $questionService->makePublish($questionIds);
+            $published = $questionService->makePublished($questionIds, $this->getUser());
             $response = [
                 'message' => sprintf('Опубликовано %d вопросов(а).', count($published))
             ];

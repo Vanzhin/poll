@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Question;
 use App\Entity\Subtitle;
+use App\Entity\User;
 use App\Entity\Variant;
 use App\Factory\Question\QuestionFactory;
 use App\Factory\Subtitle\SubtitleFactory;
@@ -12,6 +13,7 @@ use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class QuestionService
 {
@@ -218,20 +220,29 @@ class QuestionService
 
     }
 
-    public function makePublish(array $questionIds): array
+    public function makePublished(array $questionIds, User $user): array
     {
         $response = [];
-        foreach($questionIds as $id){
-            $question = $this->em->find(Question::class,$id);
-            if ($question){
-                $question->setPublishedAt(new \DateTime('now'));
+        foreach ($questionIds as $id) {
+            $question = $this->em->find(Question::class, $id);
+            if ($question) {
+                $this->publish($question, $user);
                 $this->em->persist($question);
-                $response[]=$question->getId();
+                $response[] = $question->getId();
             }
         };
         $this->em->flush();
         return $response;
     }
 
+    private function publish(Question $question, User $user): Question
+    {
+        if (!$question->getPublishedAt()) {
+            $question->setPublishedAt(new \DateTime('now'))->setAuthor($user);
+        }
+
+        return $question;
+
+    }
 
 }

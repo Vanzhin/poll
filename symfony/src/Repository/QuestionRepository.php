@@ -66,6 +66,14 @@ class QuestionRepository extends ServiceEntityRepository
         return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('qu.updatedAt', 'DESC');
 
     }
+    private function lastUnPublished(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($queryBuilder)
+            ->addOrderBy('qu.publishedAt', 'ASC')
+            ->addOrderBy('qu.updatedAt', 'DESC')
+            ;
+
+    }
 
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
@@ -75,6 +83,23 @@ class QuestionRepository extends ServiceEntityRepository
     public function findLastUpdatedByTestQuery(Test $test): QueryBuilder
     {
         return $this->lastUpdated()->andWhere('qu.test = :testId')
+            ->setParameters(['testId' => $test->getId()]);
+    }
+
+    public function findLastUnPublishedByTestQuery(Test $test): QueryBuilder
+    {
+        return $this->lastUnPublished()
+            ->join('qu.variant', 'va')
+            ->addSelect('va')
+            ->join('qu.type', 'ty')
+            ->addSelect('ty')
+            ->leftJoin('qu.tickets', 'ti')
+            ->addSelect('ti')
+            ->leftJoin('qu.section', 'se')
+            ->addSelect('se')
+            ->leftJoin('qu.subtitles', 'su')
+            ->addSelect('su')
+            ->andWhere('qu.test = :testId')
             ->setParameters(['testId' => $test->getId()]);
     }
 
