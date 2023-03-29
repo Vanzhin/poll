@@ -272,7 +272,7 @@ class TestController extends AbstractController
     #[Route('/api/admin/test/{id}/section', name: 'app_api_admin_test_section', methods: 'GET')]
     public function getSection(Test $test, Paginator $paginator, SectionRepository $repository): JsonResponse
     {
-        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test), 5);
+        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test));
         if ($pagination->count() > 0) {
             $response['section'] = $pagination;
 
