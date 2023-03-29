@@ -54,7 +54,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getCategorysDB", "getTestsDB", "getQuestionsTestIdDb","setIsLoaderStatus"]),
+    ...mapActions([
+      "getCategorysDB", 
+      "getTestsDB", 
+      "getQuestionsTestIdDb",
+      "setIsLoaderStatus",
+      "getTicketsTestIdDb"
+    ]),
     async paginate (page){
       switch (page) {
         case '-1' : {
