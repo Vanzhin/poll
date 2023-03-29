@@ -41,7 +41,9 @@ const actions = {
     commit("SET_MESSAGE", message);
     setTimeout(()=> commit("SET_MESSAGE_NULL"), 3000)
   },
-
+  setMessageVisibleFalse({ commit }) {
+    commit("SET_MESSAGE_NULL")
+  },
 
 
 }
