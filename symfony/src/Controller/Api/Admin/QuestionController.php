@@ -71,7 +71,7 @@ class QuestionController extends AbstractController
         $image = $request->files->get('questionImage');
 //        todo сделать опцией
         $data['question']['published'] = true;
-        $question = $factory->createBuilder()->buildQuestion($data['question']);
+        $question = $factory->createBuilder()->buildQuestion($data['question'], $this->getUser());
         $errors = $validation->entityWithImageValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
@@ -96,7 +96,7 @@ class QuestionController extends AbstractController
 //        todo сделать опцией
         $data['question']['published'] = true;
 
-        $question = $factory->createBuilder()->buildQuestion($data['question'], $question);
+        $question = $factory->createBuilder()->buildQuestion($data['question'], $this->getUser(), $question);
         $errors = $validation->entityWithImageValidate($question, $image instanceof UploadedFile ? $image : null);
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
@@ -136,14 +136,18 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/admin/question/create_with_variant', name: 'app_api_admin_question_create_with_variant', methods: 'POST')]
-    public function createWithVariant(Request $request, QuestionService $questionService, ValidationService $validation, VariantService $variantService, EntityManagerInterface $em,): JsonResponse
+    public function createWithVariant(Request $request, QuestionService $questionService, QuestionFactory $questionFactory): JsonResponse
     {
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
         $subtitleImages = $request->files->get('subTitleImage', []);
 
-        $response = $questionService->saveWithVariantIfValid(new Question(), $data, $questionImage, $variantImages, $subtitleImages);
+        //        todo сделать опцией
+        $data['question']['published'] = true;
+
+        $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser());
+        $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {
             $status = 422;
         } else {
@@ -157,7 +161,7 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/admin/question/{id}/edit_with_variant', name: 'app_api_admin_question_edit_with_variant', methods: 'POST')]
-    public function editWithVariant(Question $question, Request $request, QuestionService $questionService, ValidationService $validation, VariantService $variantService, EntityManagerInterface $em,): JsonResponse
+    public function editWithVariant(Question $question, Request $request, QuestionService $questionService, QuestionFactory $questionFactory): JsonResponse
     {
 //        $question->getVariant()->clear();
         $data = $request->request->all();
@@ -165,6 +169,10 @@ class QuestionController extends AbstractController
         $variantImages = $request->files->get('variantImage', []);
         $subtitleImages = $request->files->get('subTitleImage', []);
 
+        //        todo сделать опцией
+        $data['question']['published'] = true;
+
+        $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser(), $question);
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {
             $status = 422;

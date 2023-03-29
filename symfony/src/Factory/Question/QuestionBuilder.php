@@ -7,6 +7,7 @@ use App\Entity\Section;
 use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Entity\Type;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class QuestionBuilder
@@ -15,7 +16,7 @@ class QuestionBuilder
     {
     }
 
-    public function buildQuestion(array $data, Question $question = null): Question
+    public function buildQuestion(array $data = [], User $user = null, Question $question = null): Question
     {
         if (!$question) {
             $question = new Question();
@@ -55,11 +56,18 @@ class QuestionBuilder
 
             }
             if ($key === 'published') {
-                $question->setPublishedAt(new \DateTime('now'));
+                if(!$question->getPublishedAt()){
+                    $question->setPublishedAt(new \DateTime('now'));
+                }
                 continue;
 
             }
         }
+        if($user){
+            $question->setAuthor($user);
+
+        }
+
         return $question;
     }
 

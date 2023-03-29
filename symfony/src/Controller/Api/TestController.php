@@ -58,6 +58,7 @@ class TestController extends AbstractController
     {
         try {
             $sessionService->remove(QuestionHandler::SHUFFLED);
+
             //todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
 
             $questions = $testService->getQuestionForResponse($questionRepository->getRandomQByTest($test, $count));

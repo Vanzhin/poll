@@ -75,9 +75,8 @@ class QuestionService
 
     }
 
-    public function saveWithVariant(Question $question, ?array $questionData, ?array $variantData, UploadedFile $questionImage = null, array $variantImages = []): Question
+    public function saveWithVariant(Question $question, ?array $variantData, UploadedFile $questionImage = null, array $variantImages = []): Question
     {
-        $question = $this->questionFactory->createBuilder()->buildQuestion($questionData ?? [], $question);
         $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
 
         $this->em->persist($question);
@@ -103,9 +102,7 @@ class QuestionService
         } else {
             $message = 'Вопрос обновлен';
         }
-        //        todo сделать опцией
-        $data['question']['published'] = true;
-        $question = $this->questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $question);
+
         $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
         $errors = $questionErrors;
         $this->em->beginTransaction();
