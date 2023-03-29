@@ -172,6 +172,35 @@ const actions = {
       }
     }
   },
+  // получение данных статистики развернутый
+  async getAuthAccountResultsDb({dispatch, commit, state }, token) {
+    try {
+      const config = {
+        method: 'get',
+        url: '/api/auth/result',
+        headers: { 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${state.token}`
+        },
+      }
+      await axios(config)
+        .then((data)=>{
+          console.log("getAuthAccountResultsDb - ",  data)
+          commit("SET_AUTH_ACCOUNT", data.data.results);
+          dispatch("setPagination", data.pagination);
+        })
+    } catch (e) {
+      const err = e.response.data.message
+      console.log("ошибка - ",e)
+      if (err === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getAuthAccountResultsDb')
+      }else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
   // повторное получение токена
   async getAuthRefresh({commit, state }, refresh_token) {
     let data = ''

@@ -82,7 +82,7 @@
           setTimeout(() => 
             {
               this.$router.push({ path: this.getPageName})
-            }, 5000);
+            }, 3000);
         }
       }
     }
