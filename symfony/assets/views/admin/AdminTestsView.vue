@@ -5,25 +5,26 @@
   <div class="block"
     v-else
   >
-    <div class="title"
-    v-if="parentId"
-    >
-      <div class="tests__block">
-        <h3>{{getCategoryTitle }}</h3>
-        <h6>Тесты</h6>
-      </div>
-      <div class="btn-group" >
-        <div class="btn btn-outline-primary btn-center"
-            title="Добавить тест"
-            @click.stop="createTest"
-          >
-            <i class="bi bi-archive"></i>
-          </div>
-      </div>
-    </div>
     
     <div class="container">
       <div class="row">
+        <div class="title"
+          v-if="parentId"
+        >
+          <div class="tests__block">
+            <h3>{{getCategoryTitle }}</h3>
+            <h6>Тесты</h6>
+          </div>
+          <div class="btn-group" >
+            <div class="btn btn-outline-primary btn-center"
+                title="Добавить тест"
+                @click.stop="createTest"
+              >
+                <i class="bi bi-archive"></i>
+              </div>
+          </div>
+        </div>
+
         <div class="tests__block"
           v-if="tests.length > 0"
           >
@@ -108,7 +109,11 @@
  
 </script>
 <style lang="scss" scoped>
-.title{
+  .block{
+    height: 80vh;
+    overflow: auto;
+  }
+  .title{
     display: flex;
     justify-content: space-between;
     align-items: flex-end;

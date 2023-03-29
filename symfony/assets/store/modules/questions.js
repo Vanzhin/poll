@@ -242,7 +242,6 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("saveQuestionDb - ",  data)
-          // dispatch("setIsLoaderStatus", {status: false})
           dispatch('setMessage', data)
         })
     } catch (e) {

@@ -4,8 +4,9 @@
    >
     <div class="cont-message-cont">
       <div class="confirm__window" >
-        <div  class="confirm__children">
-          {{getGonfimMessage}}
+        <div  class="confirm__children"
+          v-html="getGonfimMessage"
+        >
         </div>
         
         <div class="confirm__cont-button">

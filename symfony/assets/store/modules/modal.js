@@ -10,7 +10,7 @@ const state = () => ({
     message: false,
   })
 const actions = {
-  setMessage({ commit }, data) {
+  setMessage({ commit, state }, data) {
     console.log("setMessage - ",  data)
     let message = ''
     if (data.error) {
@@ -21,9 +21,9 @@ const actions = {
       message = {err: false, mes: data.message}
     }
     commit("SET_MESSAGE", message);
-    setTimeout(()=> commit("SET_MESSAGE_NULL"), 3000)
+    setIntevalTime({ commit, state })
   },
-  setMessageError({ commit }, e) {
+  setMessageError({ commit, state  }, e) {
     console.log("setMessageError - ",  e)
     let message = e.message ? `${e.message} <hr>` : ''
     if (e.response.data.message) {
@@ -33,23 +33,32 @@ const actions = {
       message += `${e.response.data.error}`
     }
     commit("SET_MESSAGE", {err:true, mes: message});
-    setTimeout(()=> commit("SET_MESSAGE_NULL"), 3000)
+    setIntevalTime({commit, state} )
   },
-  setMessageUser({ commit }, message) {
+  setMessageUser({ commit, state  }, message) {
     console.log("setMessage - ",  message)
-    
     commit("SET_MESSAGE", message);
-    setTimeout(()=> commit("SET_MESSAGE_NULL"), 3000)
+    setIntevalTime({ commit, state  })
   },
   setMessageVisibleFalse({ commit }) {
     commit("SET_MESSAGE_NULL")
   },
-
-
 }
+function setIntevalTime ({ commit, state }){
+  let start = new Date()
+  let timerId = setInterval(() => {
+    if ( !state.message ) {
+      clearInterval(timerId)
+    }
+    let end = new Date()
+    if ((end - start) > 10000) {
+      commit("SET_MESSAGE_NULL")
+    }
+  }, 200);
+}
+
 const getters = {
   getMessage(state) {
-    console.log("getMessage - ",state.message)
     return state.message 
   },
 }

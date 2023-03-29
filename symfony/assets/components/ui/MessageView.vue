@@ -36,7 +36,7 @@ export default {
     ...mapActions(["setMessageVisibleFalse"]),
 
     visibleFalse(){
-      this.setMessageVisibleFalse
+      this.setMessageVisibleFalse()
     }
   },
   mounted(){
@@ -74,9 +74,9 @@ export default {
     align-items: center;
     background-color: #9ac7c7;
     border-radius: 10px;
-    animation: move 3s 1 linear;
+    animation: move 0.3s linear;
     text-align: center;
-    transform: scaleY(0);
+    
     padding: 15px;
     p{
       margin: 0;
@@ -91,17 +91,9 @@ export default {
         transform: scaleY(0.5);
         opacity:  0.5;
     }
-    5% {
-        transform: scaleY(1);
-        opacity:  1;
-      }
-    80% {
-        transform: scaleY(1);
-        opacity:  1;
-      }  
     100% {
-        transform: scaleY(0);
-        opacity:  0;
+        transform: scaleY(1);
+        opacity:  1;
     }
   }
 </style>
