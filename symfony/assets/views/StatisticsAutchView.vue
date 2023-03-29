@@ -18,7 +18,7 @@
               <i class="result"
                 :class="{resultTrue: result.score > 0 }"
               ><b>{{ index+1 }})</b> 
-              {{ result.ticket ? result.ticket.title: "Случайный набор" }}
+              {{ result.ticket ? `Билет № ${result.ticket.title}`: "Случайный набор" }}
               
               </i>
             </div>       
@@ -51,15 +51,17 @@
     },
    
     methods: { 
-      ...mapActions(["getAuthAccountDb"]),
+      ...mapActions(["getAuthAccountDb", "getAuthAccountResultsDb"]),
       ...mapMutations([])
     },
       async mounted(){
-      await this.getAuthAccountDb(this.getAutchUserToken)
+      
+     },
+     async created(){
+      await this.getAuthAccountResultsDb()
       console.log(this.getAuthAccountResult)
       this.isLoading = false
      }
-   
  } 
  
 </script>
