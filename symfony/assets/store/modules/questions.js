@@ -241,13 +241,43 @@ const actions = {
       console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("saveQuestionDb - ",  data)
+          console.log("approveQuestionDb - ",  data)
           dispatch('setMessage', data)
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('approveQuestionDb', {questionSend})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  //утверждение или скрытие всех вопросов теста по его id
+  async approveQuestionsAllDb({ dispatch, commit, state }, {id, param} ){
+    console.log(id)
+    const token = await dispatch("getAutchUserTokenAction")
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/admin/question/publish/test/${id}?publish=${param}`,
+        headers: { 
+          Accept: 'application/json', 
+          Authorization: `Bearer ${token}`
+        }
+      };
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("approveQuestionsAllDb - ",  data)
+          dispatch('setMessage', data)
+          dispatch('getQuestionsTestIdDb',{id})
+          dispatch('getTestIdDb',{id})
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('approveQuestionsAllDb',{id, param})
       } else {
         dispatch('setMessageError', e)
       }

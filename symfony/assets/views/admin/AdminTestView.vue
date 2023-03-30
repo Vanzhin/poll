@@ -5,13 +5,29 @@
       <h2>Тест: {{ testName }}</h2>
     </div>
     <ul class="nav nav-tabs" role="tablist">
+     
       <li class="nav-item" role="presentation"
-        v-for="(nav, index ) in navs" 
-          :key="nav.title"
       >
-        <RouterLink class="nav-link" :class="{active: nav.active}"  
-          @click="activeTogge(index)"
-          :to="{ path: nav.link}" >{{ nav.title }} {{ nav.count }}</RouterLink>
+        <RouterLink class="nav-link" :class="{active: navs[0].active}"  
+          @click="activeTogge(0)"
+          :to="{ path: navs[0].link}" >{{ navs[0].title }} {{ countQuestion }}
+        </RouterLink>
+       
+      </li>
+      <li class="nav-item" role="presentation"
+      >
+        <RouterLink class="nav-link" :class="{active: navs[1].active}"  
+          @click="activeTogge(1)"
+          :to="{ path: navs[1].link}" >{{ navs[1].title }} {{ countTicket }}
+        </RouterLink>
+        
+      </li>
+      <li class="nav-item" role="presentation"
+      >
+        <RouterLink class="nav-link" :class="{active: navs[2].active}"  
+          @click="activeTogge(2)"
+          :to="{ path: navs[2].link}" >{{ navs[2].title }} {{ countSection }}
+        </RouterLink>
       </li>
     </ul>
   </div>
@@ -35,18 +51,52 @@ export default {
       classObject: {
         active: true,
       },
-      navs:[]
+      url: this.$route.path,
+      navs:[
+        {
+          title: `Вопросы `,
+          link: 'questions',
+          active: (new RegExp("questions", 'i')).test(this.url),
+          count: this.countQuestion
+        },
+        {
+          title: `Билеты `,
+          link: 'tickets',
+          active: (new RegExp("tickets", 'i')).test(this.url),
+          count: this.countTicket
+        },
+        {
+          title: `Секции `,
+          link: 'sections',
+          active: (new RegExp("sections", 'i')).test(this.url),
+          count: this.countSection
+        }
+      ]
     }
   },
   computed:{
     ...mapGetters([
-      "getTest"
+      "getTest",
+      "getTestTicketCount",
+      "getTestSectionCount",
+      "getTestQuestionCount"
     ]),
 
     testName () {
-      return this.$store.getters.getTest.title
+      return this.getTest.title
     },
-    
+    countQuestion(){ 
+      console.log("1-",this.getTestQuestionCount)
+      return this.getTestQuestionCount
+    },
+    countTicket(){ 
+      console.log("1-",this.getTestTicketCount)
+      return this.getTestTicketCount
+    },
+    countSection(){ 
+      console.log("1-",this.getTestSectionCount)
+      return this.getTestSectionCount
+    },
   },
    methods: {
     ...mapActions(["getQuestionsTestIdDb", "getTestIdDb"]),
@@ -56,35 +106,37 @@ export default {
         return nav
       })]
     },
+  },
+ mounted(){
+  
  },
 
   async created(){
     console.log('this.getTest - ', this.$route.params.id)
-    console.log(this.$route)
-    
     await this.getTestIdDb({id: +this.$route.params.id})
-    const url = this.$route.path
-    this.navs = [
+    this.navs= [
         {
           title: `Вопросы `,
           link: 'questions',
-          active: (new RegExp("questions", 'i')).test(url),
-          count: this.getTest.questionCount || ''
+          active: (new RegExp("questions", 'i')).test(this.url),
+          count: this.countQuestion
         },
         {
           title: `Билеты `,
           link: 'tickets',
-          active: (new RegExp("tickets", 'i')).test(url),
-          count: this.getTest.ticketCount || ''
+          active: (new RegExp("tickets", 'i')).test(this.url),
+          count: this.countTicket
         },
         {
           title: `Секции `,
           link: 'sections',
-          active: (new RegExp("sections", 'i')).test(url),
-          count: this.getTest.sectionCount || ''
+          active: (new RegExp("sections", 'i')).test(this.url),
+          count: this.countSection
         }
       ]
-    this.test = this.getTest
+   
+    
+    
   },
  
 } 

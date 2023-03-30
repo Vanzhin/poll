@@ -100,6 +100,7 @@ export default {
       "setQuestion",
       "setConfirmMessage",
       "approveQuestionDb",
+      "getTestIdDb"
     ]),
     questionType(question){
       return question.title ? question.title : question
@@ -122,8 +123,7 @@ export default {
         testId: this.getTest.id, 
         page: this.getActivePage,
       })
-      this.confirmVisible = false
-      this.confirmYes = null
+      await this.getTestIdDb({id: +this.$route.params.id})
     },
     editQuestion(){
       console.log('Редактировать № - ', this.question)
@@ -140,7 +140,8 @@ export default {
     },
     async approveQuestion(){
       await this.approveQuestionDb({questionSend: [this.question.id]})
-      this.question.publishedAt = true
+      await this.getTestIdDb({id: +this.$route.params.id})
+      this.question.publishedAt = !this.question.publishedAt
     }
   },
   async created(){

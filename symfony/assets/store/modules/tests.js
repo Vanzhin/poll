@@ -86,7 +86,7 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log(data)
+          console.log("test - ", data)
           commit("SET_TEST", data)
         })
     } catch (e) {
@@ -214,6 +214,19 @@ const getters = {
   getTestId(state) {
     return state.test.id
   },
+  getTestCountPublishedQuestion(state) {
+    return state.test.questionUnPublishedCount 
+  },
+  getTestTicketCount(state) {
+    return state.test.ticketCount || ''
+  },
+  getTestQuestionCount(state) {
+    return state.test.questionCount || ''
+  },
+  getTestSectionCount(state) {
+    return state.test.sectionCount || ''
+  },
+  
 }
 
 const mutations = {

@@ -74,7 +74,7 @@ export default {
     ...mapActions([
       "deleteTicketIdDb", 
       "setConfirmMessage",
-      "getTestId",
+      "getTestIdDb",
       "saveSelectTicketStore"
     ]),
     
@@ -100,6 +100,7 @@ export default {
         testId: this.$route.params.id,
         activePage: this.getActivePage,
       })
+      await this.getTestIdDb({id: this.$route.params.id})
     },
     deleteVisibleConfirm(){
       this.setConfirmMessage(`Вы, действительно хотите удалить Билет № ${this.ticket.title}?`)

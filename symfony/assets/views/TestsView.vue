@@ -13,18 +13,22 @@
         :key="test.id"
         class="test__block"
       >
-        <div class="test__card"
-          v-if="getIsAutchUser || index < 3"
+        <div
+          v-if="test.questionCount>test.questionUnPublishedCount"
         >
-          <RouterLink :to="{ name: 'test', params: { id: test.id } }">
+          <div class="test__card"
+            v-if="getIsAutchUser || index < 3"
+          >
+            <RouterLink :to="{ name: 'test', params: { id: test.id } }">
+              {{ test.id }} - {{ test.title }}
+            </RouterLink>
+          </div>
+          <div class="test__card-limitation "
+            v-else
+            title="У Вас ограниченный доступ. Подпишитесь на группу."
+          >
             {{ test.id }} - {{ test.title }}
-          </RouterLink>
-        </div>
-        <div class="test__card-limitation "
-          v-else
-          title="У Вас ограниченный доступ. Подпишитесь на группу."
-        >
-          {{ test.id }} - {{ test.title }}
+          </div>
         </div>
       </div>
     </div> 

@@ -38,15 +38,15 @@
               :class="{published: true}"
               title="Утвердить все вопросы теста"
               @click.stop="visibleConfirm(massege.approveTestQuestions)"
-             
+              v-if="noPublishedQuestionPriznak"
             >
               <i class="bi bi-file-arrow-down"></i>
             </div>
             <div class="btn btn-outline-primary btn-center"
-              :class="{published: true}"
+              
               title="Скрыть все вопросы теста"
               @click.stop="visibleConfirm(massege.hideTestQuestions)"
-              
+              v-if="noPublishedQuestionPriznakAll"
             >
             <i class="bi bi-file-arrow-up"></i>
             </div>
@@ -131,8 +131,14 @@ export default {
       "getTotalItemsPage",
       "getTotalItem",
       "getGonfimAction",
-      
+      "getTestCountPublishedQuestion"
     ]),
+    noPublishedQuestionPriznak(){ // неопубликованные есть 
+      return this.getTest.questionUnPublishedCount > 0
+    },
+    noPublishedQuestionPriznakAll(){ // все не опубликованны 
+      return !(this.getTest.questionUnPublishedCount === this.getTest.questionCount)
+    },
     testName () {
       return this.$store.getters.getTestTitleActive
     },
@@ -155,7 +161,9 @@ export default {
     ...mapActions([
       "getQuestionsTestIdDb", 
       "approveQuestionDb",
-      "setConfirmMessage"
+      "setConfirmMessage",
+      "approveQuestionsAllDb", 
+      "getTestIdDb"
     ]),
     numQuestion(index){
       return index + (this.getActivePage - 1) * this.getTotalItemsPage
@@ -174,10 +182,11 @@ export default {
       this.isLoader = true
       await this.approveQuestionDb({questionSend: this.questionsPublished})
       await this.getQuestionsTestIdDb({id: this.testId})
+      await this.getTestIdDb({id: this.testId})
       this.isLoader = false
     },
     importQuestionsFile(){
-      this.$router.push({name: 'adminImportId',  params: {id: this.$route.params.id}})
+      this.$router.push({name: 'adminImportId',  params: {id: this.testId}})
     },
     visibleConfirm(activity){
       this.setConfirmMessage(activity.massege)
@@ -188,16 +197,19 @@ export default {
         }
       }, 200);
     },
-    questionsAllPublished(){
-      console.log('вопросы на публикацию')
+    async questionsAllPublished(){
+      this.isLoader = true
+      await this.approveQuestionsAllDb({id: this.testId, param: true})
+      this.isLoader = false
     },
-    questionsAllNoPublished(){
-      console.log('вопросы скрыть')
+    async questionsAllNoPublished(){
+      this.isLoader = true
+      await this.approveQuestionsAllDb({id: this.testId, param: false})
+      this.isLoader = false
     },
   },
   async created(){
     await this.getQuestionsTestIdDb({id: this.testId})
-    
     this.isLoader = false
   },
  
