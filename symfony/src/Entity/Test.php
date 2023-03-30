@@ -68,6 +68,9 @@ class Test
     private ?int $questionCount = null;
 
     #[Groups(['admin_test_general', 'category'])]
+    private ?int $questionUnPublishedCount = null;
+
+    #[Groups(['admin_test_general', 'category'])]
     private ?int $sectionCount = null;
 
     #[Groups(['admin_test_general', 'category'])]
@@ -297,5 +300,23 @@ class Test
         }
 
         return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getQuestionUnPublishedCount(): ?int
+    {
+        return $this->getQuestion()->filter(function (Question $question) {
+            return $question->getPublishedAt();
+        })->count();
+    }
+
+    /**
+     * @param int|null $questionUnPublishedCount
+     */
+    public function setQuestionUnPublishedCount(?int $questionUnPublishedCount): void
+    {
+        $this->questionUnPublishedCount = $questionUnPublishedCount;
     }
 }
