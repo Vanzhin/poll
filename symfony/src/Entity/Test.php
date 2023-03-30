@@ -308,7 +308,7 @@ class Test
     public function getQuestionUnPublishedCount(): ?int
     {
         return $this->getQuestion()->filter(function (Question $question) {
-            return $question->getPublishedAt();
+            return $question->getPublishedAt() === null;
         })->count();
     }
 
