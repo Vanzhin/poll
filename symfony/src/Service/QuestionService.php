@@ -220,13 +220,13 @@ class QuestionService
 
     }
 
-    public function makePublished(array $questionIds, User $user): array
+    public function switchPublishForAll(array $questionIds, User $user): array
     {
         $response = [];
         foreach ($questionIds as $id) {
             $question = $this->em->find(Question::class, $id);
             if ($question) {
-                $this->publish($question, $user);
+                $this->changePublish($question, $user);
                 $this->em->persist($question);
                 $response[] = $question->getId();
             }
@@ -235,13 +235,27 @@ class QuestionService
         return $response;
     }
 
-    private function publish(Question $question, User $user): Question
+    public function changePublished(array $questions, User $user): array
+    {
+        $response = [];
+        foreach ($questions as $question) {
+                $this->changePublish($question, $user);
+                $this->em->persist($question);
+                $response[] = $question->getId();
+            }
+        $this->em->flush();
+        return $response;
+    }
+
+    private function changePublish(Question $question, User $user): Question
     {
         if (!$question->getPublishedAt()) {
-            $question->setPublishedAt(new \DateTime('now'))->setAuthor($user);
+            $question->setPublishedAt(new \DateTime('now'));
+        }else{
+            $question->setPublishedAt(null);
         }
 
-        return $question;
+        return $question->setAuthor($user);
 
     }
 

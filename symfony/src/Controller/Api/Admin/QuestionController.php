@@ -4,6 +4,7 @@ namespace App\Controller\Api\Admin;
 
 use App\Entity\Question;
 use App\Entity\Section;
+use App\Entity\Test;
 use App\Factory\Question\QuestionFactory;
 use App\Repository\QuestionRepository;
 use App\Service\NormalizerService;
@@ -192,9 +193,31 @@ class QuestionController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $questionIds = key_exists('questionIds', $data) ? $data['questionIds'] : [];
         try {
-            $published = $questionService->makePublished($questionIds, $this->getUser());
+            $published = $questionService->switchPublishForAll($questionIds, $this->getUser());
             $response = [
                 'message' => sprintf('Опубликовано %d вопросов(а).', count($published))
+            ];
+            $status = 200;
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage()];
+            $status = 501;
+        } finally {
+            return $this->json($response,
+                $status,
+                ['charset=utf-8'],
+            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    #[Route('/api/admin/question/publish/test/{id}', name: 'app_api_admin_question_publish_test', methods: 'GET')]
+    public function publishAllByTest(Test $test, Request $request, QuestionService $questionService, QuestionRepository $questionRepository): JsonResponse
+    {
+        $publish = filter_var($request->query->get('publish'), FILTER_VALIDATE_BOOLEAN);
+        $questions = $questionRepository->findAllByPublishedByTest($test, $publish);
+        try {
+            $questionService->changePublished($questions, $this->getUser());
+            $response = [
+                'message' => sprintf('%s %d вопросов(а).', $publish ? 'Опубликовано' : 'Снято с публикации', count($questions))
             ];
             $status = 200;
         } catch (\Exception $e) {

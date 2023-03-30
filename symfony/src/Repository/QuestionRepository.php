@@ -66,12 +66,12 @@ class QuestionRepository extends ServiceEntityRepository
         return $this->getOrCreateQueryBuilder($queryBuilder)->orderBy('qu.updatedAt', 'DESC');
 
     }
+
     private function lastUnPublished(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder($queryBuilder)
             ->addOrderBy('qu.publishedAt', 'ASC')
-            ->addOrderBy('qu.updatedAt', 'DESC')
-            ;
+            ->addOrderBy('qu.updatedAt', 'DESC');
 
     }
 
@@ -89,7 +89,7 @@ class QuestionRepository extends ServiceEntityRepository
     public function findLastUnPublishedByTestQuery(Test $test): QueryBuilder
     {
         return $this->lastUnPublished()
-            ->join('qu.variant', 'va')
+            ->leftJoin('qu.variant', 'va')
             ->addSelect('va')
             ->join('qu.type', 'ty')
             ->addSelect('ty')
@@ -101,6 +101,24 @@ class QuestionRepository extends ServiceEntityRepository
             ->addSelect('su')
             ->andWhere('qu.test = :testId')
             ->setParameters(['testId' => $test->getId()]);
+    }
+
+    public function findAllByPublishedByTest(Test $test, bool $publish): mixed
+    {
+        $result = $this->getOrCreateQueryBuilder()
+            ->addSelect('qu')
+            ->andWhere('qu.test = :testId')
+            ->setParameters(['testId' => $test]);
+
+        if ($publish) {
+            $result->andWhere('qu.publishedAt IS NULL');
+        } else {
+            $result->andWhere('qu.publishedAt IS NOT NULL');
+
+        }
+        return $result
+            ->getQuery()
+            ->getResult();
     }
 
     public function findLastUpdatedQuery(): QueryBuilder

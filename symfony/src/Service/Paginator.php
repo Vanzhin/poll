@@ -25,7 +25,7 @@ class Paginator
         $this->requestStack = $requestStack;
     }
 
-    public function getPagination(QueryBuilder $query, string $itemName = 'page', $default = 1)
+    public function getPagination(QueryBuilder $query, string $itemName = 'page', $default = 1): PaginationInterface
     {
         $limit = $this->requestStack->getCurrentRequest()->get('limit', static::LIMIT_PER_PAGE);
         return $this->paginator->paginate(
