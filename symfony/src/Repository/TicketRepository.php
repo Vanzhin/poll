@@ -79,8 +79,16 @@ class TicketRepository extends ServiceEntityRepository
 
     public function findLastUpdatedByTestQuery(Test $test): QueryBuilder
     {
-        return $this->lastUpdated()->andWhere('ti.test = :testId')
-            ->setParameters(['testId' => $test->getId()]);
+        return $this->lastUpdated()
+            ->andWhere('ti.test = :testId')
+            ->setParameters(['testId' => $test])
+            ->leftJoin('ti.question', 'qu')
+            ->addSelect('qu')
+            ->join('qu.type', 'ty')
+            ->addSelect('ty')
+            ->leftJoin('qu.section', 'se')
+            ->addSelect('se')
+            ;
     }
 
     /**

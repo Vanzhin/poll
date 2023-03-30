@@ -3,9 +3,11 @@
 namespace App\Service;
 
 use Doctrine\ORM\QueryBuilder;
+use Knp\Bundle\PaginatorBundle\Twig\Extension\PaginationRuntime;
 use Knp\Component\Pager\PaginatorInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
 
 class Paginator
 {
@@ -31,6 +33,11 @@ class Paginator
             $this->requestStack->getCurrentRequest()->query->getInt($itemName, $default)/*page number*/,
             intval($limit) > 0 ? $limit : static::LIMIT_PER_PAGE/*limit per page*/
         );
+//        dd($this->paginator->paginate(
+//            $query, /* query NOT result */
+//            $this->requestStack->getCurrentRequest()->query->getInt($itemName, $default)/*page number*/,
+//            intval($limit) > 0 ? $limit : static::LIMIT_PER_PAGE/*limit per page*/
+//        )->getPaginationData());
 
     }
 

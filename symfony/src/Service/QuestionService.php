@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Question;
 use App\Entity\Subtitle;
+use App\Entity\User;
 use App\Entity\Variant;
 use App\Factory\Question\QuestionFactory;
 use App\Factory\Subtitle\SubtitleFactory;
@@ -12,6 +13,7 @@ use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class QuestionService
 {
@@ -75,9 +77,8 @@ class QuestionService
 
     }
 
-    public function saveWithVariant(Question $question, ?array $questionData, ?array $variantData, UploadedFile $questionImage = null, array $variantImages = []): Question
+    public function saveWithVariant(Question $question, ?array $variantData, UploadedFile $questionImage = null, array $variantImages = []): Question
     {
-        $question = $this->questionFactory->createBuilder()->buildQuestion($questionData ?? [], $question);
         $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
 
         $this->em->persist($question);
@@ -103,9 +104,7 @@ class QuestionService
         } else {
             $message = 'Вопрос обновлен';
         }
-        //        todo сделать опцией
-        $data['question']['published'] = true;
-        $question = $this->questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $question);
+
         $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
         $errors = $questionErrors;
         $this->em->beginTransaction();
@@ -221,20 +220,43 @@ class QuestionService
 
     }
 
-    public function makePublish(array $questionIds): array
+    public function switchPublishForAll(array $questionIds, User $user): array
     {
         $response = [];
-        foreach($questionIds as $id){
-            $question = $this->em->find(Question::class,$id);
-            if ($question){
-                $question->setPublishedAt(new \DateTime('now'));
+        foreach ($questionIds as $id) {
+            $question = $this->em->find(Question::class, $id);
+            if ($question) {
+                $this->changePublish($question, $user);
                 $this->em->persist($question);
-                $response[]=$question->getId();
+                $response[] = $question->getId();
             }
         };
         $this->em->flush();
         return $response;
     }
 
+    public function changePublished(array $questions, User $user): array
+    {
+        $response = [];
+        foreach ($questions as $question) {
+                $this->changePublish($question, $user);
+                $this->em->persist($question);
+                $response[] = $question->getId();
+            }
+        $this->em->flush();
+        return $response;
+    }
+
+    private function changePublish(Question $question, User $user): Question
+    {
+        if (!$question->getPublishedAt()) {
+            $question->setPublishedAt(new \DateTime('now'));
+        }else{
+            $question->setPublishedAt(null);
+        }
+
+        return $question->setAuthor($user);
+
+    }
 
 }

@@ -182,7 +182,7 @@ class TestController extends AbstractController
             $total = [];
             foreach ($questionData as $key => $data) {
                 $data['test'] = $test->getId();
-                $question = $questionFactory->createBuilder()->buildQuestion($data);
+                $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
                 if ($validation->entityWithImageValidate($question)) {
                     $total['error'][$key]['type'][] = implode(',', $validation->entityWithImageValidate($question));
                     $total['error'][$key]['question'] = $data;
@@ -205,7 +205,9 @@ class TestController extends AbstractController
                     if ($data['section']) {
                         $data['section'] = $sectionService->createIfNotExist($data['section'], $test)->getId();
                     }
-                    $questions[] = $questionService->saveWithVariant(new Question(), $data, $data['variant']);
+                    $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
+
+                    $questions[] = $questionService->saveWithVariant($question, $data['variant']);
                 };
                 $response = $questionService->getUploadedQuestionsSummary($questions);
             }
@@ -229,7 +231,7 @@ class TestController extends AbstractController
     #[Route('/api/admin/test/{id}/question', name: 'app_api_admin_test_question', methods: 'GET')]
     public function getQuestion(Test $test, Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
-        $pagination = $paginator->getPagination($repository->findLastUpdatedByTestQuery($test));
+        $pagination = $paginator->getPagination($repository->findLastUnPublishedByTestQuery($test));
         if ($pagination->count() > 0) {
             $response['question'] = $pagination;
 
