@@ -143,8 +143,8 @@ class QuestionController extends AbstractController
         $variantImages = $request->files->get('variantImage', []);
         $subtitleImages = $request->files->get('subTitleImage', []);
 
-        //        todo сделать опцией
-        $data['question']['published'] = true;
+//        //        todo сделать опцией
+//        $data['question']['published'] = true;
 
         $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser());
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
@@ -169,8 +169,8 @@ class QuestionController extends AbstractController
         $variantImages = $request->files->get('variantImage', []);
         $subtitleImages = $request->files->get('subTitleImage', []);
 
-        //        todo сделать опцией
-        $data['question']['published'] = true;
+//        //        todo сделать опцией
+//        $data['question']['published'] = true;
 
         $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser(), $question);
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);

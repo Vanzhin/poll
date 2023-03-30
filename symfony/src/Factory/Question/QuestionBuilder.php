@@ -56,8 +56,11 @@ class QuestionBuilder
 
             }
             if ($key === 'published') {
-                if(!$question->getPublishedAt()){
+                if($item === 'true'){
                     $question->setPublishedAt(new \DateTime('now'));
+                }elseif ($item === 'false'){
+                    $question->setPublishedAt(null);
+
                 }
                 continue;
 
