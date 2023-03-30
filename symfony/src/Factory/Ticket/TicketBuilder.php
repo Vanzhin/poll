@@ -34,11 +34,13 @@ class TicketBuilder
                     $test = $this->em->find(Test::class, $item);
                     if ($test) {
                         $ticket->setTest($test);
-                        $lastTicketTitle = $this->em->getRepository(Ticket::class)->findLastTitleByTest($test);
-                        if($lastTicketTitle){
-                            $ticket->setTitle(++$lastTicketTitle);
-                        }else{
-                            $ticket->setTitle(1);
+                        if(!$ticket->getTitle()){
+                            $lastTicketTitle = $this->em->getRepository(Ticket::class)->findLastTitleByTest($test);
+                            if($lastTicketTitle){
+                                $ticket->setTitle(++$lastTicketTitle);
+                            }else{
+                                $ticket->setTitle(1);
+                            }
                         }
                     };
 
@@ -54,6 +56,7 @@ class TicketBuilder
             };
 
         }
+
         return $ticket;
     }
 
