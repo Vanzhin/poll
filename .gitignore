@@ -15,3 +15,6 @@ symfony/symfony.lock
 symfony/yarn.lock
 symfony/node_modules
 symfony/config/jwt
+docker/db/mysql/data/
+
+docker/nginx/logs/
