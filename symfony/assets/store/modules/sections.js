@@ -1,68 +1,42 @@
-import {  } from './mutation-types.js'
+import { 
+  SET_SECTIONS,
+ } from './mutation-types.js'
 
-
+ import axios from 'axios';
 const state = () => ({
-  sections: [
-    { 
-      id: 1,
-      title: "Промбезопасноть",
-      type_responses : "one",
-      image: '_prom.jpg',
-      information: ""
-    },
-    { 
-      id: 2,
-      title: "Электробезопасность",
-      type_responses : "one",
-      image: '_electro5.jpg',
-      information: ""
-    },
-    { 
-      id: 3,
-      title: "Пожарная безопасность",
-      type_responses : "one",
-      image: '_pb.jpg',
-      information: ""
-    },
-    { 
-      id: 4,
-      title: "Энергетическая безопасность",
-      type_responses : "one",
-      image: '_energo1.jpg',
-      information: ""
-    },
-    { 
-      id: 5,
-      title: "Аттестация сварщиков (НАКС)",
-      type_responses : "one",
-      image: '_naks.jpg',
-      information: ""
-    },
-    { 
-      id: 6,
-      title: "Охрана труда в организациях",
-      type_responses : "one",
-      image: '_ot.jpg',
-      information: ""
-    },
-  ],
-  question:{},
-  
-  
+  sections: [],
 })
 
 const actions = {
-  getCategoriDB({ commit }) {
-    axios
-      .get("/api/cources")
-      .then((res) => {
-        commit("GET_COURCES", res.data.raw);
-      })
-      .catch((err) => {
+  async getSectionTestIdDb({dispatch, commit}, {id, page = null, limit = 10 }){
+    console.log("id - ",  id)
+    const token = await dispatch("getAutchUserTokenAction")
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/admin/section/test/${id}?limit=${limit}`,
+        headers: { 
+          Accept: 'application/json', 
+          Authorization: `Bearer ${token}`
+        }
+      };
+      if (page) {config.url = config.url + `&page=${page}`}
+      await axios(config)
+        .then(({data})=>{
+          console.log("getSectionTestIdDb - ",  data)
+          commit("SET_SECTIONS", data.section);
+          dispatch("setPagination", data.pagination);
+        })
+    } catch (e) {
+      console.log("getSectionTestIdDb - ",  e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getSectionTestIdDb', {id, page, limit})
+      } else {
         dispatch('setMessageError', e)
-      });
+      }
+    }
   },
-  getQues(){}
 };
 
 const getters = {
@@ -76,7 +50,9 @@ const getters = {
 }
 
 const mutations = {
- 
+  [SET_SECTIONS](state, sections){
+    state.sections = sections
+  }
 }
 export default {
   namespaced: false,

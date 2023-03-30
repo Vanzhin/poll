@@ -10,10 +10,10 @@
             <div class="item__card-block">
              
               <div class="item__card-title">
-                {{ ticket.id }} - Билет №{{ ticket.title }}
+                {{ section.id }} - {{ section.title }}
               </div>
               <div class="item__card-title">
-                Вопросов в билете - {{ ticket.question.length }}
+                Вопросов в секции - {{ section.questionCount }}
               </div>
             </div>
            
@@ -49,7 +49,7 @@
 import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
-  props:['ticket', 'index'],
+  props:['section', 'index'],
   components: {
    
   },
@@ -82,6 +82,7 @@ export default {
       this.childVisible = !this.childVisible
     },
     editTicket(){
+      return
       this.saveSelectTicketStore({ticket: this.ticket})
       this.$router.push({
         name: 'adminTicketCreate', 
@@ -93,8 +94,10 @@ export default {
       })
     },
     async deleteTicket(){
+      
       console.log('Удаляю тест № - ', this.ticket.id)
       console.log('Удаляю тест № - ', this.$route)
+      return
       await this.deleteTicketIdDb({
         id: this.ticket.id, 
         testId: this.$route.params.id,
@@ -103,7 +106,7 @@ export default {
       await this.getTestIdDb({id: this.$route.params.id})
     },
     deleteVisibleConfirm(){
-      this.setConfirmMessage(`Вы, действительно хотите удалить Билет № ${this.ticket.title}?`)
+      this.setConfirmMessage(`Вы, действительно хотите удалить секцию - "${this.section.title}"?`)
       let timerId = setInterval(() => {
         if (this.getGonfimAction) {
           clearInterval(timerId)
@@ -137,7 +140,7 @@ export default {
     }
     &-title{
       margin-left: 10px;
-      min-height: 40px;
+     
     }
     &-info{
       display: flex;
@@ -170,10 +173,7 @@ export default {
       background-color: rgb(213, 204, 238);
     }
     &-block{
-      display: flex;
       
-      align-items: center;
-      flex-wrap: wrap;
     }
   }
  .item__card:hover{

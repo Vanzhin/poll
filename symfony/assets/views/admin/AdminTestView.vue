@@ -6,14 +6,16 @@
     </div>
     <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item" role="presentation"
-        v-for="(nav, index ) in navs" 
+        v-for="(nav, index ) in navsActive" 
           :key="nav.title"
       >
         <RouterLink class="nav-link" :class="{active: nav.active}"  
           @click="activeTogge(index)"
-          :to="{ path: nav.link}" >{{ nav.title }} {{ nav.count }}</RouterLink>
+          :to="{ path: nav.link}" >{{ nav.title }} {{ nav.count }}
+        </RouterLink>
+       
       </li>
-     
+      
     </ul>
   </div>
   <RouterView/>
@@ -36,18 +38,57 @@ export default {
       classObject: {
         active: true,
       },
+      url: this.$route.path,
       navs:[]
+        
     }
   },
   computed:{
     ...mapGetters([
-      "getTest"
+      "getTest",
+      "getTestTicketCount",
+      "getTestSectionCount",
+      "getTestQuestionCount"
     ]),
 
     testName () {
-      return this.$store.getters.getTest.title
+      return this.getTest.title
     },
-    
+    countQuestion(){ 
+      console.log("1-",this.getTestQuestionCount)
+      return this.getTestQuestionCount
+    },
+    countTicket(){ 
+      console.log("1-",this.getTestTicketCount)
+      return this.getTestTicketCount
+    },
+    countSection(){ 
+      console.log("1-",this.getTestSectionCount)
+      return this.getTestSectionCount
+    },
+    navsActive(){
+      this.url= this.$route.path
+     return this.navs=[
+        {
+          title: `Вопросы `,
+          link: 'questions',
+          active: (new RegExp("questions", 'i')).test(this.url),
+          count: this.countQuestion
+        },
+        {
+          title: `Билеты `,
+          link: 'tickets',
+          active: (new RegExp("tickets", 'i')).test(this.url),
+          count: this.countTicket
+        },
+        {
+          title: `Секции `,
+          link: 'sections',
+          active: (new RegExp("sections", 'i')).test(this.url),
+          count: this.countSection
+        }
+      ]
+    }
   },
    methods: {
     ...mapActions(["getQuestionsTestIdDb", "getTestIdDb"]),
@@ -57,35 +98,18 @@ export default {
         return nav
       })]
     },
+  },
+ mounted(){
+  
  },
 
   async created(){
     console.log('this.getTest - ', this.$route.params.id)
-    console.log(this.$route)
-    
     await this.getTestIdDb({id: +this.$route.params.id})
-    const url = this.$route.path
-    this.navs = [
-        {
-          title: `Вопросы `,
-          link: 'questions',
-          active: (new RegExp("questions", 'i')).test(url),
-          count: this.getTest.questionCount || ''
-        },
-        {
-          title: `Билеты `,
-          link: 'tickets',
-          active: (new RegExp("tickets", 'i')).test(url),
-          count: this.getTest.ticketCount || ''
-        },
-        {
-          title: `Секции `,
-          link: 'sections',
-          active: (new RegExp("sections", 'i')).test(url),
-          count: this.getTest.sectionCount || ''
-        }
-      ]
-    this.test = this.getTest
+    
+   
+    
+    
   },
  
 } 
