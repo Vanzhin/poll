@@ -46,9 +46,8 @@
         </div>
         <div class="btn btn-outline-primary btn-center"
           :class="{published: !question.publishedAt}"
-          title="Утвердить"
+          :title="!question.publishedAt ? 'Утвердить' : 'Скрыть'"
           @click.stop="approveQuestion"
-          v-if="!question.publishedAt"
         >
           <i class="bi bi-file-check"></i>
         </div>

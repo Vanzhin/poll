@@ -56,8 +56,8 @@
     </div>
     
     <div class="container">
-      <div class="row">
-        <div 
+      
+        <div class="colums-blok"
           v-if="questions"
         >
           <div class="question-blok">
@@ -79,7 +79,7 @@
         >
           <p>В тесте нет вопросов. Вы можете их создать.</p>
         </div>
-      </div>
+     
     </div>
   </div>
 </template>
@@ -230,8 +230,12 @@ export default {
   padding-left: 7px;
   margin-bottom: 10px;
   }
+  .colums-blok{
+    display: flex;
+    flex-direction: column;
+  }
   .question-blok{
-    height: 68vh;
+    flex: 39em;
     overflow-y:auto;
   }
   .button{

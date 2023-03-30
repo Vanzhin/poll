@@ -13,7 +13,6 @@
           @click="activeTogge(index)"
           :to="{ path: nav.link}" >{{ nav.title }} {{ nav.count }}</RouterLink>
       </li>
-     
     </ul>
   </div>
   <RouterView/>
