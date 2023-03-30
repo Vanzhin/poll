@@ -19,7 +19,26 @@
 
     <div class="container">
       <div class="row">
-        
+        <div
+          v-if="getSections"
+        >
+          <div v-for="(section, index ) in getSections" 
+            :key="section.id"
+          >
+            <ItemSection
+              :section="section"
+              
+            />
+          </div>
+          <Pagination
+            type="getSectionTestIdDb"
+          />
+        </div>
+        <div
+          v-else
+        >
+          <p>В тесте нет секций. Вы можете их создать.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -29,7 +48,7 @@
 
 
 import Pagination from "../../components/Pagination.vue"
-
+import ItemSection from "../../components/Admin/ItemSection.vue"
 import Loader from '../../components/ui/LoaderView.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 
@@ -37,6 +56,7 @@ export default {
   components: {
     Loader,
     Pagination,
+    ItemSection
   },
   data() {
     return {
@@ -48,22 +68,16 @@ export default {
   },
   computed:{
     ...mapGetters([
-      "getSlug", 
-      "getRandomTicket", 
-      "getSelectTicket",
-      "getTest",
-      "getActivePage",
-      "getTotalItemsPage",
-      "getTotalItem"
+      "getSections"
     ]),
    
   },
    methods: {
-    ...mapActions(["getQuestionsTestIdDb", ]),
-    addSection(){},
+    ...mapActions(["getSectionTestIdDb", ]),
+    
   },
   async created(){
-    // await this.getQuestionsTestIdDb({id: this.testId})
+    await this.getSectionTestIdDb({id: this.testId})
     this.isLoader = false
   },
  

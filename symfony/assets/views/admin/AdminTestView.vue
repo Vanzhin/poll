@@ -5,30 +5,17 @@
       <h2>Тест: {{ testName }}</h2>
     </div>
     <ul class="nav nav-tabs" role="tablist">
-     
       <li class="nav-item" role="presentation"
+        v-for="(nav, index ) in navsActive" 
+          :key="nav.title"
       >
-        <RouterLink class="nav-link" :class="{active: navs[0].active}"  
-          @click="activeTogge(0)"
-          :to="{ path: navs[0].link}" >{{ navs[0].title }} {{ countQuestion }}
+        <RouterLink class="nav-link" :class="{active: nav.active}"  
+          @click="activeTogge(index)"
+          :to="{ path: nav.link}" >{{ nav.title }} {{ nav.count }}
         </RouterLink>
        
       </li>
-      <li class="nav-item" role="presentation"
-      >
-        <RouterLink class="nav-link" :class="{active: navs[1].active}"  
-          @click="activeTogge(1)"
-          :to="{ path: navs[1].link}" >{{ navs[1].title }} {{ countTicket }}
-        </RouterLink>
-        
-      </li>
-      <li class="nav-item" role="presentation"
-      >
-        <RouterLink class="nav-link" :class="{active: navs[2].active}"  
-          @click="activeTogge(2)"
-          :to="{ path: navs[2].link}" >{{ navs[2].title }} {{ countSection }}
-        </RouterLink>
-      </li>
+      
     </ul>
   </div>
   <RouterView/>
@@ -52,26 +39,8 @@ export default {
         active: true,
       },
       url: this.$route.path,
-      navs:[
-        {
-          title: `Вопросы `,
-          link: 'questions',
-          active: (new RegExp("questions", 'i')).test(this.url),
-          count: this.countQuestion
-        },
-        {
-          title: `Билеты `,
-          link: 'tickets',
-          active: (new RegExp("tickets", 'i')).test(this.url),
-          count: this.countTicket
-        },
-        {
-          title: `Секции `,
-          link: 'sections',
-          active: (new RegExp("sections", 'i')).test(this.url),
-          count: this.countSection
-        }
-      ]
+      navs:[]
+        
     }
   },
   computed:{
@@ -97,24 +66,9 @@ export default {
       console.log("1-",this.getTestSectionCount)
       return this.getTestSectionCount
     },
-  },
-   methods: {
-    ...mapActions(["getQuestionsTestIdDb", "getTestIdDb"]),
-    activeTogge(index) {
-      this.navs =[ ...this.navs.map((nav, ind) => {
-        index === ind ? nav.active = true: nav.active = false
-        return nav
-      })]
-    },
-  },
- mounted(){
-  
- },
-
-  async created(){
-    console.log('this.getTest - ', this.$route.params.id)
-    await this.getTestIdDb({id: +this.$route.params.id})
-    this.navs= [
+    navsActive(){
+      this.url= this.$route.path
+     return this.navs=[
         {
           title: `Вопросы `,
           link: 'questions',
@@ -134,6 +88,25 @@ export default {
           count: this.countSection
         }
       ]
+    }
+  },
+   methods: {
+    ...mapActions(["getQuestionsTestIdDb", "getTestIdDb"]),
+    activeTogge(index) {
+      this.navs =[ ...this.navs.map((nav, ind) => {
+        index === ind ? nav.active = true: nav.active = false
+        return nav
+      })]
+    },
+  },
+ mounted(){
+  
+ },
+
+  async created(){
+    console.log('this.getTest - ', this.$route.params.id)
+    await this.getTestIdDb({id: +this.$route.params.id})
+    
    
     
     
