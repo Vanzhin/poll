@@ -228,7 +228,7 @@ class QuestionService
             if ($question) {
                 $this->changePublish($question, $user);
                 $this->em->persist($question);
-                $response[] = $question->getId();
+                $response[$question->getPublishedAt()?'published': 'unpublished'][] = $question->getId();
             }
         };
         $this->em->flush();

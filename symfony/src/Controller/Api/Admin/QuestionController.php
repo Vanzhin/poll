@@ -193,9 +193,14 @@ class QuestionController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $questionIds = key_exists('questionIds', $data) ? $data['questionIds'] : [];
         try {
-            $published = $questionService->switchPublishForAll($questionIds, $this->getUser());
+            $changed = $questionService->switchPublishForAll($questionIds, $this->getUser());
+
+            $publishedMessage = key_exists('published', $changed) ? sprintf('Опубликовано %d вопросов(а).', count($changed['published'])) : null;
+            $unPublishedMessage = key_exists('unpublished', $changed) ? sprintf('Снято с публикации %d вопросов(а).', count($changed['unpublished'])) : null;
+            $message = ($publishedMessage ?? '') . ($unPublishedMessage ?? '');
+
             $response = [
-                'message' => sprintf('Опубликовано %d вопросов(а).', count($published))
+                'message' => $message
             ];
             $status = 200;
         } catch (\Exception $e) {
