@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api\Admin;
 
-use App\Entity\Question;
 use App\Entity\Test;
 use App\Factory\Question\QuestionFactory;
 use App\Repository\QuestionRepository;

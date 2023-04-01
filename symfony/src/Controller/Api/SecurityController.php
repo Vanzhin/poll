@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api;
 
-use App\Factory\UserFactory;
+use App\Factory\User\UserFactory;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
 use App\Service\ValidationService;
@@ -35,7 +35,7 @@ class SecurityController extends AbstractController
         }
         $user = $userRepository->findOneBy(['email' => $email]);
         if (!$user) {
-            $user = $userFactory->create($email);
+            $user = $userFactory->createBuilder()->buildUser($email);
             $entityManager->persist($user);
             $entityManager->flush();
         }

@@ -24,21 +24,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user'])]
+    #[Groups(['user', 'admin_user'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user'])]
+    #[Groups(['user', 'admin_user'])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(['user'])]
+    #[Groups(['user', 'admin_user'])]
     private array $roles = [];
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['account', 'user'])]
+    #[Groups(['account', 'user', 'admin_user'])]
     #[Assert\NotBlank]
     private string|null $firstName = null;
 
