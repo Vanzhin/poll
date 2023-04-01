@@ -13,7 +13,6 @@ use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class QuestionService
 {
@@ -228,7 +227,7 @@ class QuestionService
             if ($question) {
                 $this->changePublish($question, $user);
                 $this->em->persist($question);
-                $response[$question->getPublishedAt()?'published': 'unpublished'][] = $question->getId();
+                $response[$question->getPublishedAt() ? 'published' : 'unpublished'][] = $question->getId();
             }
         };
         $this->em->flush();
@@ -239,10 +238,10 @@ class QuestionService
     {
         $response = [];
         foreach ($questions as $question) {
-                $this->changePublish($question, $user);
-                $this->em->persist($question);
-                $response[] = $question->getId();
-            }
+            $this->changePublish($question, $user);
+            $this->em->persist($question);
+            $response[] = $question->getId();
+        }
         $this->em->flush();
         return $response;
     }
@@ -251,7 +250,7 @@ class QuestionService
     {
         if (!$question->getPublishedAt()) {
             $question->setPublishedAt(new \DateTime('now'));
-        }else{
+        } else {
             $question->setPublishedAt(null);
         }
 

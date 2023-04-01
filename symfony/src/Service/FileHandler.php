@@ -44,7 +44,17 @@ class FileHandler
                             $response[$questionKey]['variant'][$variantKey]['correct'] = 1;
                             $line = str_replace('*', '', $line);
                         }
-                        $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/(^[).]+)|((([.:;]|[[:space:]])*)$)/iu", "", $line));
+
+                        if (str_starts_with($lower, '#')) {
+                            if (preg_match("/^(#+\d+)/m", $line, $matches) > 0) {
+                                $correct = (trim($matches[0], '#'));
+                                $response[$questionKey]['variant'][$variantKey]['correct'] = ($correct - 1);
+
+                            };
+                        }
+
+
+                        $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/(^[*).#]+\d?)|((([.:;]|[[:space:]])*)$)/iu", "", $line));
                         $variantKey++;
 
                     }
@@ -60,27 +70,27 @@ class FileHandler
             fclose($handle);
         }
         foreach ($response as $key => $question) {
-            $correctCount = 0;
+            $correctCount = [];
             if (key_exists('variant', $question)) {
 
                 foreach ($question['variant'] as $variant) {
-                    if (isset($variant['correct']) && $variant['correct'] === 1) {
-                        $correctCount++;
+                    if (isset($variant['correct']) && $variant['correct'] >= 0) {
+                        $correctCount[] = $variant['correct'];
                     }
                 }
-                if ($correctCount === 1 && count($question['variant']) > $correctCount) {
+                if (count($correctCount) === 1 && count($question['variant']) > count($correctCount)) {
                     $question['type'] = 'radio';
                     $response[$key] = $question;
 
                     continue;
                 }
-                if ($correctCount > 1 && count($question['variant']) >= $correctCount) {
+                if (count($correctCount) > 1 && count($question['variant']) >= count($correctCount) && count(array_unique($correctCount)) === 1) {
                     $question['type'] = 'checkbox';
                     $response[$key] = $question;
                     continue;
 
                 }
-                if ($correctCount === 1 && count($question['variant']) === $correctCount) {
+                if (count($correctCount) === 1 && count($question['variant']) === count($correctCount)) {
                     $question['type'] = 'input_one';
                     $question['answer'] = $question['variant'][0]['title'];
                     unset($question['variant']);
@@ -89,7 +99,8 @@ class FileHandler
                     continue;
 
                 }
-                if (count($question['variant']) > 1 && $correctCount === 0) {
+                if (count($question['variant']) > 1 && count($correctCount) === count($question['variant']) && count(array_unique($correctCount)) == count($correctCount)) {
+
                     $question['type'] = 'order';
 
                     $response[$key] = $question;
@@ -98,6 +109,7 @@ class FileHandler
                 }
             }
         }
+
         return $response;
     }
 

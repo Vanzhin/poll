@@ -202,7 +202,7 @@ class TestController extends AbstractController
                 $questions = [];
                 foreach ($questionData as $data) {
                     $data['test'] = $test->getId();
-                    if ($data['section']) {
+                    if (in_array('section', $data)) {
                         $data['section'] = $sectionService->createIfNotExist($data['section'], $test)->getId();
                     }
                     $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
