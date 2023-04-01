@@ -15,7 +15,7 @@ class SectionService
 
     public function createIfNotExist(string $title, ?Test $test = null): Section
     {
-        $section = $this->em->getRepository(Section::class)->findOneBy(['title' => $title]);
+        $section = $this->em->getRepository(Section::class)->findOneBy(['title' => $title, 'test'=>$test]);
         if (!$section) {
             $section = new Section();
             $section->setTitle($title)->setTest($test);
