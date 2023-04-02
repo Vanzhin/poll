@@ -33,6 +33,14 @@
       :value="questionImgValue"
       :name="(questionImgUrl === '') && (questionImgValue  === '')? '' : 'questionImage'"
     >
+    <div class="published">
+      <input  class="" type="checkbox" checked 
+        :value="published"
+        @change="changePublished" 
+        name="question[published]"
+      >
+      <label class="label">Опубликовать</label>
+    </div>
   </div>
 </template>
 <script>
@@ -46,7 +54,8 @@ export default {
       questionImgUrl:"",
       questionImgValue:"",
       questionImgFormVisible: true,
-      operationEdit: this.$route.params.operation === "edit"
+      operationEdit: this.$route.params.operation === "edit",
+      published: true
     }
   },
   computed:{
@@ -68,6 +77,9 @@ export default {
       this.questionImgUrl = ''
       this.questionImgValue = ''
       this.questionImgFormVisible = false
+    },
+    changePublished(){
+      !this.published
     }
   },
   created(){
@@ -99,6 +111,7 @@ export default {
   .img_block{
     display: flex;
     align-items: flex-start;
+    
     & i {
       margin: 10px;
       transition: all 0.5s ease-out;
@@ -107,5 +120,9 @@ export default {
         transform: scale(1.25);
       }
     }
+  }
+  .published{
+    display: flex;
+    margin-top: 10px;
   }
 </style>
