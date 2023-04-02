@@ -35,8 +35,7 @@
     >
     <div class="published">
       <input  class="" type="checkbox" checked 
-        :value="published"
-        @change="changePublished" 
+        value="true"
         name="question[published]"
       >
       <label class="label">Опубликовать</label>
@@ -78,9 +77,6 @@ export default {
       this.questionImgValue = ''
       this.questionImgFormVisible = false
     },
-    changePublished(){
-      !this.published
-    }
   },
   created(){
     
