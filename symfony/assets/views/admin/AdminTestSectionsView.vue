@@ -73,10 +73,19 @@ export default {
    
   },
    methods: {
-    ...mapActions(["getSectionTestIdDb", ]),
-    
+    ...mapActions(["getSectionTestIdDb", "getTestIdDb"]),
+    addSection(){
+      this.$router.push({
+          name: 'adminSectionCreate', 
+          params: { 
+            operation: "create", 
+            testId: this.testId, 
+            sectionId: 0 
+          }})
+    }
   },
   async created(){
+    await this.getTestIdDb({id: +this.$route.params.id})
     await this.getSectionTestIdDb({id: this.testId})
     this.isLoader = false
   },

@@ -1,10 +1,13 @@
 import { 
   SET_SECTIONS,
+  SET_SECTION
  } from './mutation-types.js'
 
  import axios from 'axios';
 const state = () => ({
   sections: [],
+  section: localStorage.getItem('section') ?
+    JSON.parse(localStorage.getItem('section')):"",
 })
 
 const actions = {
@@ -71,7 +74,6 @@ const actions = {
     }
   },
   async createSection({dispatch, commit}, {id, section, operation}){
-    console.log("id - ",  id)
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
@@ -102,6 +104,9 @@ const actions = {
       }
     }
   },
+  saveSelectSectionStore({dispatch, commit},{section}){
+    commit("SET_SECTION", section)
+  }
 };
 
 const getters = {
@@ -111,13 +116,21 @@ const getters = {
   getSectionTitle:(state)=>(id) =>{
     return state.sections.find(section => {
       return +section.id === +id}) 
-  }
+  },
+  getSection(state) {
+    return state.section 
+  },
 }
 
 const mutations = {
   [SET_SECTIONS](state, sections){
     state.sections = sections
-  }
+  },
+  [SET_SECTION](state, section){
+    const parsed = JSON.stringify(section)
+    localStorage.setItem('section', parsed);
+    state.section = section
+  },
 }
 export default {
   namespaced: false,

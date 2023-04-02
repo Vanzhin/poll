@@ -63,7 +63,6 @@ export default {
     ...mapGetters([
       "getIsAutchUser", 
       "getMessage", 
-      "getTests",
       "getActivePage",
       "getGonfimAction",
       "getGonfimMessage"
@@ -74,7 +73,7 @@ export default {
       "deleteTicketIdDb", 
       "setConfirmMessage",
       "getTestIdDb",
-      "saveSelectTicketStore",
+      "saveSelectSectionStore",
       "deleteSectionIdDb"
     ]),
     
@@ -83,21 +82,19 @@ export default {
     },
     editSection(){
       console.log('Редактирую секцию № - ', this.section.id)
-      return
-      this.saveSelectTicketStore({section: this.section})
+      
+      this.saveSelectSectionStore({section: this.section})
       this.$router.push({
         name: 'adminSectionCreate', 
         params: {
           operation:"edit" ,
-          testId: this.$route.params.id , 
+          testId: this.$route.params.id, 
           sectionId: this.section.id 
         }
+       
       })
     },
     async deleteSection(){
-      
-      console.log('Удаляю секцию № - ', this.section.id)
-      console.log('Удаляю секцию № - ', this.$route)
       await this.deleteSectionIdDb({
         id: this.section.id, 
         testId: this.$route.params.id,

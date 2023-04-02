@@ -136,8 +136,9 @@
         questionsImgs: [],
         questionsImagesValue: '',
         imagesMaxSize:[],
-        maxSizeImg: 100,
-        inputImage:[]
+        maxSizeImg: 500,
+        inputImage:[],
+
         
       }
     },
@@ -207,9 +208,21 @@
       },
       changeFileValue(e){
         if (typeof e.target.files[0] === 'object'){
+          console.dir(e.target.files[0])
           this.testFile = e.target.files[0]
           this.testValue = e.target.value
           this.setQuestionsImportError(null)
+          if (e.target.files[0].type !=="text/plain") {
+            const message = {
+              error: true, 
+              message: 'Для импорта необходимо выбрать текстовый файл'
+            }
+            this.setMessage(message)
+            this.testFileDelete()
+            
+          }
+          
+          
         }
       },
       testFileDelete(){
@@ -217,8 +230,6 @@
         this.testValue = null
       },
       changeQuestionsImgs(e){
-        console.dir(e.target)
-        
         if (typeof e.target.files[0] === 'object'){
           this.inputImage = e.target
           const  files = [...e.target.files]
@@ -234,37 +245,18 @@
               this.imagesMaxSize.push(item.name)
             }
           }
-          console.log(arrayImg)
           this.questionsImgs = arrayImg
-          console.log(this.questionsImgs.length)
-          // this.questionsImagesValue = e.target.files
-          console.log(this.questionsImagesValue)
         }
       },
       questionImgDelete(img, index){
-        // input_img
-        console.log(this.imagesMaxSize)
-        console.log(this.inputImage)
-        // let arrInputImg = [...this.inputImage.files]
-        // this.inputImage.set( files = arrInputImg.splice(index, 1))
-
         this.imagesMaxSize = this.imagesMaxSize.filter(item => item != img.name)
         this.questionsImgs = this.questionsImgs.filter(item => item.name !== img.name)
 
         let dt = new DataTransfer()
-        
-
-        // Copy all besides deleted
-        for(let i=0; i<=inputimg.files.length-1; i++)
-            if(i !== index)
-                dt.items.add(inputimg.files[i])
-
-        // Replace
+        for(let i=0; i<=inputimg.files.length-1; i++){
+          if(i !== index) {dt.items.add(inputimg.files[i])}
+        }
         inputimg.files = dt.files
-
-        // refreshFiles()
-
-
       }
     },
     async mounted(){},

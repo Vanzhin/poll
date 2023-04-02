@@ -104,8 +104,8 @@ export default {
  },
 
   async created(){
-    console.log('this.getTest - ', this.$route.params.id)
-    await this.getTestIdDb({id: +this.$route.params.id})
+    
+    
     
    
     

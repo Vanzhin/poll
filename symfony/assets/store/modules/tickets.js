@@ -11,7 +11,7 @@ const state = () => ({
   title: localStorage.getItem('ticketTitle') ?
   localStorage.getItem('ticketTitle'):"",
   ticket: localStorage.getItem('ticket') ?
-  JSON.parse(localStorage.getItem('ticket')):"",
+    JSON.parse(localStorage.getItem('ticket')):"",
 })
 
 const actions = {
