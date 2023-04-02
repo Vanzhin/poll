@@ -222,6 +222,12 @@ const router = createRouter({
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateTicketView.vue')
     },
+    {
+      path: '/admin/test/:testId/section/:sectionId/:operation',
+      name: 'adminSectionCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateSectionView.vue')
+    },
   ]
 })
 router.beforeEach((to, from, next) => {

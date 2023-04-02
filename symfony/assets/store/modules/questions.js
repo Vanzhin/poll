@@ -4,12 +4,14 @@ import {
   SET_RESULT_TICKET_USER,
   SET_QUESTION,
   SET_QUESTIONS_IMPORT_ERROR,
-  SET_QUESTIONS_TICKET
+  SET_QUESTIONS_TICKET,
+  SET_QUESTIONS_SECTION
 } from './mutation-types.js'
 import axios from 'axios';
 
 const state = () => ({
   questionsTicket: [],
+  questionsSection: [],
   question:null,
   questions:[],
   questionsDb:[],
@@ -84,6 +86,33 @@ const actions = {
         })
     } catch (e) {
         console.log(e);
+    }
+  },
+  //запрос для админки на получение вопросов секции по ее id
+  async getQuestionsSectionIdDb({dispatch, commit }, {id,  limit=10000}) {
+    const token = await dispatch("getAutchUserTokenAction")
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/admin/question/section/${id}?limit=${limit}`,
+        headers: { 
+          Accept: 'application/json', 
+          Authorization: `Bearer ${token}`
+        }
+      };
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("getQuestionsSectionIdDb - ",  data)
+          commit("SET_QUESTIONS_SECTION", data.question);
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getQuestionsSectionIdDb', {id})
+      } else {
+        dispatch('setMessageError', e)
+      }
     }
   },
   //запрос на получение вопросов теста по его id для админки
@@ -323,7 +352,7 @@ const actions = {
       }
     }
   },
-
+  //удаление вопроса из БД
   async deleteQuestionDb({ dispatch, commit, state }, { id, testId, page = null} ){
     const token = await dispatch("getAutchUserTokenAction")
     const config = {
@@ -383,6 +412,9 @@ const getters = {
   getQuestionsTicket(state) {
     return state.questionsTicket 
   },
+  getQuestionsSection(state) {
+    return state.questionsSection 
+  },
 }
 
 const mutations = {
@@ -411,6 +443,10 @@ const mutations = {
   [SET_QUESTIONS_TICKET](state, questions ) {
     console.log("SET_QUESTIONS_TICKET", questions)
     state.questionsTicket = questions
+  },
+  [SET_QUESTIONS_SECTION](state, questions ) {
+    console.log("SET_QUESTIONS_SECTION", questions)
+    state.questionsSection = questions
   },
 }
 

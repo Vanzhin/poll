@@ -37,7 +37,43 @@
               ></i>
             </div>
           </div>
+
           <br> 
+          <div class="mb-3 w-100">
+            <div class="img_conteiner"
+              v-if="questionsImgs.length > 0"
+            >
+              <div class="img_block"
+                v-for="(img, index) in questionsImgs"
+              >
+                <div class="img_item"
+                  :class="{'img_item-error': img.size > maxSizeImg }"
+                >
+                  <img :src="img.url" width="100" />
+                  <p>{{ img.name }}</p>
+                  <p>{{ img.size }}Kb</p>
+                </div> 
+                <i class="bi bi-x-lg custom-close" title="Удалить изображениe"
+                  @click="questionImgDelete(img, index)"
+                ></i>
+              </div>
+            </div>
+            <label class="label"
+              v-if="questionsImgs.length === 0"
+            >Прикрепить файлы с изображениями</label>
+            <label class="label"
+              v-else
+            >Изменить изображения</label>
+            
+            <input  class="" type="file" accept="image/*" multiple="true" id="inputimg"
+              @change="changeQuestionsImgs" 
+              :v-model="questionsImagesValue"
+              name = 'image[]'
+            > <br>
+            <label class="label"
+              v-if="imagesMaxSize.length > 0"
+            >Имеются файлы размером больше 500Кб - {{ imagesMaxSize.length  }}шт.</label>
+          </div>
           <button type="submit" class="button">Загрузить</button>
         </form>
       </div>
@@ -55,12 +91,10 @@
           <ul>
             <li>
               <div>
-
                 <h6 
                   v-if="typeof item.type === 'object'"
                   v-for="(type) in item.type"
-
-                >{{type}}!</h6>
+                  >{{type}}!</h6>
                 <h6 v-else>{{item.type}}!</h6>
                 <p>Вопрос: {{ item.question.title}}</p>
                 <div
@@ -98,7 +132,14 @@
         testFile: '',
         testValue: null,
         selectedId: null,
-        message: null
+        message: null,
+        questionsImgs: [],
+        questionsImagesValue: '',
+        imagesMaxSize:[],
+        maxSizeImg: 500,
+        inputImage:[],
+
+        
       }
     },
     computed:{ 
@@ -108,6 +149,10 @@
         "getTests",
         "getQuestionsImportError"
       ]),
+      imagesMaxSizeArr(){
+        return this.imagesMaxSize.length
+      },
+      
     },
    
     methods: { 
@@ -120,6 +165,7 @@
       ]),
       ...mapMutations([]),
       async onSubmit(e){
+        
         if (!this.testValue) {
           const message = {
             error: true, 
@@ -162,14 +208,55 @@
       },
       changeFileValue(e){
         if (typeof e.target.files[0] === 'object'){
+          console.dir(e.target.files[0])
           this.testFile = e.target.files[0]
           this.testValue = e.target.value
           this.setQuestionsImportError(null)
+          if (e.target.files[0].type !=="text/plain") {
+            const message = {
+              error: true, 
+              message: 'Для импорта необходимо выбрать текстовый файл'
+            }
+            this.setMessage(message)
+            this.testFileDelete()
+            
+          }
+          
+          
         }
       },
       testFileDelete(){
         this.testFile = ''
         this.testValue = null
+      },
+      changeQuestionsImgs(e){
+        if (typeof e.target.files[0] === 'object'){
+          this.inputImage = e.target
+          const  files = [...e.target.files]
+          let arrayImg = []
+          for(let i = 0; i < files.length; i++){
+            let item = files[i]
+            arrayImg.push({
+              url: URL.createObjectURL(item),
+              name: item.name,
+              size: (item.size / 1024).toFixed(0)
+            })
+            if ( (item.size / 1024).toFixed(0) > this.maxSizeImg){
+              this.imagesMaxSize.push(item.name)
+            }
+          }
+          this.questionsImgs = arrayImg
+        }
+      },
+      questionImgDelete(img, index){
+        this.imagesMaxSize = this.imagesMaxSize.filter(item => item != img.name)
+        this.questionsImgs = this.questionsImgs.filter(item => item.name !== img.name)
+
+        let dt = new DataTransfer()
+        for(let i=0; i<=inputimg.files.length-1; i++){
+          if(i !== index) {dt.items.add(inputimg.files[i])}
+        }
+        inputimg.files = dt.files
       }
     },
     async mounted(){},
@@ -228,6 +315,39 @@
         color: rgb(185, 48, 14);
         transform: scale(1.25);
       }
+    }
+  }
+  .img_conteiner{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+    padding: 5px;
+    overflow: auto;
+    max-height: 57vh;
+    background-color: rgb(228 240 251);
+  }
+  .img_block{
+    display: flex;
+    align-items: flex-start;
+    margin: 3px;
+    
+    & p {
+      margin:0 ;
+    }
+    & i {
+      margin: 10px;
+      transition: all 0.5s ease-out;
+      &:hover{
+        color: rgb(185, 48, 14);
+        transform: scale(1.25);
+      }
+    }
+  }
+  .img_item{
+    outline: 2px rgb(228 240 251);
+    &-error{
+      outline: 2px solid rgb(233, 50, 18);
+      background-color: rgba(245, 30, 14, 0.336);
     }
   }
  @media (min-width: 1024px) {

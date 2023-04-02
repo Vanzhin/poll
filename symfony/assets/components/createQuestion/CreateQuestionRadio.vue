@@ -120,9 +120,8 @@ export default {
         this.answers.push({id:'a' + (this.uniqueNumber), title:"", image:"", value:""})
         
       } else {
-        const arr = this.answerSelect.filter(item =>{ 
-         return item !== this.answers[this.answers.length - 1].id})
-        this.answerSelect = arr
+        
+        if (this.answerSelect === this.answers[this.answers.length - 1].id) this.answerSelect = null 
         this.answers.pop()
       }
     },

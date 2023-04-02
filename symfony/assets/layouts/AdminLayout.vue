@@ -34,10 +34,10 @@
 <style lang="scss">
 .app{
   &-page{
-    overflow: hidden ;
+    overflow: auto ;
     padding: 0 ;
     background-color: rgb(237 237 237);
-    min-height: 92%;
+    height: 91%;
     z-index: 15;
   };
   &-content{

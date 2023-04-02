@@ -74,7 +74,7 @@ export default {
   
   },
    methods: {
-    ...mapActions(["getTicketsTestIdDb", ]),
+    ...mapActions(["getTicketsTestIdDb", "getTestIdDb"]),
     addTicket(){
       this.$router.push({
           name: 'adminTicketCreate', 
@@ -86,6 +86,7 @@ export default {
     }
   },
   async created(){
+    await this.getTestIdDb({id: +this.$route.params.id})
     await this.getTicketsTestIdDb({id: this.testId})
     this.isLoader = false
   },
