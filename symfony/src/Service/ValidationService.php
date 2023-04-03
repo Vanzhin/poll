@@ -138,7 +138,7 @@ class ValidationService
                             'message' => 'variant.title.not_blank'
                         ]),
                         new Length([
-                            'max' => 700,
+                            'max' => 2500,
                             'maxMessage' => 'variant.title.max_length'
                         ])
 
