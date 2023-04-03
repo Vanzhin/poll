@@ -98,7 +98,13 @@ const router = createRouter({
       path: '/statistics',
       name: 'statistics',
       meta: {loyout: 'page', autch: true},
-      component: () => import('../views/StatisticsAutchView.vue')
+      component: () => import('../views/AutchStatisticsView.vue')
+    },
+    {
+      path: '/user/profile',
+      name: 'userAutchProfile',
+      meta: {loyout: 'page', autch: true},
+      component: () => import('../views/AutchProfileView.vue')
     },
     {
       path: '/redirection/:rtoken',
