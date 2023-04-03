@@ -29,6 +29,10 @@ class VariantBuilder
                 $variant->setTitle($item);
                 continue;
             };
+            if ($key === 'image') {
+                $variant->setImage($item);
+                continue;
+            };
             if ($key === 'correct') {
                 $variant->setIsCorrect(true);
                 if (is_numeric($item)) {

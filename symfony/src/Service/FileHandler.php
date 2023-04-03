@@ -31,7 +31,10 @@ class FileHandler
                         continue;
                     }
                     if ($string === 'question') {
-                        //
+                        if (preg_match("/@@(\d+).([[:alpha:]]+)/m", $line, $matches)) {
+                            $line = str_replace($matches[0],'',$line);
+                            $response[$questionKey]['image']= str_replace('@@','',$matches[0]);
+                        };
                         $response[$questionKey]['title'] = trim(preg_replace("/^[(|.]?([[:alnum:]])+(?)[).]+/iu", "", $line));
                         if ($section) {
                             $response[$questionKey]['section'] = $section;
@@ -53,6 +56,10 @@ class FileHandler
                             };
                         }
 
+                        if (preg_match("/@@(\d+).([[:alpha:]]+)/m", $line, $matches)) {
+                            $line = str_replace($matches[0],'',$line);
+                            $response[$questionKey]['variant'][$variantKey]['image']= str_replace('@@','',$matches[0]);
+                        };
 
                         $response[$questionKey]['variant'][$variantKey]['title'] = trim(preg_replace("/(^[*).#]+\d?)|((([.:;]|[[:space:]])*)$)/iu", "", $line));
                         $variantKey++;

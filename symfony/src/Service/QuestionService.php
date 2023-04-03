@@ -84,10 +84,14 @@ class QuestionService
         $this->em->flush();
 
         foreach ($variantData as $key => $variantItem) {
-            $image = array_key_exists($key, $variantImages) ? $variantImages[$key] : false;
             $variantItem['questionId'] = $question->getId();
             $variant = $this->variantFactory->createBuilder()->buildVariant($variantItem ?? []);
-            $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
+            if($variant->getImage()){
+                $image = array_key_exists($variant->getImage(), $variantImages) ? $variantImages[$variant->getImage()] : false;
+
+                $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
+            }
+
             $this->em->persist($variant);
             $this->em->flush();
 

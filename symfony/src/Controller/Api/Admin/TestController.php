@@ -167,7 +167,16 @@ class TestController extends AbstractController
     {
 
         $file = $request->files->get('file');
+        $images = $request->files->get('image',[]);
+        $preparedImages = [];
+
         $errors = $validation->fileValidate($file);
+        foreach ($images as $image) {
+            if ($validation->imageValidate($image, '512k')) {
+                $errors[] = implode(",", $validation->imageValidate($image, '512k'));
+            }
+            $preparedImages[$image->getClientOriginalName()] = $image;
+        }
         if (!is_null($errors) && count($errors) > 0) {
             return $this->json([
                 'message' => 'Ошибка при вводе данных',
@@ -183,13 +192,16 @@ class TestController extends AbstractController
             foreach ($questionData as $key => $data) {
                 $data['test'] = $test->getId();
                 $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
-                if ($validation->entityWithImageValidate($question)) {
-                    $total['error'][$key]['type'][] = implode(',', $validation->entityWithImageValidate($question));
+                $image = key_exists($question->getImage(), $preparedImages)? $preparedImages[$question->getImage()]:null;
+
+//                dd($image , array_keys($preparedImages));
+                if ($validation->entityWithImageValidate($question, $image)) {
+                    $total['error'][$key]['type'][] = implode(',', $validation->entityWithImageValidate($question, $image));
                     $total['error'][$key]['question'] = $data;
 
                 }
-                if ($validation->manyVariantsValidate($data)) {
-                    $total['error'][$key]['type'][] = implode(',', $validation->manyVariantsValidate($data));
+                if ($validation->manyVariantsValidate($data, $preparedImages)) {
+                    $total['error'][$key]['type'][] = implode(',', $validation->manyVariantsValidate($data, $preparedImages));
                     $total['error'][$key]['question'] = $data;
                 }
 
@@ -202,12 +214,12 @@ class TestController extends AbstractController
                 $questions = [];
                 foreach ($questionData as $data) {
                     $data['test'] = $test->getId();
-                    if (in_array('section', $data)) {
+                    if (array_key_exists('section', $data)) {
                         $data['section'] = $sectionService->createIfNotExist($data['section'], $test)->getId();
                     }
                     $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
-
-                    $questions[] = $questionService->saveWithVariant($question, $data['variant']);
+                    $questionImage = array_key_exists($question->getImage(),$preparedImages)? $preparedImages[$question->getImage()]: null;
+                    $questions[] = $questionService->saveWithVariant($question, $data['variant'], $questionImage, $preparedImages);
                 };
                 $response = $questionService->getUploadedQuestionsSummary($questions);
             }

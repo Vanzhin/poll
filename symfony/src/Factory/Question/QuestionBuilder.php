@@ -63,8 +63,11 @@ class QuestionBuilder
 
                 }
                 continue;
-
             }
+            if ($key === 'image') {
+                $question->setImage($item);
+                continue;
+            };
         }
         if($user){
             $question->setAuthor($user);

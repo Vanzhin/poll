@@ -93,6 +93,11 @@ class ValidationService
                 $errors[] = implode(',', $this->imageValidate($image));
             };
         };
+        if ($entity->getImage() && is_null($image)) {
+//            dd($entity->getImage(), $image);
+            $errors[] = sprintf('Файл %s не обнаружен', $entity->getImage());
+        }
+
 
         if (count($errors) === 0) {
             return null;
@@ -106,6 +111,7 @@ class ValidationService
         $violations = $this->validator->validate($file, [
             new Image([
                 'maxSize' => $maxSize,
+                'maxSizeMessage' => 'file.size.max',
             ]),
 
         ]);
@@ -183,6 +189,10 @@ class ValidationService
                     continue;
 
                 }
+                if ($key === 'image' && is_null($image)) {
+                    $errors[] = sprintf('Файл %s не обнаружен', $value);
+                }
+
             }
             if ($image) {
 
@@ -190,6 +200,7 @@ class ValidationService
                     $errors[] = implode(',', $this->imageValidate($image));
                 };
             };
+
 
             if (count($errors) === 0) {
                 return null;
@@ -199,20 +210,27 @@ class ValidationService
 
     }
 
+    public function variantValidateTest(Variant $variant,Question $question, File $image)
+    {
+
+    }
+
     public function manyVariantsValidate(array $data, array $images = null): ?array
     {
+        //todo использовать только для загрузки из файла
         $errors = [];
         $variantTitles = [];
-
         foreach ($data['variant'] ?? [] as $key => $variantData) {
-            $image = $images[$key] ?? null;
+            if (key_exists('image', $variantData)) {
+                $image = key_exists($variantData['image'], $images ?? []) ? $images[$variantData['image']] : null;
+            }
             if (isset($data['questionId'])) {
                 $variantData['questionId'] = $data['questionId'];
 
             }
             $variantTitles[] = $variantData['title'];
-            if ($this->variantValidate($variantData ?? [], $image)) {
-                $errors[] = implode(',', $this->variantValidate($variantData ?? [], $image));
+            if ($this->variantValidate($variantData ?? [], $image ?? null)) {
+                $errors[] = implode(',', $this->variantValidate($variantData ?? [], $image ?? null));
             }
         }
 
@@ -220,7 +238,7 @@ class ValidationService
             $errors[] = 'Название вариантов не может быть одинаковым';
         }
 
-        if(count($variantTitles)===0){
+        if (count($variantTitles) === 0) {
             $errors[] = 'Нет соответствующих вариантов ответа (Возможные причины: пустая строка между вопросом и вариантом)';
 
         }
