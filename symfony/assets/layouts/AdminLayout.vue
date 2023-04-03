@@ -24,7 +24,9 @@
       loading: false
     }),
     components: {
-      Headers, Loader, Sidebar
+      Headers, 
+      Loader, 
+      Sidebar
     },
     computed:{ 
       ...mapGetters(["getIsLoaderQuestions"]),

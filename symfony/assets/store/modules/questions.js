@@ -176,7 +176,6 @@ const actions = {
   async setResultDb({dispatch, commit, state }, {userAuth} ){
     const token = await dispatch("getAutchUserTokenAction")
     console.log(JSON.stringify(state.resultTicketUser))
-    
     try{
       const config = {
         method: 'post',
