@@ -93,7 +93,7 @@ class Question implements EntityWithImageInterface
     #[Groups(['handle', 'result', 'result_answer'])]
     private ?array $result = null;
 
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
     private Collection $subtitles;
 

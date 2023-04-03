@@ -81,21 +81,20 @@ class QuestionService
         $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
 
         $this->em->persist($question);
-        $this->em->flush();
 
         foreach ($variantData as $key => $variantItem) {
-            $variantItem['questionId'] = $question->getId();
-            $variant = $this->variantFactory->createBuilder()->buildVariant($variantItem ?? []);
-            if($variant->getImage()){
+            $variant = $this->variantFactory->createBuilder()->buildVariant($variantItem ?? [], $question);
+            if ($variant->getImage()) {
                 $image = array_key_exists($variant->getImage(), $variantImages) ? $variantImages[$variant->getImage()] : false;
 
                 $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
             }
 
             $this->em->persist($variant);
-            $this->em->flush();
 
         }
+        $this->em->flush();
+
 
         return $question;
     }
@@ -110,18 +109,16 @@ class QuestionService
 
         $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
         $errors = $questionErrors;
-        $this->em->beginTransaction();
         $this->em->persist($question);
-        $this->em->flush();
+
         $variants = [];
         $hasCorrectVariant = [];
         static $i = 0;
         foreach ($data['variant'] ?? [] as $key => $variantData) {
-            $variantData['questionId'] = $question->getId();
             if (!is_null($question->getType()) && $question->getType()->getTitle() === 'order') {
                 $variantData['correct'] = $i++;
             }
-            $variant = $this->variantFactory->createBuilder()->buildVariant($variantData, $this->em->find(Variant::class, $key));
+            $variant = $this->variantFactory->createBuilder()->buildVariant($variantData, $question, $this->em->find(Variant::class, $key));
             if ($variant->getCorrect()) {
                 $hasCorrectVariant[] = $variant->getId();
             }
@@ -133,25 +130,21 @@ class QuestionService
 
             if ($this->validation->entityWithImageValidate($variant, $image)) {
                 $errors[] = implode(',', $this->validation->entityWithImageValidate($variant, $image));
-
             } else {
                 $variants[$key] = $variant;
                 $this->em->persist($variant);
-                $this->em->flush();
+                $question->addVariant($variant);
             }
         }
         foreach ($question->getVariant() as $variant) {
             if (!key_exists($variant->getId(), $variants)) {
                 $this->em->remove($variant);
-                $this->em->flush();
             };
         }
-
         $subtitles = [];
-
         if (!is_null($question->getType()) && $question->getType()->getTitle() === 'conformity') {
             foreach ($data['subTitle'] ?? [] as $key => $subtitleData) {
-                $subtitle = $this->subtitleFactory->createBuilder()->buildSubtitle($subtitleData['title'], $question, isset($subtitleData['variant']) ? $variants[$subtitleData['variant']] : null, $this->em->find(Subtitle::class, $key));
+                $subtitle = $this->subtitleFactory->createBuilder()->buildSubtitle($subtitleData['title'], $question, isset($subtitleData['variant']) ? $variants[$subtitleData['variant']] ?? null : null, $this->em->find(Subtitle::class, $key));
                 if (!is_null($subtitleImages) && isset($subtitleImages[$key])) {
                     $image = $subtitleImages[$key];
                 } else {
@@ -163,19 +156,17 @@ class QuestionService
 
                 } else {
                     $subtitles[$key] = $subtitle;
-
                     $this->em->persist($subtitle);
-                    $this->em->flush();
+                    $question->addSubtitle($subtitle);
+
                 }
             }
         }
         foreach ($question->getSubtitles() as $subtitle) {
             if (!key_exists($subtitle->getId(), $subtitles)) {
                 $this->em->remove($subtitle);
-                $this->em->flush();
             };
         }
-
         if (count($hasCorrectVariant) < 1 && !in_array($question->getType()->getTitle(), ['input_one', 'conformity'])) {
             $errors[] = 'Необходимо выбрать хотя бы один верный ответ';
         }
@@ -183,16 +174,21 @@ class QuestionService
             $errors[] = 'Необходимо выбрать только один верный ответ';
         }
 
+        if(!is_null($this->validation->uniqueTitlesValidate($question))){
+            $errors[] = implode(', ',$this->validation->uniqueTitlesValidate($question));
+
+        }
 
         if (!is_null($errors)) {
-            $this->em->rollback();
             return [
                 'message' => 'Ошибка при вводе данных',
                 'error' => $errors
             ];
 
         } else {
+
             try {
+                $this->em->flush();
                 $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
                 foreach ($variants as $key => $variant) {
                     $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, array_key_exists($key, $variantImages) ? $variantImages[$key] : false);
@@ -204,7 +200,6 @@ class QuestionService
                     'message' => $message,
                     'question' => $question,
                 ];
-                $this->em->commit();
             } catch (\Exception $e) {
                 $response = ['error' => $e->getMessage()];
             } catch (FilesystemException $e) {

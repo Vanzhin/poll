@@ -12,18 +12,13 @@ class VariantBuilder
     {
     }
 
-    public function buildVariant(array $data, Variant $variant = null): Variant
+    public function buildVariant(array $data, Question $question, Variant $variant = null): Variant
     {
 
         if (!$variant) {
             $variant = new Variant();
         }
 
-        if (!$variant->getQuestion() && isset($data['questionId'])) {
-            $question = $this->em->find(Question::class, $data['questionId']);
-        } else {
-            $question = $variant->getQuestion();
-        }
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $variant->setTitle($item);
@@ -60,9 +55,9 @@ class VariantBuilder
         } else {
             $variant->setWeight(100);
         }
-        if ($question) {
-            $variant->setQuestion($question);
-        }
+
+        $variant->setQuestion($question);
+
         return $variant;
     }
 

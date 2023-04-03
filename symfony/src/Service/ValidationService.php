@@ -93,10 +93,10 @@ class ValidationService
                 $errors[] = implode(',', $this->imageValidate($image));
             };
         };
-        if ($entity->getImage() && is_null($image)) {
-//            dd($entity->getImage(), $image);
-            $errors[] = sprintf('Файл %s не обнаружен', $entity->getImage());
-        }
+//        if ($entity->getImage() && is_null($image)) {
+////            dd($entity->getImage(), $image);
+//            $errors[] = sprintf('Файл %s не обнаружен', $entity->getImage());
+//        }
 
 
         if (count($errors) === 0) {
@@ -210,10 +210,6 @@ class ValidationService
 
     }
 
-    public function variantValidateTest(Variant $variant,Question $question, File $image)
-    {
-
-    }
 
     public function manyVariantsValidate(array $data, array $images = null): ?array
     {
@@ -274,6 +270,29 @@ class ValidationService
         }
         foreach ($violations as $violation) {
             $errors[] = $violation->getMessage();
+        }
+        if (count($errors) === 0) {
+            return null;
+        }
+        return $errors;
+    }
+
+    public function uniqueTitlesValidate(Question $question): ?array
+    {
+        $errors = [];
+        $variants= [];
+        $subtitles=[];
+        foreach ($question->getVariant() as $variant){
+            $variants[] = $variant->getTitle();
+        }
+        foreach ($question->getSubtitles() as $subtitle){
+            $subtitles[] = $subtitle->getTitle();
+        }
+        if(count(array_unique($variants)) !== count($variants)){
+            $errors[] = 'Названия вариантов не могут быть одинаковыми';
+        }
+        if(count(array_unique($subtitles)) !== count($subtitles)){
+            $errors[] = 'Названия подвопросов не могут быть одинаковыми';
         }
         if (count($errors) === 0) {
             return null;

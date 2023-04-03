@@ -33,13 +33,14 @@ class Variant implements EntityWithImageInterface
         message: 'variant.title.not_blank'
     )]
     #[Assert\Length(
-        max: 700,
+        max: 2500,
         maxMessage: 'variant.title.max_length'
     )]
+
     #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 100])]
     #[Assert\LessThanOrEqual(
         value: 100,
         message: 'variant.weight.greater_than'
