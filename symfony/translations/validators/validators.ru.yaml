@@ -25,6 +25,8 @@ category.title.unique: Раздел с таким названием уже су
 
 
 file.extension: Расширение загружаемого файла не {{ extensions }}
+file.size.max: Файл {{ name }} слишком большой ({{ size }} {{ suffix }}). Максимально допустимый размер {{ limit }} {{ suffix }}
+
 file.is.null: Файл не найден
 
 test.title.not_blank: Название теста не может быть пустым

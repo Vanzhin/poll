@@ -28,25 +28,26 @@ class Variant implements EntityWithImageInterface
     #[Groups(['main', 'admin', 'admin_question', 'result'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 700)]
+    #[ORM\Column(length: 2500)]
     #[Assert\NotBlank(
         message: 'variant.title.not_blank'
     )]
     #[Assert\Length(
-        max: 700,
+        max: 2500,
         maxMessage: 'variant.title.max_length'
     )]
+
     #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 100])]
     #[Assert\LessThanOrEqual(
         value: 100,
         message: 'variant.weight.greater_than'
     )]
     private ?int $weight = null;
 
-    #[ORM\ManyToOne(inversedBy: 'variant')]
+    #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'variant')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull(
         message: 'variant.test.not_null'

@@ -13,7 +13,6 @@ use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class QuestionService
 {
@@ -37,17 +36,6 @@ class QuestionService
     {
         $this->em->remove($question);
         $this->em->flush();
-    }
-
-    public function imageAttach(Question $question, UploadedFile $image = null): Question
-    {
-        if ($image) {
-            $question->setImage($this->questionImageUploader->uploadImage($image, $question->getImage()));
-            $this->em->persist($question);
-            $this->em->flush();
-        };
-        return $question;
-
     }
 
     public function saveResponse(Question $question, UploadedFile|bool|null $image): array
@@ -77,26 +65,6 @@ class QuestionService
 
     }
 
-    public function saveWithVariant(Question $question, ?array $variantData, UploadedFile $questionImage = null, array $variantImages = []): Question
-    {
-        $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
-
-        $this->em->persist($question);
-        $this->em->flush();
-
-        foreach ($variantData as $key => $variantItem) {
-            $image = array_key_exists($key, $variantImages) ? $variantImages[$key] : false;
-            $variantItem['questionId'] = $question->getId();
-            $variant = $this->variantFactory->createBuilder()->buildVariant($variantItem ?? []);
-            $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, $image);
-            $this->em->persist($variant);
-            $this->em->flush();
-
-        }
-
-        return $question;
-    }
-
     public function saveWithVariantIfValid(Question $question, array $data, UploadedFile|bool|null $questionImage = null, array $variantImages = null, array $subtitleImages = null): array
     {
         if (!$question->getId()) {
@@ -104,25 +72,78 @@ class QuestionService
         } else {
             $message = 'Вопрос обновлен';
         }
+//        todo убрать костыль
+        if (!$question->getId()) {
+            foreach ($data['variant'] as $key => $variantData) {
+                if (key_exists($key, $variantImages)) {
+                    $data['variant'][$key]['image'] = $key;
 
-        $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
-        $errors = $questionErrors;
-        $this->em->beginTransaction();
+                }
+            };
+        }
+        $response = $this->createOrUpdateQuestionIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
+
+        if (!is_null($response['error'])) {
+            return [
+                'message' => 'Ошибка при вводе данных',
+                'error' => $response['error']
+            ];
+
+        } else {
+            try {
+                $question = $this->saveWithVariants($question, $response['variants'], $response['subtitles'], $questionImage, $variantImages, $subtitleImages);
+                $response = [
+                    'message' => $message,
+                    'question' => $question,
+                ];
+            } catch (\Exception $e) {
+                $response = ['error' => $e->getMessage()];
+            } catch (FilesystemException $e) {
+                $response = ['error' => $e->getMessage()];
+            } finally {
+                return $response;
+            }
+        }
+    }
+
+    public function saveWithVariants(Question $question, array $variants = [], array $subtitles = [], UploadedFile|bool|null $questionImage = null, array $variantImages = null, array $subtitleImages = null): Question
+    {
         $this->em->persist($question);
         $this->em->flush();
+
+        $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
+        foreach ($variants as $key => $variant) {
+            $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, array_key_exists($key, $variantImages) ? $variantImages[$key] : false);
+        }
+        foreach ($subtitles as $key => $subtitle) {
+            $this->variantService->imageUpdate($subtitle, $this->variantImageUploader, $this->em, array_key_exists($key, $subtitleImages) ? $subtitleImages[$key] : false);
+        }
+        return $question;
+
+    }
+
+    public function createOrUpdateQuestionIfValid(Question $question, array $data, UploadedFile|bool|null $questionImage = null, array $variantImages = null, array $subtitleImages = null): array
+    {
+        $response = [];
+        $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
+        $errors = $questionErrors;
+
         $variants = [];
         $hasCorrectVariant = [];
         static $i = 0;
         foreach ($data['variant'] ?? [] as $key => $variantData) {
-            $variantData['questionId'] = $question->getId();
             if (!is_null($question->getType()) && $question->getType()->getTitle() === 'order') {
                 $variantData['correct'] = $i++;
             }
-            $variant = $this->variantFactory->createBuilder()->buildVariant($variantData, $this->em->find(Variant::class, $key));
+            $variant = $this->variantFactory->createBuilder()->buildVariant($variantData, $question, $this->em->find(Variant::class, $key));
             if ($variant->getCorrect()) {
-                $hasCorrectVariant[] = $variant->getId();
+                $hasCorrectVariant[] = $key;
             }
-            if (!is_null($variantImages) && isset($variantImages[$key])) {
+            if (!is_null($variantImages) && isset($variantImages[$variant->getImage()])) {
+                $image = $variantImages[$variant->getImage()];
+            } else if (!is_null($variantImages) && isset($variantImages[$variant->getId()])) {
+                $image = $variantImages[$variant->getId()];
+            } else if (!is_null($variantImages) && isset($variantImages[$key])) {
                 $image = $variantImages[$key];
             } else {
                 $image = null;
@@ -130,25 +151,25 @@ class QuestionService
 
             if ($this->validation->entityWithImageValidate($variant, $image)) {
                 $errors[] = implode(',', $this->validation->entityWithImageValidate($variant, $image));
-
             } else {
                 $variants[$key] = $variant;
-                $this->em->persist($variant);
-                $this->em->flush();
+                $question->addVariant($variant);
             }
         }
-        foreach ($question->getVariant() as $variant) {
-            if (!key_exists($variant->getId(), $variants)) {
+
+        foreach ($question->getVariant() ?? [] as $variant) {
+
+            if (!is_null($variant->getId()) && !key_exists($variant->getId(), $variants)) {
+                $question->removeVariant($variant);
                 $this->em->remove($variant);
-                $this->em->flush();
+
             };
         }
 
         $subtitles = [];
-
         if (!is_null($question->getType()) && $question->getType()->getTitle() === 'conformity') {
             foreach ($data['subTitle'] ?? [] as $key => $subtitleData) {
-                $subtitle = $this->subtitleFactory->createBuilder()->buildSubtitle($subtitleData['title'], $question, isset($subtitleData['variant']) ? $variants[$subtitleData['variant']] : null, $this->em->find(Subtitle::class, $key));
+                $subtitle = $this->subtitleFactory->createBuilder()->buildSubtitle($subtitleData['title'], $question, isset($subtitleData['variant']) ? $variants[$subtitleData['variant']] ?? null : null, $this->em->find(Subtitle::class, $key));
                 if (!is_null($subtitleImages) && isset($subtitleImages[$key])) {
                     $image = $subtitleImages[$key];
                 } else {
@@ -160,56 +181,38 @@ class QuestionService
 
                 } else {
                     $subtitles[$key] = $subtitle;
-
-                    $this->em->persist($subtitle);
-                    $this->em->flush();
+                    $question->addSubtitle($subtitle);
                 }
             }
         }
         foreach ($question->getSubtitles() as $subtitle) {
             if (!key_exists($subtitle->getId(), $subtitles)) {
                 $this->em->remove($subtitle);
-                $this->em->flush();
             };
         }
+        if (count($hasCorrectVariant) < 1 && !in_array($question->getType()?->getTitle(), ['input_one', 'conformity'])) {
 
-        if (count($hasCorrectVariant) < 1 && !in_array($question->getType()->getTitle(), ['input_one', 'conformity'])) {
             $errors[] = 'Необходимо выбрать хотя бы один верный ответ';
         }
-        if (count($hasCorrectVariant) > 1 && $question->getType()->getTitle() === 'radio') {
+
+        if (count($hasCorrectVariant) > 1 && $question->getType()?->getTitle() === 'radio') {
             $errors[] = 'Необходимо выбрать только один верный ответ';
         }
 
+        if (!is_null($this->validation->uniqueTitlesValidate($question))) {
+            $errors[] = implode(', ', $this->validation->uniqueTitlesValidate($question));
 
-        if (!is_null($errors)) {
-            $this->em->rollback();
-            return [
-                'message' => 'Ошибка при вводе данных',
-                'error' => $errors
-            ];
-
-        } else {
-            try {
-                $this->imageUpdate($question, $this->questionImageUploader, $this->em, $questionImage);
-                foreach ($variants as $key => $variant) {
-                    $this->variantService->imageUpdate($variant, $this->variantImageUploader, $this->em, array_key_exists($key, $variantImages) ? $variantImages[$key] : false);
-                }
-                foreach ($subtitles as $key => $subtitle) {
-                    $this->variantService->imageUpdate($subtitle, $this->variantImageUploader, $this->em, array_key_exists($key, $subtitleImages) ? $subtitleImages[$key] : false);
-                }
-                $response = [
-                    'message' => $message,
-                    'question' => $question,
-                ];
-                $this->em->commit();
-            } catch (\Exception $e) {
-                $response = ['error' => $e->getMessage()];
-            } catch (FilesystemException $e) {
-                $response = ['error' => $e->getMessage()];
-            } finally {
-                return $response;
-            }
         }
+        if ($question->getVariant()->count() < 1) {
+            $errors[] = 'Нет соответствующих вариантов ответа (Возможные причины: пустая строка между вопросом и вариантом)';
+
+        }
+        $response['error'] = $errors;
+        $response['question'] = $question;
+        $response['variants'] = $variants;
+        $response['subtitles'] = $subtitles;
+
+        return $response;
     }
 
     public function getUploadedQuestionsSummary(array $questions): array
@@ -228,7 +231,7 @@ class QuestionService
             if ($question) {
                 $this->changePublish($question, $user);
                 $this->em->persist($question);
-                $response[$question->getPublishedAt()?'published': 'unpublished'][] = $question->getId();
+                $response[$question->getPublishedAt() ? 'published' : 'unpublished'][] = $question->getId();
             }
         };
         $this->em->flush();
@@ -239,10 +242,10 @@ class QuestionService
     {
         $response = [];
         foreach ($questions as $question) {
-                $this->changePublish($question, $user);
-                $this->em->persist($question);
-                $response[] = $question->getId();
-            }
+            $this->changePublish($question, $user);
+            $this->em->persist($question);
+            $response[] = $question->getId();
+        }
         $this->em->flush();
         return $response;
     }
@@ -251,7 +254,7 @@ class QuestionService
     {
         if (!$question->getPublishedAt()) {
             $question->setPublishedAt(new \DateTime('now'));
-        }else{
+        } else {
             $question->setPublishedAt(null);
         }
 
