@@ -2,9 +2,10 @@
 
 namespace App\Controller\Api\Admin;
 
-use App\Entity\Question;
+use App\Entity\Section;
 use App\Entity\Test;
 use App\Factory\Question\QuestionFactory;
+use App\Factory\Section\SectionFactory;
 use App\Repository\QuestionRepository;
 use App\Repository\SectionRepository;
 use App\Repository\TestRepository;
@@ -156,24 +157,26 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/admin/test/{id}/upload', name: 'app_api_admin_test_upload', methods: 'POST')]
-    public function upload(Test              $test,
-                           Request           $request,
-                           ValidationService $validation,
-                           FileHandler       $handler,
-                           QuestionService   $questionService,
-                           SectionService    $sectionService,
-                           QuestionFactory   $questionFactory
+    public function upload(Test                   $test,
+                           Request                $request,
+                           ValidationService      $validation,
+                           FileHandler            $handler,
+                           QuestionService        $questionService,
+                           SectionService         $sectionService,
+                           QuestionFactory        $questionFactory,
+                           SectionFactory         $sectionFactory,
+                           EntityManagerInterface $em,
     ): JsonResponse
     {
 
         $file = $request->files->get('file');
-        $images = $request->files->get('image',[]);
+        $images = $request->files->get('image', []);
         $preparedImages = [];
 
         $errors = $validation->fileValidate($file);
         foreach ($images as $image) {
             if ($validation->imageValidate($image, '512k')) {
-                $errors[] = implode(",", $validation->imageValidate($image, '512k'));
+                $errors[] = implode(", ", $validation->imageValidate($image, '512k'));
             }
             $preparedImages[$image->getClientOriginalName()] = $image;
         }
@@ -187,41 +190,61 @@ class TestController extends AbstractController
         }
         try {
             $questionData = $handler->getQuestion($file);
+            $sections = [];
+
+            foreach ($questionData['section'] ?? [] as $key => $title) {
+                $section = $sectionFactory->createBuilder()->buildSection(['title' => $title, 'test' => $test], $em->getRepository(Section::class)->findOneBy(['title' => $title, 'test' => $test]));
+                $sections[$key] = $section;
+            };
+
             $status = 200;
             $total = [];
-            foreach ($questionData as $key => $data) {
+            $questions = [];
+            foreach ($questionData['question'] ?? [] as $key => $data) {
                 $data['test'] = $test->getId();
+
                 $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
-                $image = key_exists($question->getImage(), $preparedImages)? $preparedImages[$question->getImage()]:null;
+                if ($data['section']) {
 
-//                dd($image , array_keys($preparedImages));
-                if ($validation->entityWithImageValidate($question, $image)) {
-                    $total['error'][$key]['type'][] = implode(',', $validation->entityWithImageValidate($question, $image));
-                    $total['error'][$key]['question'] = $data;
+                    $question->setSection($sections[$data['section']]);
+                };
+                $image = key_exists($question->getImage(), $preparedImages) ? $preparedImages[$question->getImage()] : null;
 
+//                todo перебираю, чтобы ключи не совпадали с айдишниками вариантов из бд
+                $preparedData = [];
+                if (isset($data['variant'])) {
+                    foreach ($data['variant'] as $oldKey => $variant) {
+                        $preparedData['variant']['a' . $oldKey] = $variant;
+                    };
                 }
-                if ($validation->manyVariantsValidate($data, $preparedImages)) {
-                    $total['error'][$key]['type'][] = implode(',', $validation->manyVariantsValidate($data, $preparedImages));
+                $response = $questionService->createOrUpdateQuestionIfValid($question, $preparedData, $image, $preparedImages, $preparedImages);
+
+                if ($response['error']) {
+                    $total['error'][$key]['type'][] = implode(', ', $response['error']);
                     $total['error'][$key]['question'] = $data;
+                } else {
+                    $questions[] = $response['question'];
                 }
 
             }
+
             if ($total) {
                 $total['message'] = 'Ошибка при создании вопроса';
                 $response = $total;
                 $status = 422;
             } else {
-                $questions = [];
-                foreach ($questionData as $data) {
-                    $data['test'] = $test->getId();
-                    if (array_key_exists('section', $data)) {
-                        $data['section'] = $sectionService->createIfNotExist($data['section'], $test)->getId();
-                    }
-                    $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
-                    $questionImage = array_key_exists($question->getImage(),$preparedImages)? $preparedImages[$question->getImage()]: null;
-                    $questions[] = $questionService->saveWithVariant($question, $data['variant'], $questionImage, $preparedImages);
+                $savedQuestions = [];
+                foreach ($questions as $question) {
+                    $variantImages = [];
+                        foreach ($question->getVariant()->toArray() as $key=>$variant){
+                            if($variant->getImage()){
+                                $variantImages[$key] = $preparedImages[$variant->getImage()];
+                            }
+                        }
+                    $saved = $questionService->saveWithVariants($question, $question->getVariant()->toArray(), $question->getSubtitles()->toArray(), $preparedImages[$question->getImage()] ?? null, $variantImages);
+                    $savedQuestions[] = $saved;
                 };
-                $response = $questionService->getUploadedQuestionsSummary($questions);
+                $response = $questionService->getUploadedQuestionsSummary($savedQuestions);
             }
 
         } catch (\Exception $e) {

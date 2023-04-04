@@ -4,11 +4,10 @@ namespace App\Factory\Variant;
 
 use App\Entity\Question;
 use App\Entity\Variant;
-use Doctrine\ORM\EntityManagerInterface;
 
 class VariantBuilder
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct()
     {
     }
 
@@ -18,7 +17,6 @@ class VariantBuilder
         if (!$variant) {
             $variant = new Variant();
         }
-
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $variant->setTitle($item);
@@ -55,9 +53,7 @@ class VariantBuilder
         } else {
             $variant->setWeight(100);
         }
-
         $variant->setQuestion($question);
-
         return $variant;
     }
 

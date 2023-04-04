@@ -11,9 +11,7 @@ use App\Service\NormalizerService;
 use App\Service\Paginator;
 use App\Service\QuestionService;
 use App\Service\ValidationService;
-use App\Service\VariantService;
 use App\Twig\Extension\AppUpLoadedAsset;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -71,7 +69,7 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $image = $request->files->get('questionImage');
 //        todo сделать опцией
-        $data['question']['published'] = true;
+//        $data['question']['published'] = true;
         $question = $factory->createBuilder()->buildQuestion($data['question'], $this->getUser());
         $errors = $validation->entityWithImageValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
@@ -95,7 +93,7 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $image = $request->files->get('questionImage', false);
 //        todo сделать опцией
-        $data['question']['published'] = true;
+//        $data['question']['published'] = true;
 
         $question = $factory->createBuilder()->buildQuestion($data['question'], $this->getUser(), $question);
         $errors = $validation->entityWithImageValidate($question, $image instanceof UploadedFile ? $image : null);
@@ -146,7 +144,6 @@ class QuestionController extends AbstractController
 
 //        //        todo сделать опцией
 //        $data['question']['published'] = true;
-
         $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser());
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {

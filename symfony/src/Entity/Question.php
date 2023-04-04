@@ -72,7 +72,7 @@ class Question implements EntityWithImageInterface
     #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result'])]
     private ?string $image = null;
 
-    #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'questions')]
     #[ORM\JoinColumn(name: "section_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
     #[Groups(['admin', 'admin_ticket', 'admin_question'])]
     private ?Section $section = null;

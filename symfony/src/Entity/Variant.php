@@ -47,7 +47,7 @@ class Variant implements EntityWithImageInterface
     )]
     private ?int $weight = null;
 
-    #[ORM\ManyToOne(inversedBy: 'variant')]
+    #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'variant')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull(
         message: 'variant.test.not_null'
