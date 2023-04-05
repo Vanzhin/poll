@@ -119,7 +119,6 @@ class FileHandler
             }
         }
         $response['section'] = $sectionList;
-
         return $response;
     }
 

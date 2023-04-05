@@ -196,7 +196,6 @@ class TestController extends AbstractController
                 $section = $sectionFactory->createBuilder()->buildSection(['title' => $title, 'test' => $test], $em->getRepository(Section::class)->findOneBy(['title' => $title, 'test' => $test]));
                 $sections[$key] = $section;
             };
-
             $status = 200;
             $total = [];
             $questions = [];
@@ -204,8 +203,7 @@ class TestController extends AbstractController
                 $data['test'] = $test->getId();
 
                 $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
-                if ($data['section']) {
-
+                if (isset($data['section'])) {
                     $question->setSection($sections[$data['section']]);
                 };
                 $image = key_exists($question->getImage(), $preparedImages) ? $preparedImages[$question->getImage()] : null;
