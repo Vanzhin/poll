@@ -21,6 +21,10 @@ class QuestionBuilder
         if (!$question) {
             $question = new Question();
         }
+
+        if(!array_key_exists('published',$data) ){
+            $data['published'] = false;
+        }
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $question->setTitle($item);
@@ -56,9 +60,9 @@ class QuestionBuilder
 
             }
             if ($key === 'published') {
-                if($item === 'true'){
+                if(filter_var($item, FILTER_VALIDATE_BOOLEAN)){
                     $question->setPublishedAt(new \DateTime('now'));
-                }elseif ($item === 'false'){
+                }else{
                     $question->setPublishedAt(null);
 
                 }
