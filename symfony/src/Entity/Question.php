@@ -39,6 +39,10 @@ class Question implements EntityWithImageInterface
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(
+        max: 2500,
+        maxMessage: 'question.title.max_length'
+    )]
     #[Assert\NotBlank(
         message: 'question.title.not_blank'
     )]

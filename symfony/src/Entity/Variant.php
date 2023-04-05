@@ -28,7 +28,7 @@ class Variant implements EntityWithImageInterface
     #[Groups(['main', 'admin', 'admin_question', 'result'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 2500)]
+    #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(
         message: 'variant.title.not_blank'
     )]

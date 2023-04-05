@@ -141,7 +141,6 @@ class QuestionController extends AbstractController
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
         $subtitleImages = $request->files->get('subTitleImage', []);
-
         $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser());
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {
@@ -163,7 +162,7 @@ class QuestionController extends AbstractController
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
         $subtitleImages = $request->files->get('subTitleImage', []);
-        
+
         $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser(), $question);
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {

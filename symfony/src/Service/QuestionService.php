@@ -127,7 +127,6 @@ class QuestionService
         $response = [];
         $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
         $errors = $questionErrors;
-
         $variants = [];
         $hasCorrectVariant = [];
         static $i = 0;
