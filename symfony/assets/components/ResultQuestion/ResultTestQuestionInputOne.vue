@@ -11,7 +11,7 @@
           :class="classAnswer()"
         >{{  question.result.user_answer[0] }}
         </label>
-        <label v-if="getUserAnswer && !question.result.score"
+        <label v-if="getUserAnswer && !question.result.correct"
           class="custom-control-label f_sm answer-true" 
         > - {{ question.variant.length > 0 ? question.variant[0].title ? question.variant[0].title:"":""}}
         </label>
@@ -35,14 +35,16 @@ export default {
   computed:{
     getUserAnswer(){
       
-      return this.question.result.user_answer ?  this.question.result.user_answer.length > 0 && this.question.result.user_answer[0] !=='' : false
+      return this.question.result.user_answer 
+        ?  this.question.result.user_answer.length > 0 && this.question.result.user_answer[0] !=='' 
+        : false
     },
   },
   methods: {
     classAnswer(){
       return  {
-        "answer-true": this.getUserAnswer && this.question.result.score,
-        "answer-user": this.getUserAnswer && !this.question.result.score,
+        "answer-true": this.getUserAnswer && this.question.result.correct,
+        "answer-user": this.getUserAnswer && !this.question.result.correct,
       }
     },
     

@@ -148,61 +148,8 @@ const actions = {
       }
     }
   },
-  // получение данных статистики
-  async getAuthAccountDb({dispatch, commit, state }, token) {
-    try {
-      const config = {
-        method: 'get',
-        url: '/api/auth/account',
-        headers: { 
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${state.token}`
-        },
-      }
-      await axios(config)
-        .then((data)=>{
-          console.log("getAuthAccountDb - ",  data.data.results)
-          commit("SET_AUTH_ACCOUNT", data.data.results);
-        })
-    } catch (e) {
-      const err = e.response.data.message
-      console.log("ошибка - ",e)
-      if (err === "Expired JWT Token") {
-        await dispatch('getAuthRefresh')
-        await dispatch('getAuthAccountDb')
-      }
-    }
-  },
-  // получение данных статистики развернутый
-  async getAuthAccountResultsDb({dispatch, commit, state }, token) {
-    try {
-      const config = {
-        method: 'get',
-        url: '/api/auth/result',
-        headers: { 
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${state.token}`
-        },
-      }
-      await axios(config)
-        .then((data)=>{
-          console.log("getAuthAccountResultsDb - ",  data)
-          commit("SET_AUTH_ACCOUNT", data.data.results);
-          dispatch("setPagination", data.pagination);
-        })
-    } catch (e) {
-      const err = e.response.data.message
-      console.log("ошибка - ",e)
-      if (err === "Expired JWT Token") {
-        await dispatch('getAuthRefresh')
-        await dispatch('getAuthAccountResultsDb')
-      }else {
-        dispatch('setMessageError', e)
-      }
-    }
-  },
+  
+  
   // повторное получение токена
   async getAuthRefresh({commit, state }, refresh_token) {
     let data = ''
@@ -287,10 +234,6 @@ const getters = {
   getPageName(state) {
     return state.page
   },
-  getAuthAccountResult(state) {
-    console.log(state.result)
-    return state.result
-  },
   getLogoutLinkDate(state) {
     return state.logoutLinkDate
   },
@@ -336,10 +279,6 @@ const mutations = {
     console.log("SET_PAGE_NAME", page)
     state.page = page
     localStorage.setItem('pageLink', page);
-  },
-  [SET_AUTH_ACCOUNT] (state, result) {
-    console.log("SET_AUTH_ACCOUNT", result)
-    state.result = result
   },
   [SET_LOGOUT_LINK_DATE] (state, result) {
     console.log("SET_LOGOUT_LINK_DATE", result)
