@@ -40,6 +40,9 @@
                   <p class="tablis-cell">{{ result.questionCount }}</p>
                   <p class="tablis-cell">{{ statistikDate({date:result.updatedAt}) }}</p>
                 </div>
+                <button
+                  @click="getReport(result.id)"
+                >Получить отчет</button>
               </div>
 
               
@@ -78,12 +81,18 @@
     },
    
     methods: { 
-      ...mapActions(["getAuthAccountDb", "getAuthAccountResultsDb"]),
+      ...mapActions(["getAuthAccountDb", "getAuthAccountResultsDb","getResultsXmlDb"]),
       ...mapMutations([]),
       statistikDate({date}){
         let dateToday = date.split('T')
         return  dateToday[0]
+      },
+      async getReport(id){
+        this.isLoading = true
+        await this.getResultsXmlDb({id})
+        this.isLoading = false
       }
+
     },
       async mounted(){
       

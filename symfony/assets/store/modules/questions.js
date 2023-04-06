@@ -299,8 +299,7 @@ const actions = {
         .then(({data})=>{
           console.log("approveQuestionsAllDb - ",  data)
           dispatch('setMessage', data)
-          dispatch('getQuestionsTestIdDb',{id})
-          dispatch('getTestIdDb',{id})
+          
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
