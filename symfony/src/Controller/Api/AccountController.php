@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Action\GetReport;
 use App\Entity\Answer;
 use App\Entity\Question;
 use App\Entity\Result;
@@ -12,6 +13,8 @@ use App\Service\Paginator;
 use App\Twig\Extension\AppUpLoadedAsset;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
@@ -92,6 +95,12 @@ class AccountController extends AbstractController
                 ]
             ],
         );
+    }
+
+    #[Route('/api/auth/result/{id}/report', name: 'app_api_auth_result_report', methods: ['POST'])]
+    public function getReport(Request $request, GetReport $getReport): JsonResponse|Response
+    {
+        return $getReport->get($request);
     }
 
 }
