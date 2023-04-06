@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230405134430 extends AbstractMigration
+final class Version20230406043127 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -26,6 +26,6 @@ final class Version20230405134430 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE variant CHANGE title title VARCHAR(2500) NOT NULL, CHANGE weight weight SMALLINT DEFAULT 1 NOT NULL');
+        $this->addSql('ALTER TABLE variant CHANGE title title VARCHAR(700) NOT NULL, CHANGE weight weight SMALLINT DEFAULT 1 NOT NULL');
     }
 }
