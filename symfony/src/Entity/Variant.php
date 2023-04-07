@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     fields: ['title', 'question'],
     message: 'variant.title.unique',
 )]
-#[ORM\UniqueConstraint('variant_question_idx', ['title', 'question_id'])]
+//#[ORM\UniqueConstraint('variant_question_idx', ['title', 'question_id'])]
 class Variant implements EntityWithImageInterface
 {
 
