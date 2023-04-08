@@ -17,4 +17,11 @@ class QuestionHandler
         return $this->serializer->serializeObject($question, $format, $groups);
 
     }
+
+    public function getAll(array $questions, string $format, array $groups): string
+    {
+        return $this->serializer->serializeMany($questions, $format, $groups);
+
+    }
+
 }

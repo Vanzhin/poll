@@ -4,13 +4,12 @@ namespace App\Service;
 
 use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuilder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -79,5 +78,16 @@ class SerializerService
         ;
 
         return $this->serializer->serialize($object, 'json', $contextBuilder->toArray());
+    }
+
+    public function serializeMany(array $objects, string $format, array $groups): string
+    {
+        $response = [];
+        foreach ($objects as $object){
+            $response[] = ($this->serializeObject($object, $format, $groups));
+        }
+//        return '{ "question":' . implode(',',$response) . '}';
+        return implode(',',$response);
+
     }
 }
