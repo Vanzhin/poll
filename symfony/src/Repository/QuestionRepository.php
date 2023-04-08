@@ -43,10 +43,12 @@ class QuestionRepository extends ServiceEntityRepository
     }
 
 
-    public function getRandomQByTest(Test $test, int $limit = 20): array
+
+    public function getRandomPublishedByTest(Test $test, int $limit = 20): array
     {
         return $this->getOrCreateQueryBuilder()
             ->andWhere('qu.test = :testId')
+            ->andWhere('qu.publishedAt IS NOT NULL')
             ->setParameters(['testId' => $test->getId()])
             ->setMaxResults($limit)
             ->addSelect('RAND() as HIDDEN rand')
@@ -134,30 +136,4 @@ class QuestionRepository extends ServiceEntityRepository
             ->setParameters(['sectionId' => $section]);
     }
 
-
-
-//    /**
-//     * @return Question[] Returns an array of Question objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('q')
-//            ->andWhere('q.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('q.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Question
-//    {
-//        return $this->createQueryBuilder('q')
-//            ->andWhere('q.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
