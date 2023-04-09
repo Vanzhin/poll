@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\Admin;
 
+use App\Action\Question\GetQuestion;
 use App\Entity\Question;
 use App\Entity\Section;
 use App\Entity\Test;
@@ -24,8 +25,10 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 class QuestionController extends AbstractController
 {
     #[Route('/api/admin/question', name: 'app_api_admin_question_index', methods: ['GET'])]
-    public function index(Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
+    public function index(GetQuestion $getQuestion, Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
+
+//        return $getQuestion->getAll();
         $pagination = $paginator->getPagination($repository->findLastUpdatedQuery());
         if ($pagination->count() > 0) {
             $response['question'] = $pagination;
@@ -47,20 +50,9 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/admin/question/{id}', name: 'app_api_admin_question_show', methods: ['GET'])]
-    public function show(Question $question, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
+    public function show(Request $request, GetQuestion $getQuestion): JsonResponse
     {
-        return $this->json(
-            $question,
-            200,
-            ['charset=utf-8'],
-            [
-                'groups' => 'admin_question',
-                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-                AbstractNormalizer::CALLBACKS => [
-                    'image' => $normalizerService->imageCallback($upLoadedAsset),
-                ]
-            ],
-        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        return $getQuestion->get($request);
     }
 
     #[Route('/api/admin/question/create', name: 'app_api_admin_question_create', methods: 'POST')]
