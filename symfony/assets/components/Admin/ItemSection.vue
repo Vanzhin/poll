@@ -21,7 +21,7 @@
           <div class="btn-group" >
             <div class="btn btn-outline-primary btn-center"
               title="Редактировать"
-              @click.stop="editTicket"
+              @click.stop="editSection"
             >
               <i class="bi bi-pencil"></i>
             </div>
@@ -62,9 +62,7 @@ export default {
   computed:{
     ...mapGetters([
       "getIsAutchUser", 
-      "getCategoryParendId", 
       "getMessage", 
-      "getTests",
       "getActivePage",
       "getGonfimAction",
       "getGonfimMessage"
@@ -75,31 +73,30 @@ export default {
       "deleteTicketIdDb", 
       "setConfirmMessage",
       "getTestIdDb",
-      "saveSelectTicketStore"
+      "saveSelectSectionStore",
+      "deleteSectionIdDb"
     ]),
     
     childToggle(){
       this.childVisible = !this.childVisible
     },
-    editTicket(){
-      return
-      this.saveSelectTicketStore({ticket: this.ticket})
+    editSection(){
+      console.log('Редактирую секцию № - ', this.section.id)
+      
+      this.saveSelectSectionStore({section: this.section})
       this.$router.push({
-        name: 'adminTicketCreate', 
+        name: 'adminSectionCreate', 
         params: {
           operation:"edit" ,
-          testId: this.$route.params.id , 
-          ticketId: this.ticket.id 
+          testId: this.$route.params.id, 
+          sectionId: this.section.id 
         }
+       
       })
     },
-    async deleteTicket(){
-      
-      console.log('Удаляю тест № - ', this.ticket.id)
-      console.log('Удаляю тест № - ', this.$route)
-      return
-      await this.deleteTicketIdDb({
-        id: this.ticket.id, 
+    async deleteSection(){
+      await this.deleteSectionIdDb({
+        id: this.section.id, 
         testId: this.$route.params.id,
         activePage: this.getActivePage,
       })
@@ -110,7 +107,7 @@ export default {
       let timerId = setInterval(() => {
         if (this.getGonfimAction) {
           clearInterval(timerId)
-          if (this.getGonfimAction === "yes" ){this.deleteTicket()}
+          if (this.getGonfimAction === "yes" ){this.deleteSection()}
         }{}
       }, 200);
     },

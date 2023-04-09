@@ -61,7 +61,7 @@ class TestController extends AbstractController
 
             //todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
 
-            $questions = $testService->getQuestionForResponse($questionRepository->getRandomQByTest($test, $count));
+            $questions = $testService->getQuestionForResponse($questionRepository->getRandomPublishedByTest($test, $count));
 
             $response = [
                 'test' => $test->getTitle(),

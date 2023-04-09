@@ -39,6 +39,10 @@ class Question implements EntityWithImageInterface
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(
+        max: 2500,
+        maxMessage: 'question.title.max_length'
+    )]
     #[Assert\NotBlank(
         message: 'question.title.not_blank'
     )]
@@ -72,7 +76,7 @@ class Question implements EntityWithImageInterface
     #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result'])]
     private ?string $image = null;
 
-    #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'questions')]
     #[ORM\JoinColumn(name: "section_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
     #[Groups(['admin', 'admin_ticket', 'admin_question'])]
     private ?Section $section = null;
@@ -93,7 +97,7 @@ class Question implements EntityWithImageInterface
     #[Groups(['handle', 'result', 'result_answer'])]
     private ?array $result = null;
 
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
     private Collection $subtitles;
 

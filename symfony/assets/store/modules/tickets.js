@@ -11,7 +11,7 @@ const state = () => ({
   title: localStorage.getItem('ticketTitle') ?
   localStorage.getItem('ticketTitle'):"",
   ticket: localStorage.getItem('ticket') ?
-  JSON.parse(localStorage.getItem('ticket')):"",
+    JSON.parse(localStorage.getItem('ticket')):"",
 })
 
 const actions = {
@@ -69,7 +69,7 @@ const actions = {
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
-        await dispatch('deleteTicketIdDb', {id, page, limit})
+        await dispatch('deleteTicketIdDb', {id, testId, activePage})
       } else {
         dispatch('setMessageError', e)
       }
@@ -107,7 +107,7 @@ const actions = {
       }
     }
   },
-  
+  //запрос билетов для теста по его id в режиме тестирования
   async getTicketsTestIdNoAuthDb({dispatch, commit}, {id}){
     console.log("id - ",  id)
     try{

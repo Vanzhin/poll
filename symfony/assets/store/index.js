@@ -14,6 +14,7 @@ import category from './modules/category'
 import pagination from './modules/pagination'
 import confirm from './modules/confirm'
 import loader from './modules/loader'
+import results from './modules/results'
 export default createStore({
   state,
   mutations,
@@ -30,6 +31,7 @@ export default createStore({
     category,
     pagination,
     confirm,
-    loader
+    loader,
+    results
   },
 })

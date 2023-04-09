@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\Admin;
 
+use App\Action\Question\GetQuestion;
 use App\Entity\Question;
 use App\Entity\Section;
 use App\Entity\Test;
@@ -11,9 +12,7 @@ use App\Service\NormalizerService;
 use App\Service\Paginator;
 use App\Service\QuestionService;
 use App\Service\ValidationService;
-use App\Service\VariantService;
 use App\Twig\Extension\AppUpLoadedAsset;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,8 +25,10 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 class QuestionController extends AbstractController
 {
     #[Route('/api/admin/question', name: 'app_api_admin_question_index', methods: ['GET'])]
-    public function index(Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
+    public function index(GetQuestion $getQuestion, Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
+
+//        return $getQuestion->getAll();
         $pagination = $paginator->getPagination($repository->findLastUpdatedQuery());
         if ($pagination->count() > 0) {
             $response['question'] = $pagination;
@@ -49,20 +50,9 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/api/admin/question/{id}', name: 'app_api_admin_question_show', methods: ['GET'])]
-    public function show(Question $question, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
+    public function show(Request $request, GetQuestion $getQuestion): JsonResponse
     {
-        return $this->json(
-            $question,
-            200,
-            ['charset=utf-8'],
-            [
-                'groups' => 'admin_question',
-                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
-                AbstractNormalizer::CALLBACKS => [
-                    'image' => $normalizerService->imageCallback($upLoadedAsset),
-                ]
-            ],
-        )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        return $getQuestion->get($request);
     }
 
     #[Route('/api/admin/question/create', name: 'app_api_admin_question_create', methods: 'POST')]
@@ -71,7 +61,7 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $image = $request->files->get('questionImage');
 //        todo сделать опцией
-        $data['question']['published'] = true;
+//        $data['question']['published'] = true;
         $question = $factory->createBuilder()->buildQuestion($data['question'], $this->getUser());
         $errors = $validation->entityWithImageValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
@@ -95,7 +85,7 @@ class QuestionController extends AbstractController
         $data = $request->request->all();
         $image = $request->files->get('questionImage', false);
 //        todo сделать опцией
-        $data['question']['published'] = true;
+//        $data['question']['published'] = true;
 
         $question = $factory->createBuilder()->buildQuestion($data['question'], $this->getUser(), $question);
         $errors = $validation->entityWithImageValidate($question, $image instanceof UploadedFile ? $image : null);
@@ -143,10 +133,6 @@ class QuestionController extends AbstractController
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
         $subtitleImages = $request->files->get('subTitleImage', []);
-
-//        //        todo сделать опцией
-//        $data['question']['published'] = true;
-
         $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser());
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
         if (key_exists('error', $response)) {
@@ -164,14 +150,10 @@ class QuestionController extends AbstractController
     #[Route('/api/admin/question/{id}/edit_with_variant', name: 'app_api_admin_question_edit_with_variant', methods: 'POST')]
     public function editWithVariant(Question $question, Request $request, QuestionService $questionService, QuestionFactory $questionFactory): JsonResponse
     {
-//        $question->getVariant()->clear();
         $data = $request->request->all();
         $questionImage = $request->files->get('questionImage', false);
         $variantImages = $request->files->get('variantImage', []);
         $subtitleImages = $request->files->get('subTitleImage', []);
-
-//        //        todo сделать опцией
-//        $data['question']['published'] = true;
 
         $question = $questionFactory->createBuilder()->buildQuestion($data['question'] ?? [], $this->getUser(), $question);
         $response = $questionService->saveWithVariantIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);

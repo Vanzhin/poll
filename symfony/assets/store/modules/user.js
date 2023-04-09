@@ -6,7 +6,8 @@ import {
   SET_AUTH_ACCOUNT,
   SET_LOGOUT_LINK_DATE,
   SET_MESSAGE_REQUEST,
-  SET_AUTCH_USER_ROLE
+  SET_AUTCH_USER_ROLE,
+  SET_AUTCH_USER_PROFILE
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -24,6 +25,7 @@ const state = () => ({
   result: [],
   logoutLinkDate: {},
   message: null,
+  profile:{},
   role: localStorage.getItem('token') ?
     JSON.parse(atob(JSON.parse(localStorage.getItem('token')).token.split('.')[1])).roles[0]: "",
 })
@@ -146,68 +148,14 @@ const actions = {
       }
     }
   },
-  // получение данных статистики
-  async getAuthAccountDb({dispatch, commit, state }, token) {
-    try {
-      const config = {
-        method: 'get',
-        url: '/api/auth/account',
-        headers: { 
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${state.token}`
-        },
-      }
-      await axios(config)
-        .then((data)=>{
-          console.log("getAuthAccountDb - ",  data.data.results)
-          commit("SET_AUTH_ACCOUNT", data.data.results);
-        })
-    } catch (e) {
-      const err = e.response.data.message
-      console.log("ошибка - ",e)
-      if (err === "Expired JWT Token") {
-        await dispatch('getAuthRefresh')
-        await dispatch('getAuthAccountDb')
-      }
-    }
-  },
-  // получение данных статистики развернутый
-  async getAuthAccountResultsDb({dispatch, commit, state }, token) {
-    try {
-      const config = {
-        method: 'get',
-        url: '/api/auth/result',
-        headers: { 
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${state.token}`
-        },
-      }
-      await axios(config)
-        .then((data)=>{
-          console.log("getAuthAccountResultsDb - ",  data)
-          commit("SET_AUTH_ACCOUNT", data.data.results);
-          dispatch("setPagination", data.pagination);
-        })
-    } catch (e) {
-      const err = e.response.data.message
-      console.log("ошибка - ",e)
-      if (err === "Expired JWT Token") {
-        await dispatch('getAuthRefresh')
-        await dispatch('getAuthAccountResultsDb')
-      }else {
-        dispatch('setMessageError', e)
-      }
-    }
-  },
+  
+  
   // повторное получение токена
   async getAuthRefresh({commit, state }, refresh_token) {
     let data = ''
     if (refresh_token) {
        data = JSON.stringify({"refresh_token": refresh_token})
     } else { data = JSON.stringify({"refresh_token": state.refresh_token})}
-    
     try {
       const config = {
         method: 'post',
@@ -231,6 +179,33 @@ const actions = {
       ) {
         commit("SET_DELETE_USER_TOKEN", '');
         commit("SET_IS_AUTCH_USER", false)
+      }
+    }
+  },
+  //получение данных пользователя из БД
+  async getAutсhUserProfileDb({commit, state }, ) {
+    let token = state.token
+    try {
+      const config = {
+        method: 'post',
+        url: '/api/auth/user',
+        headers: { 
+          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+      }
+      await axios(config)
+        .then((data)=>{
+          console.log("getAuthUserProfileDb - ", data )
+          commit("SET_AUTCH_USER_PROFILE", data.data);
+          
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getAutсhUserProfileDb')
+      } else {
+        dispatch('setMessageError', e)
       }
     }
   },
@@ -259,10 +234,6 @@ const getters = {
   getPageName(state) {
     return state.page
   },
-  getAuthAccountResult(state) {
-    console.log(state.result)
-    return state.result
-  },
   getLogoutLinkDate(state) {
     return state.logoutLinkDate
   },
@@ -274,6 +245,9 @@ const getters = {
   },
   getUserAdmin(state) {
     return state.role === "ROLE_ADMIN"
+  },
+  getAutchUserProfile(state) {
+    return state.profile
   }
 }
 
@@ -306,10 +280,6 @@ const mutations = {
     state.page = page
     localStorage.setItem('pageLink', page);
   },
-  [SET_AUTH_ACCOUNT] (state, result) {
-    console.log("SET_AUTH_ACCOUNT", result)
-    state.result = result
-  },
   [SET_LOGOUT_LINK_DATE] (state, result) {
     console.log("SET_LOGOUT_LINK_DATE", result)
     state.logoutLinkDate = result
@@ -321,7 +291,11 @@ const mutations = {
   [SET_AUTCH_USER_ROLE] (state, role) {
     console.log("SET_AUTCH_USER_ROLE", role)
     state.role = role
-  }
+  },
+  [SET_AUTCH_USER_PROFILE](state, profile) {
+    console.log("SET_AUTCH_USER_ROLE", profile)
+    state.profile = profile
+  },
 }
 export default {
   namespaced: false,

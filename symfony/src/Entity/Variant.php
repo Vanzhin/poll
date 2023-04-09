@@ -18,35 +18,36 @@ use Symfony\Component\Validator\Constraints as Assert;
     fields: ['title', 'question'],
     message: 'variant.title.unique',
 )]
-#[ORM\UniqueConstraint('variant_question_idx', ['title', 'question_id'])]
+//#[ORM\UniqueConstraint('variant_question_idx', ['title', 'question_id'])]
 class Variant implements EntityWithImageInterface
 {
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'admin_question', 'result'])]
+    #[Groups(['main', 'admin', 'admin_question', 'result', 'result_answer'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 700)]
+    #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(
         message: 'variant.title.not_blank'
     )]
     #[Assert\Length(
-        max: 700,
+        max: 2500,
         maxMessage: 'variant.title.max_length'
     )]
+
     #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 100])]
     #[Assert\LessThanOrEqual(
         value: 100,
         message: 'variant.weight.greater_than'
     )]
     private ?int $weight = null;
 
-    #[ORM\ManyToOne(inversedBy: 'variant')]
+    #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'variant')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull(
         message: 'variant.test.not_null'

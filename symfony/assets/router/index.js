@@ -98,7 +98,13 @@ const router = createRouter({
       path: '/statistics',
       name: 'statistics',
       meta: {loyout: 'page', autch: true},
-      component: () => import('../views/StatisticsAutchView.vue')
+      component: () => import('../views/AutchStatisticsView.vue')
+    },
+    {
+      path: '/user/profile',
+      name: 'userAutchProfile',
+      meta: {loyout: 'page', autch: true},
+      component: () => import('../views/AutchProfileView.vue')
     },
     {
       path: '/redirection/:rtoken',
@@ -221,6 +227,12 @@ const router = createRouter({
       name: 'adminTicketCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateTicketView.vue')
+    },
+    {
+      path: '/admin/test/:testId/section/:sectionId/:operation',
+      name: 'adminSectionCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateSectionView.vue')
     },
   ]
 })

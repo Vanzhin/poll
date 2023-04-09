@@ -163,7 +163,8 @@ export default {
       "approveQuestionDb",
       "setConfirmMessage",
       "approveQuestionsAllDb", 
-      "getTestIdDb"
+      "getTestIdDb",
+      
     ]),
     numQuestion(index){
       return index + (this.getActivePage - 1) * this.getTotalItemsPage
@@ -197,18 +198,23 @@ export default {
         }
       }, 200);
     },
-    async questionsAllPublished(){
+    async questionsAllPublished( ){
       this.isLoader = true
       await this.approveQuestionsAllDb({id: this.testId, param: true})
+      await this.getQuestionsTestIdDb({id: this.testId})
+      await this.getTestIdDb({id: this.testId})
       this.isLoader = false
     },
     async questionsAllNoPublished(){
       this.isLoader = true
       await this.approveQuestionsAllDb({id: this.testId, param: false})
+      await this.getQuestionsTestIdDb({id: this.testId})
+      await this.getTestIdDb({id: this.testId})
       this.isLoader = false
     },
   },
   async created(){
+    await this.getTestIdDb({id: +this.$route.params.id})
     await this.getQuestionsTestIdDb({id: this.testId})
     this.isLoader = false
   },
@@ -247,7 +253,7 @@ export default {
     flex-direction: column;
   }
   .question-blok{
-    flex: 39em;
+    flex: 37em;
     overflow-y:auto;
   }
   .button{

@@ -1,77 +1,79 @@
 <template>
-  <div class="block">
-    <div class="title">
-      <h2 
-        v-if="getTest"
-      >Тест: {{ getTest.title }}</h2>
-      <h4
-        v-if="operation === 'create'"
-      >Создайте вопрос</h4>
-      <h4
-        v-if="operation === 'edit'"
-      >Отредактируйте вопрос</h4>
-      <div class="test"
-        v-if="operation === 'create'"
-      >
-        <div class="dropdown">
-          <button class="dropdown-toggle" 
-            type="button" id="dropdownMenuButton1" 
-            data-bs-toggle="dropdown" aria-expanded="false"
-          >
-           Выберите тип вопроса
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li
-              v-for="typeQuestion in typeQuestions"
+  <div class="question-form">
+    <div class="block">
+      <div class="title">
+        <h2 
+          v-if="getTest"
+        >Тест: {{ getTest.title }}</h2>
+        <h4
+          v-if="operation === 'create'"
+        >Создайте вопрос</h4>
+        <h4
+          v-if="operation === 'edit'"
+        >Отредактируйте вопрос</h4>
+        <div class="test"
+          v-if="operation === 'create'"
+        >
+          <div class="dropdown">
+            <button class="dropdown-toggle" 
+              type="button" id="dropdownMenuButton1" 
+              data-bs-toggle="dropdown" aria-expanded="false"
             >
-              <p class="dropdown-item" 
-                @click="selectTypeQuestion=typeQuestion"
+            Выберите тип вопроса
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li
+                v-for="typeQuestion in typeQuestions"
               >
-                {{ typeQuestion.title }}
-              </p>
-            </li>
-          </ul>
-        </div> 
+                <p class="dropdown-item" 
+                  @click="selectTypeQuestion=typeQuestion"
+                >
+                  {{ typeQuestion.title }}
+                </p>
+              </li>
+            </ul>
+          </div> 
+        </div>
+      </div>
+    <div class="container">
+        <div class="row">
+          Тип вопроса - {{ selectTypeQuestion.title }}
+        </div>
       </div>
     </div>
-   <div class="container">
-      <div class="row">
-        Тип вопроса - {{ selectTypeQuestion.title }}
-      </div>
-    </div>
-  </div>
 
-  <div class="container"
-   v-if="selectTypeQuestion !==''"
-  >
-    <div class="row">
-      <form @submit.prevent="onSubmit">
-        <input type="hidden" 
-          name="question[test]" 
-          :value="testId"
-        >
-        <input type="hidden" 
-          name="question[type]" 
-          :value="selectTypeQuestion.type"
-        >
-          <CreateQuestionRadio
-            v-if="selectTypeQuestion.type === 'radio'"
-          />
-           <CreateQuestionCheckbox
-            v-else-if="selectTypeQuestion.type === 'checkbox'"
-          />
-          <CreateQuestionInputOne
-            v-else-if="selectTypeQuestion.type === 'input_one'"
-          />
-          <CreateQuestionOrdered
-            v-else-if="selectTypeQuestion.type === 'order'"
-          />
-          <CreateQuestionConformity
-            v-else-if="selectTypeQuestion.type === 'conformity'"
-          />
-          <br> 
-        <button type="submit" class="button">Сохранить</button>
-      </form>
+    <div class="container"
+    v-if="selectTypeQuestion !==''"
+    >
+      <div class="row">
+        <form @submit.prevent="onSubmit" >
+          <input type="hidden" 
+            name="question[test]" 
+            :value="testId"
+          >
+          <input type="hidden" 
+            name="question[type]" 
+            :value="selectTypeQuestion.type"
+          >
+            <CreateQuestionRadio
+              v-if="selectTypeQuestion.type === 'radio'"
+            />
+            <CreateQuestionCheckbox
+              v-else-if="selectTypeQuestion.type === 'checkbox'"
+            />
+            <CreateQuestionInputOne
+              v-else-if="selectTypeQuestion.type === 'input_one'"
+            />
+            <CreateQuestionOrdered
+              v-else-if="selectTypeQuestion.type === 'order'"
+            />
+            <CreateQuestionConformity
+              v-else-if="selectTypeQuestion.type === 'conformity'"
+            />
+            <br> 
+          <button type="submit" class="button">Сохранить</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -203,6 +205,10 @@
  
 </script>
 <style lang="scss" scoped>
+.question-form{
+  overflow-y: auto;
+  height: 80vh;
+}
   .button{
     padding: 5px 10px;
     transition: all 0.1s ease-out;

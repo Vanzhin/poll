@@ -21,7 +21,7 @@ class Result
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['result'])]
+    #[Groups(['result','report'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
@@ -34,6 +34,7 @@ class Result
 
     #[ORM\ManyToOne(inversedBy: 'results')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['report'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'results')]

@@ -37,7 +37,6 @@ class Test
     #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?string $title = null;
 
-    #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['main', 'main_test', 'admin', 'category', 'admin_test_general'])]
     private ?string $description = null;
