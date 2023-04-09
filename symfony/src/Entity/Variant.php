@@ -25,7 +25,7 @@ class Variant implements EntityWithImageInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'admin_question', 'result'])]
+    #[Groups(['main', 'admin', 'admin_question', 'result', 'result_answer'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
