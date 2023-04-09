@@ -10,7 +10,7 @@
     </div>
     <div class="container">
       <div class="row">
-        <div v-for="(result, index ) in getAuthAccountResult" 
+        <div v-for="(result, index ) in results" 
           :key="result.score + '_' + index"
         >
           <div class="col-sm-12 col-md-12 col-lg-12"> 
@@ -40,16 +40,18 @@
                   <p class="tablis-cell">{{ result.questionCount }}</p>
                   <p class="tablis-cell">{{ statistikDate({date:result.updatedAt}) }}</p>
                 </div>
-                <button
-                  @click="getReport(result.id)"
-                >Получить отчет</button>
+                <ResultAutchView 
+                  v-if="result.answerVisible"
+                />
+                <div class="result-button-block">
+                  <button class="result-button"
+                    @click="selectReport(result, index)"
+                  >{{ result.answerVisible ? 'Скрыть':'Подробнее' }}</button>
+                  <button class="result-button"
+                    @click="getReport(result.id)"
+                  >Скачать XML-файл</button>
+                </div>
               </div>
-
-              
-
-              
-              
-             
             </div>       
           </div>
         </div>
@@ -62,35 +64,54 @@
 </template>
  
 <script>
-  import ResultTestQuestion from '../components/ResultQuestion/ResultTestQuestion.vue'
-  import Loader from '../components/ui/Loader.vue'
+  import ResultAutchView from './ResultAutchView.vue' 
+  import Loader from '../components/ui/LoaderView.vue'
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      ResultTestQuestion
+      ResultAutchView
     },
     data() {
       return {
-        isLoading: true
+        isLoading: true,
+        resultIndexVisible:0,
+        results:[]
       }
     },
     computed: {
       ...mapGetters(["getAuthAccountResult","getAutchUserToken"]),
-      
     },
    
     methods: { 
-      ...mapActions(["getAuthAccountDb", "getAuthAccountResultsDb","getResultsXmlDb"]),
+      ...mapActions([
+        "getAuthAccountDb", 
+        "getAuthAccountResultsDb",
+        "getResultsXmlDb",
+        "getResultIdAnswersDb"
+      ]),
       ...mapMutations([]),
       statistikDate({date}){
         let dateToday = date.split('T')
         return  dateToday[0]
       },
       async getReport(id){
-        this.isLoading = true
+       // this.isLoading = true
         await this.getResultsXmlDb({id})
-        this.isLoading = false
+        //this.isLoading = false
+      },
+      async selectReport(result, index){
+        if (result.answerVisible) {
+          result.answerVisible = false
+          return
+        }
+        //this.isLoading = true
+       
+        this.results[this.resultIndexVisible].answerVisible = false
+        await this.getResultIdAnswersDb({id: result.id})
+        this.resultIndexVisible = index
+        this.results[this.resultIndexVisible].answerVisible = true
+        //this.isLoading = false
       }
 
     },
@@ -99,6 +120,7 @@
      },
      async created(){
       await this.getAuthAccountResultsDb()
+      this.results = this.getAuthAccountResult
       console.log(this.getAuthAccountResult)
       this.isLoading = false
      },
@@ -125,8 +147,20 @@
     color:rgb(22, 204, 104);
     font-style:  normal ;
   }
+  .result{
+    &-button{
+      padding: 5px;
+      &:hover{
+        background-color: rgb(179 179 179);
+      }
+      &-block{
+        display: flex;
+        justify-content: space-around;
+        margin-top: 10px;
+      }
+    }
+  }
   .tablis{
-    
     margin: 10px 10px 10px;
     &-row{
       display: flex;

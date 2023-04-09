@@ -2,27 +2,27 @@
   <div class="container">
     <div class="row">
       <div v-for="(question, index ) in getResultQuestions" 
-        :key="question.id"
+        :key="questionItem(question).id"
       >
         <ResultTestQuestionCheckbox
-          :question="question"
+          :question="questionItem(question)"
           :index="index"
-          v-if="questionType(question)==='radio' || questionType(question)==='checkbox'"
+          v-if="questionType(questionItem(question))==='radio' || questionType(questionItem(question))==='checkbox'"
         />
         <ResultTestQuestionOrdered
-          :question="question"
+          :question="questionItem(question)"
           :index="index"
-          v-else-if="questionType(question)==='order'"
+          v-else-if="questionType(questionItem(question))==='order'"
         />
         <ResultTestQuestionInputOne
-          :question="question"
+          :question="questionItem(question)"
           :index="index"
-          v-else-if="questionType(question)==='input_one'"
+          v-else-if="questionType(questionItem(question))==='input_one'"
         />
         <ResultTestQuestionConformity
-          :question="question"
+          :question="questionItem(question)"
           :index="index"
-          v-else-if="questionType(question)==='conformity'"
+          v-else-if="questionType(questionItem(question))==='conformity'"
         />
       </div>
     </div>
@@ -59,6 +59,9 @@ export default {
   methods: {
     questionType(question){
       return question.type.title ? question.type.title : question.type
+    },
+    questionItem(question){
+      return question.question ? question.question : question
     }
   },
   mounted(){
