@@ -28,7 +28,7 @@ class QuestionController extends AbstractController
     public function index(GetQuestion $getQuestion, Paginator $paginator, QuestionRepository $repository, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
 
-        return $getQuestion->getAll();
+//        return $getQuestion->getAll();
         $pagination = $paginator->getPagination($repository->findLastUpdatedQuery());
         if ($pagination->count() > 0) {
             $response['question'] = $pagination;
