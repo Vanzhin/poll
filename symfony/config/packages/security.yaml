@@ -85,6 +85,11 @@ security:
         - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
         - { path: ^/api/auth, roles: IS_AUTHENTICATED_FULLY }
 
+    role_hierarchy:
+        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
+        ROLE_ADMIN: [ ROLE_TUTOR, ROLE_USER ]
+        ROLE_TUTOR: [ ROLE_USER ]
+
 when@test:
     security:
         password_hashers:

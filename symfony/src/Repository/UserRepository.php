@@ -82,4 +82,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         return $queryBuilder ?? $this->createQueryBuilder('u');
     }
+
+    public function findLatestQuery(): QueryBuilder
+    {
+        return $this->latest();
+    }
 }

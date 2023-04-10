@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api;
 
-use App\Factory\UserFactory;
+use App\Factory\User\UserFactory;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +22,7 @@ class RegistrationController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $user = $userFactory->create($data['email'] ?? '', $data['password'] ?? '', $data['firstName'] ?? '');
+        $user = $userFactory->createBuilder()->buildUser($data['email'] ?? '', $data['password'] ?? '', $data['firstName'] ?? '');
         $errors = $validator->validate($user);
         if ($validator->userPasswordValidate($data['password'])){
             foreach($validator->userPasswordValidate($data['password']) as $error){
