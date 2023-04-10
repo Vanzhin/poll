@@ -37,10 +37,91 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user', 'admin_user'])]
     private array $roles = [];
 
+    #[Assert\NotBlank(message: 'user.first_name.not_blank')]
+    #[Groups(['report'])]
+    private string|null $lastName = null;
+
     #[ORM\Column(nullable: true)]
     #[Groups(['account', 'user', 'admin_user', 'report'])]
     #[Assert\NotBlank(message: 'user.first_name.not_blank')]
     private string|null $firstName = null;
+
+    #[Assert\NotBlank(message: 'user.middle_name.not_blank')]
+    #[Groups(['report'])]
+    private string|null $middleName = null;
+
+    #[Assert\Regex(pattern: '/^\d{3}-\d{3}-\d{3} \d{2}$/', message: 'user.snils.format')]
+    #[Assert\NotBlank(message: 'user.snils.not_blank')]
+    #[Groups(['report'])]
+    private string|null $snils = null;
+
+    #[Assert\NotBlank(message: 'user.last_name.not_blank')]
+    #[Groups(['report'])]
+    private string|null $position = null;
+
+    /**
+     * @return string|null
+     */
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string|null $lastName
+     */
+    public function setLastName(?string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMiddleName(): ?string
+    {
+        return $this->middleName;
+    }
+
+    /**
+     * @param string|null $middleName
+     */
+    public function setMiddleName(?string $middleName): void
+    {
+        $this->middleName = $middleName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSnils(): ?string
+    {
+        return $this->snils;
+    }
+
+    /**
+     * @param string|null $snils
+     */
+    public function setSnils(?string $snils): void
+    {
+        $this->snils = $snils;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param string|null $position
+     */
+    public function setPosition(?string $position): void
+    {
+        $this->position = $position;
+    }
 
     /**
      * @var string|null The hashed password
@@ -55,6 +136,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Question::class)]
     private Collection $questions;
+
+//    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Organization $organization = null;
+
 
     public function __construct()
     {
@@ -220,4 +305,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(?Organization $organization): self
+    {
+        $this->organization = $organization;
+
+        return $this;
+    }
+
 }

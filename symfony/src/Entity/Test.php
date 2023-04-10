@@ -78,6 +78,11 @@ class Test
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Result::class, orphanRemoval: true)]
     private Collection $results;
 
+    #[ORM\ManyToOne(inversedBy: 'tests')]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
+
+    private ?MinTrudTest $minTrudTest = null;
+
     /**
      * @return int|null
      */
@@ -317,5 +322,17 @@ class Test
     public function setQuestionUnPublishedCount(?int $questionUnPublishedCount): void
     {
         $this->questionUnPublishedCount = $questionUnPublishedCount;
+    }
+
+    public function getMinTrudTest(): ?MinTrudTest
+    {
+        return $this->minTrudTest;
+    }
+
+    public function setMinTrudTest(?MinTrudTest $minTrudTest): self
+    {
+        $this->minTrudTest = $minTrudTest;
+
+        return $this;
     }
 }

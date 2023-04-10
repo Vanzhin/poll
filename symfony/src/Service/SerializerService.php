@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuilder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -27,7 +26,7 @@ class SerializerService
     }
 
 
-    public function serializeObject(object $object, string $format, array $groups): string
+    public function serializeObject(array|object $object, string $format, array $groups): string
     {
         switch ($format) {
             case ('xml'):
@@ -41,7 +40,7 @@ class SerializerService
         return $this->content;
     }
 
-    private function ToXml(object $object, array $groups): string
+    private function ToXml(array|object $object, array $groups): string
     {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
@@ -57,7 +56,7 @@ class SerializerService
 
     }
 
-    private function toJson(object $object, array $groups): string
+    private function toJson(array|object $object, array $groups): string
     {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
@@ -74,8 +73,7 @@ class SerializerService
             ->withSkipNullValues(true)
             ->withCallbacks([
                 'image' => $this->normalizerService->imageCallback($this->upLoadedAsset),
-            ])
-        ;
+            ]);
 
         return $this->serializer->serialize($object, 'json', $contextBuilder->toArray());
     }
@@ -83,11 +81,11 @@ class SerializerService
     public function serializeMany(array $objects, string $format, array $groups): string
     {
         $response = [];
-        foreach ($objects as $object){
+        foreach ($objects as $object) {
             $response[] = ($this->serializeObject($object, $format, $groups));
         }
-//        return '{ "question":' . implode(',',$response) . '}';
-        return implode(',',$response);
+
+        return implode(',', $response);
 
     }
 }

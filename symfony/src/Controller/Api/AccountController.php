@@ -108,7 +108,7 @@ class AccountController extends AbstractController
     #[Route('/api/auth/account/{id}/edit', name: 'app_api_auth_account_edit', methods: ['POST'])]
     public function edit(Request $request, EditUser $editUser): JsonResponse|Response
     {
-       return  $editUser->edit( $request);
+        return $editUser->edit($request);
     }
 
 

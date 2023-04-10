@@ -9,14 +9,55 @@ class Report
 {
     use TimestampableEntity;
 
-    #[Groups(['report'])]
+//    #[Groups(['report'])]
     private ?int $id = null;
 
-    #[Groups(['report'])]
+//    #[Groups(['report'])]
     private ?string $title = null;
 
-    #[Groups(['report'])]
+//    #[Groups(['report'])]
     private ?Result $result = null;
+
+//    #[Groups(['report'])]
+    private ?Organization $organization = null;
+
+
+    #[Groups(['report'])]
+    private ?User $user = null;
+
+    private array $report = [];
+
+    /**
+     * @return Organization|null
+     */
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+
+    /**
+     * @param Organization|null $organization
+     */
+    public function setOrganization(?Organization $organization): void
+    {
+        $this->organization = $organization;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     */
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
+    }
 
     public function getId(): ?int
     {
@@ -53,5 +94,21 @@ class Report
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return array
+     */
+    public function getReport(): array
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param array $report
+     */
+    public function setReport(array $report): void
+    {
+        $this->report = $report;
     }
 }
