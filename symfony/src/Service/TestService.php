@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Category;
+use App\Entity\MinTrudTest;
 use App\Entity\Question;
 use App\Entity\Test;
 use App\Entity\User;
@@ -27,6 +28,10 @@ class TestService
 
     public function make(Test $test, array $data): Test
     {
+        if (!isset($data['minTrud']) && $test->getMinTrudTest()){
+            $test->setMinTrudTest(null);
+        }
+
         foreach ($data as $key => $item) {
             if ($key === 'title') {
                 $test->setTitle($item);
@@ -37,12 +42,22 @@ class TestService
                 continue;
 
             };
+            if ($key === 'minTrud') {
+                $minTrud = $this->em->find(MinTrudTest::class,$item);
+                if($minTrud){
+                    $test->setMinTrudTest($minTrud);
+
+                }
+                continue;
+
+            };
             if ($key === 'category' && $this->em->find(Category::class, $item)) {
                 $test->setCategory($this->em->find(Category::class, $item));
 
             };
 
         }
+
 
         return $test;
     }

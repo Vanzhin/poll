@@ -15,11 +15,11 @@ class MinTrudTest
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['admin'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['admin'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?string $title = null;
 
     #[ORM\Column]

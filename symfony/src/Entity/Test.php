@@ -79,6 +79,8 @@ class Test
     private Collection $results;
 
     #[ORM\ManyToOne(inversedBy: 'tests')]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
+
     private ?MinTrudTest $minTrudTest = null;
 
     /**
