@@ -28,8 +28,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Email]
+    #[Assert\NotBlank(message: 'user.email.not_blank')]
+    #[Assert\Email(message: 'user.email.format')]
     #[Groups(['user', 'admin_user'])]
     private ?string $email = null;
 
@@ -39,8 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     #[Groups(['account', 'user', 'admin_user', 'report'])]
-
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'user.first_name.not_blank')]
     private string|null $firstName = null;
 
     /**

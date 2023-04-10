@@ -8,9 +8,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ErrorResponse implements ResponseInterface
 {
 
-    public function response(array $data): JsonResponse
+    public function response(array $data, int $code = 422): JsonResponse
     {
-        return new JsonResponse($data, 422, ['charset=utf-8']);
+        return new JsonResponse($data, $code, ['charset=utf-8']);
 
     }
 }

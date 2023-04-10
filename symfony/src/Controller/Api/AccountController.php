@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Action\GetReport;
+use App\Action\User\EditUser;
 use App\Entity\Answer;
 use App\Entity\Question;
 use App\Entity\Result;
@@ -102,5 +103,13 @@ class AccountController extends AbstractController
     {
         return $getReport->get($request);
     }
+
+
+    #[Route('/api/auth/account/{id}/edit', name: 'app_api_auth_account_edit', methods: ['POST'])]
+    public function edit(Request $request, EditUser $editUser): JsonResponse|Response
+    {
+       return  $editUser->edit( $request);
+    }
+
 
 }

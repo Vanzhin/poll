@@ -41,7 +41,7 @@ class AccountController extends AbstractController
     {
         $data = $request->request->all();
 
-        $user = $userFactory->createBuilder()->updateUser($data, $user);
+        $user = $userFactory->createBuilder()->updateUserRole($data, $user);
 
         if (count($validation->validate($user)) > 0) {
             return $this->json([

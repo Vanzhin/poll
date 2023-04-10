@@ -2,10 +2,12 @@
 
 namespace App\Factory\User;
 
+use App\Entity\Category;
 use App\Entity\User;
 use App\Enum\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use function Symfony\Component\String\u;
 
 class UserBuilder
 {
@@ -15,7 +17,7 @@ class UserBuilder
     {
     }
 
-    public function updateUser(array $data, User $user): User
+    public function updateUserRole(array $data, User $user): User
     {
         foreach ($data as $key => $item) {
             if ($key === 'role' && is_array($item)) {
@@ -48,5 +50,45 @@ class UserBuilder
         }
         return $user;
     }
+
+    public function updateUser(User $user, array $data): User
+    {
+        foreach ($data as $key => $item) {
+            if ($key === 'firstName') {
+                $user->setFirstName($item);
+                continue;
+            };
+            if ($key === 'email') {
+                $user->setEmail($item);
+                continue;
+
+            };
+//            if ($key === 'password') {
+//                $user->setPassword(
+//                    $this->userPasswordHasher->hashPassword(
+//                        $user,
+//                        $password
+//                    )
+//                );
+//            };
+
+        }
+
+           return $user;
+
+    }
+
+    public function updateUserPassword(User $user, string $plainPassword): User
+    {
+        $user->setPassword(
+            $this->userPasswordHasher->hashPassword(
+                $user,
+                $plainPassword
+            )
+        );
+        return $user;
+
+    }
+
 
 }
