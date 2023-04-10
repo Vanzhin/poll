@@ -11,8 +11,6 @@ use App\Service\Paginator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class GetQuestion
 {

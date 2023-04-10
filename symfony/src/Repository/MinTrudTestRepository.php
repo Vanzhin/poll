@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MinTrudTest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +38,21 @@ class MinTrudTestRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('mite');
+    }
+
+    public function findAllSortedByTitle(): mixed
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->addOrderBy('mite.title', 'ASC')
+            ->getQuery()
+            ->getResult();
+
     }
 
 //    /**

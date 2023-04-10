@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\Admin;
 
+use App\Action\Test\GetMinTrudTest;
 use App\Entity\Section;
 use App\Entity\Test;
 use App\Factory\Question\QuestionFactory;
@@ -47,6 +48,12 @@ class TestController extends AbstractController
                 AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
+
+    #[Route('/api/admin/test/mintrud', name: 'app_api_admin_test_mintrud')]
+    public function getMinTrudTest(GetMinTrudTest $minTrudTest): JsonResponse
+    {
+        return $minTrudTest->getAll();
     }
 
     #[Route('/api/admin/test/{id}', name: 'app_api_admin_test_show', methods: 'GET')]
@@ -234,11 +241,11 @@ class TestController extends AbstractController
                 $savedQuestions = [];
                 foreach ($questions as $question) {
                     $variantImages = [];
-                        foreach ($question->getVariant()->toArray() as $key=>$variant){
-                            if($variant->getImage()){
-                                $variantImages[$key] = $preparedImages[$variant->getImage()];
-                            }
+                    foreach ($question->getVariant()->toArray() as $key => $variant) {
+                        if ($variant->getImage()) {
+                            $variantImages[$key] = $preparedImages[$variant->getImage()];
                         }
+                    }
                     $saved = $questionService->saveWithVariants($question, $question->getVariant()->toArray(), $question->getSubtitles()->toArray(), $preparedImages[$question->getImage()] ?? null, $variantImages);
                     $savedQuestions[] = $saved;
                 };

@@ -8,7 +8,6 @@ use App\Enum\Format;
 use App\Factory\Organization\OrganizationFactory;
 use App\Factory\User\UserFactory;
 use App\Handler\ReportHandler;
-use App\Repository\MinTrudTestRepository;
 use App\Response\ErrorResponse;
 use App\Response\SuccessResponse;
 use App\Service\ValidationService;
