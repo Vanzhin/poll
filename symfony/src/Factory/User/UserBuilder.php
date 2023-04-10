@@ -63,14 +63,22 @@ class UserBuilder
                 continue;
 
             };
-//            if ($key === 'password') {
-//                $user->setPassword(
-//                    $this->userPasswordHasher->hashPassword(
-//                        $user,
-//                        $password
-//                    )
-//                );
-//            };
+            if ($key === 'lastName') {
+                $user->setLastName($item);
+                continue;
+            };
+            if ($key === 'middleName') {
+                $user->setMiddleName($item);
+                continue;
+            };
+            if ($key === 'snils') {
+                $user->setSnils($item);
+                continue;
+            };
+            if ($key === 'position') {
+                $user->setPosition($item);
+                continue;
+            };
 
         }
 
