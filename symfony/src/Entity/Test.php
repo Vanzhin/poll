@@ -87,6 +87,7 @@ class Test
     #[Assert\GreaterThanOrEqual(
         value: 1200,
     )]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?int $time = null;
 
     /**
