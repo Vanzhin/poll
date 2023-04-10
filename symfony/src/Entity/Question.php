@@ -73,7 +73,7 @@ class Question implements EntityWithImageInterface
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
     private ?string $image = null;
 
     #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'questions')]
@@ -98,7 +98,7 @@ class Question implements EntityWithImageInterface
     private ?array $result = null;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Subtitle::class, cascade: ['persist'], orphanRemoval: true)]
-    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle'])]
+    #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result_answer'])]
     private Collection $subtitles;
 
     /**

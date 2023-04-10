@@ -68,6 +68,8 @@ class AnswerRepository extends ServiceEntityRepository
             ->addSelect('qu')
             ->join('qu.variant', 'va')
             ->addSelect('va')
+            ->leftJoin('qu.subtitles', 'su')
+            ->addSelect('su')
             ->getQuery()
             ->getResult();
 

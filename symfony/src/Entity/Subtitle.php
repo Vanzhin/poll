@@ -25,7 +25,7 @@ class Subtitle implements EntityWithImageInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 500)]
-    #[Groups(['test', 'handle', 'admin_question'])]
+    #[Groups(['test', 'handle', 'admin_question', 'result_answer'])]
     #[Assert\NotBlank(
         message: 'subtitle.title.not_blank'
     )]
@@ -41,11 +41,11 @@ class Subtitle implements EntityWithImageInterface
 
     #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'subtitles')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['admin_question'])]
+    #[Groups(['admin_question', 'result_answer'])]
     private ?Variant $correct = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['admin_question', 'test'])]
+    #[Groups(['admin_question', 'test', 'result_answer'])]
     private ?string $image = null;
 
     public function getId(): ?int

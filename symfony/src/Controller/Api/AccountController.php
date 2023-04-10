@@ -47,7 +47,7 @@ class AccountController extends AbstractController
     #[Route('/api/auth/result', name: 'app_api_auth_result')]
     public function getResult(AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService, Paginator $paginator, ResultRepository $resultRepository): JsonResponse
     {
-        $pagination = $paginator->getPagination($resultRepository->findLastUpdatedByUserQuery($this->getUser()), 10);
+        $pagination = $paginator->getPagination($resultRepository->findLastUpdatedByUserQuery($this->getUser()));
 
         $response['results'] = $pagination;
         $response['pagination'] = $paginator->getInfo($pagination);
