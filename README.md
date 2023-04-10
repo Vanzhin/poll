@@ -16,6 +16,8 @@
         - php bin/console doctrine:fixtures:load
       - для тестового заполнения только типов вопросов и пользователей
         - php bin/console doctrine:fixtures:load --group=prod
+      - для заполнения только названий тестов МинТруда 
+          - php bin/console doctrine:fixtures:load --group=trud --append
     - посмотреть маршруты
       - php bin/console debug:router
 
