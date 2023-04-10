@@ -61,6 +61,13 @@ export default {
       return question.type.title ? question.type.title : question.type
     },
     questionItem(question){
+      if (question.question){
+        
+
+      } else {
+        return question
+      }
+
       return question.question ? question.question : question
     }
   },

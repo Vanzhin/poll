@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="col-6 col-sm-6 col-md-6 col-lg-6"
-          v-if="ticketsIs"
+          v-if="ticketsIs()"
         > 
           <div class="card flex-shrink-1 shadow">
             <RouterLink :to="{ name: 'ticket', params: { id: 'rndb' } }" class="py-2 link">
@@ -77,7 +77,7 @@ export default {
     }
   },
    computed:{
-    ...mapGetters(["getTickets","getTests"]),
+    ...mapGetters(["getTickets","getTests","getTest"]),
     
       testName () {
         return this.$store.getters.getTestTitleActive
@@ -98,8 +98,8 @@ export default {
       this.saveSelectTicketStore({ticket})
      },
      ticketsIs() {
-        
-        return this.getTickets.length > 0
+      console.log(this.getTest)
+        return this.getTest.ticketCount > 0
       }
     },
     mounted(){
@@ -111,7 +111,7 @@ export default {
         await this.selectTestId({id : this.$route.params.id})
         await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
       } else {
-        console.log('нет тесты')
+        console.log('нет тестов')
         await this.getTestIdDb({id : this.$route.params.id})
         // await this.selectTestId({id : this.$route.params.id})
         await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})

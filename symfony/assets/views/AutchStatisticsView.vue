@@ -40,13 +40,30 @@
                   <p class="tablis-cell">{{ result.questionCount }}</p>
                   <p class="tablis-cell">{{ statistikDate({date:result.updatedAt}) }}</p>
                 </div>
-                <ResultAutchView 
+                <div class="container"
                   v-if="result.answerVisible"
-                />
+                >
+                  <div class="row">
+                    <div v-for="(question, index ) in getResultQuestions" 
+                      :key="question.id"
+                      v-if="result.answerVisible"
+                    >
+                     <StatistickResultQuestion
+                      :question="question"
+                      :index="index"
+                     />
+                    </div>
+                  </div>
+                </div>
+             
                 <div class="result-button-block">
                   <button class="result-button"
                     @click="selectReport(result, index)"
                   >{{ result.answerVisible ? 'Скрыть':'Подробнее' }}</button>
+                  <button class="result-button"
+                    @click="formProtocol(result, index)"
+                    v-if="result.answerVisible"
+                  >Протокол</button>
                   <button class="result-button"
                     @click="getReport(result.id)"
                   >Скачать XML-файл</button>
@@ -55,32 +72,31 @@
             </div>       
           </div>
         </div>
-
-        
-
       </div>
   </div>
 </div>
 </template>
  
 <script>
-  import ResultAutchView from './ResultAutchView.vue' 
+  import StatistickResultQuestion from '../components/StatistickResultQuestion.vue'
   import Loader from '../components/ui/LoaderView.vue'
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      ResultAutchView
+      StatistickResultQuestion
     },
     data() {
       return {
         isLoading: true,
         resultIndexVisible:0,
-        results:[]
+        results:[],
+        
+        count:0
       }
     },
     computed: {
-      ...mapGetters(["getAuthAccountResult","getAutchUserToken"]),
+      ...mapGetters(["getAuthAccountResult","getAutchUserToken","getResultQuestions"]),
     },
    
     methods: { 
@@ -112,6 +128,66 @@
         this.resultIndexVisible = index
         this.results[this.resultIndexVisible].answerVisible = true
         //this.isLoading = false
+      },
+      
+      questionId(question){
+        return question.question ? question.question.id : question.id
+      },
+      formProtocol(result, index){
+        let block = `<div style="text-align: center">
+            <b>Протокол тестирования</b><br>
+            ${this.statistikDate({date:result.updatedAt})}
+          </div>
+          Тестируемый: <b>Инкогнито</b>
+          <br>
+          <h4>Тест: ${result.test.title}</h4>
+          <h4>Билет №: ${result.ticket ? `№ ${result.ticket.title}`: 
+                    result.mode ? result.mode : '' }</h4>
+          <table style=" width: 100%;"  border= "1" cellpadding="3" cellspacing="0">
+            <tr>
+            <td "
+            >Вопросы</td>
+           
+            <td ">
+              Ответы
+            </td></tr>
+          `
+          
+          const question = this.getResultQuestions
+          console.log(question)
+          question.forEach(element => {
+            block += `<tr>
+            <td 
+            >${element.title}</td>
+           
+            <td >`
+              if (element.type === "input_one") {
+                if (element.result.user_answer[0] !== "") {
+                block +=`(${element.result.user_answer[0] === element.result.true_answer[0]? '+':'-' }) ${element.result.user_answer[0]}`
+                }
+              } else if (element.result.user_answer.length > 0) {
+               
+                element.result.user_answer.forEach((uAnswer, index) => {
+                  block +=`(${uAnswer ===element.result.true_answer[index]? '+':'-' }) ${element.variant[uAnswer].title} <br>`              })
+              }
+              block +=`</td></tr>`
+
+          
+          
+          console.log(element)})
+          block +=`</table>`
+
+          var w = window.open('', '', 'scrollbars=1');
+    w.document.write(`<!DOCTYPE html>\n\
+        <title>Протокол</title>\n\
+        
+        ${block}
+
+  `);
+          // let link = document.createElement("a");
+          // link.setAttribute("href", block);
+          // link.setAttribute('target',"_blank");
+          // link.click();
       }
 
     },
@@ -141,6 +217,7 @@
     color:rgb(235, 25, 25);
     font-weight: 900;
     font-style:  oblique ;
+    
   }
   .resultTrue::before{
     content: "V  ";

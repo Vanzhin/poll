@@ -48,8 +48,8 @@ export default {
   methods: {
     classAnswer(ind){
       return  {
-        "answer-true": this.getUserAnswer && this.question.result.true_answer.indexOf(ind) > -1 && this.question.result.user_answer.indexOf(`${ind}`) > -1,
-        "answer-user": this.getUserAnswer && this.question.result.user_answer.indexOf(`${ind}`) > -1,
+        "answer-true": this.getUserAnswer && this.question.result.true_answer.indexOf(ind) > -1 && (this.question.result.user_answer.indexOf(`${ind}`) > -1 || this.question.result.user_answer.indexOf(ind) > -1),
+        "answer-user": this.getUserAnswer && (this.question.result.user_answer.indexOf(`${ind}`) > -1 || this.question.result.user_answer.indexOf(ind) > -1),
         "answer": this.getUserAnswer && this.question.result.true_answer.indexOf(ind) > -1,
       }
     },

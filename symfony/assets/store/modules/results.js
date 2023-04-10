@@ -2,6 +2,7 @@ import {
   SET_RESULT_QUESTIONS,
   SET_AUTCH_ACCOUNT,
   SET_RESULT_TICKET_USER,
+  SET_RESULT_STATISTICS_QUESTIONS
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -53,7 +54,7 @@ const actions = {
         }
         
     }
-  },//api/auth/result/71/answer
+  },
   //получение вопросов результата по его id
   async getResultIdAnswersDb({dispatch, commit, state }, {id} ){
     const token = await dispatch("getAutchUserTokenAction")
@@ -73,7 +74,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("getResultIdAnswersDb - ",  data)
-          commit("SET_RESULT_QUESTIONS", data);
+          commit("SET_RESULT_STATISTICS_QUESTIONS", data);
         })
         const err = {
           errPrizn: false
@@ -241,6 +242,37 @@ const mutations = {
     state.resultTicketUser = ticket
     localStorage.setItem('resultTicketUser', JSON.stringify(ticket));
   },
+  [SET_RESULT_STATISTICS_QUESTIONS] (state, questions) {
+    console.log("SET_RESULT_STATISTICS_QUESTIONS", questions)
+    state.resultQuestions = questions.map(question => {
+      if (question.question){
+        let questionItem = {...question.question}
+        if (questionItem.type.title) {questionItem.type = questionItem.type.title}
+
+        if (questionItem.type === 'input_one' ) {
+          questionItem.result.true_answer = questionItem.variant[0].title
+          if ( questionItem.variant[0].id === +questionItem.result.user_answer[0]){
+            questionItem.result.user_answer[0] = questionItem.variant[0].title
+          }
+        } else {
+          questionItem.result.true_answer = questionItem.result.true_answer.map(
+            (item) =>{ return questionItem.variant.findIndex(variant => +variant.id === +item )}
+          )
+          questionItem.result.user_answer = questionItem.result.user_answer.map(
+            (item) =>{ return questionItem.variant.findIndex(variant => +variant.id === +item )}
+          )
+        }
+        return questionItem
+      } else {
+        return question
+      }
+    })
+    console.log("SET_RESULT_STATISTICS_QUESTIONS", state.resultQuestions)
+
+
+   
+  },
+  
 }
 export default {
   namespaced: false,
