@@ -42,6 +42,11 @@ class TestService
                 continue;
 
             };
+            if ($key === 'time') {
+                $test->setTime(intval($item));
+                continue;
+
+            };
             if ($key === 'minTrud') {
                 $minTrud = $this->em->find(MinTrudTest::class,$item);
                 if($minTrud){
