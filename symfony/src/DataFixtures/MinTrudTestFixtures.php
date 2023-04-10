@@ -50,7 +50,7 @@ class MinTrudTestFixtures extends BaseFixtures implements FixtureGroupInterface
                     ->setTitle($title)
                     ->setOriginalId($key);
             });
-            $this->addReference(Type::class . "|$key", $entity);
+            $this->addReference(MinTrudTest::class . "|$key", $entity);
         }
 
         $this->manager->flush();
