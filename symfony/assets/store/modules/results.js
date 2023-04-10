@@ -1,6 +1,8 @@
 import { 
-  
-  SET_AUTH_ACCOUNT,
+  SET_RESULT_QUESTIONS,
+  SET_AUTCH_ACCOUNT,
+  SET_RESULT_TICKET_USER,
+  SET_RESULT_STATISTICS_QUESTIONS
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -8,13 +10,89 @@ import axios from 'axios';
 const state = () => ({
  
   result: [],
-  
+  resultQuestions:localStorage.getItem('resultQuestions') ?
+    JSON.parse(localStorage.getItem('resultQuestions')): [],
   
 })
 
 const actions = {
-   
- 
+  // отаправка результата прохождения теста на сервер
+  async setResultDb({dispatch, commit, state }, {userAuth} ){
+    const token = await dispatch("getAutchUserTokenAction")
+    console.log(JSON.stringify(state.resultTicketUser))
+    try{
+      const config = {
+        method: 'post',
+        url: '/api/test/handle',
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json'
+        },
+        data:  JSON.stringify(state.resultTicketUser)
+      };
+      if (userAuth) {
+        console.log('авторизован')
+        config.url = '/api/auth/test/handle'
+        config.headers.Authorization = `Bearer ${token}`
+      }
+      console.log(config) 
+      await axios(config)
+        .then(({data})=>{
+          console.log("setResultDb - ",  data)
+          commit("SET_RESULT_QUESTIONS", data);
+        })
+        const err = {
+          errPrizn: false
+        }
+       return err
+    } catch (e) {
+        if (e.response.data.message === "Expired JWT Token") {
+          await dispatch('getAuthRefresh')
+          await dispatch('setResultDb', {userAuth})
+        } else {
+          dispatch('setMessageError', e)
+        }
+        
+    }
+  },
+  //получение вопросов результата по его id
+  async getResultIdAnswersDb({dispatch, commit, state }, {id} ){
+    const token = await dispatch("getAutchUserTokenAction")
+    
+    try{
+      const config = {
+        method: 'get',
+        url: `/api/auth/result/${id}/answer`,
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      };
+      
+      console.log(config) 
+      await axios(config)
+        .then(({data})=>{
+          console.log("getResultIdAnswersDb - ",  data)
+          commit("SET_RESULT_STATISTICS_QUESTIONS", data);
+        })
+        const err = {
+          errPrizn: false
+        }
+       return err
+    } catch (e) {
+        if (e.response.data.message === "Expired JWT Token") {
+          await dispatch('getAuthRefresh')
+          await dispatch('getResultIdAnswersDb', {id})
+        } else {
+          dispatch('setMessageError', e)
+        }
+        
+    }
+  },
+  saveResultTicketUser({ commit }, ticket){
+    commit("SET_RESULT_TICKET_USER", ticket);
+  },
   // получение данных статистики
   async getAuthAccountDb({dispatch, commit, state }) {
     const token = await dispatch("getAutchUserTokenAction")
@@ -31,7 +109,7 @@ const actions = {
       await axios(config)
         .then((data)=>{
           console.log("getAuthAccountDb - ",  data.data.results)
-          commit("SET_AUTH_ACCOUNT", data.data.results);
+          commit("SET_AUTCH_ACCOUNT", data.data.results);
         })
     } catch (e) {
       const err = e.response.data.message
@@ -60,7 +138,7 @@ const actions = {
       await axios(config)
         .then((data)=>{
           console.log("getAuthAccountResultsDb - ",  data)
-          commit("SET_AUTH_ACCOUNT", data.data.results);
+          commit("SET_AUTCH_ACCOUNT", data.data.results);
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
@@ -113,7 +191,7 @@ const actions = {
           link.setAttribute("href", xml);
           link.setAttribute("download", Date.now()+"");
           link.click();
-          // commit("SET_AUTH_ACCOUNT", data.data.results);
+          // commit("SET_AUTCH_ACCOUNT", data.data.results);
          
         })
     } catch (e) {
@@ -144,13 +222,55 @@ const getters = {
     console.log(state.result)
     return state.result
   },
- 
+  getResultQuestions(state) {
+    return state.resultQuestions 
+  },
 }
 
 const mutations = {
-  [SET_AUTH_ACCOUNT] (state, result) {
-    console.log("SET_AUTH_ACCOUNT", result)
+  [SET_AUTCH_ACCOUNT] (state, result) {
+    console.log("SET_AUTCH_ACCOUNT", result)
     state.result = result
+  },
+  [SET_RESULT_QUESTIONS] (state, questions) {
+    console.log("SET_RESULT_QUESTIONS", questions)
+    state.resultQuestions = questions
+    // localStorage.setItem('resultQuestions', JSON.stringify(questions));
+  },
+  [SET_RESULT_TICKET_USER] (state, ticket) {
+    console.log("SET_RESULT_TICKET_USER", )
+    state.resultTicketUser = ticket
+    localStorage.setItem('resultTicketUser', JSON.stringify(ticket));
+  },
+  [SET_RESULT_STATISTICS_QUESTIONS] (state, questions) {
+    console.log("SET_RESULT_STATISTICS_QUESTIONS", questions)
+    state.resultQuestions = questions.map(question => {
+      if (question.question){
+        let questionItem = {...question.question}
+        if (questionItem.type.title) {questionItem.type = questionItem.type.title}
+
+        if (questionItem.type === 'input_one' ) {
+          questionItem.result.true_answer = questionItem.variant[0].title
+          if ( questionItem.variant[0].id === +questionItem.result.user_answer[0]){
+            questionItem.result.user_answer[0] = questionItem.variant[0].title
+          }
+        } else {
+          questionItem.result.true_answer = questionItem.result.true_answer.map(
+            (item) =>{ return questionItem.variant.findIndex(variant => +variant.id === +item )}
+          )
+          questionItem.result.user_answer = questionItem.result.user_answer.map(
+            (item) =>{ return questionItem.variant.findIndex(variant => +variant.id === +item )}
+          )
+        }
+        return questionItem
+      } else {
+        return question
+      }
+    })
+    console.log("SET_RESULT_STATISTICS_QUESTIONS", state.resultQuestions)
+
+
+   
   },
   
 }

@@ -16,13 +16,13 @@
               :key="answer"
             >
               <img :src="question.variant[answer].image" 
-                v-if="question.variant[answer].image"
+                v-if="question.variant[answer] && question.variant[answer].image"
                 class="img"
               />  
               <label v-if="answer!==''"
                 class="custom-control-label f_sm " 
                 :class="classAnswer(ind)"
-              >{{ question.variant[+answer].title }}
+              >{{ question.variant[+answer] ? question.variant[+answer].title: ''}}
               </label>
             </div>
           </div>
@@ -36,12 +36,12 @@
               :key="answer"
             >
               <img :src="question.variant[answer].image" 
-                v-if="question.variant[answer].image"
+                v-if="question.variant[answer] && question.variant[answer].image"
                 class="img"
               />  
               <label v-if="answer!==''"
                 class="custom-control-label f_sm " 
-              >{{ question.variant[answer].title }}
+              >{{ question.variant[+answer] ? question.variant[+answer].title: '' }}
               </label>
             </div>
           </div>

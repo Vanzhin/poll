@@ -36,7 +36,6 @@ const actions = {
           console.log("getTestsDb - ",  data)
           dispatch("setTests", data.test)
           dispatch("setPagination", data.pagination);
-
         })
       if (limitMax) {
         const limit = await dispatch('getTotalItemAction')
