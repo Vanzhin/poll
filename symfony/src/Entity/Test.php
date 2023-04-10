@@ -83,6 +83,12 @@ class Test
 
     private ?MinTrudTest $minTrudTest = null;
 
+    #[ORM\Column(options: ['default'=>6000])]
+    #[Assert\GreaterThanOrEqual(
+        value: 1200,
+    )]
+    private ?int $time = null;
+
     /**
      * @return int|null
      */
@@ -332,6 +338,18 @@ class Test
     public function setMinTrudTest(?MinTrudTest $minTrudTest): self
     {
         $this->minTrudTest = $minTrudTest;
+
+        return $this;
+    }
+
+    public function getTime(): ?int
+    {
+        return $this->time;
+    }
+
+    public function setTime(int $time): self
+    {
+        $this->time = $time;
 
         return $this;
     }
