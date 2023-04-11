@@ -2,7 +2,9 @@ import {
   SET_RESULT_QUESTIONS,
   SET_AUTCH_ACCOUNT,
   SET_RESULT_TICKET_USER,
-  SET_RESULT_STATISTICS_QUESTIONS
+  SET_RESULT_STATISTICS_QUESTIONS,
+  SET_RESULT_ID,
+  SET_FORM_INFO_VISIBLE
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -12,6 +14,8 @@ const state = () => ({
   result: [],
   resultQuestions:localStorage.getItem('resultQuestions') ?
     JSON.parse(localStorage.getItem('resultQuestions')): [],
+  formInfoVisible: false,
+  resultId: null
   
 })
 
@@ -153,20 +157,18 @@ const actions = {
     }
   },
   // получение отчета в xml
-  async getResultsXmlDb({dispatch, commit, state },{id} ) {
+  async getResultsXmlDb({dispatch, commit, state },{info} ) {
     const token = await dispatch("getAutchUserTokenAction")
     try {
       const config = {
         method: 'post',
-        url: `/api/auth/result/${id}/report`,
+        url: `/api/auth/result/${state.resultId}/report`,
         headers: { 
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        data:{
-          "format": "xml"
-        }
+        data: info
       }
       await axios(config)
         .then((data)=>{
@@ -205,6 +207,12 @@ const actions = {
       }
     }
   },
+  changeFormInfoVisible({dispatch, commit, state },{param}){
+    commit("SET_FORM_INFO_VISIBLE", param);
+  },
+  setResultId({dispatch, commit, state },{id}){
+    commit("SET_RESULT_ID", id);
+  }
 };
 
 //Функция сохранения строки (данных) в файл на ПК из браузера
@@ -225,6 +233,9 @@ const getters = {
   getResultQuestions(state) {
     return state.resultQuestions 
   },
+  getFormInfoVisible(state){
+    return state.formInfoVisible
+  },
 }
 
 const mutations = {
@@ -244,6 +255,7 @@ const mutations = {
   },
   [SET_RESULT_STATISTICS_QUESTIONS] (state, questions) {
     console.log("SET_RESULT_STATISTICS_QUESTIONS", questions)
+   console.log(JSON.stringify(questions))
     state.resultQuestions = questions.map(question => {
       if (question.question){
         let questionItem = {...question.question}
@@ -268,9 +280,14 @@ const mutations = {
       }
     })
     console.log("SET_RESULT_STATISTICS_QUESTIONS", state.resultQuestions)
-
-
-   
+  },
+  [SET_FORM_INFO_VISIBLE] (state, param) {
+    console.log("SET_FORM_INFO_VISIBLE", param)
+    state.formInfoVisible = param
+  },
+  [SET_RESULT_ID] (state, id) {
+    console.log("SET_RESULT_ID", id)
+    state.resultId = id
   },
   
 }

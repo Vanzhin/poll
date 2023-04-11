@@ -1,5 +1,6 @@
 <template>
-   <Loader
+   
+  <Loader
     v-if="isLoading"
   />
   <div class="block"
@@ -66,6 +67,7 @@
                   >Протокол</button>
                   <button class="result-button"
                     @click="getReport(result.id)"
+                    
                   >Скачать XML-файл</button>
                 </div>
               </div>
@@ -73,30 +75,37 @@
           </div>
         </div>
       </div>
+    </div>
   </div>
-</div>
+  
 </template>
  
 <script>
   import StatistickResultQuestion from '../components/StatistickResultQuestion.vue'
   import Loader from '../components/ui/LoaderView.vue'
+  import FormInfoXML from '../components/ui/FormInfoXML.vue'
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      StatistickResultQuestion
+      StatistickResultQuestion,
+      FormInfoXML
     },
     data() {
       return {
         isLoading: true,
         resultIndexVisible:0,
         results:[],
-        
-        count:0
+        count:0,
       }
     },
     computed: {
-      ...mapGetters(["getAuthAccountResult","getAutchUserToken","getResultQuestions"]),
+      ...mapGetters([
+        "getAuthAccountResult",
+        "getAutchUserToken",
+        "getResultQuestions",
+        "getFormInfoVisible",
+      ]),
     },
    
     methods: { 
@@ -104,7 +113,9 @@
         "getAuthAccountDb", 
         "getAuthAccountResultsDb",
         "getResultsXmlDb",
-        "getResultIdAnswersDb"
+        "getResultIdAnswersDb",
+        "changeFormInfoVisible",
+        "setResultId"
       ]),
       ...mapMutations([]),
       statistikDate({date}){
@@ -113,7 +124,9 @@
       },
       async getReport(id){
        // this.isLoading = true
-        await this.getResultsXmlDb({id})
+        this.changeFormInfoVisible({param:true})
+        this.setResultId({id})
+        //await this.getResultsXmlDb({id})
         //this.isLoading = false
       },
       async selectReport(result, index){
@@ -158,19 +171,19 @@
           question.forEach(element => {
             block += `<tr>
             <td 
-            >${element.title}</td>
-           
-            <td >`
-              if (element.type === "input_one") {
-                if (element.result.user_answer[0] !== "") {
-                block +=`(${element.result.user_answer[0] === element.result.true_answer[0]? '+':'-' }) ${element.result.user_answer[0]}`
-                }
-              } else if (element.result.user_answer.length > 0) {
-               
-                element.result.user_answer.forEach((uAnswer, index) => {
-                  block +=`(${uAnswer ===element.result.true_answer[index]? '+':'-' }) ${element.variant[uAnswer].title} <br>`              })
+            >${element.title}`
+            
+            block +=`</td><td>`
+            if (element.type === "input_one") {
+              if (element.result.user_answer[0] !== "") {
+              block +=`(${element.result.user_answer[0] === element.result.true_answer[0]? '+':'-' }) ${element.result.user_answer[0]}`
               }
-              block +=`</td></tr>`
+            } else if (element.result.user_answer.length > 0) {
+              
+              element.result.user_answer.forEach((uAnswer, index) => {
+                block +=`(${uAnswer === element.result.true_answer[index]? '+':'-' }) ${element.variant[uAnswer].title} <br>`              })
+            }
+            block +=`</td></tr>`
 
           
           
