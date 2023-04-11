@@ -4,7 +4,8 @@ import {
   SET_RESULT_TICKET_USER,
   SET_RESULT_STATISTICS_QUESTIONS,
   SET_RESULT_ID,
-  SET_FORM_INFO_VISIBLE
+  SET_FORM_INFO_VISIBLE,
+  SET_FORM_INFO
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -15,7 +16,9 @@ const state = () => ({
   resultQuestions:localStorage.getItem('resultQuestions') ?
     JSON.parse(localStorage.getItem('resultQuestions')): [],
   formInfoVisible: false,
-  resultId: null
+  formInfoParam: "",
+  resultId: null,
+  
   
 })
 
@@ -207,8 +210,8 @@ const actions = {
       }
     }
   },
-  changeFormInfoVisible({dispatch, commit, state },{param}){
-    commit("SET_FORM_INFO_VISIBLE", param);
+  changeFormInfoVisible({dispatch, commit, state },{param, visible}){
+    commit("SET_FORM_INFO", {param, visible});
   },
   setResultId({dispatch, commit, state },{id}){
     commit("SET_RESULT_ID", id);
@@ -235,6 +238,9 @@ const getters = {
   },
   getFormInfoVisible(state){
     return state.formInfoVisible
+  },
+  getFormInfoParam(state){
+    return state.formInfoParam
   },
 }
 
@@ -281,9 +287,10 @@ const mutations = {
     })
     console.log("SET_RESULT_STATISTICS_QUESTIONS", state.resultQuestions)
   },
-  [SET_FORM_INFO_VISIBLE] (state, param) {
-    console.log("SET_FORM_INFO_VISIBLE", param)
-    state.formInfoVisible = param
+  [SET_FORM_INFO] (state, {param, visible}) {
+    console.log("SET_FORM_INFO", {param, visible})
+    state.formInfoVisible = visible
+    state.formInfoParam = param
   },
   [SET_RESULT_ID] (state, id) {
     console.log("SET_RESULT_ID", id)

@@ -40,45 +40,49 @@
                   required
                 />
               </div>
-              <div class="text-field">
-                <label class="text-field__label" >СНИЛС</label>
-                <input class="text-field__input"
-                  type="text" 
-                  placeholder="123-235-122 12"
-                  v-model="snils"
-                  required
-                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}( |-)[0-9]{2}"
-                />
+              <div
+                v-if="getFormInfoParam === 'xml'"
+              >
+                <div class="text-field">
+                  <label class="text-field__label" >СНИЛС</label>
+                  <input class="text-field__input"
+                    type="text" 
+                    placeholder="123-235-122 12"
+                    v-model="snils"
+                    required
+                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}( |-)[0-9]{2}"
+                  />
+                </div>
+                <div class="text-field">
+                  <label class="text-field__label" >Профессия (должность)</label>
+                  <input class="text-field__input"
+                    type="text" 
+                    placeholder="Введите должность"
+                    v-model="position"
+                    required
+                  />
+                </div>
+                <div class="text-field">
+                  <label class="text-field__label" >ИНН организации работодателя:</label>
+                  <input class="text-field__input"
+                    type="text" 
+                    placeholder="1234567891"
+                    v-model="employerInn"
+                    required
+                    pattern="[0-9]{10}"
+                  />
+                </div>
+                <div class="text-field">
+                  <label class="text-field__label" >Место работы:</label>
+                  <input class="text-field__input"
+                    type="text" 
+                    placeholder="Укажите место работы"
+                    v-model="employerTitle"
+                    required
+                  />
+                </div>
               </div>
-              <div class="text-field">
-                <label class="text-field__label" >Профессия (должность)</label>
-                <input class="text-field__input"
-                  type="text" 
-                  placeholder="Введите должность"
-                  v-model="position"
-                  required
-                />
-              </div>
-              <div class="text-field">
-                <label class="text-field__label" >ИНН организации работодателя:</label>
-                <input class="text-field__input"
-                  type="text" 
-                  placeholder="1234567891"
-                  v-model="employerInn"
-                  required
-                  pattern="[0-9]{10}"
-                />
-              </div>
-              <div class="text-field">
-                <label class="text-field__label" >Место работы:</label>
-                <input class="text-field__input"
-                  type="text" 
-                  placeholder="Укажите место работы"
-                  v-model="employerTitle"
-                  required
-                />
-              </div>
-              <input class="btn" type="submit" value="Получить отчет XML"/>
+              <input class="btn" type="submit" :value="buttonValue()"/>
                 
           </div>
       </form>
@@ -112,6 +116,8 @@ export default {
       "getGonfimMessage",
       "getMessage",
       "getFormInfoVisible",
+      "getFormInfoParam",
+      "getAutchUserProfileFIO"
     ]),
     
 
@@ -120,10 +126,28 @@ export default {
     ...mapActions([
       "changeFormInfoVisible",
       "getResultsXmlDb",
+      "setAutchUserProfileFIO"
     ]),
+    buttonValue() { 
+      return this.getFormInfoParam === 'xml' ? 'Получить отчет XML' :
+        this.getFormInfoParam === 'print'? 'Отчет на печать' : ''
+    },
+    onSubmit(e){
+  
+      switch (this.getFormInfoParam) {
+        case 'xml':
+          this.getReportXml()
+          break;
+        case "print":
+          this.getReportPrint()
+          break;
+        default:
+          alert( "Нет таких значений" );
+      }
    
-    async onSubmit(e){
-        console.log('отправка запроса на получение XML')
+    },
+    async getReportXml(){
+      console.log('отправка запроса на получение XML')
         const info = {
           format: 'xml',
           worker: {
@@ -139,31 +163,51 @@ export default {
                     "inn": this.employerInn,
                     "title": this.employerTitle,
                     },
-        test: {
-                    "learnProgramId": "2"
-                } 
+        // test: {
+        //             "learnProgramId": "2"
+        //         } 
         }
         console.log(info)
+        this.setAutchUserProfileFIO(info.worker)
         await this.getResultsXmlDb({info})
         this.message = !this.getMessage.err
         let timerId = setInterval(() => {
           if ( !this.getMessage) {
             clearInterval(timerId)
-            if (this.message ){this.changeFormInfoVisible({param:false})}
+            if (this.message ){this.changeFormInfoVisible({visible: false, param: false})}
           }
         }, 200);
 
-        
-        
+    },
+    getReportPrint(){
+      //передать ФИО
+      const user = {
+                    "lastName": this.lastName,
+                    "firstName": this.firstName,
+                    "middleName": this.middleName,
+                  }
+      this.setAutchUserProfileFIO(user)
+      this.changeFormInfoVisible({visible: false, param: true})
     },
     closeForm(){
-      this.changeFormInfoVisible({param:false})
+      this.changeFormInfoVisible({visible: false, param: false})
     }
     
   },
   mounted(){
   },
   unmounted(){
+  },
+  async created(){
+    if (this.getAutchUserProfileFIO){
+      this.lastName = this.getAutchUserProfileFIO.lastName
+      this.firstName = this.getAutchUserProfileFIO.firstName 
+      this.middleName = this.getAutchUserProfileFIO.middleName 
+      this.snils = this.getAutchUserProfileFIO.snils
+      this.position = this.getAutchUserProfileFIO.position
+      this.employerInn = this.getAutchUserProfileFIO.employerInn
+      this.employerTitle = this.getAutchUserProfileFIO.employerTitle
+    }
   }
 }
 

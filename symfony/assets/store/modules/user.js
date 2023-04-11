@@ -6,7 +6,8 @@ import {
   SET_LOGOUT_LINK_DATE,
   SET_MESSAGE_REQUEST,
   SET_AUTCH_USER_ROLE,
-  SET_AUTCH_USER_PROFILE
+  SET_AUTCH_USER_PROFILE,
+  SET_IS_AUTCH_USER_FIO
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -24,7 +25,8 @@ const state = () => ({
   result: [],
   logoutLinkDate: {},
   message: null,
-  profile:{},
+  profile: {},
+  profileFIO: null,
   role: localStorage.getItem('token') ?
     JSON.parse(atob(JSON.parse(localStorage.getItem('token')).token.split('.')[1])).roles[0]: "",
 })
@@ -217,6 +219,9 @@ const actions = {
   getAutchUserTokenAction({state}) {
     return state.token
   },
+  setAutchUserProfileFIO({ commit }, fio){
+    commit("SET_IS_AUTCH_USER_FIO", fio)
+  }
   
 };
 
@@ -247,7 +252,11 @@ const getters = {
   },
   getAutchUserProfile(state) {
     return state.profile
-  }
+  },
+  getAutchUserProfileFIO(state) {
+    return state.profileFIO
+  },
+  
 }
 
 const mutations = {
@@ -294,6 +303,10 @@ const mutations = {
   [SET_AUTCH_USER_PROFILE](state, profile) {
     console.log("SET_AUTCH_USER_ROLE", profile)
     state.profile = profile
+  },
+  [SET_IS_AUTCH_USER_FIO](state, profile) {
+    console.log("SET_IS_AUTCH_USER_FIO", profile)
+    state.profileFIO = profile
   },
 }
 export default {

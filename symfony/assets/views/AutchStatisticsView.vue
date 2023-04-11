@@ -62,7 +62,7 @@
                     @click="selectReport(result, index)"
                   >{{ result.answerVisible ? 'Скрыть':'Подробнее' }}</button>
                   <button class="result-button"
-                    @click="formProtocol(result, index)"
+                    @click="startReportPrint(result, index)"
                     v-if="result.answerVisible"
                   >Протокол</button>
                   <button class="result-button"
@@ -105,6 +105,8 @@
         "getAutchUserToken",
         "getResultQuestions",
         "getFormInfoVisible",
+        "getAutchUserProfileFIO",
+        "getFormInfoParam"
       ]),
     },
    
@@ -115,7 +117,8 @@
         "getResultsXmlDb",
         "getResultIdAnswersDb",
         "changeFormInfoVisible",
-        "setResultId"
+        "setResultId",
+        "getFormInfoVisible"
       ]),
       ...mapMutations([]),
       statistikDate({date}){
@@ -124,7 +127,7 @@
       },
       async getReport(id){
        // this.isLoading = true
-        this.changeFormInfoVisible({param:true})
+        this.changeFormInfoVisible({visible:true, param:'xml'})
         this.setResultId({id})
         //await this.getResultsXmlDb({id})
         //this.isLoading = false
@@ -135,84 +138,83 @@
           return
         }
         //this.isLoading = true
-       
         this.results[this.resultIndexVisible].answerVisible = false
         await this.getResultIdAnswersDb({id: result.id})
         this.resultIndexVisible = index
         this.results[this.resultIndexVisible].answerVisible = true
         //this.isLoading = false
       },
-      
       questionId(question){
         return question.question ? question.question.id : question.id
       },
-      formProtocol(result, index){
-        let block = `<div style="text-align: center">
-            <b>Протокол тестирования</b><br>
-            ${this.statistikDate({date:result.updatedAt})}
-          </div>
-          Тестируемый: <b>Инкогнито</b>
-          <br>
-          <h4>Тест: ${result.test.title}</h4>
-          <h4>Билет №: ${result.ticket ? `№ ${result.ticket.title}`: 
-                    result.mode ? result.mode : '' }</h4>
-          <table style=" width: 100%;"  border= "1" cellpadding="3" cellspacing="0">
-            <tr>
-            <td "
-            >Вопросы</td>
-           
-            <td ">
-              Ответы
-            </td></tr>
-          `
-          
-          const question = this.getResultQuestions
-          console.log(question)
-          question.forEach(element => {
-            block += `<tr>
-            <td 
-            >${element.title}`
-            
-            block +=`</td><td>`
-            if (element.type === "input_one") {
-              if (element.result.user_answer[0] !== "") {
-              block +=`(${element.result.user_answer[0] === element.result.true_answer[0]? '+':'-' }) ${element.result.user_answer[0]}`
-              }
-            } else if (element.result.user_answer.length > 0) {
-              
-              element.result.user_answer.forEach((uAnswer, index) => {
-                block +=`(${uAnswer === element.result.true_answer[index]? '+':'-' }) ${element.variant[uAnswer].title} <br>`              })
-            }
-            block +=`</td></tr>`
-
-          
-          
-          console.log(element)})
-          block +=`</table>`
-
-          var w = window.open('', '', 'scrollbars=1');
-    w.document.write(`<!DOCTYPE html>\n\
-        <title>Протокол</title>\n\
+      async startReportPrint(result, index){
+        await this.changeFormInfoVisible({visible:true, param:'print' })
+        let timerId = setInterval(() => {
+          if ( !this.getFormInfoVisible) {
+            clearInterval(timerId)
+            if (this.getFormInfoParam) { this.reportPrint(result) }
+          }
+        }, 200);
+      },
+      reportPrint(result){
+      let block = `
+        <div style="text-align: center">
+          <b>Протокол тестирования</b><br>
+          ${this.statistikDate({date:result.updatedAt})}
+        </div>
+        Тестируемый: <b>
+          ${!this.getAutchUserProfileFIO ? 'Инкогнито' : this.getAutchUserProfileFIO.firstName + ' ' + this.getAutchUserProfileFIO.lastName+' '+
+           this.getAutchUserProfileFIO.middleName
+          }
         
-        ${block}
+        </b><br>
+        <h4>Тест: ${result.test.title}</h4>
+        <h4>Билет №: ${result.ticket ? `№ ${result.ticket.title}`: 
+          result.mode ? result.mode : '' }</h4>
+        <table style=" width: 100%;"  border= "1" cellpadding="3" cellspacing="0">
+          <tr>
+            <td>Вопросы</td>
+            <td>Ответы</td>
+          </tr>
+        `
+        const question = this.getResultQuestions
+        console.log(question)
+        question.forEach(element => {
+          block += `<tr><td>${element.title}</td><td>`
+          if (element.type === "input_one") {
+            if (element.result.user_answer[0] !== "") {
+            block +=`(${element.result.user_answer[0] === element.result.true_answer[0]? '+':'-' }) ${element.result.user_answer[0]}`
+            }
+          } else if (element.result.user_answer.length > 0) {
+            element.result.user_answer.forEach((uAnswer, index) => {
+              block +=`(${uAnswer === element.result.true_answer[index]? '+':'-' }) ${element.variant[uAnswer].title} <br>`              })
+          }
+          block +=`</td></tr>`
+          console.log(element)
+        })
+        block +=`</table>`
 
-  `);
+        let w = window.open('', '', 'scrollbars=1');
+        w.document.write(`<!DOCTYPE html>\n\
+          <title>Протокол</title>\n\
+          ${block}
+        `);
           // let link = document.createElement("a");
           // link.setAttribute("href", block);
           // link.setAttribute('target',"_blank");
           // link.click();
-      }
-
     },
-      async mounted(){
+    },
+   
+    async mounted(){
       
-     },
-     async created(){
+    },
+    async created(){
       await this.getAuthAccountResultsDb()
       this.results = this.getAuthAccountResult
       console.log(this.getAuthAccountResult)
       this.isLoading = false
-     },
+    },
      
  } 
  
