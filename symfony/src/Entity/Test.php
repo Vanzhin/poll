@@ -79,8 +79,7 @@ class Test
     private Collection $results;
 
     #[ORM\ManyToOne(inversedBy: 'tests')]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
-
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'report'])]
     private ?MinTrudTest $minTrudTest = null;
 
     #[ORM\Column(options: ['default'=>6000])]
