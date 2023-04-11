@@ -74,18 +74,6 @@ class GetReport
                     $errors[] = implode(', ', $this->validation->validate($organization));
 
                 };
-
-                if ($data['test']) {
-                    $minTrudTest = $this->em->find(MinTrudTest::class, intval($data['test']['learnProgramId'] ?? null));
-                    if ($minTrudTest) {
-                        $result->getTest()->setMinTrudTest($minTrudTest);
-                    } else {
-                        $errors[] = sprintf('Теста МИНТРУД с идентификатором %s не найдено', $data['test']['learnProgramId'] ?? 'пусто');
-                    }
-                } else {
-                    $errors[] = 'Укажите соответствующий тест МИНТРУД';
-
-                }
                 if (count($errors) > 0) {
                     throw new \Exception(implode(', ', $errors));
 
