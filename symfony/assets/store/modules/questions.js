@@ -1,7 +1,7 @@
 import { 
   SET_QUESTIONS, 
-  SET_QUESTIONS_RESULT, 
-  SET_RESULT_TICKET_USER,
+   
+  
   SET_QUESTION,
   SET_QUESTIONS_IMPORT_ERROR,
   SET_QUESTIONS_TICKET,
@@ -15,19 +15,13 @@ const state = () => ({
   question:null,
   questions:[],
   questionsDb:[],
-  resultQuestions:localStorage.getItem('resultQuestions') ?
-    JSON.parse(localStorage.getItem('resultQuestions')): [],
+  
   
   resultTicketUser:localStorage.getItem('resultTicketUser') ?
     JSON.parse(localStorage.getItem('resultTicketUser')): [],
   questionsImportError: null
   
 })
-
-
-
-
-
 
 const actions = {
   //запрос на получение вопросов пользователем при тестированиии
@@ -172,45 +166,7 @@ const actions = {
       }
     }
   },
-  // отаправка результата прохождения теста на сервер
-  async setResultDb({dispatch, commit, state }, {userAuth} ){
-    const token = await dispatch("getAutchUserTokenAction")
-    console.log(JSON.stringify(state.resultTicketUser))
-    try{
-      const config = {
-        method: 'post',
-        url: '/api/test/handle',
-        headers: { 
-          Accept: 'application/json', 
-          'Content-Type': 'application/json'
-        },
-        data:  JSON.stringify(state.resultTicketUser)
-      };
-      if (userAuth) {
-        console.log('авторизован')
-        config.url = '/api/auth/test/handle'
-        config.headers.Authorization = `Bearer ${token}`
-      }
-      console.log(config) 
-      await axios(config)
-        .then(({data})=>{
-          console.log("setResultDb - ",  data)
-          commit("SET_QUESTIONS_RESULT", data);
-        })
-        const err = {
-          errPrizn: false
-        }
-       return err
-    } catch (e) {
-        if (e.response.data.message === "Expired JWT Token") {
-          await dispatch('getAuthRefresh')
-          await dispatch('setResultDb', {userAuth})
-        } else {
-          dispatch('setMessageError', e)
-        }
-        
-    }
-  },
+  
 
   //сохранение нового вопроса в базу. если передается id - вносятся изменения
   async saveQuestionDb({ dispatch, commit, state }, {questionSend, id = null} ){
@@ -383,9 +339,7 @@ const actions = {
   setQuestion({ commit }, question){
     commit("SET_QUESTION", question)
   },
-  saveResultTicketUser({ commit }, ticket){
-    commit("SET_RESULT_TICKET_USER", ticket);
-  },
+  
   setQuestionsImportError({ commit }, error){
     commit("SET_QUESTIONS_IMPORT_ERROR", error);
   }
@@ -398,9 +352,7 @@ const getters = {
   getQuestions(state) {
     return state.questions 
   },
-  getResultQuestions(state) {
-    return state.resultQuestions 
-  },
+  
   getQuestion(state) {
     return state.question 
   },
@@ -420,16 +372,8 @@ const mutations = {
     console.log("SET_QUESTIONS", questions)
     state.questions = questions
   },
-  [SET_QUESTIONS_RESULT] (state, questions) {
-    console.log("SET_QUESTIONS_RESULT", questions)
-    state.resultQuestions = questions
-    // localStorage.setItem('resultQuestions', JSON.stringify(questions));
-  },
-  [SET_RESULT_TICKET_USER] (state, ticket) {
-    console.log("SET_RESULT_TICKET_USER", )
-    state.resultTicketUser = ticket
-    localStorage.setItem('resultTicketUser', JSON.stringify(ticket));
-  },
+  
+  
   [SET_QUESTION] (state, question ) {
     console.log("SET_QUESTION", question)
     state.question = question

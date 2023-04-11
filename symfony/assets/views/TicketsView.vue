@@ -16,7 +16,9 @@
             
           </div>
         </div>
-        <div class="col-6 col-sm-6 col-md-6 col-lg-6"> 
+        <div class="col-6 col-sm-6 col-md-6 col-lg-6"
+          v-if="ticketsIs()"
+        > 
           <div class="card flex-shrink-1 shadow">
             <RouterLink :to="{ name: 'ticket', params: { id: 'rndb' } }" class="py-2 link">
               Случайный билет
@@ -75,7 +77,7 @@ export default {
     }
   },
    computed:{
-    ...mapGetters(["getTickets"]),
+    ...mapGetters(["getTickets","getTests","getTest"]),
     
       testName () {
         return this.$store.getters.getTestTitleActive
@@ -83,19 +85,38 @@ export default {
       tickets () {
         return this.$store.getters.getTickets
       },
+      
     },
     methods: {
-     ...mapActions(["selectTestId","getTicketsTestIdNoAuthDb","saveSelectTicketStore"]),
+     ...mapActions([
+      "selectTestId",
+      "getTicketsTestIdNoAuthDb",
+      "saveSelectTicketStore",
+      "getTestIdDb"
+    ]),
      saveSelectTicket({ticket}){
       this.saveSelectTicketStore({ticket})
-     }
+     },
+     ticketsIs() {
+      console.log(this.getTest)
+        return this.getTest.ticketCount > 0
+      }
     },
     mounted(){
       // this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
     },
     async created() { 
-      await this.selectTestId({id : this.$route.params.id})
-      await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
+      if (this.getTests) {
+        console.log('есть тесты')
+        await this.selectTestId({id : this.$route.params.id})
+        await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
+      } else {
+        console.log('нет тестов')
+        await this.getTestIdDb({id : this.$route.params.id})
+        // await this.selectTestId({id : this.$route.params.id})
+        await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
+      }
+      
      
       this.isLoader = false
     }
