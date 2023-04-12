@@ -2,11 +2,11 @@
 
 namespace App\Action;
 
-use App\Entity\MinTrudTest;
 use App\Entity\Result;
+use App\Entity\User;
 use App\Enum\Format;
 use App\Factory\Organization\OrganizationFactory;
-use App\Factory\User\UserFactory;
+use App\Factory\WorkerCard\WorkerCardFactory;
 use App\Handler\ReportHandler;
 use App\Response\ErrorResponse;
 use App\Response\SuccessResponse;
@@ -24,7 +24,7 @@ class GetReport
         private readonly ErrorResponse          $errorResponse,
         private readonly SuccessResponse        $successResponse,
         private readonly ReportHandler          $reportHandler,
-        private readonly UserFactory            $userFactory,
+        private readonly WorkerCardFactory      $workerCardFactory,
         private readonly ValidationService      $validation,
         private readonly OrganizationFactory    $organizationFactory,
     )
@@ -49,12 +49,10 @@ class GetReport
 
                 }
                 $errors = [];
-                $user = $this->userFactory->createBuilder()->updateUser($result->getUser(), $data['worker'] ?? []);
+//todo костыль убрать
+                $user = $result->getUser();
+                $workerCard = $this->workerCardFactory->createBuilder()->buildWorkerCard($data['worker']);
 
-                if (count($this->validation->validate($user)) > 0) {
-                    $errors[] = implode(', ', $this->validation->validate($user));
-
-                };
                 $workerOrganization = $this->organizationFactory->createBuilder()
                     ->buildOrganization([
                         'inn' => intval($data['worker']['employerInn'] ?? ''),
@@ -74,11 +72,18 @@ class GetReport
                     $errors[] = implode(', ', $this->validation->validate($organization));
 
                 };
+                $workerCard->setOrganization($workerOrganization);
+
+                if (count($this->validation->validate($workerCard)) > 0) {
+                    $errors[] = implode(', ', $this->validation->validate($workerCard));
+
+                };
                 if (count($errors) > 0) {
                     throw new \Exception(implode(', ', $errors));
 
                 }
-                $user->setOrganization($workerOrganization);
+                /** @var User $user */
+                $user->setWorkerCard($workerCard);
 
                 return $this->successResponse->response(['content' => $this->reportHandler->build($result, $organization, $format, $groups)]);
 
