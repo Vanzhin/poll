@@ -132,7 +132,7 @@ class QuestionService
         $variants = [];
         $hasCorrectVariant = [];
 
-        $section = $this->sectionService->createIfNotExist('Без категории', $question->getTest());
+        $section = $this->sectionService->createIfNotExist('Без секции', $question->getTest());
         if ($section && !$question->getSection()) {
             $question->setSection($section);
         }
