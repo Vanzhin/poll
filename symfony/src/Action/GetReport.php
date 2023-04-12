@@ -37,10 +37,10 @@ class GetReport
             $data = json_decode($request->getContent(), true);
             $resultId = $request->attributes->get('_route_params', [])['id'];
             $result = $this->em->find(Result::class, $resultId);
-            if ($result) {
+            if ($result?->getTest()->getMinTrudTest()) {
                 $result = $this->em->find(Result::class, $resultId);
             } else {
-                throw new \Exception(sprintf('Результат с идентификатором %s не обнаружен', $resultId));
+                throw new \Exception(sprintf('Результат с идентификатором %s не обнаружен/ Не обнаружен соответствующий тест МИНТРУД', $resultId));
             }
             if (($data['format'] ?? null)) {
                 $format = (Format::tryFrom($data['format'])?->name);
