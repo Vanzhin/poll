@@ -51,14 +51,16 @@ export default {
 .cont-message{
   position: relative;
   
+  
   &-cont{
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(240, 248, 255, 0.267);
+    background-color: rgba(115, 118, 121, 0.678);
+    z-index: 40;
   }
   
   &-view{
@@ -68,7 +70,7 @@ export default {
     // bottom: -40vh;
     max-width: 300px;
     max-height: 300px;
-    z-index: 10;
+    
     display: flex;
     justify-content: center;
     align-items: center;
