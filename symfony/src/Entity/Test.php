@@ -82,7 +82,7 @@ class Test
     #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'report'])]
     private ?MinTrudTest $minTrudTest = null;
 
-    #[ORM\Column(options: ['default'=>6000])]
+    #[ORM\Column(options: ['default' => 6000])]
     #[Assert\GreaterThanOrEqual(
         value: 1200,
     )]

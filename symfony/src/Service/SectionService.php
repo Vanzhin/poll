@@ -13,7 +13,7 @@ class SectionService
     {
     }
 
-    public function createIfNotExist(string $title, ?Test $test = null): Section
+    public function createIfNotExist(string $title, ?Test $test = null): ?Section
     {
         $section = $this->em->getRepository(Section::class)->findOneBy(['title' => $title, 'test'=>$test]);
         if (!$section) {

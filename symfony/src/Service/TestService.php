@@ -47,6 +47,11 @@ class TestService
                 continue;
 
             };
+            if ($key === 'sectionCountToPass') {
+                $test->setSectionCountToPass(intval($item));
+                continue;
+
+            };
             if ($key === 'minTrud') {
                 $minTrud = $this->em->find(MinTrudTest::class,$item);
                 if($minTrud){
@@ -62,7 +67,9 @@ class TestService
             };
 
         }
-
+        if (!isset($data['time']) && !$test->getTime()){
+            $test->setTime(6000);
+        }
 
         return $test;
     }
