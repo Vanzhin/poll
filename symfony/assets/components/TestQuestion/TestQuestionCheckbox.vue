@@ -18,7 +18,7 @@
         <input type="checkbox" 
           :name="'q' + (index + 1) + (ind + 1)"  
           :id="'q' + (index + 1) + (ind + 1) "
-          :value= "ind "
+          :value= "ind"
           v-model="answerSelect"
           v-if="answer!==''"
           class="custom-control-input">
