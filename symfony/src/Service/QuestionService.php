@@ -27,7 +27,8 @@ class QuestionService
         private readonly ValidationService      $validation,
         private readonly QuestionFactory        $questionFactory,
         private readonly VariantFactory         $variantFactory,
-        private readonly SubtitleFactory        $subtitleFactory
+        private readonly SubtitleFactory        $subtitleFactory,
+        private readonly SectionService         $sectionService,
     )
     {
     }
@@ -81,6 +82,7 @@ class QuestionService
                 }
             };
         }
+
         $response = $this->createOrUpdateQuestionIfValid($question, $data, $questionImage, $variantImages, $subtitleImages);
 
         if (!is_null($response['error'])) {
@@ -129,6 +131,12 @@ class QuestionService
         $errors = $questionErrors;
         $variants = [];
         $hasCorrectVariant = [];
+
+        $section = $this->sectionService->createIfNotExist('Без категории', $question->getTest());
+        if ($section && !$question->getSection()) {
+            $question->setSection($section);
+        }
+
         static $i = 0;
         foreach ($data['variant'] ?? [] as $key => $variantData) {
             if (!is_null($question->getType()) && $question->getType()->getTitle() === 'order') {

@@ -29,6 +29,11 @@ class SectionBuilder
                 $section->setTest($this->em->find(Test::class, $item));
                 continue;
             }
+
+            if ($key === 'questionCountToPass') {
+                $section->setQuestionCountToPass(intval($item));
+                continue;
+            }
             if ($key === 'question' && is_array($item)) {
                 foreach ($section->getQuestions() as $question) {
                     $section->removeQuestion($question);

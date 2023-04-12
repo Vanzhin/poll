@@ -60,8 +60,7 @@ class QuestionController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('questionImage');
-//        todo сделать опцией
-//        $data['question']['published'] = true;
+
         $question = $factory->createBuilder()->buildQuestion($data['question'], $this->getUser());
         $errors = $validation->entityWithImageValidate($question, $image);
         if (!is_null($errors) && count($errors) > 0) {
@@ -72,6 +71,7 @@ class QuestionController extends AbstractController
                 ['charset=utf-8'],
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
+
         $response = $questionService->saveResponse($question, $image);
         return $this->json($response['response'],
             $response['status'],
