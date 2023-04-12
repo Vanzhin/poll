@@ -21,7 +21,7 @@ class Result
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['result','report'])]
+    #[Groups(['result', 'report'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::SMALLINT)]

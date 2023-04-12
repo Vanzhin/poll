@@ -22,13 +22,13 @@ class ReportHandler
         $report->setReport([
             'RegistryRecord' => [
                 'Worker' => [
-                    'LastName' => $report->getUser()->getLastName(),
-                    'FirstName' => $report->getUser()->getFirstName(),
-                    'MiddleName' => $report->getUser()->getMiddleName(),
-                    'Snils' => $report->getUser()->getSnils(),
-                    'Position' => $report->getUser()->getPosition(),
-                    'EmployerInn' => $report->getUser()->getOrganization()->getInn(),
-                    'EmployerTitle' => $report->getUser()->getOrganization()->getTitle()
+                    'LastName' => $report->getUser()->getWorkerCard()->getLastName(),
+                    'FirstName' => $report->getUser()->getWorkerCard()->getFirstName(),
+                    'MiddleName' => $report->getUser()->getWorkerCard()->getMiddleName(),
+                    'Snils' => $report->getUser()->getWorkerCard()->getSnils(),
+                    'Position' => $report->getUser()->getWorkerCard()->getPosition(),
+                    'EmployerInn' => $report->getUser()->getWorkerCard()->getOrganization()->getInn(),
+                    'EmployerTitle' => $report->getUser()->getWorkerCard()->getOrganization()->getTitle()
                 ],
                 'Organization' => [
                     'Inn' => $report->getOrganization()->getInn(),

@@ -2,12 +2,12 @@
 
 namespace App\Factory\User;
 
-use App\Entity\Category;
 use App\Entity\User;
+use App\Entity\WorkerCard;
 use App\Enum\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use function Symfony\Component\String\u;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserBuilder
 {
@@ -17,7 +17,7 @@ class UserBuilder
     {
     }
 
-    public function updateUserRole(array $data, User $user): User
+    public function updateUserRole(array $data, UserInterface $user): UserInterface
     {
         foreach ($data as $key => $item) {
             if ($key === 'role' && is_array($item)) {
@@ -61,29 +61,19 @@ class UserBuilder
             if ($key === 'email') {
                 $user->setEmail($item);
                 continue;
-
-            };
-            if ($key === 'lastName') {
-                $user->setLastName($item);
-                continue;
-            };
-            if ($key === 'middleName') {
-                $user->setMiddleName($item);
-                continue;
-            };
-            if ($key === 'snils') {
-                $user->setSnils($item);
-                continue;
-            };
-            if ($key === 'position') {
-                $user->setPosition($item);
-                continue;
             };
 
         }
 
-           return $user;
+        return $user;
 
+    }
+
+    public function createWorker(User $user): WorkerCard
+    {
+        $worker = new WorkerCard();
+
+        return $worker;
     }
 
     public function updateUserPassword(User $user, string $plainPassword): User
