@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -44,6 +45,9 @@ class Section
 
     #[Groups(['admin_test_section'])]
     private ?int $questionCount = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $questionCountToPass = null;
 
     /**
      * @return int|null
@@ -114,6 +118,18 @@ class Section
     public function setTest(?Test $test): self
     {
         $this->test = $test;
+
+        return $this;
+    }
+
+    public function getQuestionCountToPass(): ?int
+    {
+        return $this->questionCountToPass;
+    }
+
+    public function setQuestionCountToPass(?int $questionCountToPass): self
+    {
+        $this->questionCountToPass = $questionCountToPass;
 
         return $this;
     }

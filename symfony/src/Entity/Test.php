@@ -89,6 +89,9 @@ class Test
     #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?int $time = null;
 
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $sectionCountToPass = null;
+
     /**
      * @return int|null
      */
@@ -350,6 +353,18 @@ class Test
     public function setTime(int $time): self
     {
         $this->time = $time;
+
+        return $this;
+    }
+
+    public function getSectionCountToPass(): ?int
+    {
+        return $this->sectionCountToPass;
+    }
+
+    public function setSectionCountToPass(?int $sectionCountToPass): self
+    {
+        $this->sectionCountToPass = $sectionCountToPass;
 
         return $this;
     }
