@@ -66,6 +66,7 @@
                     v-if="result.answerVisible"
                   >Протокол</button>
                   <button class="result-button"
+                    v-if="result.test.minTrudTest"
                     @click="getReport(result.id)"
                     
                   >Скачать XML-файл</button>
@@ -117,8 +118,8 @@
         "getResultsXmlDb",
         "getResultIdAnswersDb",
         "changeFormInfoVisible",
-        "setResultId",
-        "getFormInfoVisible"
+        "setResultId"
+        
       ]),
       ...mapMutations([]),
       statistikDate({date}){
