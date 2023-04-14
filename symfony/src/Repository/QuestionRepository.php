@@ -43,7 +43,6 @@ class QuestionRepository extends ServiceEntityRepository
     }
 
 
-
     public function getRandomPublishedByTest(Test $test, int $limit = 20): array
     {
         return $this->getOrCreateQueryBuilder()
@@ -56,6 +55,46 @@ class QuestionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getAllIdAndSectionByTest(Test $test)
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('qu.test = :testId')
+            ->andWhere('qu.publishedAt IS NOT NULL')
+            ->setParameters(['testId' => $test->getId()])
+            ->join('qu.section', 'se')
+            ->select(['se.id as section_id', 'JSON_ARRAYAGG(qu.id) as questions', 'count(qu.id) as count'])
+            ->groupBy('se.id')
+            ->getQuery()
+            ->getArrayResult();
+
+
+    }
+    public function getByIdsSortBySection(array $ids)
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->leftJoin('qu.variant', 'va')
+            ->addSelect('va')
+            ->join('qu.type', 'ty')
+            ->addSelect('ty')
+            ->leftJoin('qu.tickets', 'ti')
+            ->addSelect('ti')
+            ->leftJoin('qu.section', 'se')
+            ->addSelect('se')
+            ->leftJoin('qu.subtitles', 'su')
+            ->addSelect('su')
+            ->andWhere('qu.id IN (:ids)')
+            ->setParameters(['ids' => $ids])
+            ->addSelect('RAND() as HIDDEN rand')
+            ->addOrderBy('se.id')
+            ->addOrderBy('rand')
+            ->getQuery()
+            ->getResult()
+            ;
+
+
+    }
+
 
     private function latest(QueryBuilder $queryBuilder = null): QueryBuilder
     {
