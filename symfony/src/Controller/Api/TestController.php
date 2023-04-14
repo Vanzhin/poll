@@ -60,7 +60,7 @@ class TestController extends AbstractController
             $sessionService->remove(QuestionHandler::SHUFFLED);
 
             //todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
-
+//todo разобраться с кодировкой и вынести в хендлер
             $sections = [];
             $AllQuestionsId = $questionRepository->getAllIdAndSectionByTest($test);
 
@@ -80,16 +80,16 @@ class TestController extends AbstractController
                         } else {
                             unset($sections[$key]);
                         }
+                        $i++;
+
                     }
-                    $i++;
                 } else {
                     break;
                 }
 
             }
-
             $questions = $testService->getQuestionForResponse($questionRepository->getByIdsSortBySection($questionsId));
-
+            
             $response = [
                 'test' => $test->getTitle(),
                 'questions' => $questions
