@@ -67,6 +67,10 @@ class Result
     #[Groups(['result'])]
     private ?string $mode = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['result'])]
+    private ?bool $pass = null;
+
     public function __construct()
     {
         $this->answers = new ArrayCollection();
@@ -183,5 +187,17 @@ class Result
         return $this->getAnswers()->filter(function (Answer $answer) {
             return $answer->getCorrect();
         })->count();
+    }
+
+    public function isPass(): ?bool
+    {
+        return $this->pass;
+    }
+
+    public function setPass(bool $pass): self
+    {
+        $this->pass = $pass;
+
+        return $this;
     }
 }

@@ -13,7 +13,7 @@ class TestHandler
 
     public function getAll(array $tests, string $format, array $groups): string
     {
-        return $this->serializer->serializeMany($tests, $format, $groups);
+        return $this->serializer->serializeMany([$tests], $format, $groups);
 
     }
 }

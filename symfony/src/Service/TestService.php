@@ -138,11 +138,7 @@ class TestService
             }
 
         }
-        if ($result) {
-            $result->setScore($score);
-            $this->em->persist($result);
-            $this->em->flush();
-        }
+
         $test = $this->em->find(Test::class, $data['info']['test']);
         $response['response']['test'] = $test;
         /** @var Question $question */
@@ -163,21 +159,12 @@ class TestService
 
         }
 
-//        $test = $this->em->find(Test::class, $data['info']['test']);
-//
-//        foreach($test->getSection() as $section){
-//            dd($section->getQuestionCountToPass());
-//        };
-
-//        foreach($response['response'] as $question){
-//
-//            /** @var Question $question */
-//
-//            if($question->getResult()['correct'] === 'true'){
-//                $pass['section']['questionsPassed']++;
-//            };
-//        };
-//        dd($pass);
+        if ($result) {
+            $result->setPass($test->isPass());
+            $result->setScore($score);
+            $this->em->persist($result);
+            $this->em->flush();
+        }
         return $response;
 
     }

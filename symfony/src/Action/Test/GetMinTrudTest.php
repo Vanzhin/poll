@@ -12,15 +12,15 @@ class GetMinTrudTest
 {
     public function __construct(private readonly MinTrudTestRepository $minTrudTestRepository,
                                 private readonly TestHandler           $testHandler,
-                                private readonly ErrorResponse          $errorResponse,
-                                private readonly SuccessResponse        $successResponse)
+                                private readonly ErrorResponse         $errorResponse,
+                                private readonly SuccessResponse       $successResponse)
     {
     }
 
     public function getAll(): JsonResponse
     {
         return $this->successResponse
-            ->response(['content'=>$this->testHandler->getAll($this->minTrudTestRepository->findAllSortedByTitle(), 'json', ['admin'])]);
+            ->response(['content' => $this->testHandler->getAll($this->minTrudTestRepository->findAllSortedByTitle(), 'json', ['admin'])]);
 
     }
 }
