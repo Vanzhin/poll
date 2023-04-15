@@ -148,8 +148,9 @@ class TestService
         /** @var Question $question */
 
         foreach ($response['response']['question'] as $question) {
+            $section = $question->getSection();
+
             if ($question->getResult()['correct'] === true) {
-                $section = $question->getSection();
                 $count = $section->getQuestionCountPassed();
                 $section->setQuestionCountPassed(++$count);
                 $test->addSection($section);
