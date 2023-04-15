@@ -1,33 +1,30 @@
 <template>
+  <div class="sections">
   <Loader
     v-if="isLoader"
   />
   <div class="" v-else>
-    <div class="tests__block conteiner">
-      <h4>Сервис онлайн тестирования по промышленной безопасности приветствует вас!</h4>
+    <div class="conteiner">
+      <div class="sections__title">
+        Сервис <span class="sections__title-select">онлайн-тестирования</span> по промышленной безопасности 
+        приветствует вас!
+      </div>
+      <div class="sections__title-h2">
+        Выберите область проверки знаний
+      </div>
     </div>
-    <div class="tests__block conteiner">
+    <div class="conteiner">
       <div class="sections__block row" >
-        <div class="card shadow col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
           v-for="section in sections" 
           :key="section.id"
+          :style="`background-image: url(${section.image ? section.image 
+            :'http://test2-open/img/item_fon.png'});`"
+          @click="categoryUpdate({section})"
         >
-          <div
-            class="link"
-            @click="categoryUpdate({section})"
-          ><!-- @click="categoryUpdate(section.id)" -->
-            <div class="card-header flex-shrink-1">
-                <h5 class="my-0 font-weight-normal">{{ section.title }}</h5>
-            </div>
-            <div  class="img">
-              <img :src="section.image" alt="" class="img"
-                v-if="section.image"
-              >
-            </div>
-           
-            <div class="card-body">
-              <h6>{{ section.information }}</h6>
-            </div> 
+          <div class="item-info">
+            <div class="item-info-title">{{ section.title }}</div>
+            <div class="item-info-discrabe">{{ section.description }}</div>
           </div>
         </div>
       </div>
@@ -36,6 +33,7 @@
       />
     </div> 
   </div>
+</div>
 </template>
  
 <script>
@@ -94,44 +92,101 @@ export default {
  
 </script>
 <style lang="scss" scoped>
-  .sections__block{
-    display: flex;
-    flex-wrap: wrap;
+  .sections{
+    
+    min-height: 100vh;
+    &__block{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      max-width: 1110px;
+      margin: auto;
+    }
+    &__title{
+      margin-top: 77px;
+      max-width: 630px;
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 40px;
+      color: var(--color-Black_blue);
+      &-select{
+        color: var(--color-blue);
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 40px;
+      }
+      &-h2{
+        margin-top: 50px;
+        margin-bottom: 20px;
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 40px;
+        color: var(--color-Black_blue);
+      }
+    }
   }
   .item{
-    margin-bottom: 5px;
-    padding: 5px;
-    height: 250px;
-    // &:nth-child(1) .img{
-    // background-image: url(../img/_prom.jpg);
-    // }
-    // &:nth-child(2) .img{
-    //   background-image: url(../img/_electro5.jpg);
-    // }
-    // &:nth-child(3) .img{
-    //   background-image: url(../img/_pb.jpg);
-    // }
-    // &:nth-child(4) .img{
-    //   background-image: url(../img/_energo1.jpg);
-    // }
-    // &:nth-child(5) .img{
-    //   background-image: url(../img/_naks.jpg);
-    // }
-    // &:nth-child(6) .img{
-    //   background-image: url(../img/_ot.jpg);
-    // }
+    margin: 15px 0;
+    padding: 0;
+    height: 277px;
+    background: #848EA8;
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    max-width: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    background-position: center;
+    background-size: cover;
+    
+    &-info{
+      text-align:left ;
+      height: 137px;
+      background: var(--color-fon);
+      border-radius: 6px;
+      width: 90%;
+      padding: 16px 26px;
+      &-title{
+        height: 50%;
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 29px;
+        color: var(--color-Black_blue);
+      }
+      &-discrabe{
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: #66727F;
+      }
+    }
+    &:hover{
+      .item-info{
+        background: var(--color-blue);
+        &-title{
+          color:var(--color-white);
+        }
+        &-discrabe{
+          color:var(--color-white);
+        }
+      }
+    }
   }
   .font-weight-normal {
     font-weight: 300;
     text-align: center;
   }
-.img{
-  
-  width: 100%;
-  height: 150px;
-  
- 
-}
+
 .link{
   text-decoration: none;
   color: #204242;

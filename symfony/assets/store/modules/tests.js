@@ -211,6 +211,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           const rrr = "["+ data +"]"//.slice(0, 321)
+          console.log("getTestsMinTrudDb",  data)
           console.log("getTestsMinTrudDb",  rrr)
           console.log("getTestsMinTrudDb",  JSON.parse(rrr))
            commit("SET_TEST_MIN_TRUD", JSON.parse(rrr))
