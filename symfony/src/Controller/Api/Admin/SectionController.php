@@ -67,7 +67,6 @@ class SectionController extends AbstractController
     public function edit(Section $section, Request $request, SectionFactory $factory, SectionService $sectionService): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
         $response = $sectionService->saveIfValid($factory->createBuilder()->buildSection($data, $section));
         return $this->json($response['response'],
             $response['status'],

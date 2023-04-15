@@ -76,6 +76,9 @@ class QuestionHandler
                     $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $shuffled['variant'][$answer]);
                     $answers[] = $variant->getId();
 
+                } else {
+                    $answers[] = null;
+
                 }
                 if ($question->getType()->getTitle() === 'input_one') {
                     $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $answer);
@@ -91,16 +94,20 @@ class QuestionHandler
         } else {
             $answers = $userAnswer;
         }
+
         if ($question->getSubtitles()->count() > 1 && isset($shuffled['subTitle'])) {
             $shuffledUserAnswer = [];
             foreach ($question->getSubtitles() as $subTitle) {
                 if (isset($answers[array_search($subTitle->getId(), $shuffled['subTitle'])])) {
                     $shuffledUserAnswer[] = $answers[array_search($subTitle->getId(), $shuffled['subTitle'])];
 
+                } else {
+                    $shuffledUserAnswer[] = null;
                 }
             }
             $answers = $shuffledUserAnswer;
         }
+
         return $answers;
     }
 
@@ -138,10 +145,6 @@ class QuestionHandler
             $trueShufflesAnswers = $answers;
 
         }
-//
-//        if($question->getType()->getTitle() === 'input_one'){
-//            $trueShufflesAnswers = [$question->getVariant()->first()->getTitle()];
-//        }
 
         return $trueShufflesAnswers;
 
@@ -225,6 +228,7 @@ class QuestionHandler
         }
         return $response;
     }
+
     public function isAnswerCorrect(Question $question, array $answerContent): bool
     {
         $correct = false;

@@ -4,28 +4,26 @@ namespace App\Service;
 
 use App\Entity\Section;
 use App\Entity\Test;
+use App\Factory\Section\SectionFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SectionService
 {
 
-    public function __construct(private readonly EntityManagerInterface $em, private readonly ValidationService $validation)
+    public function __construct(private readonly EntityManagerInterface $em,
+                                private readonly ValidationService      $validation,
+                                private readonly SectionFactory         $sectionFactory,
+    )
     {
     }
 
     public function createIfNotExist(string $title, ?Test $test = null): ?Section
     {
-        $section = $this->em->getRepository(Section::class)->findOneBy(['title' => $title, 'test'=>$test]);
-        if (!$section) {
-            $section = new Section();
-            $section->setTitle($title)->setTest($test);
+        $section = $this->sectionFactory->createBuilder()->buildSection(['title' => 'Без секции', 'test' => $test], $this->em->getRepository(Section::class)->findOneBy(['title' => $title, 'test' => $test]));
 
-            if ($test) {
-                $section->setTest($test);
-            }
-            $this->em->persist($section);
-            $this->em->flush();
-        };
+        $this->em->persist($section);
+        $this->em->flush();
+
         return $section;
     }
 
