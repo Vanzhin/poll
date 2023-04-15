@@ -55,7 +55,7 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          console.log("getQuestionsDb - ",  data.questions)
+          console.log("getQuestionsDb - ",  data)
           commit("SET_QUESTIONS", data.questions);
         })
     } catch (e) {

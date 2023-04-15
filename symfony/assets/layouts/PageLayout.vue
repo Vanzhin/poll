@@ -2,16 +2,11 @@
   <MessageView/>
   <FormInfoXML/>
   <Headers/>
-  <div class="fon">
-    <div class="container">
-      <div class="wrapper">
-        <div class="head"></div>
-      </div>
-      <div class="wrapper">
-        <RouterView />
-      </div>
-    </div>
+  <div class="wrapper">
+    <div class="head"></div>
   </div>
+  <RouterView />
+  
   <FooterBlock/>
 </template>
 <script>
@@ -32,9 +27,7 @@ export default {
 } 
 </script>
 <style lang="scss">
-.fon{
-  background: var(--color-fon);
-}
+
 .head{
   height: 85px;
 }

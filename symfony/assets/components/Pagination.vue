@@ -101,7 +101,7 @@ export default {
 <style lang="scss" scoped>
 .block{
   margin-top: 20px;
- 
+  padding-bottom: 30px;
   &-pagination{
       display: flex;
       justify-content: center;

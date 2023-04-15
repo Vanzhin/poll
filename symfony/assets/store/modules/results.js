@@ -46,7 +46,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log("setResultDb - ",  data)
-          commit("SET_RESULT_QUESTIONS", data);
+          commit("SET_RESULT_QUESTIONS", data.question);
         })
         const err = {
           errPrizn: false
