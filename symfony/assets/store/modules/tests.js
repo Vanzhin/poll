@@ -1,7 +1,8 @@
 import { 
   SET_TEST_TITLE, 
   SET_TEST,
-  SET_TESTS
+  SET_TESTS,
+  SET_TEST_MIN_TRUD
 } from './mutation-types.js'
 import axios from 'axios';
 
@@ -11,7 +12,8 @@ const state = () => ({
   JSON.parse(localStorage.getItem('tests')) : null,
   test: localStorage.getItem('test') ?
   JSON.parse(localStorage.getItem('test')) : null,
- 
+  testsMinTrud: localStorage.getItem('testsMinTrud') ?
+  JSON.parse(localStorage.getItem('testsMinTrud')) : null,
 
 })
 
@@ -24,7 +26,7 @@ const actions = {
       url: `/api/admin/test?limit=${limit}`,
       headers: { 
         Accept: 'application/json', 
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       }
     }
     if (page) {
@@ -36,7 +38,6 @@ const actions = {
           console.log("getTestsDb - ",  data)
           dispatch("setTests", data.test)
           dispatch("setPagination", data.pagination);
-
         })
       if (limitMax) {
         const limit = await dispatch('getTotalItemAction')
@@ -193,6 +194,38 @@ const actions = {
   getCountQuestionsTest({state}) {
     return state.test.questionCount ?? 1
   },
+  //получение тестов минтруда
+  async getTestsMinTrudDb({dispatch, commit}, ){
+    const token = await dispatch("getAutchUserTokenAction")
+    const config = {
+      method: 'get',
+      url: `/api/admin/test/mintrud`,
+      headers: { 
+        Accept: 'application/json', 
+        'Content-Type': 'application/json', 
+        Authorization: `Bearer ${token}`
+      },
+    };
+    
+    try{
+      await axios(config)
+        .then(({data})=>{
+          const rrr = "["+ data +"]"//.slice(0, 321)
+          console.log("getTestsMinTrudDb",  data)
+          console.log("getTestsMinTrudDb",  rrr)
+          console.log("getTestsMinTrudDb",  JSON.parse(rrr))
+           commit("SET_TEST_MIN_TRUD", JSON.parse(rrr))
+        })
+    } catch (e) {
+      console.log("getTestsMinTrudDb ошибка",  e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getTestsMinTrudDb')
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  }
 };
 
 const getters = {
@@ -226,6 +259,9 @@ const getters = {
   getTestSectionCount(state) {
     return state.test.sectionCount || ''
   },
+  getTestsMinTrud(state) {
+    return state.testsMinTrud
+  },
   
 }
 
@@ -253,6 +289,13 @@ const mutations = {
       localStorage.setItem('tests', parsed);
     } else { localStorage.removeItem('tests')}
         state.tests = tests
+  },
+  [SET_TEST_MIN_TRUD](state, tests){
+    if (tests) { 
+      const parsed = JSON.stringify(tests)
+      localStorage.setItem('testsMinTrud', parsed);
+    } else { localStorage.removeItem('testsMinTrud')}
+      state.testsMinTrud = tests
   },
 }
 

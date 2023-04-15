@@ -35,6 +35,19 @@
             v-if="title !== ''"
           ></i>
         </div>
+        <p class="label"><b>Укажите минимальное количество вопросов для прохождения секции: </b></p>
+        <div class="custom-radio img_block">
+          <input required
+            name="questionCountToPass"
+            v-model= "questionCountToPass"
+            class="textarea_input"
+            pattern="[0-9]{1,10}" 
+          /> 
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="questionCountToPass = ''"
+            v-if="questionCountToPass !== ''"
+          ></i>
+        </div>
         <div class="block_number">
           <label for="number" class="label"> Количество вопросов:</label>
           <label for="number" class="label"> {{ numberQuestions }}</label>
@@ -75,6 +88,7 @@
         testId: undefined,
         title: "",
         description: "",
+        questionCountToPass:"",
         message: null,
         isLoader: true,
         operation: this.$route.params.operation,
@@ -164,14 +178,15 @@
         await this.getQuestionsSectionIdDb({id: +this.$route.params.sectionId})
         console.log('getQuestionsSection -', this.getQuestionsSection)
         this.title = this.getSection.title ?? ''
-        this.sectionQuestions = this.getQuestionsSection.map((question)=>{
+        this.questionCountToPass = this.getSection.questionCountToPass ?? ''
+        this.sectionQuestions =this.getQuestionsSection? this.getQuestionsSection.map((question)=>{
             const num = this.questions.findIndex((item)=>item.id === question.id)
             console.log(num)
             console.log(this.questions[num])
             if (num >= 0) {this.questions[num].select = true}
             return question.id
           }
-        )
+        ) : []
         this.numberQuestions = this.sectionQuestions.length
       }
       this.isLoader = false

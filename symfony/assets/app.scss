@@ -1,3 +1,4 @@
+
 :root {
   --unit: 1rem; /* 1rem = 16px */
   --radius: 5px;
@@ -8,32 +9,36 @@
   --color-gray: #7d818e;
   --color-light: #94a3b8;
   --color-link: #0ea5e9;
+
+  --color-blue: #269EB7;
+  --color-white: #FFFFFF;
+  --color-fon: #FAFCFF;
+  --color-grey : #E0E6EE;
+  --color-red: #FF3F3F ;
+  --color-green: #56D062;
+  --color-Black_blue: #0B1F33;
+  --color-hover-logo:#5ab5c86e;
+  --font: 'Lato';
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: 'Lato', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Lato',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+
 * {
   padding: 0;
   margin: 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  font-family: "Nunito";
+  font-family: "Lato";
   font-style: normal;
-  font-size: 16px;
-  line-height: 22px;
-  font-weight: 300;
-  letter-spacing: 0.24px;
+ 
   cursor: nw-default;
 }
 

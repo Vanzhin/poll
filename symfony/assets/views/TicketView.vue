@@ -112,6 +112,12 @@ export default {
     },
     
   },
+  watch:{
+      $route(newRout){
+        console.log("newParentId -", newRout)
+        
+      }
+    },
    methods: {
     ...mapActions([
       "getQuestionsDb", 

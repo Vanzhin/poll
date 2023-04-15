@@ -2,12 +2,13 @@
 @import "bootstrap-icons.css";
 @import "blog.css";
 @import "admin/dashboard.css";
+@import "fonts.css";
 /*@import "signin.css";*/
 
 .container{
   width: 100%;
 }
 .wrapper{
-  max-width: 1140px;
+  max-width: 1110px;
   margin: 0 auto;
 }
