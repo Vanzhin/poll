@@ -50,6 +50,7 @@ class Test
     private Collection $question;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Section::class, orphanRemoval: true)]
+    #[Groups(['handle'])]
     private Collection $section;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Ticket::class, orphanRemoval: true)]
@@ -69,7 +70,7 @@ class Test
     #[Groups(['admin_test_general', 'category'])]
     private ?int $questionUnPublishedCount = null;
 
-    #[Groups(['admin_test_general', 'category'])]
+    #[Groups(['admin_test_general', 'category', 'handle'])]
     private ?int $sectionCount = null;
 
     #[Groups(['admin_test_general', 'category'])]
@@ -89,8 +90,39 @@ class Test
     #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?int $time = null;
 
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $sectionCountToPass = null;
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 0])]
+    #[Groups(['handle'])]
+    private int $sectionCountToPass;
+
+    #[Groups(['handle'])]
+    private int $sectionCountPassed = 0;
+
+    #[Groups(['handle'])]
+    private bool $pass = false;
+
+    /**
+     * @return bool
+     */
+    public function isPass(): bool
+    {
+        return $this->sectionCountToPass <= $this->sectionCountPassed;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getSectionCountPassed(): ?int
+    {
+        return $this->sectionCountPassed;
+    }
+
+    /**
+     * @param int $sectionCountPassed
+     */
+    public function setSectionCountPassed(int $sectionCountPassed): void
+    {
+        $this->sectionCountPassed = $sectionCountPassed;
+    }
 
     /**
      * @return int|null
