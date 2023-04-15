@@ -3,7 +3,7 @@
       <div class="login-page">
         <CloseView/>
         <form @submit.prevent="submit">
-          <div class="login-page-text">Регистрация</div>
+          <div class="login-page-title">Регистрация</div>
           <div class="form">
             <div class="text-field">
               <label class="text-field__label" >Ник</label>
@@ -53,7 +53,7 @@
             </div>
             <div class="text-login">
               <RouterLink :to="{ name: 'logout'}" class="routerLink"> 
-                <p> Уже есть аккаунт</p>
+                 Уже есть аккаунт
               </RouterLink>
             </div>
             <input class="btn" type="submit" value="Зерегистрироваться"/> 
@@ -123,21 +123,7 @@
 </script>
 <style lang="scss" scoped>
   
-.login-page {
-   max-width: 380px;
-   padding: 24px;
-   background: #cad5d5;
-   box-shadow: 0px 4px 15px rgba(34, 42, 70, 0.08);
-   border-radius: var(--radius);
-   margin: 100px auto;
-   &-text{
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 26px;
-      text-align: center;
-   }
-   
- }
+
  @media (min-width: 1024px) {
   
  }

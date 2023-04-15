@@ -5,18 +5,21 @@
      
       <CloseView/>
       <form @submit.prevent="onSubmit">
-          <div class="login-page-text">Вход на сайт</div>
-          <div class="form">
-              <div class="text-field">
-                <label class="text-field__label" >Email</label>
-                <input class="text-field__input"
-                  type="email" 
-                  placeholder="Введите email"
-                  name="email"
-                  v-model="email"
-                  required
-                />
-              </div>
+        <div class="login-page-title">Авторизация</div>
+        <div class="login-page-text">Введите действующий e-mail. <br>
+          Вам на почту придет ссылка для авторизации
+        </div>
+        <div class="form">
+          <div class="text-field">
+            <label class="text-field__label" >E-mail</label>
+            <input class="text-field__input"
+              type="email" 
+              placeholder="Введите email"
+              name="email"
+              v-model="email"
+              required
+            />
+          </div>
               <div class="text-field">
                 <label class="text-field__label" >Пароль</label>
                 <input class="text-field__input"
@@ -36,7 +39,7 @@
               </div>
               <div class="text-login">
                 <RouterLink :to="{ name: 'signup'}" class="routerLink"> 
-                  <p> Пройти регистрацию</p>
+                   Пройти регистрацию
                 </RouterLink>
               </div>
               <input class="btn" type="submit" value="Войти"/>
@@ -92,23 +95,8 @@
 </script>
 
 <style lang="scss" scoped>
-.login-page {
-  max-width: 380px;
-  padding: 24px;
-  background: #cad5d5;
-  box-shadow: 0px 4px 15px rgba(34, 42, 70, 0.08);
-  border-radius: var(--radius);
-  margin: 100px auto;
-  &-text{
-    font-weight: 600;
-    font-size: 18px;
-    line-height: 26px;
-    text-align: center;
-  }
-}
-p{
-  margin: 0;
-}
+
+
 @media (min-width: 1024px) {
   
 }
