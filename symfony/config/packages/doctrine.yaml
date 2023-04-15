@@ -19,6 +19,8 @@ doctrine:
         dql:
             numeric_functions:
                 rand: App\DoctrineFunction\Rand
+            string_functions:
+                JSON_ARRAYAGG: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonArrayAgg
 
 when@test:
     doctrine:

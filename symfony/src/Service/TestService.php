@@ -28,7 +28,7 @@ class TestService
 
     public function make(Test $test, array $data): Test
     {
-        if (!isset($data['minTrud']) && $test->getMinTrudTest()){
+        if (!isset($data['minTrud']) && $test->getMinTrudTest()) {
             $test->setMinTrudTest(null);
         }
 
@@ -53,8 +53,8 @@ class TestService
 
             };
             if ($key === 'minTrud') {
-                $minTrud = $this->em->find(MinTrudTest::class,$item);
-                if($minTrud){
+                $minTrud = $this->em->find(MinTrudTest::class, $item);
+                if ($minTrud) {
                     $test->setMinTrudTest($minTrud);
 
                 }
@@ -67,7 +67,7 @@ class TestService
             };
 
         }
-        if (!isset($data['time']) && !$test->getTime()){
+        if (!isset($data['time']) && !$test->getTime()) {
             $test->setTime(6000);
         }
 
@@ -77,7 +77,9 @@ class TestService
     public function handle(array $data, User $user = null): array
     {
         $response = [];
-        $response['response'] = [];
+        $response['response']['question'] = [];
+        $response['response']['test'] = [];
+
         $score = 0;
         $response['status'] = 200;
         if ($user) {
@@ -102,13 +104,15 @@ class TestService
 
         }
         foreach ($data['question'] ?? [] as $answerData) {
+
+
             $question = $this->em->find(Question::class, $answerData["id"]);
             if ($question) {
                 $preparedQuestion = $this->questionHandler->handle($answerData, $question);
-                $response['response'][] = $preparedQuestion;
+                $response['response']['question'][] = $preparedQuestion;
 
                 //todo начисление очков
-                if($preparedQuestion->getResult()['correct']?? null){
+                if ($preparedQuestion->getResult()['correct'] ?? null) {
                     $score++;
                 }
 
@@ -127,19 +131,40 @@ class TestService
                 }
 
             } else {
-                $response['response'][] = [
+                $response['response']['question'][] = [
                     "id" => $answerData["id"],
                     "error" => "question not found"
                 ];
             }
 
         }
-        if ($result){
+
+        $test = $this->em->find(Test::class, $data['info']['test']);
+        $response['response']['test'] = $test;
+        /** @var Question $question */
+
+        foreach ($response['response']['question'] as $question) {
+            $section = $question->getSection();
+
+            if ($question->getResult()['correct'] === true) {
+                $count = $section->getQuestionCountPassed();
+                $section->setQuestionCountPassed(++$count);
+                $test->addSection($section);
+
+            };
+            if ($section->getPass()) {
+                $passSection = $test->getSectionCountPassed();
+                $test->setSectionCountPassed(++$passSection);
+            }
+
+        }
+
+        if ($result) {
+            $result->setPass($test->isPass());
             $result->setScore($score);
             $this->em->persist($result);
             $this->em->flush();
         }
-
         return $response;
 
     }

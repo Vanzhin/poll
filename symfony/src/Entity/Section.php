@@ -25,7 +25,7 @@ class Section
     #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question', 'admin_test_section'])]
     private ?int $id = null;
 
-    #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question', 'admin_test_section'])]
+    #[Groups(['admin', 'admin_section', 'admin_ticket', 'admin_question', 'admin_test_section', 'handle'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(
         message: 'section.title.not_blank'
@@ -43,11 +43,18 @@ class Section
     )]
     private ?Test $test = null;
 
-    #[Groups(['admin_test_section'])]
+    #[Groups(['admin_test_section', 'handle'])]
     private ?int $questionCount = null;
 
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $questionCountToPass = null;
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 0])]
+    #[Groups(['handle'])]
+    private int $questionCountToPass;
+
+    #[Groups(['handle'])]
+    private int $questionCountPassed = 0;
+
+    #[Groups(['handle'])]
+    private ?bool $pass = null;
 
     /**
      * @return int|null
@@ -122,15 +129,39 @@ class Section
         return $this;
     }
 
-    public function getQuestionCountToPass(): ?int
+    public function getQuestionCountToPass(): int
     {
         return $this->questionCountToPass;
     }
 
-    public function setQuestionCountToPass(?int $questionCountToPass): self
+    public function setQuestionCountToPass(int $questionCountToPass): self
     {
         $this->questionCountToPass = $questionCountToPass;
 
         return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getQuestionCountPassed(): int
+    {
+        return $this->questionCountPassed;
+    }
+
+    /**
+     * @param int|null $questionCountPassed
+     */
+    public function setQuestionCountPassed(?int $questionCountPassed): void
+    {
+        $this->questionCountPassed = $questionCountPassed;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getPass(): ?bool
+    {
+        return $this->questionCountToPass <= $this->questionCountPassed;
     }
 }

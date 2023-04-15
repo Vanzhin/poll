@@ -60,8 +60,35 @@ class TestController extends AbstractController
             $sessionService->remove(QuestionHandler::SHUFFLED);
 
             //todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
+//todo разобраться с кодировкой и вынести в хендлер
+            $sections = [];
+            $AllQuestionsId = $questionRepository->getAllIdAndSectionByTest($test);
 
-            $questions = $testService->getQuestionForResponse($questionRepository->getRandomPublishedByTest($test, $count));
+            foreach ($AllQuestionsId as $data) {
+                $sections[$data['section_id']] = json_decode($data['questions']);
+            };
+            $questionsId = [];
+            $i = 0;
+            while ($i <= $count) {
+                if (count($sections) > 0) {
+                    foreach ($sections as $key => $section) {
+                        if (count($section) > 0) {
+                            $randomId = array_rand($section);
+                            $questionsId[] = $section[$randomId];
+                            unset($sections[$key][$randomId]);
+
+                        } else {
+                            unset($sections[$key]);
+                        }
+                        $i++;
+
+                    }
+                } else {
+                    break;
+                }
+
+            }
+            $questions = $testService->getQuestionForResponse($questionRepository->getByIdsSortBySection($questionsId));
 
             $response = [
                 'test' => $test->getTitle(),
