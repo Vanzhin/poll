@@ -72,7 +72,12 @@ export default {
     line-height: 24px;
     color: var(--color-blue);
     &:hover{
-      background-color: var(--color-hover-logo);
+      cursor: pointer;
+      background: var(--color-blue);
+      color: var(--color-white);
+      path{
+        fill:var(--color-white);
+      }
     }
   }
   .title{
@@ -103,7 +108,7 @@ export default {
       line-height: 24px;
       color: var(--color-white);
     &:hover{
-      &svg {
+      & path {
         fill: var(--color-blue);
       }
       cursor: pointer;

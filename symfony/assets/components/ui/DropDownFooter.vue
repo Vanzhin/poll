@@ -16,10 +16,7 @@
       
       <li><RouterLink class="dropdown-item menu_li" :to="{ name: 'statistics'}">Статистика</RouterLink></li>
       <li><RouterLink class="dropdown-item menu_li" :to="{ name: 'userAutchProfile'}">Профиль</RouterLink></li>
-       
-        
-      
-      
+     
     </ul>
   </div>
 </template>
@@ -68,7 +65,12 @@ export default {
     line-height: 24px;
     color: var(--color-blue);
     &:hover{
-      background-color: var(--color-hover-logo);
+      cursor: pointer;
+      background: var(--color-blue);
+      color: var(--color-white);
+      path{
+        fill:var(--color-white);
+      }
     }
   }
   .menu{

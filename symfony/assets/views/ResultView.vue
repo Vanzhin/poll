@@ -1,28 +1,31 @@
 <template>
-  <div class="block">
-    <div class="title">
-      <h1>Результат:</h1>  
-      <h2> {{ getTestTitleActive }}</h2>
-      <div class="test">
-        <p > {{ getTicketTitle  }}</p>  
-      </div>
-    </div>
-  
-  
-  <Loader
-    v-if="loader"
+  <HeadersPage
+      title="Тестирование Базовый курс"
+      :subTitle="getTestTitleActive"
   />
-  <div
-    v-else
-  >
-    <ResultAutchView
-      v-if="getIsAutchUser"
-    />
-    <ResultNoAutchView
-      v-else
-    />
+  <div class="fon">
+    <div class="wrapper">
+      <div class="ticket-title">
+        Режим тотальной проверки
+      </div>
+      <div class="ticket-number">
+        {{  getTicketTitle }}
+      </div>
+      <Loader
+        v-if="loader"
+      />
+      <div
+        v-else
+      >
+        <ResultAutchView
+          v-if="getIsAutchUser"
+        />
+        <ResultNoAutchView
+          v-else
+        />
+      </div> 
+    </div>
   </div> 
-  </div>
 </template>
 <script>
 
@@ -30,11 +33,13 @@ import ResultAutchView from './ResultAutchView.vue'
 import ResultNoAutchView from './ResultNoAutchView.vue'
 import Loader from '../components/ui/LoaderView.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
+import HeadersPage from '../components/HeadersPage.vue'
 export default {
   components: {
     ResultAutchView,
     ResultNoAutchView,
-    Loader
+    Loader,
+    HeadersPage
   },
   data() {
     return {
@@ -48,6 +53,7 @@ export default {
       "getTicketTitle",
       "getTestTitleActive",
     ]),
+    
   },
   methods: {
     ...mapActions(["getQuestionsDb", "setResultDb", "getAuthRefresh"]),
@@ -72,19 +78,24 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-    .block{
-    background-color: rgb(207 207 199);
-    padding: 10px ;
-    
-  }
-  .title{
-    margin: 10px;
-    & h2{
-      font-size: 1.4rem;
-      color: #697a3f;
+  .ticket{
+    &-title{
+      padding-top: 27px;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 40px;
+      color: var(--color-Black_blue);
     }
-  }
-  .test{
-    display: flex;
+    &-number{
+      width: 148px;
+      height: 36px;
+      color: var(--color-blue);
+      border: 1px solid var(--color-blue);
+      border-radius: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+     
+    }
   }
 </style>

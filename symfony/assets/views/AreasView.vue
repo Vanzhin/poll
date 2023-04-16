@@ -1,46 +1,50 @@
 <template>
-   <Loader
+  
+  <Loader
     v-if="isLoader"
   />
+    
   <div class="" v-else>
-    <div class="tests__block">
-      <h4>{{getCategoryTitle }}</h4>
-      <h5>{{getCategoryDescription}}</h5>
-    </div>
-    <div class="tests__block"
-      v-if="areas.length > 0"
-    >
-      <div
-        v-for="(area, index) in areas" 
-        :key="area.id"
-        class="test__block"
+    <div  class="wrapper">
+      <div class="tests__block">
+        <h4>{{getCategoryTitle }}</h4>
+        <h5>{{getCategoryDescription}}</h5>
+      </div>
+      <div class="tests__block"
+        v-if="areas.length > 0"
       >
-        
-        <div class="test__card"
-          v-if="getIsAutchUser || index < 3"
-          @click="categoryUpdate({ area })"
+        <div
+          v-for="(area, index) in areas" 
+          :key="area.id"
+          class="test__block"
         >
-          <div>
+          
+          <div class="test__card"
+            v-if="getIsAutchUser || index < 3"
+            @click="categoryUpdate({ area })"
+          >
+            <div>
+              {{ area.id }} - {{ area.title }}
+            </div>
+          </div>
+          <div class="test__card-limitation"
+            v-else
+            title="У Вас ограниченный доступ. Подпишитесь на группу."
+          >
             {{ area.id }} - {{ area.title }}
           </div>
         </div>
-        <div class="test__card-limitation"
-          v-else
-          title="У Вас ограниченный доступ. Подпишитесь на группу."
-        >
-          {{ area.id }} - {{ area.title }}
-        </div>
-      </div>
-    </div> 
-    <div class="tests__block"
-      v-else
-    > 
-      Данная категория в разработке.
-    </div> 
-    <Pagination
-      type="getCategorysDB"
-    />  
-     
+      </div> 
+      <div class="tests__block"
+        v-else
+      > 
+        Данная категория в разработке.
+      </div> 
+      <Pagination
+        type="getCategorysDB"
+      />  
+      
+    </div>
   </div>
 </template>
  

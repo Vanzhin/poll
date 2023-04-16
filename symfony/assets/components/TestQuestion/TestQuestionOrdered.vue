@@ -1,9 +1,11 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
-    <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
-      <img :src="question.image" width="200" 
+    <div class="card flex-shrink-1 shad">
+      <div class="title"
+      >{{ index+1 }}. {{ question.title }}</div>
+      <img :src="question.image" 
         v-if="question.image"
+        class="title-img"
       />  
       <input type="hidden" 
         :id="'a_' +  question.id"
@@ -107,8 +109,24 @@ export default {
     margin: 5px;
     max-width: 170px;
   }
-  .shadow{
-    padding: 5px;
+  .shad{
+    margin-top: 30px;
+    padding: 20px 43px 18px 43px;
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    background-color: var(--color-white);
+
+  }
+  .title{
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    color: var(--color-Black_blue);
+    &-img{
+      height: 235px;
+      width: 306px;
+      margin-top: 15px;
+    }
   }
  
   .custom-control {

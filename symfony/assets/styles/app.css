@@ -12,3 +12,6 @@
   max-width: 1110px;
   margin: 0 auto;
 }
+.fon{
+  background-color: var(--color-fon);
+}

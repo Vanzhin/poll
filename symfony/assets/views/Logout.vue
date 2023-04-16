@@ -6,9 +6,7 @@
       <CloseView/>
       <form @submit.prevent="onSubmit">
         <div class="login-page-title">Авторизация</div>
-        <div class="login-page-text">Введите действующий e-mail. <br>
-          Вам на почту придет ссылка для авторизации
-        </div>
+       
         <div class="form">
           <div class="text-field">
             <label class="text-field__label" >E-mail</label>
