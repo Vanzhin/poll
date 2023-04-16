@@ -17,8 +17,49 @@
           name="category" 
           :value="parentId"
         >
-        <p class="label"><b>Тест: </b></p>
-        <div class="custom-radio img_block">
+       
+        <div class="custom-radio mintrud">  
+          <p class="label"><b>Тест: </b></p>
+          <input type="checkbox"
+            v-model="checkedMinTrud"
+          >
+          <b> Минтруд </b>
+        </div>
+        <div class="mintrud_block"
+          v-if="checkedMinTrud"
+        >
+          <input type="hidden" 
+            name="minTrud" 
+            :value="selectTestMinTrud"
+          >
+          <input type="hidden" 
+            name="title" 
+            :value="title"
+          >
+          <p class="mintrud_title"
+            
+          >{{ title }}</p>
+          <div class="dropdown trud_select"> 
+            <button class=" dropdown-toggle trud_select" 
+              id="dropdownMenuButton1" 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false">
+              Выберите тест
+            </button> {{ selectTestMinTrud }} 
+            <ul class="dropdown-menu trud_grup_option" aria-labelledby="dropdownMenuButton1">
+              <li class="trud_option"
+                v-for="(item, index) in getTestsMinTrud"
+                :value="item.id"
+                @click="selectedTestMinTrud(item)"
+              >{{ item.title }}</li>
+              
+            </ul>
+          </div>
+          
+        </div>
+        <div class="custom-radio img_block"
+          v-else
+        >
           <textarea rows="2" required
             name="title"
             v-model= "title"
@@ -39,6 +80,34 @@
           <i class="bi bi-eraser custom-close" title="Очистить поле"
             @click="description = ''"
             v-if="description !== ''"
+          ></i>
+        </div>
+        <label class="label"><b>Укажите время на прохождение теста:</b> </label>
+        <div class="custom-radio img_block">  
+          <input  
+            name="time"
+            v-model= "time"
+            class="textarea_input" 
+            required
+            pattern="[0-9]{1,10}"
+          > 
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="time = ''"
+            v-if="time !== ''"
+          ></i>
+        </div>
+        <label class="label"><b>Укажите колличество секций для  прохождения теста:</b> </label>
+        <div class="custom-radio img_block">  
+          <input  
+            name="sectionCountToPass"
+            v-model= "sectionCountToPass"
+            class="textarea_input" 
+            required
+            pattern="[0-9]{1,10}"
+          > 
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="sectionCountToPass = ''"
+            v-if="sectionCountToPass !== ''"
           ></i>
         </div>
         <br> 
@@ -70,14 +139,24 @@
         parentId: undefined,
         title: "",
         description: "",
+        time: 1200,
+        sectionCountToPass:"",
         message: null,
         isLoader: true,
-        operation: this.$route.params.operation
+        operation: this.$route.params.operation,
+        checkedMinTrud: false,
+        selectTestMinTrud: null,
       }
     },
     computed:{ 
-      ...mapGetters(["getAutchUserToken", 
-      "getMessage", "getCategoryParendId", "getTest"]),
+      ...mapGetters([
+        "getAutchUserToken", 
+        "getMessage", 
+        "getCategoryParendId", 
+        "getTest",
+        "getTestsMinTrud",
+
+      ]),
       getTest () {
         const test = this.$store.getters.getTest
         console.log(test)
@@ -86,7 +165,15 @@
     },
    
     methods: { 
-      ...mapActions(["editTest", "createTest" ,"setMessage", "selectTestId", "getTestIdDb"]),
+      ...mapActions([
+        "editTest", 
+        "createTest",
+        "setMessage", 
+        "selectTestId", 
+        "getTestIdDb",
+        "getCountQuestionsTest",
+        "getTestsMinTrudDb"
+      ]),
       ...mapMutations([]),
       setSelectTypeQuestion(){},
       async onSubmit(e){
@@ -99,16 +186,22 @@
           await this.createTest({questionSend, token: this.getAutchUserToken, })
          
         }
+        
         this.message = !this.getMessage.err
+        
         let timerId = setInterval(() => {
           if ( !this.getMessage) {
             clearInterval(timerId)
             if (this.message ){this.$router.go(-1)}
           }
         }, 200);
-      
       },
+      selectedTestMinTrud(item) {
+        this.selectTestMinTrud = item.id
+        this.title = item.title
+      }
     },
+
     async mounted(){
       
     },
@@ -123,6 +216,11 @@
         await this.getTestIdDb({id: +this.$route.params.id})
         this.title = this.getTest.title
         this.description = this.getTest.description
+      }
+      console.log(this.getTestsMinTrud)
+      if (!this.getTestsMinTrud) {
+        console.log('запрос тестов минтруд')
+        await this.getTestsMinTrudDb()
       }
       this.isLoader = false
       
@@ -162,6 +260,41 @@
       }
     }
   }
+  .mintrud{
+    display: flex;
+    align-items: center;
+    &_block{
+      display: flex;
+      flex-direction: column;
+    }
+    &_title{
+      background-color: #fff;
+      border: var(--border) solid var(--color-secondary);
+      border-radius: var(--radius);
+      padding: 10px;
+      min-height: 50px;
+      max-width: 70%;
+    }
+    & b {
+      margin-left: 10px;
+    }
+  }
+  .trud{
+    &_select{
+    width: 80%;
+  }
+  &_grup_option{
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  &_option{
+   
+    &:hover{
+      background-color: rgb(170, 185, 197);
+      cursor: pointer;
+    }
+  }
+}
  @media (min-width: 1024px) {
   
  }

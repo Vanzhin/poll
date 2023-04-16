@@ -20,7 +20,8 @@ export default {
 .backgraund{
   width: 100%;
   height: 100%;
-  background-color: rgb(163 156 156);
+  min-height: 80vh;
+  background-color: #f0eeff;
   padding-top: 1px;
   
 }

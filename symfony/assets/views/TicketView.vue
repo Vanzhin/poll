@@ -1,58 +1,69 @@
 <template>
+  
   <Loader
     v-if="isLoader"
   />
-  <div class="block"
+  <div 
     v-else
   >
+    <HeadersPage
+      title="Тестирование Базовый курс"
+      :subTitle="testName"
+    />
+
+
     <div class="title">
       <Timer
         v-if="timeTicket"
         :time="20" 
         @time-end="timerEnd"
       />
-      <h2> {{ testName }}</h2>
-      <div class="test">
-        <p> {{ ticketTitle }}</p>  
+    </div>
+    <div class="fon">
+      <div class="wrapper">
+        <div class="ticket-title">
+          Режим тотальной проверки
+        </div>
+        <div class="ticket-number">
+          {{ ticketTitle }}
+        </div>
+        <form @submit.prevent="onSubmit">
+            <div v-for="(question, index ) in questions" 
+              :key="question.id"
+            >
+              <TestQuestionRadio
+                v-if="type(question) === 'radio'"
+                :question="question"
+                :index="index"
+              />
+              <TestQuestionCheckbox
+                v-else-if="type(question) === 'checkbox'"
+                :question="question"
+                :index="index"
+              />
+              <TestQuestionInputOne
+                v-else-if="type(question) === 'input_one'"
+                :question="question"
+                :index="index"
+              />
+              <TestQuestionOrdered
+                v-else-if="type(question) === 'order'"
+                :question="question"
+                :index="index"
+              />
+              <TestQuestionConformity
+                v-else-if="type(question) === 'conformity'"
+                :question="question"
+                :index="index"
+              />
+            </div>
+            <div class="button-cont">
+              <button type="submit" class="button">Проверить</button>
+            </div>
+          </form>
       </div>
     </div>
-    
-    <div class="container">
-      <div class="row">
-        <form @submit.prevent="onSubmit">
-          <div v-for="(question, index ) in questions" 
-            :key="question.id"
-          >
-            <TestQuestionRadio
-              v-if="type(question) === 'radio'"
-              :question="question"
-              :index="index"
-            />
-            <TestQuestionCheckbox
-              v-else-if="type(question) === 'checkbox'"
-              :question="question"
-              :index="index"
-            />
-            <TestQuestionInputOne
-              v-else-if="type(question) === 'input_one'"
-              :question="question"
-              :index="index"
-            />
-            <TestQuestionOrdered
-              v-else-if="type(question) === 'order'"
-              :question="question"
-              :index="index"
-            />
-            <TestQuestionConformity
-              v-else-if="type(question) === 'conformity'"
-              :question="question"
-              :index="index"
-            />
-          </div>
-          <button type="submit" class="button">Проверить</button>
-        </form>
-      </div>
-  </div>
+  
 </div>
 </template>
 
@@ -64,6 +75,7 @@ import TestQuestionInputOne from '../components/TestQuestion/TestQuestionInputOn
 import TestQuestionConformity from '../components/TestQuestion/TestQuestionConformity.vue'
 import Timer from '../components/ui/Timer.vue'
 import Loader from '../components/ui/LoaderView.vue'
+import HeadersPage from '../components/HeadersPage.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   components: {
@@ -73,7 +85,8 @@ export default {
     TestQuestionInputOne,
     TestQuestionConformity,
     Loader,
-    Timer
+    Timer,
+    HeadersPage
   },
   data() {
     return {
@@ -112,6 +125,12 @@ export default {
     },
     
   },
+  watch:{
+      $route(newRout){
+        console.log("newParentId -", newRout)
+        
+      }
+    },
    methods: {
     ...mapActions([
       "getQuestionsDb", 
@@ -173,7 +192,7 @@ export default {
     
   }
   .title{
-    margin: 10px;
+    
     & h2{
       font-size: 1.4rem;
       color: #697a3f;
@@ -182,18 +201,47 @@ export default {
   .test{
     display: flex;
   }
-  [class*="col-"] {
-  padding-top: 7px;
-  padding-right: 7px;
-  padding-left: 7px;
-  margin-bottom: 10px;
+  .ticket{
+    &-title{
+      padding-top: 27px;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 40px;
+      color: var(--color-Black_blue);
+    }
+    &-number{
+      width: 148px;
+      height: 36px;
+      color: var(--color-blue);
+      border: 1px solid var(--color-blue);
+      border-radius: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+    }
   }
   .button{
-    border: 1px solid rgb(171 171 171);
-    padding: 5px 10px;
-    border-radius: 5px;
+    width: 148px;
+    height: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-blue);
+    border: 1px solid var(--color-blue);
+    border-radius: 6px;
+    color: var(--color-white);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    margin-top: 30px 0;
     &:hover{
-      background-color: rgb(225 225 221);
+      background-color: var(--color-white);
+      color: var(--color-blue);
+    }
+    &-cont{
+      padding-top: 30px;
+      padding-bottom: 141px;
     }
   }
 @media (min-width: 1024px) {

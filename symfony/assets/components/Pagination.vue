@@ -101,7 +101,7 @@ export default {
 <style lang="scss" scoped>
 .block{
   margin-top: 20px;
- 
+  padding-bottom: 30px;
   &-pagination{
       display: flex;
       justify-content: center;
@@ -111,14 +111,16 @@ export default {
          border: 1px solid rgb(20, 126, 112);
          margin: 0 5px;
          min-width: 10px;
+         border-radius: 5px;
          &.active {
-            border-color: rgb(45, 56, 207);
-            background-color: rgb(134 161 152);
+           
+            background-color: var(--color-blue);
+            color: var(--color-white)
          }
          &:hover{
             cursor: pointer;
             border-color: rgb(45, 207, 186);
-            background-color: #d7e9e9;
+            background-color: var(--color-hover-logo)
          }
       }
    }}

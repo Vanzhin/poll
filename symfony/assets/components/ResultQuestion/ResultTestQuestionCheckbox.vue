@@ -1,25 +1,30 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
-    <div class="card flex-shrink-1 shadow">
+    <div class="flex-shrink-1 shad"
+    :class="{resultTrue: question.result.correct }"
+    >
       <QuestionHeaderQuestion
         :question='question'
         :index='index'
       />
-      <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in question.variant" 
-        :key="answer"
-      >
-        <div class=""> 
-          <img :src="answer.image" 
-            v-if="answer.image"
-            class="img"
-          />   
+      <div class="answer-cont">
+        <hr>
+        <div class="custom-control custom-radio"
+          v-for="(answer, ind ) in question.variant" 
+          :key="answer"
+        >
+          <div class=""> 
+            <img :src="answer.image" 
+              v-if="answer.image"
+              class="img"
+            />   
+          </div>
+          <label v-if="answer!==''"
+            class="custom-control-label f_sm " 
+            :class="classAnswer(ind)"
+          >{{ answer.title ? answer.title : answer }}
+          </label>
         </div>
-        <label v-if="answer!==''"
-          class="custom-control-label f_sm " 
-          :class="classAnswer(ind)"
-        >{{ answer.title ? answer.title : answer }}
-        </label>
       </div>
       <br>
     </div>       
@@ -48,8 +53,8 @@ export default {
   methods: {
     classAnswer(ind){
       return  {
-        "answer-true": this.getUserAnswer && this.question.result.true_answer.indexOf(ind) > -1 && this.question.result.user_answer.indexOf(`${ind}`) > -1,
-        "answer-user": this.getUserAnswer && this.question.result.user_answer.indexOf(`${ind}`) > -1,
+        "answer-true": this.getUserAnswer && this.question.result.true_answer.indexOf(ind) > -1 && (this.question.result.user_answer.indexOf(`${ind}`) > -1 || this.question.result.user_answer.indexOf(ind) > -1),
+        "answer-user": this.getUserAnswer && (this.question.result.user_answer.indexOf(`${ind}`) > -1 || this.question.result.user_answer.indexOf(ind) > -1),
         "answer": this.getUserAnswer && this.question.result.true_answer.indexOf(ind) > -1,
       }
     },
@@ -62,18 +67,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .shad{
+    margin-top: 14px;
+    padding: 30px 14px 30px 14px;
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-red);
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    
+  }
+
+
   .answer{
-    color:rgb(91, 206, 235);
+    color:var(--color-blue);
     &-user{
-      color:rgb(196, 44, 17)
+      color:var(--color-red)
     }
     &-true{
-      color:rgb(17, 196, 47)
+      color:var(--color-green)
+    }
+    &-cont{
+      padding: 0 29px;
     }
   }
   .img{
     height: 130px;
-    margin: 3px 10px;
+    margin: 3px 10px 3px 0;
     max-width: 170px;
   }
   .shadow{
@@ -84,7 +105,7 @@ export default {
     display: flex;
     align-items:flex-start;
     min-height: 1.5rem;
-    padding-left: 1.5rem;
+    
   }
   .f_sm {
       font-size: 0.9rem;
@@ -93,17 +114,12 @@ export default {
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
   }
-  .result::before{
-    content: "X  ";
-    font-family: Geneva, Arial;
-    color:rgb(235, 25, 25);
-    font-weight: 900;
-    font-style:  oblique ;
+  .resultTrue{
+    border: 1px solid #56D062;
   }
-  .resultTrue::before{
-    content: "V  ";
-    color:rgb(22, 204, 104);
-    font-style:  normal ;
-  }
+  
 </style>

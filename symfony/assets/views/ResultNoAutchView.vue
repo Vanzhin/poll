@@ -1,27 +1,28 @@
 <template>
- <div class="container">
-    <div class="row">
-      <div v-for="(question, index ) in getResultQuestions" 
-        :key="question.id"
-      >
-        <ResultTestQuestion
-          :question="question"
-          :index="index"
-        /> 
-      </div>
-
-      <div class="col-sm-12 col-md-12 col-lg-12"> 
-        <div class="card flex-shrink-1 shadow">
-          <h5>Для просмотра более подробной информации </h5>
-          <div class="links">
-            <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
-              <h5>   /авторизуйтесь/  </h5>
-            </RouterLink>
-          </div>
-        </div>       
-      </div>
-    </div>
+  <div v-for="(question, index ) in getResultQuestions" 
+    :key="question.id"
+  >
+    <ResultTestQuestion
+      :question="question"
+      :index="index"
+    /> 
   </div>
+  
+  <div class="info">
+    <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16.6673" cy="16.8298" r="13.3333" fill="#269EB7"/>
+      <path d="M15.3789 12.8938H17.9549V10.4298H15.3789V12.8938ZM15.4909 14.8298V23.4965H17.8429V14.8298H15.4909Z" fill="white"/>
+    </svg>
+
+    <div class="info-text">Для просмотра более подробной информации </div>
+    <RouterLink :to="{ name: 'logoutlink'}" class="routerLink"> 
+      <div class="button">
+        Авторизуйтесь  
+      </div> 
+    </RouterLink>
+  </div>       
+      
+    
 </template>
 
 <script>
@@ -55,37 +56,37 @@ export default {
 </script>
 <style lang="scss" scoped>
   
-  [class*="col-"] {
-  padding-top: 7px;
-  padding-right: 7px;
-  padding-left: 7px;
-  margin-bottom: 10px;
-  }
-  .card{
-    display: flex;
-    padding: 15px;
-    justify-content: center;
-    text-align: center;
-    & p{
-      margin: 0;
-    }
-  }
+  
+  
   .button{
-    border: 1px solid rgb(171 171 171);
-    padding: 5px 10px;
-    border-radius: 5px;
+    width: 190px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--color-blue);
+    border-radius: 6px;
+    color:var( --color-blue) ;
     &:hover{
-      background-color: rgb(225 225 221);
+      background-color: var(--color-blue);
+      color:var( --color-white) ;
     }
   }
-  .links{
-  & h5 {
-    color:#2c6666;
+  .info{
+    display: flex;
+    padding-top: 72px;
+    padding-bottom: 90px;
+    align-items: center;
+    &-text{
+      margin-left: 13px;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 40px;
+      margin-right: 30px;
+    }
+    
   }
-  :hover{
-  cursor: pointer;
-  h5 {color: #82a5a5;}
-}}
+  
 
 @media (min-width: 1024px) {
  

@@ -21,7 +21,7 @@ class AppUpLoadedAsset implements RuntimeExtensionInterface
 
     public function asset(string $config, string $fileName): string
     {
-            return $this->packages->getUrl($this->parameterBag->get($config) . DIRECTORY_SEPARATOR . $fileName);
+            return $this->packages->getUrl($this->parameterBag->get($config) . '/' . $fileName);
 
     }
 }

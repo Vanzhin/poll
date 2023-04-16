@@ -16,17 +16,16 @@
           class="custom-control-label f_sm " 
         >{{ answer.title }}
         </label>
-        <div v-if="getUserAnswer"  class="custom-control-label d-flex">
+        <div v-if="getUserAnswer(ind)"  class="custom-control-label d-flex">
           <label 
-            v-if="question.result.user_answer[ind] && question.result.user_answer[ind]!==''"
+            v-if="question.result.user_answer[ind]!==''"
             class="custom-control-label f_sm answer " 
             :class="classAnswer(ind)"
           >{{ question.variant[question.result.user_answer[ind]].title }}
           </label>
         
           <label 
-            v-if="
-                +question.result.user_answer[ind] !== question.result.true_answer[ind]"
+            v-if="+question.result.user_answer[ind] !== +question.result.true_answer[ind]"
             class="custom-control-label f_sm " 
           >{{ question.variant[question.result.true_answer[ind]].title }}
           </label>
@@ -55,16 +54,19 @@ export default {
     }
   },
   computed:{
-    getUserAnswer(){
-      return   this.question.result.user_answer ? this.question.result.user_answer.length > 0 
-        ? this.question.result.user_answer[0]!=='' : false
-        : false
-    },
+    
   },
   methods: {
+    getUserAnswer(ind){
+      return   this.question.result.user_answer 
+        ? this.question.result.user_answer.length > 0 && this.question.result.user_answer.length > ind
+          ? this.question.result.user_answer[ind]!== -1 
+          : false
+        : false
+    },
     classAnswer(ind){
       return  {
-        "answer-true": this.getUserAnswer && (this.question.result.true_answer[ind] === +this.question.result.user_answer[ind]) ,
+        "answer-true": this.getUserAnswer && (+this.question.result.true_answer[ind] === +this.question.result.user_answer[ind]) ,
       }
     },
     
