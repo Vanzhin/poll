@@ -35,7 +35,7 @@ class ReportHandler
                     'Title' => $report->getOrganization()->getTitle()
                 ],
                 "Test" => [
-                    "@isPassed" => "true",
+                    "@isPassed" => $result->isPass() ? "true" : "false",
                     "@learnProgramId" => $result->getTest()->getMinTrudTest()->getOriginalId(),
                     'Date' => $result->getCreatedAt()->format(DateTimeInterface::ATOM),
                     'ProtocolNumber' => $result->getId(),
