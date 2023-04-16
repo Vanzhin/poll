@@ -81,6 +81,7 @@ class QuestionHandler
 
                 }
                 if ($question->getType()->getTitle() === 'input_one') {
+                    $answers = [];
                     $variant = $this->entityManager->getRepository(Variant::class)->findOneByQuestionAndTitle($question->getId(), $answer);
                     if ($variant) {
                         $answers[] = $variant->getId();
@@ -94,7 +95,6 @@ class QuestionHandler
         } else {
             $answers = $userAnswer;
         }
-
         if ($question->getSubtitles()->count() > 1 && isset($shuffled['subTitle'])) {
             $shuffledUserAnswer = [];
             foreach ($question->getSubtitles() as $subTitle) {
@@ -107,7 +107,6 @@ class QuestionHandler
             }
             $answers = $shuffledUserAnswer;
         }
-
         return $answers;
     }
 
@@ -158,7 +157,9 @@ class QuestionHandler
             $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, $this->sessionService->get(self::SHUFFLED)[$question->getId()]);
         } else {
             $userShuffledAnswers = $this->getShuffledUserAnswers($question, $userAnswers, ['variant' => $this->getVariantsToArray($question)]);
+
         }
+
         switch ($question->getType()->getTitle()) {
             case 'radio':
             case 'order':
