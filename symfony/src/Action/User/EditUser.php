@@ -2,26 +2,27 @@
 
 namespace App\Action\User;
 
+use App\Action\BaseAction;
 use App\Entity\User;
 use App\Handler\UserHandler;
-use App\Response\Question\ErrorResponse;
-use App\Response\Question\SuccessResponse;
+use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class EditUser
+class EditUser extends BaseAction
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ErrorResponse          $errorResponse,
-        private readonly SuccessResponse        $successResponse,
         private readonly Security               $security,
         private readonly UserHandler            $userHandler,
+        private readonly SerializerService      $serializer
 
     )
     {
+        parent::__construct($serializer);
+
     }
 
     public function edit(Request $request): JsonResponse
@@ -32,7 +33,7 @@ class EditUser
 
             if ($user) {
                 if ((in_array('ROLE_ADMIN', $this->security->getUser()->getRoles())) or ($user === $this->security->getUser())) {
-                    return $this->successResponse->response(['content' => json_encode($this->userHandler->edit($user, $request->request->all()))]);
+                    return $this->successResponse($this->userHandler->edit($user, $request->request->all()));
 
 
                 } else {
@@ -44,7 +45,7 @@ class EditUser
             }
 
         } catch (\Exception $e) {
-            return $this->errorResponse->response(['error' => $e->getMessage()], $e->getCode() ? $e->getCode() : 422);
+            return $this->errorResponse(['error' => $e->getMessage()], $e->getCode() ? $e->getCode() : 422);
         }
 
     }

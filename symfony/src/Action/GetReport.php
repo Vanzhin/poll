@@ -8,21 +8,17 @@ use App\Enum\Format;
 use App\Factory\Organization\OrganizationFactory;
 use App\Factory\WorkerCard\WorkerCardFactory;
 use App\Handler\ReportHandler;
-use App\Response\ErrorResponse;
-use App\Response\SuccessResponse;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class GetReport
+class GetReport extends BaseAction
 {
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ErrorResponse          $errorResponse,
-        private readonly SuccessResponse        $successResponse,
         private readonly ReportHandler          $reportHandler,
         private readonly WorkerCardFactory      $workerCardFactory,
         private readonly ValidationService      $validation,
@@ -85,14 +81,14 @@ class GetReport
                 /** @var User $user */
                 $user->setWorkerCard($workerCard);
 
-                return $this->successResponse->response(['content' => $this->reportHandler->build($result, $organization, $format, $groups)]);
+                return $this->successFileResponse(['content' => $this->reportHandler->build($result, $organization, $format, $groups)]);
 
             } else {
                 throw new \Exception('Формат не передан');
             }
 
         } catch (\Exception $e) {
-            return $this->errorResponse->response(['error' => $e->getMessage()]);
+            return $this->errorResponse(['error' => $e->getMessage()]);
         }
     }
 }
