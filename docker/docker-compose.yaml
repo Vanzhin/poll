@@ -20,6 +20,7 @@ services:
       - SYMFONY_DATABASE_PASSWORD_FILE=/run/secrets/user.pwd
       - PHP_FPM_LISTEN_ADDRESS=0.0.0.0:9000
       - PHP_DATE_TIMEZONE=Asia/Yekaterinburg
+      - PHP_ENABLE_OPCACHE=yes
     command: /opt/bitnami/scripts/php/run.sh
     volumes:
       - '../symfony:/app:rw'
