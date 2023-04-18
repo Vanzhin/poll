@@ -65,14 +65,14 @@ export default {
       switch (page) {
         case '-1' : {
           if (this.currentPage > 1) {
-            console.log(this.getPagination[0].label)
+           
             this.currentPage = parseInt(this.getPagination[0].label) - 1
-            console.log(this.currentPage)
+           
           } else { return }
         break;
         }
         case '+1' : {
-          console.log(this.getTotalPage)
+         
           if  (this.currentPage = parseInt(this.getPagination[9].label) < this.getTotalPage) {
             this.currentPage = this.currentPage = parseInt(this.getPagination[9].label) + 1
           } else { return }
@@ -83,7 +83,7 @@ export default {
         }
       }
       this.setIsLoaderStatus({status:true})
-      console.log(this.type)
+     
      
       const data = {
         page: this.currentPage, 
@@ -91,7 +91,7 @@ export default {
         id: this.$route.params.id||null,
         admin: this.admin
       }
-      console.log(data)
+     
       await this[this.type](data)
       this.setIsLoaderStatus({status:false})
     }

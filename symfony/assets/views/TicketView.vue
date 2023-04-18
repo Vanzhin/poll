@@ -1,70 +1,68 @@
 <template>
-  
-  <Loader
-    v-if="isLoader"
-  />
-  <div 
-    v-else
-  >
-    <HeadersPage
-      title="Тестирование Базовый курс"
-      :subTitle="testName"
-    />
-
-
-    <div class="title">
-      <Timer
-        v-if="timeTicket"
-        :time="20" 
-        @time-end="timerEnd"
+  <div class="cont">
+    
+    <div 
+    v-if="!getIsLoaderStatus"
+    >
+      <HeadersPage
+        title="Тестирование Базовый курс"
+        :subTitle="testName"
       />
-    </div>
-    <div class="fon">
-      <div class="wrapper">
-        <div class="ticket-title">
-          Режим тотальной проверки
+      <div class="title">
+        <Timer
+          v-if="timeTicket"
+          :time="20" 
+          @time-end="timerEnd"
+        />
+      </div>
+      <div class="fon">
+        <div class="wrapper">
+          <div class="ticket-title">
+            {{ info.ticketModeTitle }}
+          </div>
+          <div class="ticket-number"
+            v-if="info.ticketTitle !== ''"
+          >
+            {{ info.ticketTitle }}
+          </div>
+          <form @submit.prevent="onSubmit">
+              <div v-for="(question, index ) in questions" 
+                :key="question.id"
+              >
+                <TestQuestionRadio
+                  v-if="type(question) === 'radio'"
+                  :question="question"
+                  :index="index"
+                />
+                <TestQuestionCheckbox
+                  v-else-if="type(question) === 'checkbox'"
+                  :question="question"
+                  :index="index"
+                />
+                <TestQuestionInputOne
+                  v-else-if="type(question) === 'input_one'"
+                  :question="question"
+                  :index="index"
+                />
+                <TestQuestionOrdered
+                  v-else-if="type(question) === 'order'"
+                  :question="question"
+                  :index="index"
+                />
+                <TestQuestionConformity
+                  v-else-if="type(question) === 'conformity'"
+                  :question="question"
+                  :index="index"
+                />
+              </div>
+              <div class="button-cont">
+                <button type="submit" class="button">Проверить</button>
+              </div>
+            </form>
         </div>
-        <div class="ticket-number">
-          {{ ticketTitle }}
-        </div>
-        <form @submit.prevent="onSubmit">
-            <div v-for="(question, index ) in questions" 
-              :key="question.id"
-            >
-              <TestQuestionRadio
-                v-if="type(question) === 'radio'"
-                :question="question"
-                :index="index"
-              />
-              <TestQuestionCheckbox
-                v-else-if="type(question) === 'checkbox'"
-                :question="question"
-                :index="index"
-              />
-              <TestQuestionInputOne
-                v-else-if="type(question) === 'input_one'"
-                :question="question"
-                :index="index"
-              />
-              <TestQuestionOrdered
-                v-else-if="type(question) === 'order'"
-                :question="question"
-                :index="index"
-              />
-              <TestQuestionConformity
-                v-else-if="type(question) === 'conformity'"
-                :question="question"
-                :index="index"
-              />
-            </div>
-            <div class="button-cont">
-              <button type="submit" class="button">Проверить</button>
-            </div>
-          </form>
       </div>
     </div>
-  
-</div>
+  </div>
 </template>
 
 <script>
@@ -97,6 +95,7 @@ export default {
       ticketTitle:"",
       rnd: {
         rnd:"Случайный набор вопросов",
+        rndb:"Случайный билет",
         rnd20:"Случайный набор из 20 вопросов",
         rnd20t:"Случайный набор из 20 вопросов на время",
         rndmax:"Режим тотальной проверки знаний"
@@ -104,7 +103,9 @@ export default {
       info:{
         ticket:'',
         mode:'',
-        test:''
+        test:'',
+        ticketTitle:'',
+        ticketModeTitle:'',
       }
     }
   },
@@ -114,7 +115,8 @@ export default {
       "getRandomTicket", 
       "getSelectTicket", 
       "getTestId",
-      "getTicket"
+      "getTicket",
+      "getIsLoaderStatus"
       
     ]),
     testName() {
@@ -127,7 +129,7 @@ export default {
   },
   watch:{
       $route(newRout){
-        console.log("newParentId -", newRout)
+        // console.log("newParentId -", newRout)
         
       }
     },
@@ -136,7 +138,8 @@ export default {
       "getQuestionsDb", 
       "saveResultTicketUser", 
       "setIsLoaderStatus",
-      "setTicketTitle"
+      "setTicketInfo",
+      "setIsLoaderStatus"
     ]),
     async onSubmit(e){
       const question = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
@@ -156,36 +159,39 @@ export default {
       return item.type.title ? item.type.title : item.type
     }
   },
+  mounted(){
+    window.scroll(0, 0)
+  },
   async created(){
-    this.isLoader = true
+    
+    this.setIsLoaderStatus({status: true})
     if (this.ticketId === "rndb" ) { 
+      this.info.ticketModeTitle = this.rnd[this.ticketId]
       this.ticketId = await this.getRandomTicket
-      console.log("запрос случайного билета ", this.ticketId)
     }
-    console.log("this.ticketId - ", this.ticketId)
     
     const regexp = new RegExp("rnd", 'i');
-               
-    console.log(" regexp.test(this.ticketId) - ",  regexp.test(this.ticketId))
+   
     if ( regexp.test(this.ticketId)){
-      this.ticketTitle =this.rnd[this.ticketId]
-      this.info.mode = this.ticketId
-      this.setTicketTitle(this.rnd[this.ticketId])
+      this.info.ticketModeTitle = this.rnd[this.ticketId]
     } else {
-      this.ticketTitle ='Билет № ' + this.getTicket.title
-      this.info.ticket = +this.ticketId
-      this.setTicketTitle(this.ticketTitle) 
+      this.info.ticketTitle ='Билет № ' + this.getTicket.title
     }
+
     this.info.test= this.getTestId
+    this.setTicketInfo(this.info) 
     
     await this.getQuestionsDb({id: this.ticketId, slug: this.getSlug})
     if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
-    this.isLoader = false
+    this.setIsLoaderStatus({status: false})
   }
 } 
 
 </script>
 <style lang="scss" scoped>
+.cont{
+  min-height: 90vh;
+}
   .block{
     background-color: rgb(207 207 199);
     padding: 10px ;

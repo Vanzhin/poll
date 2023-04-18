@@ -67,8 +67,7 @@
     computed:{
       ...mapGetters(["getIsAutchUser", "getCategoryTitle", "getTests", "getCategorys", "getCategoryDescription"]),
       sectionTitle () {
-        console.log(this.$route.params.id)
-        console.log(this.$store.getters.getSectionTitle(this.$route.params.id))
+       
         return this.$store.getters.getSectionTitle(this.$route.params.id)
       },
       areas () {
@@ -83,7 +82,7 @@
     // },
     watch:{
       $route(newRout){
-        console.log("newParentId -", newRout)
+       
         this.categoryUpdateStory(newRout.params.id)
       }
     },

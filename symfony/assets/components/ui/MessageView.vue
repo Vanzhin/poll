@@ -59,7 +59,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(115, 118, 121, 0.678);
+    background-color: rgba(199, 223, 247, 0.678);
     z-index: 40;
   }
   
@@ -74,11 +74,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #9ac7c7;
+    background-color: var(--color-blue);
     border-radius: 10px;
     animation: move 0.3s linear;
     text-align: center;
-    
+    color: var(--color-white);
     padding: 15px;
     p{
       margin: 0;

@@ -109,7 +109,7 @@ const actions = {
   },
   //запрос билетов для теста по его id в режиме тестирования
   async getTicketsTestIdNoAuthDb({dispatch, commit}, {id}){
-    console.log("id - ",  id)
+   
     try{
       const config = {
         method: 'get',
@@ -121,7 +121,7 @@ const actions = {
      
       await axios(config)
         .then(({data})=>{
-          console.log("getTicketsTestIdNoAuthDb - ",  data)
+          // console.log("getTicketsTestIdNoAuthDb - ",  data)
           commit("SET_TICKETS", data.ticket);
          
         })
@@ -132,7 +132,7 @@ const actions = {
   setTickets ({dispatch, commit}, tickets) {
     commit("SET_TICKETS", tickets)
   },
-  setTicketTitle ({dispatch, commit}, title) {
+  setTicketInfo ({dispatch, commit}, title) {
     commit("SET_TICKET_TITLE", title)
   },
   saveSelectTicketStore({dispatch, commit},{ticket}){
@@ -145,9 +145,9 @@ const getters = {
     return state.tickets
   },
   getRandomTicket(state) {
-    console.log(state.tickets.length)
+   
     const num = Math.floor(Math.random() * (state.tickets.length ) )
-    console.log(num)
+    
     return state.tickets[num].id
   },
   getSelectTicket:(state)=>(id) =>{
@@ -155,7 +155,7 @@ const getters = {
       return +ticket.id === +id}) 
   },
   getTicketTitle(state) {
-    console.log(state.title)
+   
     return state.title
   },
   getTicket(state) {

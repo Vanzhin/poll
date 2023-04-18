@@ -11,7 +11,10 @@
         <div class="page-header-navigation-crumbs">
           Тесты/
         </div>
-        <Button/>
+        <Button
+          title="Назад"
+          @click="nextLink"
+        />
       </div>
     </div>
   </div>
@@ -31,14 +34,13 @@ export default {
     Button
   },
   computed:{
-    classObject() {
-      return {
-        fixeds: this.isActive
-      }
-    }
+   
   },
   methods: {
-   
+    nextLink(toLink){
+      
+      this.$router.go(-1)
+    }
   }, 
   mounted() {
    

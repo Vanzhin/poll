@@ -1,5 +1,5 @@
 <template>
-  <div class="col-sm-12 col-md-12 col-lg-12"> 
+  
     <div class="flex-shrink-1 shad"
     :class="{resultTrue: question.result.correct }"
     >
@@ -26,9 +26,9 @@
           </label>
         </div>
       </div>
-      <br>
+      
     </div>       
-  </div>
+ 
 </template>
 <script>
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
@@ -74,12 +74,7 @@ export default {
     border-radius: 6px;
     background-color: var(--color-white);
     border: 1px solid var(--color-red);
-    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
-    border-radius: 6px;
-    
   }
-
-
   .answer{
     color:var(--color-blue);
     &-user{
@@ -97,26 +92,23 @@ export default {
     margin: 3px 10px 3px 0;
     max-width: 170px;
   }
-  .shadow{
-    padding: 5px;
-  }
+  
   .custom-control {
     position: relative;
     display: flex;
     align-items:flex-start;
     min-height: 1.5rem;
-    
   }
   .f_sm {
-      font-size: 0.9rem;
+    font-size: 0.9rem;
   }
   .custom-control-label {
-      position: relative;
-      margin-bottom: 0;
-      margin-left: 10px;
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 24px;
+    position: relative;
+    margin-bottom: 0;
+    margin-left: 10px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
   }
   .resultTrue{
     border: 1px solid #56D062;

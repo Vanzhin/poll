@@ -79,20 +79,14 @@
     methods: {
       ...mapActions(["setIsAutchUser","getLoginByLinkUser"]),
       async onSubmit(e){
-        
-        console.log('авторизация')
-        console.log(this.email)
-        
-        console.log(await this.getLoginByLinkUser(this.email))
+        await this.getLoginByLinkUser(this.email)
         this.emailSend = this.getLogoutLinkDate.send,
         this.resMessage = this.getLogoutLinkDate.message,
         this.link = this.getLogoutLinkDate.url
        
-        // this.$router.push({ name: this.getPageName})
       }
     }
-     // mounted(){
-     // }
+     
   } 
 </script>
 

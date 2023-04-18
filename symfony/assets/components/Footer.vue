@@ -104,6 +104,7 @@
 <script>
 import { RouterLink } from 'vue-router'
 import DropDownFooter from './ui/DropDownFooter.vue'
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   data() {
     return {
@@ -114,8 +115,9 @@ export default {
     DropDownFooter
   },
   computed:{
+    ...mapGetters(["getCategorysFooter"]),
     sections () {
-      return this.$store.getters.getCategorys
+      return this.$store.getters.getCategorysFooter
     },
   },
   methods: {
@@ -172,6 +174,7 @@ export default {
     &-section{
       font-family: var(--font);
       font-style: normal;
+      font-weight: 400;
       font-size: 14px;
       line-height: 30px;
       color: #000000;

@@ -1,31 +1,40 @@
 <template>
-  <HeadersPage
-      title="Тестирование Базовый курс"
-      :subTitle="getTestTitleActive"
-  />
-  <div class="fon">
-    <div class="wrapper">
-      <div class="ticket-title">
-        Режим тотальной проверки
+  <div class="cont">
+    <Loader
+      v-if="loader"
+    />
+    <div
+      v-else
+    >
+    <HeadersPage
+        title="Тестирование Базовый курс"
+        :subTitle="getTestTitleActive"
+    />
+    <div class="fon">
+      <div class="wrapper">
+        <div class="ticket-title">
+          {{ getTicketTitle.ticketModeTitle }}
+        </div>
+        <div class="ticket-number"
+          v-if="getTicketTitle.ticketTitle !== ''"
+        >
+          {{  getTicketTitle.ticketTitle }}
+        </div>
+        <div
+          class="question-cont"
+        >
+        
+          <ResultAutchView
+            v-if="getIsAutchUser"
+          />
+          <ResultNoAutchView
+            v-else
+          />
+        </div>
+        </div> 
       </div>
-      <div class="ticket-number">
-        {{  getTicketTitle }}
-      </div>
-      <Loader
-        v-if="loader"
-      />
-      <div
-        v-else
-      >
-        <ResultAutchView
-          v-if="getIsAutchUser"
-        />
-        <ResultNoAutchView
-          v-else
-        />
-      </div> 
-    </div>
-  </div> 
+    </div> 
+  </div>
 </template>
 <script>
 
@@ -59,11 +68,11 @@ export default {
     ...mapActions(["getQuestionsDb", "setResultDb", "getAuthRefresh"]),
   },
   async mounted(){
-    console.log('монтирую результат')
+   
     
   },
   async created(){
-    console.log('создаю результат')
+    
     this.loader = true
     window.scroll(0, 0);
     await this.setResultDb( {token: this.getAutchUserToken, userAuth:this.getIsAutchUser})
@@ -71,13 +80,16 @@ export default {
     this.loader = false
   },
   unmounted(){
-    console.log('размонтирую результат!')
+   
   }
 
 } 
 
 </script>
 <style lang="scss" scoped>
+  .cont{
+    min-height: 90vh;
+  }
   .ticket{
     &-title{
       padding-top: 27px;
@@ -97,5 +109,8 @@ export default {
       align-items: center;
      
     }
+  }
+  .question-cont{
+    padding-bottom: 27px;
   }
 </style>

@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <div class="row">
+  
       <div v-for="(question, index ) in getResultQuestions" 
         :key="questionItem(question).id"
       >
@@ -25,8 +24,7 @@
           v-else-if="questionType(questionItem(question))==='conformity'"
         />
       </div>
-    </div>
-  </div>
+  
 </template>
 
 <script>
@@ -73,7 +71,7 @@ export default {
   },
   mounted(){
     window.scroll(0, 0);
-    console.log("монтирую результат для авторизованного")
+   
   }
 } 
 

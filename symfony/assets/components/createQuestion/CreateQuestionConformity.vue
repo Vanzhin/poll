@@ -212,7 +212,7 @@ export default {
   },
   created(){
     if (this.operationEdit) {
-      console.log("this.getQuestion - ", this.getQuestion)
+ 
       this.uniqueNumber = this.numberAnswers = this.getQuestion.subtitles.length
       this.richtVariants = this.getQuestion.variant
       this.answers = this.getQuestion.subtitles.map((item, index) => 
@@ -229,7 +229,7 @@ export default {
             sort: index, 
           }
         })
-      console.log("this.answers -",this.answers )
+      
     }
   } 
    

@@ -3,6 +3,7 @@ import {
   SET_CATEGORY_TITLE, 
   SET_CATEGORY_DESCRIPTION,
   SET_CATEGORYS_PARENT,
+  SET_CATEGORYS_FOOTER
  
  } from './mutation-types.js'
 import axios from 'axios';
@@ -13,11 +14,13 @@ const state = () => ({
   iter: 1,
   parent: localStorage.getItem('categoryParent') ?
   JSON.parse(localStorage.getItem('categoryParent')): null,
+  categorysFooter: localStorage.getItem('categorysFooter') ?
+  JSON.parse(localStorage.getItem('categorysFooter')): null,
  
 })
 
 const actions = {
-  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null }) {
+  async getCategorysDB({ dispatch, commit }, { page = null, parentId = null, admin = null, limit = 6 }) {
     const token = await dispatch("getAutchUserTokenAction")
     
     const config = {
@@ -27,7 +30,7 @@ const actions = {
         Accept: 'application/json', 
       }
     };
-    console.log(admin)
+    
     if (admin) { 
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -41,11 +44,11 @@ const actions = {
     if (page) {
       config.url = config.url + `&page=${page}`
     }
-    console.log("getCategoryDB - ",  config)
+    // console.log("getCategoryDB - ",  config)
   try{
     await axios(config)
       .then(({data})=>{
-        console.log("getCategoryDB - ",  data)
+        // console.log("getCategoryDB - ",  data)
         if (data.test) {dispatch("setTests", data.test)}
         else dispatch("setTests", null)
         commit("SET_CATEGORYS", data.children);
@@ -65,6 +68,25 @@ const actions = {
       dispatch('setMessageError', e)
     }
   }
+  },
+  //запрос категорий для футера
+  async getCategorysDBFooter({ dispatch, commit }, ) {
+    const config = {
+      method: 'get',
+      url: `/api/category?limit=1000`,
+      headers: { 
+        Accept: 'application/json', 
+      }
+    };
+    
+  try{
+    await axios(config)
+      .then(({data})=>{
+        // console.log("getCategoryDBаге - ",  data)
+        commit("SET_CATEGORYS_FOOTER", data.children);
+      })
+  } catch (e) { }
+  
   },
   setCategorys({commit}, categorys){
     commit("SET_CATEGORYS", categorys);
@@ -91,7 +113,7 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("deletCategoryDb - удалено",  data)
+          // console.log("deletCategoryDb - удалено",  data)
           dispatch("getCategorysDB",  { page: null , parentId: parentId, admin: true  });
           dispatch('setMessage', data)
         })
@@ -107,9 +129,9 @@ const actions = {
   async createCategory ({dispatch, commit}, {id, questionSend}){
     const token = await dispatch("getAutchUserTokenAction")
     const data = new FormData(questionSend);
-    for(let [name, value] of data) {
-      console.dir(`${name} = ${value}`); 
-    }
+    // for(let [name, value] of data) {
+    //   console.dir(`${name} = ${value}`); 
+    // }
     const config = {
       method: 'post',
       url: `/api/admin/category/create`,
@@ -122,7 +144,7 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("createCategory - создано",  data)
+          // console.log("createCategory - создано",  data)
           dispatch('setMessage', data)
           // dispatch("getCategorysDB",  { page: null , parentId: id });
         })
@@ -138,9 +160,9 @@ const actions = {
   async editCategory ({dispatch, commit}, {id, questionSend}){
     const token = await dispatch("getAutchUserTokenAction")
     const data = new FormData(questionSend)
-    for(let [name, value] of data) {
-      console.dir(`${name} = ${value}`)
-    }
+    // for(let [name, value] of data) {
+    //   console.dir(`${name} = ${value}`)
+    // }
     const config = {
       method: 'post',
       url: `/api/admin/category/${id}/edit`,
@@ -153,7 +175,7 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("createCategory - изменено",  data)
+          // console.log("createCategory - изменено",  data)
           dispatch('setMessage', data)
           dispatch("getCategorysDB", { page: null , parentId: id });
         })
@@ -184,6 +206,9 @@ const getters = {
   getCategory:(state) => (id)=> {
     return state.categorys.find(item => item.id === id) 
   },
+  getCategorysFooter(state) {
+    return state.categorysFooter
+  },
 }
 
 const mutations = {
@@ -191,6 +216,7 @@ const mutations = {
     if (categorys) {
     const parsed = JSON.stringify(categorys)
     localStorage.setItem('categorys', parsed)
+
     } else {
       localStorage.removeItem('categorys');
     }
@@ -209,6 +235,13 @@ const mutations = {
     } else localStorage.removeItem('categoryParent');
     state.parent = parent
   },
+  [SET_CATEGORYS_FOOTER](state, categorys) {
+    if (categorys) {
+      const parsed = JSON.stringify(categorys)
+      localStorage.setItem('categorysFooter', parsed)
+    }
+    state.categorysFooter = categorys
+  }
 }
 export default {
   namespaced: false,

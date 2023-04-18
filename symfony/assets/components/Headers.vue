@@ -101,7 +101,7 @@ export default {
   methods: {
     setIsActive(){
       let scrollY = window.pageYOffset;
-      console.log(scrollY)
+      // console.log(scrollY)
       // this.isActive = ind
     },
   }, 
@@ -124,7 +124,7 @@ export default {
 <style lang="scss" scoped>
 .cont{
   position: fixed;
-  z-index: 20;
+  z-index: 40;
   width: 100%;
   background: var(--color-fon);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);

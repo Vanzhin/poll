@@ -16,7 +16,7 @@ const state = () => ({
 
 const actions = {
   setPagination({commit}, pagination){
-    console.log("pagination -", pagination)
+   
     commit("SET_PAGINATION",pagination);
   },
   getTotalItemAction({state}) {

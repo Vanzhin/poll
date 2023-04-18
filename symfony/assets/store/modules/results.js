@@ -26,7 +26,7 @@ const actions = {
   // отаправка результата прохождения теста на сервер
   async setResultDb({dispatch, commit, state }, {userAuth} ){
     const token = await dispatch("getAutchUserTokenAction")
-    console.log(JSON.stringify(state.resultTicketUser))
+    // console.log(JSON.stringify(state.resultTicketUser))
     try{
       const config = {
         method: 'post',
@@ -38,14 +38,14 @@ const actions = {
         data:  JSON.stringify(state.resultTicketUser)
       };
       if (userAuth) {
-        console.log('авторизован')
+       
         config.url = '/api/auth/test/handle'
         config.headers.Authorization = `Bearer ${token}`
       }
-      console.log(config) 
+      // console.log(config) 
       await axios(config)
         .then(({data})=>{
-          console.log("setResultDb - ",  data)
+          // console.log("setResultDb - ",  data)
           commit("SET_RESULT_QUESTIONS", data.question);
         })
         const err = {
@@ -77,10 +77,10 @@ const actions = {
         },
       };
       
-      console.log(config) 
+      // console.log(config) 
       await axios(config)
         .then(({data})=>{
-          console.log("getResultIdAnswersDb - ",  data)
+          // console.log("getResultIdAnswersDb - ",  data)
           commit("SET_RESULT_STATISTICS_QUESTIONS", data);
         })
         const err = {
@@ -115,12 +115,12 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getAuthAccountDb - ",  data.data.results)
+          // console.log("getAuthAccountDb - ",  data.data.results)
           commit("SET_AUTCH_ACCOUNT", data.data.results);
         })
     } catch (e) {
       const err = e.response.data.message
-      console.log("ошибка - ",e)
+      // console.log("ошибка - ",e)
       if (err === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getAuthAccountDb')
@@ -144,13 +144,13 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getAuthAccountResultsDb - ",  data)
+          // console.log("getAuthAccountResultsDb - ",  data)
           commit("SET_AUTCH_ACCOUNT", data.data.results);
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
       const err = e.response.data.message
-      console.log("ошибка - ",e)
+      // console.log("ошибка - ",e)
       if (err === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getAuthAccountResultsDb')
@@ -175,7 +175,7 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getResultsXmlDb - ",  data.data)
+          // console.log("getResultsXmlDb - ",  data.data)
           //let blob = new Blob([data.data], {type: "text/plain"});
           //const parser = new DOMParser();
          // const doc = parser.parseFromString([data.data], "application/xml");
@@ -201,7 +201,7 @@ const actions = {
         })
     } catch (e) {
       const err = e.response.data.message
-      console.log("ошибка - ",e)
+      // console.log("ошибка - ",e)
       if (err === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getResultsXmlDb', {id})
@@ -230,7 +230,6 @@ function saveToPC(str){
 
 const getters = {
   getAuthAccountResult(state) {
-    console.log(state.result)
     return state.result
   },
   getResultQuestions(state) {
@@ -246,22 +245,21 @@ const getters = {
 
 const mutations = {
   [SET_AUTCH_ACCOUNT] (state, result) {
-    console.log("SET_AUTCH_ACCOUNT", result)
+   
     state.result = result
   },
   [SET_RESULT_QUESTIONS] (state, questions) {
-    console.log("SET_RESULT_QUESTIONS", questions)
+   
     state.resultQuestions = questions
     // localStorage.setItem('resultQuestions', JSON.stringify(questions));
   },
   [SET_RESULT_TICKET_USER] (state, ticket) {
-    console.log("SET_RESULT_TICKET_USER", )
+  
     state.resultTicketUser = ticket
     localStorage.setItem('resultTicketUser', JSON.stringify(ticket));
   },
   [SET_RESULT_STATISTICS_QUESTIONS] (state, questions) {
-    console.log("SET_RESULT_STATISTICS_QUESTIONS", questions)
-   console.log(JSON.stringify(questions))
+   
     state.resultQuestions = questions.map(question => {
       if (question.question){
         let questionItem = {...question.question}
@@ -285,15 +283,15 @@ const mutations = {
         return question
       }
     })
-    console.log("SET_RESULT_STATISTICS_QUESTIONS", state.resultQuestions)
+   
   },
   [SET_FORM_INFO] (state, {param, visible}) {
-    console.log("SET_FORM_INFO", {param, visible})
+   
     state.formInfoVisible = visible
     state.formInfoParam = param
   },
   [SET_RESULT_ID] (state, id) {
-    console.log("SET_RESULT_ID", id)
+   
     state.resultId = id
   },
   

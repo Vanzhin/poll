@@ -66,10 +66,8 @@ const actions = {
     commit("SET_TESTS", tests)
   },
   selectTestId({dispatch ,commit, state}, {id}) {
-    console.log("id - ",  id)
-    console.log("выбранный тест - ",  state)
+    
     const test = state.tests.find(test => test.id === +id)
-    console.log("выбранный тест - ",  test)
     dispatch("setTest", test)
   },
   //получение информации теста по его id
@@ -273,7 +271,7 @@ const mutations = {
       return +test.id === +id}) ;
   },
   [SET_TEST] (state, test){
-    console.log(test)
+    
     const parsed = JSON.stringify(
       test
     );

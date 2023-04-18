@@ -93,8 +93,7 @@ export default {
       })
     },
     async deleteTicket(){
-      console.log('Удаляю тест № - ', this.ticket.id)
-      console.log('Удаляю тест № - ', this.$route)
+    
       await this.deleteTicketIdDb({
         id: this.ticket.id, 
         testId: this.$route.params.id,

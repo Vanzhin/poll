@@ -28,17 +28,17 @@ const actions = {
   async getQuestionsDb({dispatch, commit }, {id, slug}) {
     //  const slag = 'mindal-kraiola-ooo-kompaniia-rybvektorzheldorprof' // опен серв
     // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
-    console.log("id - ",  id)
+   
     let url = ''
     if (id === "rnd20" || id === "rnd20t") {
       url = `/api/test/${slug}/question/20`
     } else if (id === "rnd"){
       const i = Math.floor(Math.random() * (30 - 1) )
-      console.log("i - ",  i)
+     
       url = `/api/test/${slug}/question/${i}`
     } else if (id === "rndmax"){
       const i = await dispatch("getCountQuestionsTest")
-      console.log("i rndmax - ",  i)
+    
       url = `/api/test/${slug}/question/${i}`
     } else {
       url = `/api/ticket/${id}/question`
@@ -55,11 +55,11 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          console.log("getQuestionsDb - ",  data)
+          // console.log("getQuestionsDb - ",  data)
           commit("SET_QUESTIONS", data.questions);
         })
     } catch (e) {
-        console.log(e.message);
+        // console.log(e.message);
     }
   },
   //запрос для админки на получение вопросов билета по его id
@@ -75,11 +75,11 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          console.log("getQuestionsTickeetIdD - ",  data)
+          // console.log("getQuestionsTickeetIdD - ",  data)
           commit("SET_QUESTIONS_TICKET", data.questions);
         })
     } catch (e) {
-        console.log(e);
+        // console.log(e);
     }
   },
   //запрос для админки на получение вопросов секции по ее id
@@ -94,10 +94,10 @@ const actions = {
           Authorization: `Bearer ${token}`
         }
       };
-      console.log(config)
+      // console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("getQuestionsSectionIdDb - ",  data)
+          // console.log("getQuestionsSectionIdDb - ",  data)
           commit("SET_QUESTIONS_SECTION", data.question);
         })
     } catch (e) {
@@ -123,10 +123,10 @@ const actions = {
         }
       };
       if (page) {config.url = config.url + `&page=${page}`}
-      console.log(config)
+      // console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("getQuestionsTestIdDb - ",  data.question)
+          // console.log("getQuestionsTestIdDb - ",  data.question)
           commit("SET_QUESTIONS", data.question);
           dispatch("setPagination", data.pagination);
         })
@@ -142,7 +142,7 @@ const actions = {
   //получение вороса по его id
   async getQuestionIdDb({dispatch, commit }, {id}) {
     const token = await dispatch("getAutchUserTokenAction")
-    console.log("id - ",  id)
+
     try{
       const config = {
         method: 'get',
@@ -154,7 +154,7 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          console.log("getQuestionIdDb - ",  data)
+          // console.log("getQuestionIdDb - ",  data)
           commit("SET_QUESTION", data);
         })
     } catch (e) {
@@ -170,7 +170,7 @@ const actions = {
 
   //сохранение нового вопроса в базу. если передается id - вносятся изменения
   async saveQuestionDb({ dispatch, commit, state }, {questionSend, id = null} ){
-    console.dir(questionSend)
+
     // dispatch("setIsLoaderStatus", {status: true})
     const token = await dispatch("getAutchUserTokenAction")
     try{
@@ -239,7 +239,7 @@ const actions = {
   },
   //утверждение или скрытие всех вопросов теста по его id
   async approveQuestionsAllDb({ dispatch, commit, state }, {id, param} ){
-    console.log(id)
+    
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
@@ -369,25 +369,25 @@ const getters = {
 
 const mutations = {
   [SET_QUESTIONS] (state, questions ) {
-    console.log("SET_QUESTIONS", questions)
+   
     state.questions = questions
   },
   
   
   [SET_QUESTION] (state, question ) {
-    console.log("SET_QUESTION", question)
+   
     state.question = question
   },
   [SET_QUESTIONS_IMPORT_ERROR](state, error ) {
-    console.log("SET_QUESTIONS_IMPORT_ERROR", error)
+    
     state.questionsImportError = error
   },
   [SET_QUESTIONS_TICKET](state, questions ) {
-    console.log("SET_QUESTIONS_TICKET", questions)
+   
     state.questionsTicket = questions
   },
   [SET_QUESTIONS_SECTION](state, questions ) {
-    console.log("SET_QUESTIONS_SECTION", questions)
+   
     state.questionsSection = questions
   },
 }
