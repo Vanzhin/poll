@@ -91,7 +91,24 @@ ul {margin-top: 0;
   margin-bottom: 0.25rem;
   color: #0B1F33;
 }
-
+.authorise{
+  width: 280px;
+  height: 242px;
+  background: #FFFFFF;
+  box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--color-green);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction:column;
+  & svg{
+    margin-bottom: 25px;
+  }
+}
 .text-field__input,
 .text-field__select {
   width: 100%;

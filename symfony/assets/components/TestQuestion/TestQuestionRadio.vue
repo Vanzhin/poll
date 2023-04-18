@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     setChangeAnswer(event){
-      console.log(event.target.value)
+
       this.answer = event.target.value
     }
   } 

@@ -1,10 +1,14 @@
 <template>
-  <div class="col-sm-12 col-md-12 col-lg-12"> 
-    <div class="card flex-shrink-1 shadow">
-      <QuestionHeaderQuestion
-        :question='question'
-        :index='index'
-      />
+  <div class="card flex-shrink-1 shad"
+    :class="{resultTrue: question.result.correct }"
+  >
+    <QuestionHeaderQuestion
+      :question='question'
+      :index='index'
+
+    />
+    <div class="answer-cont">
+      <hr>
       <div class="row text-center"
         v-if="getUserAnswer"
       >
@@ -47,9 +51,9 @@
           </div>
         </div>
       </div>
-      <br>
-    </div>       
-  </div>
+    </div>
+    
+  </div>       
 </template>
 <script>
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
@@ -87,18 +91,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .shad{
+    margin-top: 14px;
+    padding: 30px 14px 30px 14px;
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-red);
+  }
   .img{
     height: 130px;
     margin: 5px;
     max-width: 170px;
   }
   .answer{
-    color:rgb(91, 206, 235);
+    color:var(--color-blue);
     &-user{
-      color:rgb(196, 44, 17)
+      color:var(--color-red)
     }
     &-true{
-      color:rgb(17, 196, 47)
+      color:var(--color-green)
+    }
+    &-cont{
+      padding: 0 29px;
     }
   }
   .shadow{
@@ -109,7 +124,6 @@ export default {
     display: flex;
     align-items:flex-start;
     min-height: 1.5rem;
-    padding-left: 1.5rem;
     background-color: rgb(245 245 242);
     border: 1px solid rgb(167, 167, 163);
     border-radius: 10px;
@@ -119,22 +133,15 @@ export default {
       font-size: 0.9rem;
   }
   .custom-control-label {
-      position: relative;
-      margin-bottom: 0;
-      margin-left: 10px;
-      
-      text-align: left;
+    position: relative;
+    margin-bottom: 0;
+    margin-left: 10px;
+    text-align: left;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
   }
-  .result::before{
-    content: "X  ";
-    font-family: Geneva, Arial;
-    color:rgb(235, 25, 25);
-    font-weight: 900;
-    font-style:  oblique ;
-  }
-  .resultTrue::before{
-    content: "V  ";
-    color:rgb(22, 204, 104);
-    font-style:  normal ;
+  .resultTrue{
+    border: 1px solid #56D062;
   }
 </style>

@@ -11,20 +11,20 @@ const state = () => ({
   })
 const actions = {
   setMessage({ commit, state }, data) {
-    console.log("setMessage - ",  data)
+    
     let message = ''
     if (data.error) {
-      console.log("ошибка - ")
+      
       message = {err: true, mes: `${data.message}!<hr>  ${data.error[0] ? data.error[0]:''}`}
     } else {
-      console.log("сообщение - ")
+      
       message = {err: false, mes: data.message}
     }
     commit("SET_MESSAGE", message);
     setIntevalTime({ commit, state })
   },
   setMessageError({ commit, state  }, e) {
-    console.log("setMessageError - ",  e)
+    // console.log("setMessageError - ",  e)
     let message = e.message ? `${e.message} <hr>` : ''
     if (e.response.data.message) {
       message += `${e.response.data.message}!<hr>`
@@ -36,7 +36,7 @@ const actions = {
     setIntevalTime({commit, state} )
   },
   setMessageUser({ commit, state  }, message) {
-    console.log("setMessage - ",  message)
+    // console.log("setMessage - ",  message)
     commit("SET_MESSAGE", message);
     setIntevalTime({ commit, state  })
   },

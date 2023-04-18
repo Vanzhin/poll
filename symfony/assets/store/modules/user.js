@@ -45,7 +45,7 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getLogInUser - ", data )
+          // console.log("getLogInUser - ", data )
           commit("SET_LOGOUT_LINK_DATE",{
             message: data.data.message,
             url: data.data.link ? data.data.link.url : '',
@@ -53,7 +53,7 @@ const actions = {
           })
         })
     } catch (e) {
-      console.log("ошибка - ", e)
+      // console.log("ошибка - ", e)
       commit("SET_LOGOUT_LINK_DATE",{data:e, send: false })
     }
   },
@@ -78,14 +78,14 @@ const actions = {
           //   return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
           // }).join(''));
           const base64 = JSON.parse(atob(base64Url))
-          console.log( base64)
+          
          
           commit("SET_AUTCH_USER_ROLE", base64.roles[0]);
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)
-          dispatch('setMessage',{
-            message: "Вы успешно авторизовались",
-          });
+          // dispatch('setMessage',{
+          //   message: "Вы успешно авторизовались",
+          // });
         })
         return false
     } catch (e) {
@@ -96,7 +96,7 @@ const actions = {
   //регистрация на сайте
   async setRegistrationUser({ dispatch, commit }, user) {
     const data = JSON.stringify(user)
-    console.log(data)
+    // console.log(data)
     try {
       const config = {
         method: 'post',
@@ -110,8 +110,8 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getRegistrationUser - ", data.data )
-          dispatch('setMessage', data.data)
+          // console.log("getRegistrationUser - ", data.data )
+          // dispatch('setMessage', data.data)
         })
         return false
     } catch (e) {
@@ -135,12 +135,12 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getLogInUser - ",  data)
+          // console.log("getLogInUser - ",  data)
           commit("SET_DELETE_USER_TOKEN", '');
           commit("SET_IS_AUTCH_USER", false)
         })
     } catch (e) {
-      console.log("ошибка - ",e.response.data.message)
+      // console.log("ошибка - ",e.response.data.message)
       if (e.response.data.message === "No refresh_token found." ||
       e.response.data.message === "JWT Refresh Token Not Found"
       ) {
@@ -169,12 +169,12 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getAuthRefresh - ", data )
+          // console.log("getAuthRefresh - ", data )
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)
         })
     } catch (e) {
-      console.log("ошибка - ", e)
+      // console.log("ошибка - ", e)
       if (e.response.data.message === "No refresh_token found." ||
       e.response.data.message === "JWT Refresh Token Not Found"
       ) {
@@ -184,7 +184,7 @@ const actions = {
     }
   },
   //получение данных пользователя из БД
-  async getAutсhUserProfileDb({commit, state }, ) {
+  async getAutсhUserProfileDb({commit, dispatch ,state }, ) {
     let token = state.token
     try {
       const config = {
@@ -261,12 +261,12 @@ const getters = {
 
 const mutations = {
   [SET_IS_AUTCH_USER] (state, pr ) {
-    console.log("SET_AUTCH_USER", )
+    
     state.isAutchUser = pr
   },
 
   [SET_AUTCH_USER_TOKEN] (state, data  ) {
-    console.log("SET_AUTCH_USER_TOKEN", )
+    // console.log("SET_AUTCH_USER_TOKEN", )
     state.token = data.token
     state.refresh_token = data.refresh_token
     const parsed = JSON.stringify({
@@ -277,35 +277,34 @@ const mutations = {
   },
 
   [SET_DELETE_USER_TOKEN] (state  ) {
-    console.log("SET_DELETE_USER_TOKEN", )
+    
     state.token = ''
     state.refresh_token = ''
     localStorage.removeItem('token');
   },
 
   [SET_PAGE_NAME] (state, page) {
-    console.log("SET_PAGE_NAME", page)
+    
     state.page = page
     localStorage.setItem('pageLink', page);
   },
   [SET_LOGOUT_LINK_DATE] (state, result) {
-    console.log("SET_LOGOUT_LINK_DATE", result)
+    
     state.logoutLinkDate = result
   },
   [SET_MESSAGE_REQUEST] (state, message) {
-    console.log("SET_MESSAGE_REQUEST", message)
+    
     state.message = message
   },
   [SET_AUTCH_USER_ROLE] (state, role) {
-    console.log("SET_AUTCH_USER_ROLE", role)
+    
     state.role = role
   },
   [SET_AUTCH_USER_PROFILE](state, profile) {
-    console.log("SET_AUTCH_USER_ROLE", profile)
+    
     state.profile = profile
   },
   [SET_IS_AUTCH_USER_FIO](state, profile) {
-    console.log("SET_IS_AUTCH_USER_FIO", profile)
     state.profileFIO = profile
   },
 }

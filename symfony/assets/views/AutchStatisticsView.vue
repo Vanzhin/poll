@@ -1,5 +1,5 @@
 <template>
-   
+   <div class="cont"> 
   <Loader
     v-if="isLoading"
   />
@@ -7,8 +7,11 @@
     v-else
   >
     <div class="wrapper">
-      <div class="title">
-        Результаты прохождения тестов  
+      <div class="title"
+      v-html="results.length > 0 ? 'Результаты прохождения тестов' 
+        : `Данных с результатами не найдено. <br> Пройдите тестирование.`"
+      >
+        
       </div>
       <div class="container">
         <div class="row">
@@ -123,6 +126,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
  
 <script>
@@ -223,7 +227,7 @@
           </tr>
         `
         const question = this.getResultQuestions
-        console.log(question)
+       
         question.forEach(element => {
           block += `<tr><td>${element.title}</td><td>`
           if (element.type === "input_one") {
@@ -235,7 +239,7 @@
               block +=`(${uAnswer === element.result.true_answer[index]? '+':'-' }) ${element.variant[uAnswer].title} <br>`              })
           }
           block +=`</td></tr>`
-          console.log(element)
+         
         })
         block +=`</table>`
 
@@ -257,7 +261,7 @@
     async created(){
       await this.getAuthAccountResultsDb()
       this.results = this.getAuthAccountResult
-      console.log(this.getAuthAccountResult)
+     
       this.isLoading = false
     },
      
@@ -265,7 +269,9 @@
  
 </script>
 <style lang="scss" scoped>
-  
+  .cont{
+    min-height: 90vh;
+  }
   .title{
     padding-top: 67px;
     padding-bottom: 24px;

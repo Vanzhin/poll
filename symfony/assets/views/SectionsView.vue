@@ -122,7 +122,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getTests",]),
+    ...mapGetters(["getTests","getCategorysFooter"]),
     sections () {
       return this.$store.getters.getCategorys
     },
@@ -134,7 +134,8 @@ export default {
       "setTests", 
       "setPagination", 
       "setCategoryParent",
-      "setCategorys"
+      "setCategorys",
+      "getCategorysDBFooter"
     ]),
     async categoryUpdate({section}){
       this.setCategoryParent(section)
@@ -153,9 +154,19 @@ export default {
       return img
     },
   },
+  mounted(){
+    window.scroll(0, 0);
+   
+    if ( !this.getCategorysFooter){
+      this.getCategorysDBFooter()
+    }
+    
+   
+  },
   async created(){
     await this.getCategorysDB({})
     this.isLoader = false
+    
   }
   
 } 

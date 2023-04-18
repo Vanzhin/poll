@@ -86,7 +86,7 @@ export default {
     if (this.operationEdit) {
       this.subTitles = this.richtVariant
       this.numberSubTitles = this.subTitles.length
-      console.log("this.subTitles -",this.subTitles )
+      
     }
   } 
 

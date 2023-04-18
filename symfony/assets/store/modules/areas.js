@@ -53,7 +53,7 @@ const actions = {
         commit("GET_COURCES", res.data.raw);
       })
       .catch((err) => {
-        console.log(err);
+       
       });
   },
   getQuestion(){}
@@ -67,9 +67,9 @@ const getters = {
     return state.areas.filter(area => {return area.type_responses === "one"}) 
   },
   getAreaTitle:(state)=>(id) =>{
-    console.log(id)
+   
     return state.areas.find(area => {
-      console.log(+area.id === +id)
+    
       return +area.id === +id}) 
   }
 }

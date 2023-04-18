@@ -1,10 +1,14 @@
 <template>
-  <div class="col-sm-12 col-md-12 col-lg-12"> 
-    <div class="card flex-shrink-1 shadow">
-      <QuestionHeaderQuestion
-        :question='question'
-        :index='index'
-      />
+
+  <div class="flex-shrink-1 shad"
+    :class="{resultTrue: question.result.correct }"
+  >
+    <QuestionHeaderQuestion
+      :question='question'
+      :index='index'
+    />
+    <div class="answer-cont">
+      <hr>
       <div class="custom-control custom-radio"
         v-for="(answer, ind ) in question.subtitles" 
         :key="answer"
@@ -19,7 +23,7 @@
         <div v-if="getUserAnswer(ind)"  class="custom-control-label d-flex">
           <label 
             v-if="question.result.user_answer[ind]!==''"
-            class="custom-control-label f_sm answer " 
+            class="custom-control-label f_sm answer-user " 
             :class="classAnswer(ind)"
           >{{ question.variant[question.result.user_answer[ind]].title }}
           </label>
@@ -36,10 +40,10 @@
           </label>
         </div>
       </div>
-      <br>
       
-    </div>       
-  </div>
+    </div>
+  </div>       
+  
 </template>
 <script>
 import  QuestionHeaderQuestion from './QuestionHeaderQuestion.vue';
@@ -76,14 +80,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .answer{
-    color:rgb(196, 44, 17);
-    &-true{
-      color:rgb(17, 196, 47)
-    }
+  .shad{
+    margin-top: 14px;
+    padding: 30px 14px 30px 14px;
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-red);
   }
-  .shadow{
-    padding: 5px;
+  .answer{
+    color:var(--color-blue);
+    &-user{
+      color:var(--color-red)
+    }
+    &-true{
+      color:var(--color-green)
+    }
+    &-cont{
+      padding: 0 29px;
+    }
   }
   .custom-control {
     position: relative;
@@ -91,7 +106,6 @@ export default {
     align-items:flex-start;
     justify-content: space-between;
     min-height: 1.5rem;
-    padding-left: 1.5rem;
   }
   .f_sm {
       font-size: 0.9rem;
@@ -102,16 +116,7 @@ export default {
       margin-bottom: 0;
       margin-left: 10px;
   }
-  .result::before{
-    content: "X  ";
-    font-family: Geneva, Arial;
-    color:rgb(235, 25, 25);
-    font-weight: 900;
-    font-style:  oblique ;
-  }
-  .resultTrue::before{
-    content: "V  ";
-    color:rgb(22, 204, 104);
-    font-style:  normal ;
+  .resultTrue{
+    border: 1px solid #56D062;
   }
 </style>

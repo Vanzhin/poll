@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="cont"
+    v-if="getIsLoaderStatus"
+  >
     <div 
       class="container-loader"
     >
@@ -12,12 +14,15 @@
 import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   computed:{ 
-      ...mapGetters(["getIsLoaderQuestions"]),
+      ...mapGetters(["getIsLoaderStatus"]),
     },
 }
 </script>
 
 <style lang="scss" scoped>
+  .cont{
+    position: relative;
+  }
   .container-loader{
     width: 100%;
     height: 93vh;
@@ -26,7 +31,7 @@ export default {
     align-items: center;
     position: absolute;
     z-index: 30;
-    background-color: #ced5d352;
+    background-color: var(--color-fon);
 }
 
 .loader {

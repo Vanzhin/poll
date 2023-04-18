@@ -147,7 +147,7 @@ export default {
    
     },
     async getReportXml(){
-      console.log('отправка запроса на получение XML')
+      
         const info = {
           format: 'xml',
           worker: {
@@ -167,7 +167,7 @@ export default {
         //             "learnProgramId": "2"
         //         } 
         }
-        console.log(info)
+      
         this.setAutchUserProfileFIO(info.worker)
         await this.getResultsXmlDb({info})
         this.message = !this.getMessage.err

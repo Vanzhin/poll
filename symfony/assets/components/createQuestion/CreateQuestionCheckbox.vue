@@ -145,7 +145,7 @@ export default {
     },
   },
   created(){
-    console.log(this.getQuestion)
+
     if (this.operationEdit) {
       this.answerSelect = this.getQuestion.answer
       this.uniqueNumber = this.numberAnswers = this.getQuestion.variant.length
@@ -158,7 +158,7 @@ export default {
             value: ''
           }
         })
-      console.log("this.answers -",this.answers )
+    
     }
   } 
 }

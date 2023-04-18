@@ -41,7 +41,7 @@ export default {
     },
   },
   mounted(){
-    console.log('mount confirm getGonfimMessage -', this.getGonfimMessage)
+    
   },
   unmounted(){
   }

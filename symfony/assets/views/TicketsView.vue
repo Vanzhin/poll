@@ -154,7 +154,6 @@ export default {
       this.saveSelectTicketStore({ticket})
      },
      ticketsIs() {
-      console.log(this.getTest)
         return this.getTest.ticketCount > 0
       }
     },
@@ -163,17 +162,14 @@ export default {
     },
     async created() { 
       if (this.getTests) {
-        console.log('есть тесты')
         await this.selectTestId({id : this.$route.params.id})
         await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
       } else {
-        console.log('нет тестов')
         await this.getTestIdDb({id : this.$route.params.id})
         // await this.selectTestId({id : this.$route.params.id})
         await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
       }
-      
-     
+           
       this.isLoader = false
     }
   
@@ -183,7 +179,6 @@ export default {
 <style lang="scss" scoped>
   .fon{
     background-color: var(--color-fon);
-    
   }
    .tickets{
     

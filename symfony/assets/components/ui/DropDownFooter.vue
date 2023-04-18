@@ -4,18 +4,25 @@
       <div  class="title"> 
         Все разделы тестирования
       </div> 
-      <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9.87954 8.51725C9.60121 8.23826 9.60112 7.78666 9.87935 7.50757V7.50757C10.1586 7.22745 10.6122 7.22731 10.8917 7.50726L14.6709 11.2936C15.0605 11.6839 15.0605 12.3161 14.6709 12.7064L10.8917 16.4927C10.6122 16.7727 10.1586 16.7726 9.87935 16.4924V16.4924C9.60112 16.2133 9.60121 15.7617 9.87954 15.4828L13.3541 12L9.87954 8.51725Z" fill="#269EB7"/>
-      </svg>
-
+      <div>
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.87954 8.51725C9.60121 8.23826 9.60112 7.78666 9.87935 7.50757V7.50757C10.1586 7.22745 10.6122 7.22731 10.8917 7.50726L14.6709 11.2936C15.0605 11.6839 15.0605 12.3161 14.6709 12.7064L10.8917 16.4927C10.6122 16.7727 10.1586 16.7726 9.87935 16.4924V16.4924C9.60112 16.2133 9.60121 15.7617 9.87954 15.4828L13.3541 12L9.87954 8.51725Z" fill="#269EB7"/>
+        </svg>
+      </div>
     </button>
     <ul 
       class="dropdown-menu menu" 
       aria-labelledby="dropdownMenuButton1"
     >
       
-      <li><RouterLink class="dropdown-item menu_li" :to="{ name: 'statistics'}">Статистика</RouterLink></li>
-      <li><RouterLink class="dropdown-item menu_li" :to="{ name: 'userAutchProfile'}">Профиль</RouterLink></li>
+      <li v-for="category, index in getCategorysFooter"
+         class="dropdown-item menu_li" >
+         
+        
+          {{ category.title }}
+        
+      </li>
+      
      
     </ul>
   </div>
@@ -25,7 +32,11 @@ import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions } from "vuex"
 export default {
   computed:{
-    ...mapGetters(["getIsAutchUser", "getUserAdmin"]),
+    ...mapGetters(["getIsAutchUser", "getUserAdmin", "getCategorysFooter"]),
+    dropCategory(){
+      if (this.getCategorysFooter){}
+      return this.getCategorysFooter
+    }
   },
   methods:{
     ...mapActions(["getLogOutUser"]),
@@ -50,7 +61,7 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 1px 10px 10px;
+    padding: 0 0 0 10px ;
     gap: 10px;
     width: 246px;
     height: 36px;
@@ -75,10 +86,12 @@ export default {
   }
   .menu{
     transform: translate(-40px, 40px);
-    width: 172px;
+    width: 240px;
     background: var(--color-blue);
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
+    max-height: 300px;
+    overflow-y: auto;
    &-hr{
     margin:10px 15px ;
     
@@ -87,6 +100,8 @@ export default {
     opacity: 1;
    }
     &_li{
+      word-wrap: break-word;
+      white-space: normal;
       font-family: 'Lato';
       font-style: normal;
       font-weight: 400;

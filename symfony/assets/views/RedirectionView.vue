@@ -41,7 +41,7 @@
    async mounted(){
       if (this.$route.params.rtoken !== "" ) {
         await this.getAuthRefresh(this.$route.params.rtoken)
-        console.log(this.getPageName)
+       
         setTimeout(() => {
           this.$router.push( this.getPageName===""? "/": this.getPageName)
         },15000);
