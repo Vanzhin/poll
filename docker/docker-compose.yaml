@@ -46,7 +46,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: bitnami/nginx:latest
+    image: docker.io/bitnami/nginx:latest
     ports:
       - "81:80"
       - "443:8443"
@@ -61,27 +61,27 @@ services:
 
   mysql:
     container_name: mysql
-    image: bitnami/mariadb:latest
+    image: docker.io/bitnami/mysql:5.7
     environment:
-      - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/root.pwd
-      - MARIADB_PASSWORD_FILE=/run/secrets/user.pwd
-      - MARIADB_REPLICATION_PASSWORD_FILE=/run/secrets/replica.pwd
-      - MARIADB_USER=symfony_master
-      - MARIADB_DATABASE=poll
-      - MARIADB_COLLATE=utf8mb4_unicode_ci
-      - MARIADB_CHARACTER_SET=utf8mb4
-      - MARIADB_REPLICATION_USER=slave_read_user
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/root.pwd
+      - MYSQL_PASSWORD_FILE=/run/secrets/user.pwd
+      - MYSQL_REPLICATION_PASSWORD_FILE=/run/secrets/replica.pwd
+      - MYSQL_USER=symfony_master
+      - MYSQL_DATABASE=poll
+      - MYSQL_COLLATE=utf8mb4_unicode_ci
+      - MYSQL_CHARACTER_SET=utf8mb4
+      - MYSQL_REPLICATION_USER=slave_read_user
     ports:
       - "3307:3306"
     volumes:
       - ./db/secrets:/run/secrets:ro
-      - ./db/mysql:/bitnami/mariadb:rw
+      - ./db/mysql:/bitnami/mysql:rw
     networks:
       - symfony
 
   mailhog:
     container_name: mailhog
-    image: mailhog/mailhog
+    image: docker.io/mailhog/mailhog
     restart: always
     ports:
       - "8025:8025"
