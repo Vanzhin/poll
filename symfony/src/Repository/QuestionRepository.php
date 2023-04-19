@@ -70,6 +70,20 @@ class QuestionRepository extends ServiceEntityRepository
 
 
     }
+
+    public function getAllPublishedByTest(Test $test)
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('qu.test = :testId')
+            ->andWhere('qu.publishedAt IS NOT NULL')
+            ->setParameters(['testId' => $test])
+            ->join('qu.section', 'se')
+            ->addSelect('se')
+            ->getQuery()
+            ->getResult();
+
+
+    }
     public function getByIdsSortBySection(array $ids)
     {
         return $this->getOrCreateQueryBuilder()

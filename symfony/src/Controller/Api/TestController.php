@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Question;
 use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Repository\QuestionRepository;
@@ -60,12 +61,14 @@ class TestController extends AbstractController
             $sessionService->remove(QuestionHandler::SHUFFLED);
 
             //todo убрать костыль и сделать опцией типа по умолчанию перетасовывать варианты и подвопросы
-//todo разобраться с кодировкой и вынести в хендлер
             $sections = [];
-            $AllQuestionsId = $questionRepository->getAllIdAndSectionByTest($test);
 
-            foreach ($AllQuestionsId as $data) {
-                $sections[$data['section_id']] = json_decode($data['questions']);
+            $questions = $questionRepository->getAllPublishedByTest($test);
+
+            foreach ($questions as $question) {
+
+                /** @var Question $question */
+                $sections[$question->getSection()->getId()][] = $question->getId();
             };
             $questionsId = [];
             $i = 0;
