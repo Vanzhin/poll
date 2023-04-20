@@ -99,9 +99,7 @@ class QuestionRepository extends ServiceEntityRepository
             ->addSelect('su')
             ->andWhere('qu.id IN (:ids)')
             ->setParameters(['ids' => $ids])
-            ->addSelect('RAND() as HIDDEN rand')
             ->addOrderBy('se.id')
-            ->addOrderBy('rand')
             ->getQuery()
             ->getResult()
             ;

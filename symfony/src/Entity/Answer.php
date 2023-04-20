@@ -39,13 +39,29 @@ class Answer
     public function getCorrect(): ?bool
     {
         $correct = false;
-//        if(is_numeric($this->content[0])){
-//            dd($this->question);
-//        }
+        switch ($this->question->getType()->getTitle()) {
+            case 'input_one':
+            case 'radio':
+            case 'order':
 
-        if ($this->getQuestion()->getAnswer() === $this->content) {
-            $correct = true;
-        };
+            if ($this->question->getAnswer() === $this->content) {
+                    $correct = true;
+                };
+                break;
+
+            case 'checkbox':
+                $trueAnswer = $this->question->getAnswer();
+                sort($trueAnswer);
+                sort($this->content);
+                if ($trueAnswer === $this->content) {
+                    $correct = true;
+                };
+                break;
+            case 'conformity':
+
+                break;
+
+        }
 
         return $correct;
     }

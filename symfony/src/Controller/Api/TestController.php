@@ -12,7 +12,6 @@ use App\Service\QuestionHandler;
 use App\Service\SessionService;
 use App\Service\TestService;
 use App\Twig\Extension\AppUpLoadedAsset;
-use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +63,6 @@ class TestController extends AbstractController
             $sections = [];
 
             $questions = $questionRepository->getAllPublishedByTest($test);
-
             foreach ($questions as $question) {
 
                 /** @var Question $question */
@@ -72,7 +70,7 @@ class TestController extends AbstractController
             };
             $questionsId = [];
             $i = 0;
-            while ($i <= $count) {
+            while ($i < $count) {
                 if (count($sections) > 0) {
                     foreach ($sections as $key => $section) {
                         if (count($section) > 0) {
@@ -82,9 +80,9 @@ class TestController extends AbstractController
 
                         } else {
                             unset($sections[$key]);
+                            break;
                         }
                         $i++;
-
                     }
                 } else {
                     break;
@@ -92,7 +90,6 @@ class TestController extends AbstractController
 
             }
             $questions = $testService->getQuestionForResponse($questionRepository->getByIdsSortBySection($questionsId));
-
             $response = [
                 'test' => $test->getTitle(),
                 'questions' => $questions
