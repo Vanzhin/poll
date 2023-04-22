@@ -90,7 +90,7 @@ class Test
     #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?int $time = null;
 
-    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 0])]
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
     #[Groups(['handle'])]
     private int $sectionCountToPass;
 
