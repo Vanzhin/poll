@@ -85,7 +85,9 @@ const actions = {
         // console.log("getCategoryDBаге - ",  data)
         commit("SET_CATEGORYS_FOOTER", data.children);
       })
-  } catch (e) { }
+  } catch (e) { 
+    dispatch('setMessageError', e)
+  }
   
   },
   setCategorys({commit}, categorys){
