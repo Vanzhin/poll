@@ -8,9 +8,9 @@ import axios from 'axios';
 
 const state = () => ({
   testsTest: [],
-  tests: localStorage.getItem('tests') ?
+  tests: localStorage.getItem('tests') && localStorage.getItem('tests') !== undefined ?
   JSON.parse(localStorage.getItem('tests')) : null,
-  test: localStorage.getItem('test') ?
+  test: localStorage.getItem('test') && localStorage.getItem('test') !== undefined ?
   JSON.parse(localStorage.getItem('test')) : null,
   testsMinTrud: localStorage.getItem('testsMinTrud') ?
   JSON.parse(localStorage.getItem('testsMinTrud')) : null,
@@ -66,7 +66,6 @@ const actions = {
     commit("SET_TESTS", tests)
   },
   selectTestId({dispatch ,commit, state}, {id}) {
-    
     const test = state.tests.find(test => test.id === +id)
     dispatch("setTest", test)
   },
@@ -97,6 +96,7 @@ const actions = {
       }
     }
   },
+
   async deleteTestDb({dispatch, commit}, {id, parentId, page, type}){
     const token = await dispatch("getAutchUserTokenAction")
     const config = {

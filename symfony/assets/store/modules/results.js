@@ -144,7 +144,7 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          // console.log("getAuthAccountResultsDb - ",  data)
+          console.log("getAuthAccountResultsDb - ",  data)
           commit("SET_AUTCH_ACCOUNT", data.data.results);
           dispatch("setPagination", data.pagination);
         })

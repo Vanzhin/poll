@@ -88,7 +88,7 @@
         testId: undefined,
         title: "",
         description: "",
-        questionCountToPass:"",
+        questionCountToPass: 1,
         message: null,
         isLoader: true,
         operation: this.$route.params.operation,
@@ -129,7 +129,8 @@
         const section = {
           "title": this.title,
           "test": +this.testId, 
-          "question": [...this.sectionQuestions]
+          "question": [...this.sectionQuestions],
+          "questionCountToPass": +this.questionCountToPass
         }
         if ( this.operation === 'edit'){
           await this.createSection({

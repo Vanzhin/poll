@@ -59,7 +59,7 @@ const actions = {
           commit("SET_QUESTIONS", data.questions);
         })
     } catch (e) {
-        // console.log(e.message);
+      dispatch('setMessageError', e)
     }
   },
   //запрос для админки на получение вопросов билета по его id
@@ -79,7 +79,7 @@ const actions = {
           commit("SET_QUESTIONS_TICKET", data.questions);
         })
     } catch (e) {
-        // console.log(e);
+      dispatch('setMessageError', e)
     }
   },
   //запрос для админки на получение вопросов секции по ее id
