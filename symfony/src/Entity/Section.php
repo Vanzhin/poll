@@ -48,7 +48,7 @@ class Section
 
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
     #[Groups(['handle', 'admin_test_section'])]
-    private int $questionCountToPass;
+    private int $questionCountToPass = 1;
 
     #[Groups(['handle'])]
     private int $questionCountPassed = 0;

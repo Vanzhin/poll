@@ -50,6 +50,10 @@ class SectionBuilder
             }
 
         }
+        if (!$section->getQuestionCountToPass()) {
+            $section->setQuestionCountToPass(1);
+        }
+
         return $section;
     }
 
