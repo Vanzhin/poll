@@ -101,6 +101,9 @@ class Question implements EntityWithImageInterface
     #[Groups(['main', 'admin', 'admin_question', 'test', 'handle', 'result_answer'])]
     private Collection $subtitles;
 
+
+    private array $subtitleIds;
+
     /**
      * @return array|null
      */
@@ -161,7 +164,7 @@ class Question implements EntityWithImageInterface
                 break;
             case 'conformity':
                 foreach ($this->getSubtitles() as $subtitle) {
-                    $answer[] = $subtitle->getCorrect()->getId();
+                    $answer[] = (int)$subtitle->getCorrect()->getId();
                 }
 
                 break;
@@ -369,6 +372,17 @@ class Question implements EntityWithImageInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSubtitleIds(): array
+    {
+        foreach ($this->getSubtitles() as $subtitle) {
+            $subtitleIds[] = (int)$subtitle->getId();
+        }
+        return $subtitleIds;
     }
 
 }

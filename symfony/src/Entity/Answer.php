@@ -43,8 +43,8 @@ class Answer
             case 'input_one':
             case 'radio':
             case 'order':
-
-            if ($this->question->getAnswer() === $this->content) {
+            case 'conformity':
+                if ($this->question->getAnswer() === $this->content) {
                     $correct = true;
                 };
                 break;
@@ -56,9 +56,6 @@ class Answer
                 if ($trueAnswer === $this->content) {
                     $correct = true;
                 };
-                break;
-            case 'conformity':
-
                 break;
 
         }

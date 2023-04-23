@@ -175,8 +175,10 @@ class QuestionHandler
                 break;
             case 'checkbox':
             case 'checkbox_picture':
-
-                if (count(array_diff($question->getAnswer(), $userShuffledAnswers)) === 0) {
+                $answer = $question->getAnswer();
+                sort($answer);
+                sort($userShuffledAnswers);
+                if ($answer === $userShuffledAnswers) {
                     $score = true;
                 }
                 break;
@@ -240,6 +242,19 @@ class QuestionHandler
         };
 
         return $correct;
+    }
+
+    public function getContentQuestionWithSubs(Question $question, array $content, array $userAnswer): array
+    {
+
+        foreach ($content['subTitle'] as $key => $subtitleId) {
+            $data[$subtitleId] = $userAnswer[$key];
+        }
+
+        foreach ($question->getSubtitleIds() as $key => $subtitleId) {
+            $answerContent[] = $data[$subtitleId];
+        }
+        return $answerContent;
     }
 
 
