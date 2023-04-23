@@ -7,13 +7,12 @@
     v-else
   >
     <div class="wrapper">
-      <div class="title"
-      v-html="results.length > 0 ? 'Результаты прохождения тестов' 
-        : `Данных с результатами не найдено. <br> Пройдите тестирование.`"
-      >
-        
-      </div>
       <div class="container">
+        <div class="title"
+        v-html="results.length > 0 ? 'Результаты прохождения тестов' 
+          : `Данных с результатами не найдено. <br> Пройдите тестирование.`"
+      >
+      </div>
         <div class="row">
           <div v-for="(result, index ) in results" 
             :key="result.score + '_' + index"
@@ -305,7 +304,7 @@
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
-    
+    flex-wrap: wrap;
     &-container{
       padding-top: 24px;
       padding-bottom: 74px;
@@ -315,13 +314,13 @@
     &-cell{
       display: flex;
       align-items: center;
-      
       flex-direction:column;
       width: 255px;
       height: 130px;
       text-align: center;
       background-color: #FFFFFF;
       margin: 0;
+      margin-top: 10px;
       padding: 0 15px;
       &-row1{
         display: flex;
@@ -353,6 +352,7 @@
       line-height: 24px;
       color: #0B1F33;
       justify-content: space-between;
+      flex-wrap: wrap;
       &-cont{
         display: flex;
         
@@ -370,6 +370,7 @@
         align-items: center;
       }
       &-button{
+        margin-top: 15px;
         display: flex;
         justify-content: center;
         align-items: center;

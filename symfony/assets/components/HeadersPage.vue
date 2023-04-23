@@ -1,20 +1,22 @@
 <template>
   <div class="page-header">
-    <div class="wrapper">
-      <div class="page-header-title">
-        {{ title }}
-      </div>
-      <div class="page-header-title">
-        {{ subTitle }}
-      </div>
-      <div class="page-header-navigation">
-        <div class="page-header-navigation-crumbs">
-          Тесты/
+    <div class="container">
+      <div class="wrapper">
+        <div class="page-header-title">
+          {{ title }}
         </div>
-        <Button
-          title="Назад"
-          @click="nextLink"
-        />
+        <div class="page-header-title">
+          {{ subTitle }}
+        </div>
+        <div class="page-header-navigation">
+          <div class="page-header-navigation-crumbs">
+            Тесты/
+          </div>
+          <Button
+            title="Назад"
+            @click="nextLink"
+          />
+        </div>
       </div>
     </div>
   </div>

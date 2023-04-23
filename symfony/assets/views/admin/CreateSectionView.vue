@@ -49,7 +49,7 @@
           ></i>
         </div>
         <div class="block_number">
-          <label for="number" class="label"> Количество вопросов:</label>
+          <label for="number" class="label"> Количество вопросов в секции:</label>
           <label for="number" class="label"> {{ numberQuestions }}</label>
         </div>
         <div class="questions-block">  
