@@ -105,7 +105,6 @@ class TestService
         }
         foreach ($data['question'] ?? [] as $answerData) {
 
-
             $question = $this->em->find(Question::class, $answerData["id"]);
             if ($question) {
                 $preparedQuestion = $this->questionHandler->handle($answerData, $question);
@@ -118,7 +117,15 @@ class TestService
 
                 if ($result) {
                     $content = (isset($this->sessionService->get(QuestionHandler::SHUFFLED)[$question->getId()]) ? $this->sessionService->get(QuestionHandler::SHUFFLED)[$question->getId()] : null);
-                    $answer = $this->answerFactory->createBuilder()->buildAnswer($this->questionHandler->getShuffledUserAnswers($question, $answerData['answer'], $content ?? ['variant' => $this->questionHandler->getVariantsToArray($question)]), $question, $result);
+
+                    if (count($question->getSubtitles()) > 0) {
+                        $answerContent = $this->questionHandler->getContentQuestionWithSubs($question, $content, $this->questionHandler->getShuffledUserAnswers($question, $answerData['answer'], $content ?? ['variant' => $this->questionHandler->getVariantsToArray($question)]));
+                        sort($answerContent);
+                        $answer = $this->answerFactory->createBuilder()->buildAnswer($answerContent, $question, $result);
+                    }else{
+                        $answer = $this->answerFactory->createBuilder()->buildAnswer($this->questionHandler->getShuffledUserAnswers($question, $answerData['answer'], $content ?? ['variant' => $this->questionHandler->getVariantsToArray($question)]), $question, $result);
+
+                    }
                     $this->em->persist($answer);
                     $this->em->flush();
 
