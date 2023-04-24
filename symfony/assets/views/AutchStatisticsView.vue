@@ -272,6 +272,7 @@
     min-height: 90vh;
   }
   .title{
+    margin-top: 0;
     padding-top: 67px;
     padding-bottom: 24px;
     font-weight: 700;

@@ -228,7 +228,7 @@ export default {
             flex-wrap: wrap;
             justify-content:space-between;
             max-width: 782px;
-            margin-right: 44px;}
+          }
           &-item{
             text-decoration: none;
             width: 48%;

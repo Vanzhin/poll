@@ -64,8 +64,8 @@
         </div> 
       </div>
     </div> 
-    
   </div>
+  <div class="heder-padding"></div>
   
 </template>
 
@@ -114,6 +114,7 @@ export default {
 
 <style lang="scss" scoped>
 .cont{
+  position: fixed;
   z-index: 40;
   width: 100%;
   background: var(--color-fon);
@@ -145,12 +146,9 @@ export default {
     background-color: var(--color-hover-logo);
     cursor: pointer;
   }
-
 }
 
 .search{
-  
-  
   margin-top: 25px;
   display: flex;
   height: 36px;
@@ -203,8 +201,8 @@ export default {
 }}
 .fixeds {
   position: fixed;
-  z-index: 40;
-
-   
-  }
+}
+.heder-padding{
+  height: 85px;
+}
 </style>

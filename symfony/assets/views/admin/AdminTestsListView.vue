@@ -1,12 +1,14 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <h2>Тесты</h2>
+  <div
+    class="fon"
+  >
+    <div class="container">
+     
+      <AdminTestsView/>
+      <Pagination
+        type="getTestsDB"
+      />
     </div>
-    <AdminTestsView/>
-    <Pagination
-      type="getTestsDB"
-    />
   </div>
 </template>
  

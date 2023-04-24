@@ -79,7 +79,7 @@ export default {
     line-height: 24px;
     color: var(--color-Black_blue);
     &-img{
-      height: 235px;
+     
       width: 306px;
       margin-top: 15px;
     }

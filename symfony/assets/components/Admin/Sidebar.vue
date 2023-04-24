@@ -65,7 +65,7 @@ export default {
   padding-top:147px;
   padding-right: 30px;
   position:fixed;
-  top:80px;
+  top:89px;
   width:250px;
   transition:transform .3s;
   bottom:0!important;

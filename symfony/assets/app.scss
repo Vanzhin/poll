@@ -296,3 +296,28 @@ textarea:hover,
 .i{
   font-style:italic;
 }
+
+.button{
+  &-group{
+  
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  }
+
+  &-item{
+    margin-left: 24px;
+    &:hover{
+      background-color: rgba(68, 151, 199, 0.342);
+    }
+  }
+}
+.title{
+  margin-top: 60px;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 40px;
+  color: #269EB7;
+}

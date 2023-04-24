@@ -3,9 +3,7 @@
   <FormInfoXML/>
   <Headers/>
   <Loader/>
-  
   <RouterView />
-  
   <FooterBlock/>
 </template>
 <script>
@@ -18,19 +16,13 @@ import Loader from '../components/ui/Loader.vue'
 export default {
   components: {
     Headers,
+    Loader,
     FormInfoXML,
     MessageView,
     FooterBlock,
-    Loader
   },
- 
-
 } 
 </script>
 <style lang="scss">
-
-.head{
-  height: 85px;
-}
 
 </style>

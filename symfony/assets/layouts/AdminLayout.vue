@@ -38,13 +38,13 @@
   &-page{
     overflow: auto ;
     padding: 0 ;
-    background-color: rgb(237 237 237);
+    background-color: var(--color-fon);
     height: 91%;
     z-index: 15;
   };
   &-content{
     overflow: hidden ;
-    padding-top:80px;
+    
     padding-left:250px;
     transition:padding-left .3s;
     position:relative;
