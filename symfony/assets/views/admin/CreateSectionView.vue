@@ -49,7 +49,7 @@
           ></i>
         </div>
         <div class="block_number">
-          <label for="number" class="label"> Количество вопросов:</label>
+          <label for="number" class="label"> Количество вопросов в секции:</label>
           <label for="number" class="label"> {{ numberQuestions }}</label>
         </div>
         <div class="questions-block">  
@@ -88,7 +88,7 @@
         testId: undefined,
         title: "",
         description: "",
-        questionCountToPass:"",
+        questionCountToPass: 1,
         message: null,
         isLoader: true,
         operation: this.$route.params.operation,
@@ -129,7 +129,8 @@
         const section = {
           "title": this.title,
           "test": +this.testId, 
-          "question": [...this.sectionQuestions]
+          "question": [...this.sectionQuestions],
+          "questionCountToPass": +this.questionCountToPass
         }
         if ( this.operation === 'edit'){
           await this.createSection({

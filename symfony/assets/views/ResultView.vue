@@ -11,27 +11,29 @@
         :subTitle="getTestTitleActive"
     />
     <div class="fon">
-      <div class="wrapper">
-        <div class="ticket-title">
-          {{ getTicketTitle.ticketModeTitle }}
+      <div class="container">
+        <div class="wrapper">
+          <div class="ticket-title">
+            {{ getTicketTitle.ticketModeTitle }}
+          </div>
+          <div class="ticket-number"
+            v-if="getTicketTitle.ticketTitle !== ''"
+          >
+            {{  getTicketTitle.ticketTitle }}
+          </div>
+          <div
+            class="question-cont"
+          >
+          
+            <ResultAutchView
+              v-if="getIsAutchUser"
+            />
+            <ResultNoAutchView
+              v-else
+            />
+          </div>
+          </div> 
         </div>
-        <div class="ticket-number"
-          v-if="getTicketTitle.ticketTitle !== ''"
-        >
-          {{  getTicketTitle.ticketTitle }}
-        </div>
-        <div
-          class="question-cont"
-        >
-        
-          <ResultAutchView
-            v-if="getIsAutchUser"
-          />
-          <ResultNoAutchView
-            v-else
-          />
-        </div>
-        </div> 
       </div>
     </div> 
   </div>

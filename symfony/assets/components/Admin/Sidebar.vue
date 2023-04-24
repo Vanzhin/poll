@@ -1,4 +1,5 @@
 <template>
+  <div class="fon">
   <ul class="sidenav app-sidenav" :class="{open: value}">
     <RouterLink
       tag="li"
@@ -10,11 +11,12 @@
       :key="link.url"
     >    
       <li class="list"> 
-        <span v-html="link.icon"  class="list-icon" :title="link.title"></span>
+       
         {{link.title}}
       </li>
     </RouterLink>
   </ul>
+</div>
 </template>
 
 <script>
@@ -59,15 +61,17 @@ export default {
 
 <style lang="scss" scoped>
 .app-sidenav{
-  padding-top:15px;
+
+  padding-top:147px;
+  padding-right: 30px;
   position:fixed;
   top:80px;
   width:250px;
   transition:transform .3s;
-  transition:transform .3s,-webkit-transform .3s;
   bottom:0!important;
   height:auto!important;
   z-index: 16;
+  background-color: var(--color-fon);
   @media (max-width: 768px) {
     width: 60px;
     overflow:hidden;
@@ -81,24 +85,31 @@ export default {
 .list{
   list-style-type:none;
   padding: 5px;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 40px;
+  border-bottom: 1px solid rgba(255, 255, 0, 0);
   @media (max-width: 768px) {
-    width: 28px;
-    overflow:hidden;
-    height: 32px;
+    
     }
   &-icon{
     margin-right: 15px;
   }
   &-link{
-    color: rgb(94, 93, 92);
+    color: var(--color-Black_blue);
+    border-bottom: 1px solid rgba(255, 255, 0, 0);
     text-decoration: none;
   }
   &-active{
-    color: rgb(12, 137, 187);
+    color: var(--color-blue);
+    border-bottom: 1px solid#269EB7 ;
   }
   &:hover{
     cursor: pointer;
-    background-color: rgb(186, 217, 245);
+    color: var(--color-blue);
+    border-bottom: 1px solid#269EB7 ;
     .list-icon{
       color: rgb(19, 19, 19);
     }

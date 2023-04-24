@@ -5,7 +5,7 @@
         v-if="isLoader"
       />
       <div class="" v-else>
-        <div class="conteiner">
+        <div class="container">
           <div class="sections__title">
             Сервис <span class="sections__title-select">онлайн-тестирования</span> по промышленной безопасности 
             приветствует вас!
@@ -14,7 +14,7 @@
             Выберите область проверки знаний
           </div>
         </div>
-        <div class="conteiner">
+        <div class="container">
           <div class="sections__block row" >
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
               v-for="section in sections" 
@@ -37,57 +37,61 @@
       </div>
     </div>
   </div>
-  <div class="conteiner fon">
-    <div class="wrapper">
-      <div class="service">
-        <div>
-          <div class="service-title">
-            О Сервисе
+  <div class="fon">
+    <div class="container">
+      <div class="wrapper">
+        <div class="service">
+          <div>
+            <div class="service-title">
+              О Сервисе
+            </div>
+            <div class="service-text">
+              Сервис представляет собой - группу тестов, <br>
+              которая предназначается для подготовки к аттестации:
+            </div>
+            <div class="service-text-list">
+              <ul> 
+                <li>по промышленной безопасности по тестам Ростехнадзора;</li>
+                <li>на группу по электробезопасности;</li>
+                <li>по охране труда;</li>
+                <li>водителей, перевозящих опасные грузы (ДОПОГ);</li>
+                <li>сварщиков (НАКС);</li>
+                <li>на знания ПДД.</li>
+              </ul>
+            </div>
           </div>
-          <div class="service-text">
-            Сервис представляет собой - группу тестов, <br>
-            которая предназначается для подготовки к аттестации:
-          </div>
-          <div class="service-text-list">
-            <ul> 
-              <li>по промышленной безопасности по тестам Ростехнадзора;</li>
-              <li>на группу по электробезопасности;</li>
-              <li>по охране труда;</li>
-              <li>водителей, перевозящих опасные грузы (ДОПОГ);</li>
-              <li>сварщиков (НАКС);</li>
-              <li>на знания ПДД.</li>
-            </ul>
-          </div>
-        </div>
-        <div>
-          <div class="service-right-block">
-            В сервисе предоставляются тесты Ростехнадзора по промбезопасности 
-            и по электробезопасности. Сервис поможет подготовиться к аттестации 
-            водителям, занимающимся перевозкой опасных грузов (тесты ДОПОГ), 
-            а также сварщикам (тесты НАКС). Кроме того, представлены тесты 
-            по пожарной безопасности, экологической безопасности и общим 
-            вопросам охраны труда.
+          <div>
+            <div class="service-right-block">
+              В сервисе предоставляются тесты Ростехнадзора по промбезопасности 
+              и по электробезопасности. Сервис поможет подготовиться к аттестации 
+              водителям, занимающимся перевозкой опасных грузов (тесты ДОПОГ), 
+              а также сварщикам (тесты НАКС). Кроме того, представлены тесты 
+              по пожарной безопасности, экологической безопасности и общим 
+              вопросам охраны труда.
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="conteiner ticket-fon">
-    <div class="wrapper">
-      <div class="ticket">
-        <div class="ticket-icon">
-          <svg width="56" height="65" viewBox="0 0 56 65" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.4667 18.7291H9.30547C8.04055 18.7291 7.01514 19.7545 7.01514 21.0194V53.0841C7.01514 54.349 8.04055 55.3744 9.30547 55.3744H34.4991C35.7641 55.3744 36.7895 54.349 36.7895 53.0841V46.2132H45.9507C47.2156 46.2132 48.2411 45.1878 48.2411 43.9229V16.4389C48.2411 12.6441 45.1648 9.56787 41.3701 9.56787H20.7571C19.4921 9.56787 18.4667 10.5933 18.4667 11.8582V18.7291ZM21.9022 18.7291H29.9185C33.7132 18.7291 36.7895 21.8054 36.7895 25.6001V42.7777H44.8056V16.4389C44.8056 14.5415 43.2674 13.0034 41.3701 13.0034H21.9022V18.7291ZM10.4506 51.9389V22.1646H29.9185C31.8159 22.1646 33.354 23.7027 33.354 25.6001V51.9389H10.4506Z" fill="#269EB7"/>
-          </svg>
+  <div class="ticket-fon">
+    <div class="container">
+      <div class="wrapper">
+        <div class="ticket">
+          <div class="ticket-icon">
+            <svg width="56" height="65" viewBox="0 0 56 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M18.4667 18.7291H9.30547C8.04055 18.7291 7.01514 19.7545 7.01514 21.0194V53.0841C7.01514 54.349 8.04055 55.3744 9.30547 55.3744H34.4991C35.7641 55.3744 36.7895 54.349 36.7895 53.0841V46.2132H45.9507C47.2156 46.2132 48.2411 45.1878 48.2411 43.9229V16.4389C48.2411 12.6441 45.1648 9.56787 41.3701 9.56787H20.7571C19.4921 9.56787 18.4667 10.5933 18.4667 11.8582V18.7291ZM21.9022 18.7291H29.9185C33.7132 18.7291 36.7895 21.8054 36.7895 25.6001V42.7777H44.8056V16.4389C44.8056 14.5415 43.2674 13.0034 41.3701 13.0034H21.9022V18.7291ZM10.4506 51.9389V22.1646H29.9185C31.8159 22.1646 33.354 23.7027 33.354 25.6001V51.9389H10.4506Z" fill="#269EB7"/>
+            </svg>
 
-        </div>
-        <div class="ticket-text">
-          Билеты формируются отдельно в процессе обработки материала. Таким образом, сочетание и порядок вопросов в тестах сервиса и в комиссиях Ростехнадзора или предприятия будут отличаться.
+          </div>
+          <div class="ticket-text">
+            Билеты формируются отдельно в процессе обработки материала. Таким образом, сочетание и порядок вопросов в тестах сервиса и в комиссиях Ростехнадзора или предприятия будут отличаться.
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="conteiner">
+  <div class="container">
     <div class="wrapper">
       <div class="description">
         <ul> 
@@ -287,6 +291,7 @@ export default {
   font-style: normal;
   justify-content: space-between;
   padding-bottom: 43px;
+  flex-wrap: wrap;
   &-title{
     font-weight: 700;
     font-size: 32px;
@@ -309,7 +314,7 @@ export default {
   }
   &-right-block{
     padding: 32px 9px 40px 27px;
-    height: 335px;
+    min-height: 335px;
     width: 348px;
     background:var(--color-blue);
     border: 1px solid var(--color-blue);
@@ -318,12 +323,22 @@ export default {
     font-size: 18px;
     line-height: 22px;
     color: var(--color-white);
+    @media (max-width: 992px) {
+              width: 87vw;
+              margin-left: 15px;
+              min-height: 250px;
+            }
+    @media (max-width: 350px) {
+      width: 270px;
+      
+    }
   }
 }
 .ticket{
-  height: 135px;
+  min-height: 135px;
   display: flex;
   align-items: center;
+  padding: 20px 0;
   &-fon{
     background: #F1F7FF;
   }
@@ -339,8 +354,8 @@ export default {
 
 }
 .description{
-  padding: 38px 0 0 40px;
-  height: 400px;
+  padding: 38px 0 38px 40px;
+  min-height: 400px;
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;

@@ -9,38 +9,40 @@
       :subTitle="areaTitle"
     />
     <div class="tests__block">
-      <div class="wrapper">
-        <div
-          v-for="(test, index) in tests" 
-          :key="test.id"
-          class="test__block"
-        >
+      <div class="container">
+        <div class="wrapper">
           <div
-            v-if="test.questionCount > test.questionUnPublishedCount"
+            v-for="(test, index) in tests" 
+            :key="test.id"
+            class="test__block"
           >
-            <RouterLink :to="{ name: 'test', params: { id: test.id } }"
-            v-if="getIsAutchUser || index < 3"
+            <div
+              v-if="test.questionCount > test.questionUnPublishedCount"
             >
-              <div class="test__card">
-                <div>
-                  {{ test.id }} - {{ test.title }}
+              <RouterLink :to="{ name: 'test', params: { id: test.id } }"
+              v-if="getIsAutchUser || index < 3"
+              >
+                <div class="test__card">
+                  <div>
+                    {{ test.title }}
+                  </div>
                 </div>
+              </RouterLink>
+              <div class="test__card-limitation"
+                v-else
+                title="У Вас ограниченный доступ. Подпишитесь на нашу группу."
+              >
+                {{ test.title }}
               </div>
-            </RouterLink>
-            <div class="test__card-limitation"
-              v-else
-              title="У Вас ограниченный доступ. Подпишитесь на нашу группу."
-            >
-              {{ test.id }} - {{ test.title }}
             </div>
           </div>
-        </div>
-        <div class="test__block-info">
-          Дополнительная информация
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
-          </svg>
+          <div class="test__block-info">
+            Дополнительная информация
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
+            </svg>
 
+          </div>
         </div>
       </div>
     </div> 

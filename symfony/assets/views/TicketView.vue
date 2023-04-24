@@ -8,57 +8,60 @@
         title="Тестирование Базовый курс"
         :subTitle="testName"
       />
-      <div class="title">
-        <Timer
-          v-if="timeTicket"
-          :time="20" 
-          @time-end="timerEnd"
-        />
-      </div>
+      
+      
+      
       <div class="fon">
-        <div class="wrapper">
-          <div class="ticket-title">
-            {{ info.ticketModeTitle }}
+        <div class="container">
+          <div class="wrapper">
+            <Timer
+              v-if="timeTicket"
+              :time="2" 
+              @time-end="timerEnd"
+            />
+            <div class="ticket-title">
+              {{ info.ticketModeTitle }}
+            </div>
+            <div class="ticket-number"
+              v-if="info.ticketTitle !== ''"
+            >
+              {{ info.ticketTitle }}
+            </div>
+            <form @submit.prevent="onSubmit">
+                <div v-for="(question, index ) in questions" 
+                  :key="question.id"
+                >
+                  <TestQuestionRadio
+                    v-if="type(question) === 'radio'"
+                    :question="question"
+                    :index="index"
+                  />
+                  <TestQuestionCheckbox
+                    v-else-if="type(question) === 'checkbox'"
+                    :question="question"
+                    :index="index"
+                  />
+                  <TestQuestionInputOne
+                    v-else-if="type(question) === 'input_one'"
+                    :question="question"
+                    :index="index"
+                  />
+                  <TestQuestionOrdered
+                    v-else-if="type(question) === 'order'"
+                    :question="question"
+                    :index="index"
+                  />
+                  <TestQuestionConformity
+                    v-else-if="type(question) === 'conformity'"
+                    :question="question"
+                    :index="index"
+                  />
+                </div>
+                <div class="button-cont">
+                  <button type="submit" class="button">Проверить</button>
+                </div>
+              </form>
           </div>
-          <div class="ticket-number"
-            v-if="info.ticketTitle !== ''"
-          >
-            {{ info.ticketTitle }}
-          </div>
-          <form @submit.prevent="onSubmit">
-              <div v-for="(question, index ) in questions" 
-                :key="question.id"
-              >
-                <TestQuestionRadio
-                  v-if="type(question) === 'radio'"
-                  :question="question"
-                  :index="index"
-                />
-                <TestQuestionCheckbox
-                  v-else-if="type(question) === 'checkbox'"
-                  :question="question"
-                  :index="index"
-                />
-                <TestQuestionInputOne
-                  v-else-if="type(question) === 'input_one'"
-                  :question="question"
-                  :index="index"
-                />
-                <TestQuestionOrdered
-                  v-else-if="type(question) === 'order'"
-                  :question="question"
-                  :index="index"
-                />
-                <TestQuestionConformity
-                  v-else-if="type(question) === 'conformity'"
-                  :question="question"
-                  :index="index"
-                />
-              </div>
-              <div class="button-cont">
-                <button type="submit" class="button">Проверить</button>
-              </div>
-            </form>
         </div>
       </div>
     </div>
@@ -174,11 +177,13 @@ export default {
    
     if ( regexp.test(this.ticketId)){
       this.info.ticketModeTitle = this.rnd[this.ticketId]
+      this.info.mode = this.ticketId
     } else {
-      this.info.ticketTitle ='Билет № ' + this.getTicket.title
+      this.info.ticketTitle = 'Билет № ' + this.getTicket.title
+      this.info.ticket = +this.ticketId
     }
 
-    this.info.test= this.getTestId
+    this.info.test = this.getTestId
     this.setTicketInfo(this.info) 
     
     await this.getQuestionsDb({id: this.ticketId, slug: this.getSlug})

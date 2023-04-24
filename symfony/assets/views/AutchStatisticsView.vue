@@ -7,13 +7,12 @@
     v-else
   >
     <div class="wrapper">
-      <div class="title"
-      v-html="results.length > 0 ? 'Результаты прохождения тестов' 
-        : `Данных с результатами не найдено. <br> Пройдите тестирование.`"
-      >
-        
-      </div>
       <div class="container">
+        <div class="title"
+        v-html="results.length > 0 ? 'Результаты прохождения тестов' 
+          : `Данных с результатами не найдено. <br> Пройдите тестирование.`"
+      >
+      </div>
         <div class="row">
           <div v-for="(result, index ) in results" 
             :key="result.score + '_' + index"
@@ -44,7 +43,7 @@
                   <div class="title-icon">
                     <svg width="24" height="25" viewBox="0 0 24 25" 
                       fill="none" xmlns="http://www.w3.org/2000/svg"
-                      v-if="result.correct"
+                      v-if="result.pass"
                     >
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M12 23.1659C6.3756 23.1659 1.8 18.5903 1.8 12.9659C1.8 7.34154 6.3756 2.76594 12 2.76594C17.6244 2.76594 22.2 7.34154 22.2 12.9659C22.2 18.5903 17.6244 23.1659 12 23.1659ZM12 0.965942C5.373 0.965942 0 6.33894 0 12.9659C0 19.5935 5.373 24.9659 12 24.9659C18.6276 24.9659 24 19.5935 24 12.9659C24 6.33894 18.6276 0.965942 12 0.965942Z" fill="#56D062"/>
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M15.9818 9.28007C15.8552 9.15827 15.65 9.15827 15.5234 9.28007L11.066 13.5731L9.17003 11.7473C9.04403 11.6255 8.83823 11.6255 8.71162 11.7473L7.64183 12.7781C7.51523 12.8999 7.51523 13.0979 7.64183 13.2197L10.8368 16.2971C10.8998 16.3583 10.9832 16.3889 11.066 16.3889C11.1488 16.3889 11.2316 16.3583 11.2952 16.2971L17.0516 10.7525C17.1128 10.6937 17.1464 10.6145 17.1464 10.5317C17.1464 10.4489 17.1128 10.3691 17.0516 10.3109L15.9818 9.28007Z" fill="#56D062"/>
@@ -305,7 +304,7 @@
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
-    
+    flex-wrap: wrap;
     &-container{
       padding-top: 24px;
       padding-bottom: 74px;
@@ -315,13 +314,13 @@
     &-cell{
       display: flex;
       align-items: center;
-      
       flex-direction:column;
       width: 255px;
       height: 130px;
       text-align: center;
       background-color: #FFFFFF;
       margin: 0;
+      margin-top: 10px;
       padding: 0 15px;
       &-row1{
         display: flex;
@@ -353,6 +352,7 @@
       line-height: 24px;
       color: #0B1F33;
       justify-content: space-between;
+      flex-wrap: wrap;
       &-cont{
         display: flex;
         
@@ -370,6 +370,7 @@
         align-items: center;
       }
       &-button{
+        margin-top: 15px;
         display: flex;
         justify-content: center;
         align-items: center;

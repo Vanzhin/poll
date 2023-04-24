@@ -15,6 +15,9 @@
               <div class="item__card-title">
                 Вопросов в секции - {{ section.questionCount }}
               </div>
+              <div class="item__card-title">
+                Количество правильных ответов для прохождения секции - {{ section.questionCountToPass }}
+              </div>
             </div>
            
           </div>

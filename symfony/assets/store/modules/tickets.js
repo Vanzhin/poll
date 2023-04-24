@@ -123,7 +123,6 @@ const actions = {
         .then(({data})=>{
           // console.log("getTicketsTestIdNoAuthDb - ",  data)
           commit("SET_TICKETS", data.ticket);
-         
         })
     } catch (e) {
       dispatch('setMessageError', e)
@@ -145,9 +144,7 @@ const getters = {
     return state.tickets
   },
   getRandomTicket(state) {
-   
     const num = Math.floor(Math.random() * (state.tickets.length ) )
-    
     return state.tickets[num].id
   },
   getSelectTicket:(state)=>(id) =>{
@@ -155,7 +152,6 @@ const getters = {
       return +ticket.id === +id}) 
   },
   getTicketTitle(state) {
-   
     return state.title
   },
   getTicket(state) {

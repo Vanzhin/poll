@@ -3,9 +3,7 @@
   <FormInfoXML/>
   <Headers/>
   <Loader/>
-  <div class="wrapper">
-    <div class="head"></div>
-  </div>
+  
   <RouterView />
   
   <FooterBlock/>

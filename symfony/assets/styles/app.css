@@ -5,9 +5,7 @@
 @import "fonts.css";
 /*@import "signin.css";*/
 
-.container{
-  width: 100%;
-}
+
 .wrapper{
   max-width: 1110px;
   margin: 0 auto;
