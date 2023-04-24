@@ -98,6 +98,7 @@ export default {
     display: flex;
     align-items:flex-start;
     min-height: 1.5rem;
+    flex-wrap: wrap;
   }
   .f_sm {
     font-size: 0.9rem;

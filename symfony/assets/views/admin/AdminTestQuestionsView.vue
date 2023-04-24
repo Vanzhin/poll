@@ -10,7 +10,7 @@
         <div class="title">
           <div>
             <div class="test">
-              <p>Всего вопросов в тесте: {{ getTotalItem }}</p>  
+              <h2>Всего вопросов в тесте: {{ getTotalItem }}</h2>  
             </div>
           </div>
           <div class="btn-group " >
@@ -223,17 +223,18 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  .block{
-    background-color: rgb(207 207 199);
-  }
   .title{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin:0 10px 5px 10px;
     & h2{
-      font-size: 1.4rem;
-      color: #697a3f;
+      font-family: "Lato";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 40px;
+      color: var(--color-blue);
     }
   }
   .test{

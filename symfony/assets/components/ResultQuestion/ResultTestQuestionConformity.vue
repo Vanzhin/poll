@@ -64,7 +64,7 @@ export default {
     getUserAnswer(ind){
       return   this.question.result.user_answer 
         ? this.question.result.user_answer.length > 0 && this.question.result.user_answer.length > ind
-          ? this.question.result.user_answer[ind]!== -1 
+          ? this.question.result.user_answer[ind]!== -1 && this.question.result.user_answer[ind]!== ''
           : false
         : false
     },

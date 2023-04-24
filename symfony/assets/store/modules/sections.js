@@ -11,8 +11,8 @@ const state = () => ({
 })
 
 const actions = {
+  
   async getSectionTestIdDb({dispatch, commit}, {id, page = null, limit = 10 }){
-   
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
@@ -24,6 +24,7 @@ const actions = {
         }
       };
       if (page) {config.url = config.url + `&page=${page}`}
+      // console.log("config - ", config)
       await axios(config)
         .then(({data})=>{
           // console.log("getSectionTestIdDb - ",  data)
@@ -40,8 +41,8 @@ const actions = {
       }
     }
   },
+
   async deleteSectionIdDb({dispatch, commit}, {id, testId, activePage }){
-   
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {

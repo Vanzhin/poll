@@ -70,7 +70,6 @@ export default {
     margin-left: 15px;
     
     &-img{
-      height: 235px;
       width: 306px;
       margin-top: 15px;
     }

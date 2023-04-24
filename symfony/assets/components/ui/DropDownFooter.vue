@@ -16,14 +16,10 @@
     >
       
       <li v-for="category, index in getCategorysFooter"
-         class="dropdown-item menu_li" >
-         
-        
-          {{ category.title }}
-        
+        class="dropdown-item menu_li" 
+      >
+        {{ category.title }}
       </li>
-      
-     
     </ul>
   </div>
 </template>
@@ -53,7 +49,9 @@ export default {
     border: 0;
   }
   .title{
-
+    margin-top: 0;
+    font-size: 14px;
+    line-height: 30px;
   }
   .btn{
     margin-top: 10px;
@@ -78,7 +76,9 @@ export default {
     &:hover{
       cursor: pointer;
       background: var(--color-blue);
-      color: var(--color-white);
+      .title{
+        color: var(--color-white);
+      };
       path{
         fill:var(--color-white);
       }

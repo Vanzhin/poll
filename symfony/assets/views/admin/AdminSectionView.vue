@@ -59,5 +59,14 @@
  
 </script>
 <style lang="scss">
- 
+  .title{
+    h2 {
+      font-family: "Lato";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 40px;
+      color: var(--color-blue);
+    }
+  }
 </style>

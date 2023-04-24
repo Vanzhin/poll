@@ -2,7 +2,7 @@
   
   <div class="block">
     <div class="title">
-      <h2>Импортировать тест из файла</h2>
+      Импортировать тест из файла
     </div>
     <hr/>
    <div class="container">
@@ -277,6 +277,8 @@
 <style lang="scss" scoped>
   .form-import{
     margin-bottom: 15px;
+    font-family: 'Lato';
+    font-style: normal;
   }
   .question-item{
     margin-top: 10px;

@@ -56,7 +56,6 @@ export default {
     
     
     &-img{
-      height: 235px;
       width: 306px;
       margin-top: 15px;
     }

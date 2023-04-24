@@ -6,10 +6,10 @@
     v-else
   >
     <div class="title">
-      <div>
-        <h2>Билеты: </h2>
+      
+      <h2>Билеты: </h2>
         
-      </div>
+      
       <div class="btn-group " >
         <div class="btn btn-outline-primary btn-center"
           title="Добавить билет"
@@ -95,17 +95,18 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  .block{
-    background-color: rgb(207 207 199);
-    padding: 10px ;
-  }
+  
   .title{
     display: flex;
     justify-content: space-between;
     margin: 10px;
     & h2{
-      font-size: 1.4rem;
-      color: #697a3f;
+      font-family: "Lato";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 40px;
+      color: var(--color-blue);
     }
   }
   .test{

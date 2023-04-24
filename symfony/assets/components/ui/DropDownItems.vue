@@ -74,13 +74,17 @@ export default {
     &:hover{
       cursor: pointer;
       background: var(--color-blue);
-      color: var(--color-white);
+      .title{
+        color: var(--color-white);
+      };
       path{
         fill:var(--color-white);
       }
     }
   }
   .title{
+
+    margin-top: 0;
     font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
