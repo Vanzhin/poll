@@ -52,7 +52,7 @@
             </div>
             <div class="mb-3 w-100">
               <div class="img_block">
-                <img :src="answer.image"  width="200"
+                <img :src="answer.image"  width="170"
                   v-if="answer.image !== ''"
                 /> 
                 <i class="bi bi-x-lg custom-close" title="Удалить изображение"

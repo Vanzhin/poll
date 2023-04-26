@@ -96,7 +96,7 @@
             v-if="time !== ''"
           ></i>
         </div>
-        <label class="label"><b>Укажите колличество секций для  прохождения теста:</b> </label>
+        <label class="label"><b>Укажите количество секций для  прохождения теста:</b> </label>
         <div class="custom-radio img_block">  
           <input  
             name="sectionCountToPass"

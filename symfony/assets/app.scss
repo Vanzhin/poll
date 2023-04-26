@@ -307,8 +307,10 @@ textarea:hover,
 
   &-item{
     margin-left: 24px;
+    cursor: pointer;
     &:hover{
-      background-color: rgba(68, 151, 199, 0.342);
+      transform: scale(1.15);
+      
     }
   }
 }

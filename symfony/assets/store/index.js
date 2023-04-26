@@ -15,6 +15,7 @@ import pagination from './modules/pagination'
 import confirm from './modules/confirm'
 import loader from './modules/loader'
 import results from './modules/results'
+import metriks from './modules/metriks'
 export default createStore({
   state,
   mutations,
@@ -32,6 +33,7 @@ export default createStore({
     pagination,
     confirm,
     loader,
-    results
+    results,
+    metriks
   },
 })

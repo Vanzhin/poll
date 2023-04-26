@@ -13,7 +13,7 @@
   </div>
   <div class="mb-3 w-100">
     <div class="img_block">
-      <img :src="questionImgUrl" width="200" 
+      <img :src="questionImgUrl" width="306" 
         v-if="questionImgUrl !== ''"
       />  
       <i class="bi bi-x-lg custom-close" title="Удалить изображение"

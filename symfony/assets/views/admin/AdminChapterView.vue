@@ -129,6 +129,7 @@
     }
   }
   .button{
+    margin-right: 20px;
     &-cont{
       display: flex;
       justify-content: end;
@@ -137,7 +138,7 @@
     transition: all 0.1s ease-out;
     &:hover{
       cursor: pointer;
-      
+      transform: scale(1.15);
     }
   }
  @media (min-width: 1024px) {

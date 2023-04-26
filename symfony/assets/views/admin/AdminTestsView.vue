@@ -29,7 +29,9 @@
             </div>
            
           </div>
-
+         
+            <Button/>
+        
           <div class="tests__block"
             v-if="tests.length > 0"
             >
@@ -51,11 +53,13 @@
  
   import Loader from '../../components/ui/LoaderView.vue'
   import ItemTest from "../../components/Admin/ItemTest.vue"
+  import Button from "../../components/ui/ButtonBack.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      ItemTest
+      ItemTest,
+      Button
     },
     data() {
       return {
@@ -99,6 +103,7 @@
             token: this.getAutchUserToken 
           }})
       },
+      
     },
     async mounted(){},
     async created(){
@@ -136,24 +141,8 @@
       cursor: pointer;
     }
   }
-  .create{
-    display: flex;
-    align-items: center;
-    &-plus{
-      transform: scaleY(1.3);
-    }
-  }
-  .btn-center{
-    display: flex;
-    align-items: center;
-  }  
-  .button{
-    padding: 5px 10px;
-    transition: all 0.1s ease-out;
-    &:hover{
-      background-color: rgb(156, 156, 154);
-    }
-  }
+  
+  
  @media (min-width: 1024px) {
   
  }

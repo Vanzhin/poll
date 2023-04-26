@@ -10,19 +10,24 @@
         <h3>{{getCategoryTitle }}</h3>
         <h6>{{getCategoryDescription}}</h6>
       </div>
-      <div class="btn-group" >
-        <div class="btn btn-outline-primary create"
+      <div class="button-cont" >
+        <div class="button"
           title="Добавить новую категорию"
           @click.stop="createCategory"
         >
-          <i class="bi bi-plus create-plus" ></i>
+          <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M30.4023 18.8252C30.4023 25.9054 24.6627 31.645 17.5825 31.645C10.5023 31.645 4.7627 25.9054 4.7627 18.8252C4.7627 11.745 10.5023 6.00537 17.5825 6.00537C24.6627 6.00537 30.4023 11.745 30.4023 18.8252ZM31.9023 18.8252C31.9023 26.7338 25.4911 33.145 17.5825 33.145C9.6739 33.145 3.2627 26.7338 3.2627 18.8252C3.2627 10.9166 9.6739 4.50537 17.5825 4.50537C25.4911 4.50537 31.9023 10.9166 31.9023 18.8252ZM24.7419 19.899H10.4221V17.751H24.7419V19.899Z" fill="#269EB7"/>
+            <path d="M16.5088 11.6646L16.5088 25.9844L18.6567 25.9844L18.6567 11.6646L16.5088 11.6646Z" fill="#269EB7"/>
+          </svg>
         </div>
-        <div class="btn btn-outline-primary btn-center"
+        <div class="button"
             title="Добавить тест"
             @click.stop="createTest"
             v-if="!(areas.length > 0)"
           >
-            <i class="bi bi-archive"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
+              <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+            </svg>
           </div>
       </div>
     </div>
@@ -144,8 +149,18 @@
       transform: scaleY(1.3);
     }
   }
-  .btn-center{
-    display: flex;
-    align-items: center;
-  }  
+  .button{
+    margin-right: 20px;
+    &-cont{
+      display: flex;
+      justify-content: end;
+      align-items: center;
+    }
+    
+    transition: all 0.1s ease-out;
+    &:hover{
+      cursor: pointer;
+      transform: scale(1.15);
+    }
+  }
 </style>
