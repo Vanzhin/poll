@@ -204,5 +204,8 @@ export default {
 }
 .heder-padding{
   height: 85px;
+  @media (max-width: 800px) {
+    height: 150px;
+  }
 }
 </style>

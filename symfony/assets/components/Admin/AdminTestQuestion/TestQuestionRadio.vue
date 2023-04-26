@@ -1,8 +1,10 @@
 <template>
   <div class="col-sm-12 col-md-12 col-lg-12"> 
-    <div class="card flex-shrink-1 shadow">
-      <i><b>{{ index+1 }})</b> {{ question.title }}</i>
-      <img :src="question.image" width="200" 
+    <div class="">
+      <div>
+        <i><b>{{ index+1 }})</b> {{ question.title }}</i>
+      </div>
+      <img :src="question.image" width="306"
         v-if="question.image"
       />  
       <hr>
@@ -59,7 +61,6 @@ export default {
 
 <style lang="scss" scoped>
   .img{
-    height: 130px;
     margin-left: 10px;
     max-width: 170px;
   }

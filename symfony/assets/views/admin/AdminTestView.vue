@@ -1,15 +1,15 @@
 <template>
- 
   <div class="block">
     <div class="title">
       <h2>Тест: {{ testName }}</h2>
     </div>
+    <Button/>
     <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item" role="presentation"
         v-for="(nav, index ) in navsActive" 
           :key="nav.title"
       >
-        <RouterLink class="nav-link" :class="{active: nav.active}"  
+        <RouterLink class="nav-link tabs-fonts" :class="{active: nav.active}"  
           @click="activeTogge(index)"
           :to="{ path: nav.link}" >{{ nav.title }} {{ nav.count }}
         </RouterLink>
@@ -25,10 +25,10 @@
 <script>
 import { RouterLink,  RouterView } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
-
+import Button from "../../components/ui/ButtonBack.vue"
 export default {
   components: {
-  
+    Button
   },
   data() {
     return {
@@ -116,6 +116,14 @@ export default {
 
 </script>
 <style lang="scss" scoped>
+  .tabs-fonts{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0B1F33;
+  }
   .block{
     
     padding: 10px ;

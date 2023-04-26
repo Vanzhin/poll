@@ -49,6 +49,7 @@ export default {
 </script>
 <style lang="scss" scoped>
    .title{
+    margin-top: 0;
     font-weight: 700;
     font-size: 18px;
     line-height: 24px;

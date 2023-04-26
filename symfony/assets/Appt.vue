@@ -1,4 +1,7 @@
-<template>
+<template
+v-html="`${metrikScr + metrikNoscr}`"
+>
+  
   <component :is="layout" >
     <RouterView />
   </component>
@@ -18,12 +21,23 @@ export default {
   computed:{
     layout(){
       return (this.$route.meta.loyout || 'page') + '-layout'
+    },
+    metrikScr(){
+      console.log(this.$store.getters.getMetrikScr)
+      return  this.$store.getters.getMetrikScr
+    },
+    metrikNoscr(){
+      return this.$store.getters.getMetrikNoscr
     }
   },
   components: {
     EmptyLayout, PageLayout, AdminLayout
   },
-  
+  created(){
+   
+   
+    
+  }
 } 
 </script>
 

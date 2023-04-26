@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     nextLink(toLink){
-      
       this.$router.go(-1)
     }
   }, 
