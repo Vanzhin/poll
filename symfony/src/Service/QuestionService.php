@@ -12,6 +12,7 @@ use App\Factory\Variant\VariantFactory;
 use App\Traits\ImageHandle;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class QuestionService
@@ -108,7 +109,7 @@ class QuestionService
         }
     }
 
-    public function saveWithVariants(Question $question, array $variants = [], array $subtitles = [], UploadedFile|bool|null $questionImage = null, array $variantImages = null, array $subtitleImages = null): Question
+    public function saveWithVariants(Question $question, array $variants = [], array $subtitles = [], File|bool|null $questionImage = null, array $variantImages = null, array $subtitleImages = null): Question
     {
         $this->em->persist($question);
         $this->em->flush();
@@ -124,10 +125,10 @@ class QuestionService
 
     }
 
-    public function createOrUpdateQuestionIfValid(Question $question, array $data, UploadedFile|bool|null $questionImage = null, array $variantImages = null, array $subtitleImages = null): array
+    public function createOrUpdateQuestionIfValid(Question $question, array $data, File|bool|null $questionImage = null, array $variantImages = null, array $subtitleImages = null): array
     {
         $response = [];
-        $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof UploadedFile ? $questionImage : null);
+        $questionErrors = $this->validation->entityWithImageValidate($question, $questionImage instanceof File ? $questionImage : null);
         $errors = $questionErrors;
         $variants = [];
         $hasCorrectVariant = [];
