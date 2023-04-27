@@ -9,6 +9,9 @@ use ZipArchive;
 
 class FileHandler
 {
+    public function __construct(private readonly string $tempDir)
+    {
+    }
 
     public function getQuestion(File $file): array
     {
@@ -126,8 +129,9 @@ class FileHandler
     }
 
 
-    public function emptyDirectory(string $dirPath): void
+    public function emptyDirectory(string $dirPath = null): void
     {
+        $dirPath = $dirPath??$this->tempDir;
         if (is_dir($dirPath)) {
             $files = glob($dirPath . '*');
             foreach ($files as $file) {
@@ -154,8 +158,10 @@ class FileHandler
 
     }
 
-    public function unzip(UploadedFile $file, string $dirPath): void
+    public function unzip(UploadedFile $file, string $dirPath = null): void
     {
+        $dirPath = $dirPath??$this->tempDir;
+
         if ($file->guessExtension() !== 'zip') {
             throw new \Exception(sprintf('Не допустимый формат файла %s', $file->getFilename()), 422);
 
@@ -172,8 +178,10 @@ class FileHandler
         }
     }
 
-    public function getImagesFromDir(string $dirPath): array
+    public function getImagesFromDir(string $dirPath = null): array
     {
+        $dirPath = $dirPath??$this->tempDir;
+
         $images = [];
         $finder = new Finder();
         $finder->files()->in($dirPath);
@@ -185,6 +193,32 @@ class FileHandler
 
         }
         return $images;
+
+    }
+
+    public function isTextFile(File $file): bool
+    {
+        if (!str_starts_with(mime_content_type($file->getRealPath()), 'text/plain')) {
+           return false;
+        }
+        return true;
+    }
+
+    public function getTextFilesFromDir(string $dirPath = null): array
+    {
+        $dirPath = $dirPath??$this->tempDir;
+
+        $files = [];
+        $finder = new Finder();
+        $finder->files()->in($dirPath);
+        foreach ($finder as $imageFile) {
+            if (str_starts_with(mime_content_type($imageFile->getRealPath()), 'text/plain')) {
+                $image = new File($imageFile->getRealPath(), $imageFile->getFilename());
+                $files[] = $image;
+            }
+
+        }
+        return $files;
 
     }
 

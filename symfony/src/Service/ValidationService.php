@@ -119,13 +119,14 @@ class ValidationService
         return $errors;
     }
 
-    public function fileValidate(?File $file, string $maxSize = '512k'): ?array
+    public function fileValidate(?File $file, string $maxSize = '512k'): array
     {
         $errors = [];
         $violations = $this->validator->validate($file, [
             new FileConstraint([
                 'extensions' => [
                     'txt' => 'text/plain',
+                    'zip' => 'application/zip'
                 ],
 
                 'maxSize' => $maxSize,
@@ -138,15 +139,8 @@ class ValidationService
 
         ]);
 
-        if (!is_null($file) && $file->guessExtension() !== 'txt') {
-            $errors[] = 'Кажется, этот не текстовый файл';
-
-        }
         foreach ($violations as $violation) {
             $errors[] = $violation->getMessage();
-        }
-        if (count($errors) === 0) {
-            return null;
         }
         return $errors;
     }
