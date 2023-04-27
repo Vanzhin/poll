@@ -16,6 +16,8 @@ parameters:
     app.admin_pass: '%env(ADMIN_PASS)%'
     app.user_pass: '%env(USER_PASS)%'
 
+    app.temp_dir: '%kernel.project_dir%/public/temp/'
+
     question_upload: 'uploads/question'
     question_upload_url: '%env(SITE_URL)%/%question_upload%'
     question_upload_dir: '%kernel.project_dir%/public/%question_upload%'
@@ -27,6 +29,7 @@ parameters:
     category_upload: 'uploads/category'
     category_upload_url: '%env(SITE_URL)%/%category_upload%'
     category_upload_dir: '%kernel.project_dir%/public/%category_upload%'
+
 
 services:
     # default configuration for services in *this* file
@@ -89,6 +92,11 @@ services:
             $appName: '%app.name%'
             $defaultFromEmail: '%app.default_from_email%'
             $defaultFromName: '%app.default_from_name%'
+
+    App\Service\FileHandler:
+        arguments:
+            $tempDir: '%app.temp_dir%'
+
 
 #    App\Entity\Variant:
 #        arguments:

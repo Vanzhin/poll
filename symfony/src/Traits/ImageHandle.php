@@ -4,12 +4,13 @@ namespace App\Traits;
 
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 trait ImageHandle
 {
 
-    public function imageUpdate(object $entity, FileUploader $imageUploader, EntityManagerInterface $em, UploadedFile|bool|null $image = null): object
+    public function imageUpdate(object $entity, FileUploader $imageUploader, EntityManagerInterface $em, File|bool|null $image = null): object
     {
         switch (gettype($image)) {
             case 'boolean':

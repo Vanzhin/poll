@@ -2,10 +2,16 @@
 
 namespace App\Service;
 
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use ZipArchive;
 
 class FileHandler
 {
+    public function __construct(private readonly string $tempDir)
+    {
+    }
 
     public function getQuestion(File $file): array
     {
@@ -120,6 +126,100 @@ class FileHandler
         }
         $response['section'] = $sectionList;
         return $response;
+    }
+
+
+    public function emptyDirectory(string $dirPath = null): void
+    {
+        $dirPath = $dirPath??$this->tempDir;
+        if (is_dir($dirPath)) {
+            $files = glob($dirPath . '*');
+            foreach ($files as $file) {
+                $this->removeFiles($file);
+            }
+        } else {
+            throw new \Exception(sprintf('Директории %s не найдено', $dirPath), 422);
+        }
+
+    }
+
+    private function removeFiles(string $dirPath): void
+    {
+        if (is_dir($dirPath)) {
+            $files = glob($dirPath . GLOB_MARK);
+            foreach ($files as $file) {
+                $this->removeFiles($file);
+            }
+
+            rmdir($dirPath);
+        } elseif (is_file($dirPath)) {
+            unlink($dirPath);
+        }
+
+    }
+
+    public function unzip(UploadedFile $file, string $dirPath = null): void
+    {
+        $dirPath = $dirPath??$this->tempDir;
+
+        if ($file->guessExtension() !== 'zip') {
+            throw new \Exception(sprintf('Не допустимый формат файла %s', $file->getFilename()), 422);
+
+        }
+        try {
+            $zip = new ZipArchive();
+            if ($zip->open($file->getRealPath(), ZipArchive::CREATE)) {
+                $zip->extractTo($dirPath);
+                $zip->close();
+            }
+        } catch (\Exception $exception) {
+            throw new \Exception(sprintf('Не удалось разархивировать файл %s', $file->getFilename()), 422);
+
+        }
+    }
+
+    public function getImagesFromDir(string $dirPath = null): array
+    {
+        $dirPath = $dirPath??$this->tempDir;
+
+        $images = [];
+        $finder = new Finder();
+        $finder->files()->in($dirPath);
+        foreach ($finder as $imageFile) {
+            if (str_starts_with(mime_content_type($imageFile->getRealPath()), 'image')) {
+                $image = new File($imageFile->getRealPath(), $imageFile->getFilename());
+                $images[] = $image;
+            }
+
+        }
+        return $images;
+
+    }
+
+    public function isTextFile(File $file): bool
+    {
+        if (!str_starts_with(mime_content_type($file->getRealPath()), 'text/plain')) {
+           return false;
+        }
+        return true;
+    }
+
+    public function getTextFilesFromDir(string $dirPath = null): array
+    {
+        $dirPath = $dirPath??$this->tempDir;
+
+        $files = [];
+        $finder = new Finder();
+        $finder->files()->in($dirPath);
+        foreach ($finder as $imageFile) {
+            if (str_starts_with(mime_content_type($imageFile->getRealPath()), 'text/plain')) {
+                $image = new File($imageFile->getRealPath(), $imageFile->getFilename());
+                $files[] = $image;
+            }
+
+        }
+        return $files;
+
     }
 
     private function detectEncoding(File $file, array $encoding = ['utf8', 'windows-1251']): string

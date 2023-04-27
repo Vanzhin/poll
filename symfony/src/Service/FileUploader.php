@@ -10,7 +10,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUploader
 {
-
     private SluggerInterface $slugger;
     private Filesystem $fileSystem;
 

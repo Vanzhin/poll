@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Admin;
 
 use App\Action\Test\GetMinTrudTest;
+use App\Action\Test\UploadQuestionAction;
 use App\Entity\Section;
 use App\Entity\Test;
 use App\Factory\Question\QuestionFactory;
@@ -22,11 +23,15 @@ use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use ZipArchive;
 
 class TestController extends AbstractController
 {
@@ -164,107 +169,10 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/admin/test/{id}/upload', name: 'app_api_admin_test_upload', methods: 'POST')]
-    public function upload(Test                   $test,
-                           Request                $request,
-                           ValidationService      $validation,
-                           FileHandler            $handler,
-                           QuestionService        $questionService,
-                           SectionService         $sectionService,
-                           QuestionFactory        $questionFactory,
-                           SectionFactory         $sectionFactory,
-                           EntityManagerInterface $em,
-    ): JsonResponse
+    public function upload(Request              $request,
+                           UploadQuestionAction $uploadQuestionAction): JsonResponse
     {
-
-        $file = $request->files->get('file');
-        $images = $request->files->get('image', []);
-        $preparedImages = [];
-
-        $errors = $validation->fileValidate($file);
-        foreach ($images as $image) {
-            if ($validation->imageValidate($image, '512k')) {
-                $errors[] = implode(", ", $validation->imageValidate($image, '512k'));
-            }
-            $preparedImages[$image->getClientOriginalName()] = $image;
-        }
-        if (!is_null($errors) && count($errors) > 0) {
-            return $this->json([
-                'message' => 'Ошибка при вводе данных',
-                'error' => $errors],
-                423,
-                ['charset=utf-8'],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
-        try {
-            $questionData = $handler->getQuestion($file);
-            $sections = [];
-
-            foreach ($questionData['section'] ?? [] as $key => $title) {
-                $section = $sectionFactory->createBuilder()->buildSection(['title' => $title, 'test' => $test], $em->getRepository(Section::class)->findOneBy(['title' => $title, 'test' => $test]));
-                $sections[$key] = $section;
-            };
-            $status = 200;
-            $total = [];
-            $questions = [];
-            foreach ($questionData['question'] ?? [] as $key => $data) {
-                $data['test'] = $test->getId();
-
-                $question = $questionFactory->createBuilder()->buildQuestion($data, $this->getUser());
-                if (isset($data['section'])) {
-                    $question->setSection($sections[$data['section']]);
-                };
-                $image = key_exists($question->getImage(), $preparedImages) ? $preparedImages[$question->getImage()] : null;
-
-//                todo перебираю, чтобы ключи не совпадали с айдишниками вариантов из бд
-                $preparedData = [];
-                if (isset($data['variant'])) {
-                    foreach ($data['variant'] as $oldKey => $variant) {
-                        $preparedData['variant']['a' . $oldKey] = $variant;
-                    };
-                }
-                $response = $questionService->createOrUpdateQuestionIfValid($question, $preparedData, $image, $preparedImages, $preparedImages);
-
-                if ($response['error']) {
-                    $total['error'][$key]['type'][] = implode(', ', $response['error']);
-                    $total['error'][$key]['question'] = $data;
-                } else {
-                    $questions[] = $response['question'];
-                }
-
-            }
-
-            if ($total) {
-                $total['message'] = 'Ошибка при создании вопроса';
-                $response = $total;
-                $status = 422;
-            } else {
-                $savedQuestions = [];
-                foreach ($questions as $question) {
-                    $variantImages = [];
-                    foreach ($question->getVariant()->toArray() as $key => $variant) {
-                        if ($variant->getImage()) {
-                            $variantImages[$key] = $preparedImages[$variant->getImage()];
-                        }
-                    }
-                    $saved = $questionService->saveWithVariants($question, $question->getVariant()->toArray(), $question->getSubtitles()->toArray(), $preparedImages[$question->getImage()] ?? null, $variantImages);
-                    $savedQuestions[] = $saved;
-                };
-                $response = $questionService->getUploadedQuestionsSummary($savedQuestions);
-            }
-
-        } catch (\Exception $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } catch (FilesystemException $e) {
-            $response = ['error' => $e->getMessage()];
-            $status = 501;
-        } finally {
-            return $this->json($response,
-                $status,
-                ['charset=utf-8'],
-                ['groups' => 'create']
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
+        return $uploadQuestionAction->upload($request);
 
     }
 
