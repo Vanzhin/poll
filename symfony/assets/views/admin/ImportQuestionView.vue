@@ -22,7 +22,10 @@
 
             {{ selectedId }}
           </div>
-          <label class="label">Выберите файл для импорта</label>
+          <label class="label ">Выберите файл для импорта   <i class="bi bi-question-square" 
+            title="Для загрузки возможен файл .txt или архив .zip(до 25mB) с файлом .txt и 
+            картинками для вопросов зазмером до 512kB."
+            ></i></label>
           <br>
           <div class="d-flex align-items-center">
             <input  class="input_file" type="file"  
@@ -39,7 +42,7 @@
           </div>
 
           <br> 
-          <div class="mb-3 w-100">
+          <!-- <div class="mb-3 w-100">
             <div class="img_conteiner"
               v-if="questionsImgs.length > 0"
             >
@@ -73,45 +76,49 @@
             <label class="label"
               v-if="imagesMaxSize.length > 0"
             >Имеются файлы размером больше 500Кб - {{ imagesMaxSize.length  }}шт.</label>
-          </div>
+          </div> -->
           <button type="submit" class="button">Загрузить</button>
         </form>
       </div>
       
       <div class="row"
-        v-if="getQuestionsImportError"
+        v-if="(getQuestionsImportError && (Array.isArray(getQuestionsImportError) || 
+        typeof getQuestionsImportError === 'object'
+        ))"
       >
+      
         <br/>
         <hr><br/>
         <h5>При импорте обнаруженны ошибки в следующих вопросах:</h5>
-        <div 
-          v-for="(item, index) in getQuestionsImportError"
-          class="question-item"
-        >
-          <ul>
-            <li>
-              <div>
-                <h6 
-                  v-if="typeof item.type === 'object'"
-                  v-for="(type) in item.type"
-                  >{{type}}!</h6>
-                <h6 v-else>{{item.type}}!</h6>
-                <p>Вопрос: {{ item.question.title}}</p>
-                <div
-                  v-if="item.question.variant"
-                  class="question-item-variant"
+        <ol>
+          <li 
+            v-for="(item, index) in getQuestionsImportError"
+            class="question-item"
+          >
+           
+              <h6 
+                v-if="typeof item.type === 'object'"
+                v-for="(type) in item.type"
+                >{{type}}!</h6>
+              <h6 v-else>{{item.type}}!</h6>
+              <p>Вопрос: {{ item.question.title || ""}}</p>
+              <div
+                v-if="item.question.variant"
+                class="question-item-variant"
+              >
+                Варинты ответов:
+                <div class="variants "
+                  v-for="(variant, index) in item.question.variant"
                 >
-                  Варинты ответов:
-                  <li
-                    v-for="(variant, index) in item.question.variant"
-                  >
-                    {{ variant.title }}
-                  </li>
+                <i class="bi bi-check-square "
+                  v-if="variant.correct"
+                ></i>
+                {{ variant.title || '' }}
                 </div>
-              </div>
-            </li>
-          </ul>
-        </div>
+             
+            </div>
+          </li>
+        </ol>
       </div>
     </div>
   </div>
@@ -144,7 +151,6 @@
     },
     computed:{ 
       ...mapGetters([
-        "getAutchUserToken", 
         "getMessage",
         "getTests",
         "getQuestionsImportError"
@@ -161,7 +167,7 @@
         "setMessage", 
         "getTestsDB", 
         "setQuestionsImportError",
-        
+        "setIsLoaderStatus"
       ]),
       ...mapMutations([]),
       async onSubmit(e){
@@ -188,8 +194,9 @@
         } else {
           testId = this.selectedId
         }
-         
+        
         await this.importQuestionsFileDb({id: testId, testFile})
+       
         this.message = !this.getMessage.err
         // this.testFileDelete()
         let timerId = setInterval(() => {
@@ -212,22 +219,21 @@
           this.testFile = e.target.files[0]
           this.testValue = e.target.value
           this.setQuestionsImportError(null)
-          if (e.target.files[0].type !=="text/plain") {
+          console.log(e.target.files[0].type)
+          if (!(e.target.files[0].type =="text/plain" || e.target.files[0].type =="application/zip")) {
             const message = {
               error: true, 
-              message: 'Для импорта необходимо выбрать текстовый файл'
+              message: 'Для импорта необходимо выбрать текстовый файл или архив zip с текстовым файлом и картинками.'
             }
             this.setMessage(message)
             this.testFileDelete()
-            
           }
-          
-          
         }
       },
       testFileDelete(){
         this.testFile = ''
         this.testValue = null
+        this.setQuestionsImportError(null)
       },
       changeQuestionsImgs(e){
         if (typeof e.target.files[0] === 'object'){
@@ -275,6 +281,14 @@
  
 </script>
 <style lang="scss" scoped>
+.variants{
+  position: relative;
+  & i {
+    position: absolute;
+    left: -20px;
+    top: 4px;
+  }
+}
   .form-import{
     margin-bottom: 15px;
     font-family: 'Lato';
@@ -282,6 +296,7 @@
   }
   .question-item{
     margin-top: 10px;
+    margin-left: 15px;
     h6{
       color: rgb(223, 62, 62);
     }
@@ -292,12 +307,23 @@
   .input_file{
     margin-top: 20px;
     margin-bottom: 20px;
+    
   }
   .button{
-    padding: 5px 10px;
+    width: 148px;
+    height: 37px;
+    background: #269EB7;
+    border: 1px solid #269EB7;
+    border-radius: 6px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    
     transition: all 0.1s ease-out;
+    color: #FFFFFF;
     &:hover{
-      background-color: rgb(156, 156, 154);
+      background-color: #FFFFFF;
+      color:#269EB7;
     }
   }
   .custom{

@@ -16,7 +16,7 @@
           <div class="wrapper">
             <Timer
               v-if="timeTicket"
-              :time="2" 
+              :time="20" 
               @time-end="timerEnd"
             />
             <div class="ticket-title">

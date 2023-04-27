@@ -1,7 +1,5 @@
 <template>
-    <Loader 
-      v-if="getIsLoaderQuestions"
-    />
+    <Loader/>
   <div class="app-main-layout" >
     <Headers/>
     <Sidebar v-model="isOpen" />
@@ -29,7 +27,7 @@
       Sidebar
     },
     computed:{ 
-      ...mapGetters(["getIsLoaderQuestions"]),
+      
     },
   } 
 </script>

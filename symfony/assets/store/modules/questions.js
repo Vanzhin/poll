@@ -293,6 +293,7 @@ const actions = {
           dispatch('setMessage',  data)
         })
     } catch (e) {
+      console.log("saveQuestionDb error - ",  e)
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('importQuestionsFileDb', {id, testFile})
@@ -357,6 +358,8 @@ const getters = {
     return state.question 
   },
   getQuestionsImportError(state) {
+    console.log(state.questionsImportError)
+    console.log(Array.isArray(state.questionsImportError))
     return state.questionsImportError 
   },
   getQuestionsTicket(state) {
