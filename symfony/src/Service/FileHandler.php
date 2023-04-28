@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
+use FilesystemIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
@@ -131,11 +134,16 @@ class FileHandler
 
     public function emptyDirectory(string $dirPath = null): void
     {
-        $dirPath = $dirPath??$this->tempDir;
+        $dirPath = $dirPath ?? $this->tempDir;
         if (is_dir($dirPath)) {
-            $files = glob($dirPath . '*');
-            foreach ($files as $file) {
-                $this->removeFiles($file);
+            $filePaths = glob($dirPath . '*');
+            foreach ($filePaths as $filePath) {
+                if (is_dir($filePath)) {
+                    $this->removeDir($filePath);
+
+                } else {
+                    unlink($filePath);
+                }
             }
         } else {
             throw new \Exception(sprintf('Директории %s не найдено', $dirPath), 422);
@@ -143,24 +151,24 @@ class FileHandler
 
     }
 
-    private function removeFiles(string $dirPath): void
+    private function removeDir(string $dirPath): void
     {
-        if (is_dir($dirPath)) {
-            $files = glob($dirPath . GLOB_MARK);
-            foreach ($files as $file) {
-                $this->removeFiles($file);
+        $it = new RecursiveDirectoryIterator($dirPath, FilesystemIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($it,
+            RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
             }
-
-            rmdir($dirPath);
-        } elseif (is_file($dirPath)) {
-            unlink($dirPath);
         }
-
+        rmdir($dirPath);
     }
 
     public function unzip(UploadedFile $file, string $dirPath = null): void
     {
-        $dirPath = $dirPath??$this->tempDir;
+        $dirPath = $dirPath ?? $this->tempDir;
 
         if ($file->guessExtension() !== 'zip') {
             throw new \Exception(sprintf('Не допустимый формат файла %s', $file->getFilename()), 422);
@@ -180,7 +188,7 @@ class FileHandler
 
     public function getImagesFromDir(string $dirPath = null): array
     {
-        $dirPath = $dirPath??$this->tempDir;
+        $dirPath = $dirPath ?? $this->tempDir;
 
         $images = [];
         $finder = new Finder();
@@ -199,14 +207,14 @@ class FileHandler
     public function isTextFile(File $file): bool
     {
         if (!str_starts_with(mime_content_type($file->getRealPath()), 'text/plain')) {
-           return false;
+            return false;
         }
         return true;
     }
 
     public function getTextFilesFromDir(string $dirPath = null): array
     {
-        $dirPath = $dirPath??$this->tempDir;
+        $dirPath = $dirPath ?? $this->tempDir;
 
         $files = [];
         $finder = new Finder();
