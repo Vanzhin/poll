@@ -52,7 +52,6 @@ class UploadQuestionAction extends BaseAction
              * @var UploadedFile $archive
              */
             $uploadFile = $request->files->get('file');
-
             if ($this->validation->fileValidate($uploadFile, '25M')) {
                 return $this->errorResponse([
                     'message' => 'Ошибка загрузки файла',
@@ -70,7 +69,7 @@ class UploadQuestionAction extends BaseAction
                     return $this->errorResponse(
                         [
                             'message' => 'Ошибка при вводе данных',
-                            'error' => 'Архив не должен содержать больше одного файла с тестами'
+                            'error' => 'Архив должен содержать 1 файл с тестами'
                         ]
                     );
 
