@@ -48,9 +48,7 @@ class UploadQuestionAction extends BaseAction
                     'error' => sprintf('Тест с идентификатором %s не найден', $testId)
                 ]);
             }
-            /**
-             * @var UploadedFile $archive
-             */
+
             $uploadFile = $request->files->get('file');
             if ($this->validation->fileValidate($uploadFile, '25M')) {
                 return $this->errorResponse([
