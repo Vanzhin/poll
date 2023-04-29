@@ -18,17 +18,14 @@ const actions = {
 
 const getters = {
   getIsLoaderStatus(state) {
-    console.log("getIsLoaderStatus", state.isLoader)
     return state.isLoader 
   },
 }
 const mutations = {
   [SET_LOADER_TOGGLE] (state, ) {
-    // console.log("SET_LOADER_TOGGLE", state.isLoader)
     state.isLoader = !state.isLoader
   },
   [SET_LOADER_STATUS] (state, status) {
-    console.log("SET_LOADER_STATUS", state.isLoader)
     state.isLoader = status
   },
 }

@@ -85,12 +85,10 @@
         this.isLoader = true
         await this.getCategorysDB({parentId: id, admin: true, token: this.getAutchUserToken})
         if (this.getTests) {
-          console.log('переход к списку тестов - ', this.getTests)
-            this.$router.push({name: 'adminTests', params: {id } })
-            setTimeout(() => this.isLoader = false, 200)
+          this.$router.push({name: 'adminTests', params: {id } })
+          setTimeout(() => this.isLoader = false, 200)
           return
         } 
-        console.log('переход к списку категорий - ', this.getTests)
         this.$router.push({name: 'adminIter', params: { num: 1, id: id } })
         setTimeout(() => this.isLoader = false, 200)
         // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })

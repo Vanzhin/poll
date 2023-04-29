@@ -55,15 +55,12 @@ export default {
       return this.getTest.title
     },
     countQuestion(){ 
-      console.log("1-",this.getTestQuestionCount)
       return this.getTestQuestionCount
     },
     countTicket(){ 
-      console.log("1-",this.getTestTicketCount)
       return this.getTestTicketCount
     },
     countSection(){ 
-      console.log("1-",this.getTestSectionCount)
       return this.getTestSectionCount
     },
     navsActive(){

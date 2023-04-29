@@ -24,15 +24,15 @@ const actions = {
         }
       };
       if (page) {config.url = config.url + `&page=${page}`}
-      // console.log("config - ", config)
+      
       await axios(config)
         .then(({data})=>{
-          // console.log("getSectionTestIdDb - ",  data)
+          
           commit("SET_SECTIONS", data.section);
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
-      // console.log("getSectionTestIdDb - ",  e)
+      
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getSectionTestIdDb', {id, page, limit})
@@ -53,10 +53,10 @@ const actions = {
           Authorization: `Bearer ${token}`
         }
       };
-      // console.log(config)
+      
       await axios(config)
         .then(({data})=>{
-          // console.log(data)
+         
           dispatch('getSectionTestIdDb', {
             id: testId,
             // page: activePage,
@@ -90,10 +90,10 @@ const actions = {
       if (operation === 'edit') {
         config.url = `/api/admin/section/${id}/edit`
       }
-      // console.log(config)
+      
       await axios(config)
         .then(({data})=>{
-          // console.log(data)
+         
           dispatch('setMessage', data)
         })
     } catch (e) {

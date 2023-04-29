@@ -91,6 +91,7 @@ export default {
 
   }
   .title{
+    margin-top: 0;
     font-weight: 700;
     font-size: 18px;
     line-height: 24px;

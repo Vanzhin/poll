@@ -26,7 +26,6 @@ const actions = {
   // отаправка результата прохождения теста на сервер
   async setResultDb({dispatch, commit, state }, {userAuth} ){
     const token = await dispatch("getAutchUserTokenAction")
-    // console.log(JSON.stringify(state.resultTicketUser))
     try{
       const config = {
         method: 'post',
@@ -42,10 +41,9 @@ const actions = {
         config.url = '/api/auth/test/handle'
         config.headers.Authorization = `Bearer ${token}`
       }
-      // console.log(config) 
+      
       await axios(config)
         .then(({data})=>{
-          // console.log("setResultDb - ",  data)
           commit("SET_RESULT_QUESTIONS", data.question);
         })
         const err = {
@@ -76,11 +74,8 @@ const actions = {
           'Authorization': `Bearer ${token}`
         },
       };
-      
-      // console.log(config) 
       await axios(config)
         .then(({data})=>{
-          // console.log("getResultIdAnswersDb - ",  data)
           commit("SET_RESULT_STATISTICS_QUESTIONS", data);
         })
         const err = {
@@ -115,12 +110,10 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          // console.log("getAuthAccountDb - ",  data.data.results)
           commit("SET_AUTCH_ACCOUNT", data.data.results);
         })
     } catch (e) {
       const err = e.response.data.message
-      // console.log("ошибка - ",e)
       if (err === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getAuthAccountDb')
@@ -144,13 +137,11 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getAuthAccountResultsDb - ",  data)
           commit("SET_AUTCH_ACCOUNT", data.data.results);
           dispatch("setPagination", data.pagination);
         })
     } catch (e) {
       const err = e.response.data.message
-      // console.log("ошибка - ",e)
       if (err === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getAuthAccountResultsDb')
@@ -201,7 +192,6 @@ const actions = {
         })
     } catch (e) {
       const err = e.response.data.message
-      // console.log("ошибка - ",e)
       if (err === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getResultsXmlDb', {id})

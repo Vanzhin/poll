@@ -16,7 +16,7 @@ const state = () => ({
 
 const actions = {
   async getTicketsTestIdDb({dispatch, commit}, {id, page = null, limit = 10 }){
-    console.log("id - ",  id)
+    
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
@@ -30,7 +30,7 @@ const actions = {
       if (page) {config.url = config.url + `&page=${page}`}
       await axios(config)
         .then(({data})=>{
-          console.log("getTicketsTestIdDb - ",  data)
+          
           commit("SET_TICKETS", data.ticket);
           dispatch("setPagination", data.pagination);
         })
@@ -44,7 +44,7 @@ const actions = {
     }
   },
   async deleteTicketIdDb({dispatch, commit}, {id, testId, activePage }){
-    console.log("id - ",  id)
+   
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
@@ -55,10 +55,10 @@ const actions = {
           Authorization: `Bearer ${token}`
         }
       };
-      console.log(config)
+      
       await axios(config)
         .then(({data})=>{
-          console.log(data)
+         
           dispatch('getTicketsTestIdDb', {
             id: testId,
             // page: activePage,
@@ -76,7 +76,7 @@ const actions = {
     }
   },
   async createTicket({dispatch, commit}, {id, ticket, operation}){
-    console.log("id - ",  id)
+    
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
@@ -92,10 +92,10 @@ const actions = {
       if (operation === 'edit') {
         config.url = `/api/admin/ticket/${id}/edit`
       }
-      console.log(config)
+      
       await axios(config)
         .then(({data})=>{
-          console.log(data)
+          
           dispatch('setMessage', data)
         })
     } catch (e) {
@@ -121,7 +121,7 @@ const actions = {
      
       await axios(config)
         .then(({data})=>{
-          // console.log("getTicketsTestIdNoAuthDb - ",  data)
+          
           commit("SET_TICKETS", data.ticket);
         })
     } catch (e) {

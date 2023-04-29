@@ -67,11 +67,9 @@ const getters = {
     return state.areas.filter(area => {return area.type_responses === "one"}) 
   },
   getAreaTitle:(state)=>(id) =>{
-   
     return state.areas.find(area => {
-    
       return +area.id === +id}) 
-  }
+    }
 }
 
 const mutations = {

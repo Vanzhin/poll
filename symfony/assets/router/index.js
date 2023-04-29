@@ -241,18 +241,13 @@ router.beforeEach((to, from, next) => {
   const requireRole = to.meta.admin
   const userAutch = store.getters.getIsAutchUser
   const role = store.getters.getUserRole
-  // console.log('userAutch', userAutch)
-  // console.log(store)
-  // console.log(from.name)
+  
   if ((to.name === 'logout' || to.name === 'logoutlink' || to.name ==='signup')
     &(from.name !== 'logout' & from.name !== 'logoutlink' & from.name !=='signup')
-  
   ) {
-    console.log("page true" )
     store.dispatch('setPage', from.path)
-    
-  } else{ console.log("page false" )}
-  // store._actions.setPage(from.name)
+  } else{ }
+  
   if (requireAuth && !userAutch) {
     next('/logout')
   } else {

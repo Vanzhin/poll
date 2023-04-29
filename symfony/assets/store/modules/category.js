@@ -44,11 +44,10 @@ const actions = {
     if (page) {
       config.url = config.url + `&page=${page}`
     }
-    // console.log("getCategoryDB - ",  config)
+    
   try{
     await axios(config)
       .then(({data})=>{
-        // console.log("getCategoryDB - ",  data)
         if (data.test) {dispatch("setTests", data.test)}
         else dispatch("setTests", null)
         commit("SET_CATEGORYS", data.children);
@@ -82,7 +81,6 @@ const actions = {
   try{
     await axios(config)
       .then(({data})=>{
-        // console.log("getCategoryDBаге - ",  data)
         commit("SET_CATEGORYS_FOOTER", data.children);
       })
   } catch (e) { 
@@ -115,7 +113,6 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          // console.log("deletCategoryDb - удалено",  data)
           dispatch("getCategorysDB",  { page: null , parentId: parentId, admin: true  });
           dispatch('setMessage', data)
         })
@@ -146,7 +143,6 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          // console.log("createCategory - создано",  data)
           dispatch('setMessage', data)
           // dispatch("getCategorysDB",  { page: null , parentId: id });
         })
@@ -177,7 +173,6 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          // console.log("createCategory - изменено",  data)
           dispatch('setMessage', data)
           dispatch("getCategorysDB", { page: null , parentId: id });
         })
