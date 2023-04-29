@@ -215,12 +215,13 @@
       },
       changeFileValue(e){
         if (typeof e.target.files[0] === 'object'){
-          console.dir(e.target.files[0])
+          
           this.testFile = e.target.files[0]
           this.testValue = e.target.value
           this.setQuestionsImportError(null)
-          console.log(e.target.files[0].type)
-          if (!(e.target.files[0].type =="text/plain" || e.target.files[0].type =="application/zip")) {
+          const regexp = new RegExp("zip", 'i');
+          const regexp1 = new RegExp("txt", 'i');
+          if (!(regexp.test(e.target.files[0].name) || regexp1.test(e.target.files[0].name))) {
             const message = {
               error: true, 
               message: 'Для импорта необходимо выбрать текстовый файл или архив zip с текстовым файлом и картинками.'
@@ -267,8 +268,7 @@
     },
     async mounted(){},
     async created(){
-      console.log(this.$route)
-      console.log(this.parentId)
+      
       // if (!(this.getMessage.length > 0)){
         await this.getTestsDB({limitMax:true}) 
       // }       

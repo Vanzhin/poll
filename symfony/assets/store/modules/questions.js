@@ -55,7 +55,6 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          // console.log("getQuestionsDb - ",  data)
           commit("SET_QUESTIONS", data.questions);
         })
     } catch (e) {
@@ -75,7 +74,6 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          // console.log("getQuestionsTickeetIdD - ",  data)
           commit("SET_QUESTIONS_TICKET", data.questions);
         })
     } catch (e) {
@@ -94,10 +92,9 @@ const actions = {
           Authorization: `Bearer ${token}`
         }
       };
-      // console.log(config)
+      
       await axios(config)
         .then(({data})=>{
-          // console.log("getQuestionsSectionIdDb - ",  data)
           commit("SET_QUESTIONS_SECTION", data.question);
         })
     } catch (e) {
@@ -111,7 +108,6 @@ const actions = {
   },
   //запрос на получение вопросов теста по его id для админки
   async getQuestionsTestIdDb({dispatch, commit }, {id, page=null, limit=10}) {
-    console.log("id - ",  id)
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
@@ -123,10 +119,9 @@ const actions = {
         }
       };
       if (page) {config.url = config.url + `&page=${page}`}
-      // console.log(config)
+      
       await axios(config)
         .then(({data})=>{
-          // console.log("getQuestionsTestIdDb - ",  data.question)
           commit("SET_QUESTIONS", data.question);
           dispatch("setPagination", data.pagination);
         })
@@ -154,7 +149,6 @@ const actions = {
       };
       await axios(config)
         .then(({data})=>{
-          // console.log("getQuestionIdDb - ",  data)
           commit("SET_QUESTION", data);
         })
     } catch (e) {
@@ -166,8 +160,6 @@ const actions = {
       }
     }
   },
-  
-
   //сохранение нового вопроса в базу. если передается id - вносятся изменения
   async saveQuestionDb({ dispatch, commit, state }, {questionSend, id = null} ){
 
@@ -176,7 +168,7 @@ const actions = {
     try{
       // const data = new FormData(questionSend);
       for(let [name, value] of questionSend) {
-        console.dir(`${name} = ${value}`)
+        // console.dir(`${name} = ${value}`)
       }
       const config = {
         method: 'post',
@@ -190,10 +182,8 @@ const actions = {
       if (id) {
         config.url = `/api/admin/question/${id}/edit_with_variant`
       }
-      console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("saveQuestionDb - ",  data)
           dispatch("setIsLoaderStatus", {status: false})
           dispatch('setMessage', data)
         })
@@ -208,7 +198,6 @@ const actions = {
   },
   //утверждение вопроса
   async approveQuestionDb({ dispatch, commit, state }, {questionSend} ){
-    console.log(questionSend)
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const config = {
@@ -221,11 +210,8 @@ const actions = {
         },
         data:  JSON.stringify({"questionIds": questionSend})
       };
-      
-      console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("approveQuestionDb - ",  data)
           dispatch('setMessage', data)
         })
     } catch (e) {
@@ -250,10 +236,8 @@ const actions = {
           Authorization: `Bearer ${token}`
         }
       };
-      console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("approveQuestionsAllDb - ",  data)
           dispatch('setMessage', data)
           
         })
@@ -273,9 +257,6 @@ const actions = {
     const token = await dispatch("getAutchUserTokenAction")
     try{
       const data = new FormData(testFile);
-      for(let [name, value] of data) {
-        console.dir(`${name} = ${value}`); // key1=value1, потом key2=value2
-      }
       const config = {
         method: 'post',
         url: `/api/admin/test/${id}/upload`,
@@ -285,15 +266,12 @@ const actions = {
         },
         data:  data
       };
-      console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log("saveQuestionDb - ",  data)
           dispatch("setIsLoaderStatus", {status: false})
           dispatch('setMessage',  data)
         })
     } catch (e) {
-      console.log("saveQuestionDb error - ",  e)
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('importQuestionsFileDb', {id, testFile})
@@ -318,7 +296,7 @@ const actions = {
           Authorization: `Bearer ${token}`
         },
       };
-      console.log(config)
+     
     try{
       await axios(config)
         .then(({data})=>{
@@ -358,8 +336,6 @@ const getters = {
     return state.question 
   },
   getQuestionsImportError(state) {
-    console.log(state.questionsImportError)
-    console.log(Array.isArray(state.questionsImportError))
     return state.questionsImportError 
   },
   getQuestionsTicket(state) {
@@ -372,25 +348,18 @@ const getters = {
 
 const mutations = {
   [SET_QUESTIONS] (state, questions ) {
-   
     state.questions = questions
   },
-  
-  
   [SET_QUESTION] (state, question ) {
-   
     state.question = question
   },
   [SET_QUESTIONS_IMPORT_ERROR](state, error ) {
-    
     state.questionsImportError = error
   },
   [SET_QUESTIONS_TICKET](state, questions ) {
-   
     state.questionsTicket = questions
   },
   [SET_QUESTIONS_SECTION](state, questions ) {
-   
     state.questionsSection = questions
   },
 }

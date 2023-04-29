@@ -45,7 +45,7 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          // console.log("getLogInUser - ", data )
+          
           commit("SET_LOGOUT_LINK_DATE",{
             message: data.data.message,
             url: data.data.link ? data.data.link.url : '',
@@ -53,14 +53,13 @@ const actions = {
           })
         })
     } catch (e) {
-      // console.log("ошибка - ", e)
+      
       commit("SET_LOGOUT_LINK_DATE",{data:e, send: false })
     }
   },
   //вход на сайт с помощью учетной записи
   async setLogInUser({ dispatch, commit }, user) {
     const data = JSON.stringify(user)
-    console.log(data)
     try {
       const config = {
         method: 'post',
@@ -96,7 +95,7 @@ const actions = {
   //регистрация на сайте
   async setRegistrationUser({ dispatch, commit }, user) {
     const data = JSON.stringify(user)
-    // console.log(data)
+    
     try {
       const config = {
         method: 'post',
@@ -135,12 +134,12 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          // console.log("getLogInUser - ",  data)
+          
           commit("SET_DELETE_USER_TOKEN", '');
           commit("SET_IS_AUTCH_USER", false)
         })
     } catch (e) {
-      // console.log("ошибка - ",e.response.data.message)
+      
       if (e.response.data.message === "No refresh_token found." ||
       e.response.data.message === "JWT Refresh Token Not Found"
       ) {
@@ -149,8 +148,6 @@ const actions = {
       }
     }
   },
-  
-  
   // повторное получение токена
   async getAuthRefresh({commit, state }, refresh_token) {
     let data = ''
@@ -169,12 +166,10 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          // console.log("getAuthRefresh - ", data )
           commit("SET_AUTCH_USER_TOKEN", data.data);
           commit("SET_IS_AUTCH_USER", true)
         })
     } catch (e) {
-      // console.log("ошибка - ", e)
       if (e.response.data.message === "No refresh_token found." ||
       e.response.data.message === "JWT Refresh Token Not Found"
       ) {
@@ -197,9 +192,7 @@ const actions = {
       }
       await axios(config)
         .then((data)=>{
-          console.log("getAuthUserProfileDb - ", data )
           commit("SET_AUTCH_USER_PROFILE", data.data);
-          
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
@@ -256,17 +249,14 @@ const getters = {
   getAutchUserProfileFIO(state) {
     return state.profileFIO
   },
-  
 }
 
 const mutations = {
   [SET_IS_AUTCH_USER] (state, pr ) {
-    
     state.isAutchUser = pr
   },
 
   [SET_AUTCH_USER_TOKEN] (state, data  ) {
-    // console.log("SET_AUTCH_USER_TOKEN", )
     state.token = data.token
     state.refresh_token = data.refresh_token
     const parsed = JSON.stringify({
@@ -277,31 +267,25 @@ const mutations = {
   },
 
   [SET_DELETE_USER_TOKEN] (state  ) {
-    
     state.token = ''
     state.refresh_token = ''
     localStorage.removeItem('token');
   },
 
   [SET_PAGE_NAME] (state, page) {
-    
     state.page = page
     localStorage.setItem('pageLink', page);
   },
   [SET_LOGOUT_LINK_DATE] (state, result) {
-    
     state.logoutLinkDate = result
   },
   [SET_MESSAGE_REQUEST] (state, message) {
-    
     state.message = message
   },
   [SET_AUTCH_USER_ROLE] (state, role) {
-    
     state.role = role
   },
   [SET_AUTCH_USER_PROFILE](state, profile) {
-    
     state.profile = profile
   },
   [SET_IS_AUTCH_USER_FIO](state, profile) {

@@ -165,7 +165,6 @@ export default {
         if (!question.publishedAt) {
           publishedAt.push( question.id)}
       })
-      console.log(publishedAt)
       return publishedAt
     },
     

@@ -24,7 +24,6 @@ const actions = {
     setIntevalTime({ commit, state })
   },
   setMessageError({ commit, state  }, e) {
-    // console.log("setMessageError - ",  e)
     let message = e.message ? `${e.message} <hr>` : ''
     if (e.response.data.message) {
       message += `${e.response.data.message}!<hr>`
@@ -36,7 +35,6 @@ const actions = {
     setIntevalTime({commit, state} )
   },
   setMessageUser({ commit, state  }, message) {
-    // console.log("setMessage - ",  message)
     commit("SET_MESSAGE", message);
     setIntevalTime({ commit, state  })
   },

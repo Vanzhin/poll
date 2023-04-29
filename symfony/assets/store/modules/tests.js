@@ -35,7 +35,7 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("getTestsDb - ",  data)
+         
           dispatch("setTests", data.test)
           dispatch("setPagination", data.pagination);
         })
@@ -80,11 +80,11 @@ const actions = {
         Authorization: `Bearer ${token}`
       }
     }
-    console.log(config)
+    
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("test - ", data)
+         
           commit("SET_TEST", data)
         })
     } catch (e) {
@@ -110,7 +110,7 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("deleteTestDb - удалено",  data)
+         
           if ( type === "test") {
             dispatch("getTestsDB",  { page })
           } else {
@@ -131,7 +131,7 @@ const actions = {
     const token = await dispatch("getAutchUserTokenAction")
     const data = new FormData(questionSend);
     for(let [name, value] of data) {
-      console.dir(`${name} = ${value}`)
+      
     }
     const config = {
       method: 'post',
@@ -145,7 +145,7 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("createTest - создано",  data)
+          
           dispatch('setMessage', data)
           // dispatch("getCategorysDB",  { page: null , parentId: id });
         })
@@ -162,7 +162,7 @@ const actions = {
     const token = await dispatch("getAutchUserTokenAction")
     const data = new FormData(questionSend);
     for(let [name, value] of data) {
-      console.dir(`${name} = ${value}`); 
+      
     }
     const config = {
       method: 'post',
@@ -176,7 +176,7 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("editTest - изменено",  data)
+         
           dispatch('setMessage',  data)
           // dispatch("getCategorysDB", { page: null , parentId: id });
         })
@@ -208,11 +208,11 @@ const actions = {
     try{
       await axios(config)
         .then(({data})=>{
-          console.log("getTestsMinTrudDb",  data)
+        
           commit("SET_TEST_MIN_TRUD", data)
         })
     } catch (e) {
-      console.log("getTestsMinTrudDb ошибка",  e)
+      
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
         await dispatch('getTestsMinTrudDb')

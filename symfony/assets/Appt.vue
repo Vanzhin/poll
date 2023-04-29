@@ -23,7 +23,6 @@ export default {
       return (this.$route.meta.loyout || 'page') + '-layout'
     },
     metrikScr(){
-      console.log(this.$store.getters.getMetrikScr)
       return  this.$store.getters.getMetrikScr
     },
     metrikNoscr(){
@@ -33,11 +32,7 @@ export default {
   components: {
     EmptyLayout, PageLayout, AdminLayout
   },
-  created(){
-   
-   
-    
-  }
+  created(){}
 } 
 </script>
 

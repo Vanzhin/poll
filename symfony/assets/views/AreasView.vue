@@ -125,7 +125,6 @@
       },
       async categoryUpdateStory(parentId) {
         this.isLoader = true
-        console.log('categoryUpdateStory - ', parentId)
         await this.getCategorysDB({page: null, parentId})
         this.isLoader = false
       }
