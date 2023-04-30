@@ -2,17 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\Category;
-use App\Entity\MinTrudTest;
 use App\Entity\Question;
 use App\Entity\Test;
 use App\Entity\User;
 use App\Factory\Answer\AnswerFactory;
 use App\Factory\Result\ResultFactory;
-use App\Repository\QuestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class TestService
 {
@@ -24,54 +19,6 @@ class TestService
                                 private readonly SessionService         $sessionService,
     )
     {
-    }
-
-    public function make(Test $test, array $data): Test
-    {
-        if (!isset($data['minTrud']) && $test->getMinTrudTest()) {
-            $test->setMinTrudTest(null);
-        }
-
-        foreach ($data as $key => $item) {
-            if ($key === 'title') {
-                $test->setTitle($item);
-                continue;
-            };
-            if ($key === 'description') {
-                $test->setDescription($item);
-                continue;
-
-            };
-            if ($key === 'time') {
-                $test->setTime(intval($item));
-                continue;
-
-            };
-            if ($key === 'sectionCountToPass') {
-                $test->setSectionCountToPass(intval($item));
-                continue;
-
-            };
-            if ($key === 'minTrud') {
-                $minTrud = $this->em->find(MinTrudTest::class, $item);
-                if ($minTrud) {
-                    $test->setMinTrudTest($minTrud);
-
-                }
-                continue;
-
-            };
-            if ($key === 'category' && $this->em->find(Category::class, $item)) {
-                $test->setCategory($this->em->find(Category::class, $item));
-
-            };
-
-        }
-        if (!isset($data['time']) && !$test->getTime()) {
-            $test->setTime(6000);
-        }
-
-        return $test;
     }
 
     public function handle(array $data, User $user = null): array
@@ -122,7 +69,7 @@ class TestService
                         $answerContent = $this->questionHandler->getContentQuestionWithSubs($question, $content, $this->questionHandler->getShuffledUserAnswers($question, $answerData['answer'], $content ?? ['variant' => $this->questionHandler->getVariantsToArray($question)]));
                         sort($answerContent);
                         $answer = $this->answerFactory->createBuilder()->buildAnswer($answerContent, $question, $result);
-                    }else{
+                    } else {
                         $answer = $this->answerFactory->createBuilder()->buildAnswer($this->questionHandler->getShuffledUserAnswers($question, $answerData['answer'], $content ?? ['variant' => $this->questionHandler->getVariantsToArray($question)]), $question, $result);
 
                     }

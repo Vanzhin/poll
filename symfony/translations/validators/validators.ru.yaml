@@ -42,17 +42,19 @@ variant.correct.not_integer: Должно быть положительным ч
 category.title.not_blank: Название раздела не может быть пустым
 category.parent.exist: Такого раздела нет
 category.title.unique: Раздел с таким названием уже существует
-
+category.alias.not_blank: Псевдоним раздела не может быть пустым
+category.alias.max_length: Псевдоним раздела не может быть длиннее {{ limit }} символов
 
 file.extension: Расширение загружаемого файла не {{ extensions }}
 file.size.max: Файл {{ name }} слишком большой ({{ size }} {{ suffix }}). Максимально допустимый размер {{ limit }} {{ suffix }}
-
 file.is.null: Файл не найден
 
 test.title.not_blank: Название теста не может быть пустым
 test.title.max_length: Название теста не может быть длиннее {{ limit }} символов
 test.category.exist: Такого раздела нет
 test.title.exist_in_category: Тест с таким названием уже существует в указанном разделе
+test.alias.not_blank: Псевдоним теста не может быть пустым
+test.alias.max_length: Псевдоним теста не может быть длиннее {{ limit }} символов
 
 ticket.title.not_blank: Название билета не может быть пустым/ Неверный формат названия билета, необходимо указать номер
 ticket.test.not_null: Теста с таким идентификатором не найдено
