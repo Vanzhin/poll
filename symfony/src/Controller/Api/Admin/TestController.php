@@ -4,34 +4,23 @@ namespace App\Controller\Api\Admin;
 
 use App\Action\Test\GetMinTrudTest;
 use App\Action\Test\UploadQuestionAction;
-use App\Entity\Section;
 use App\Entity\Test;
-use App\Factory\Question\QuestionFactory;
-use App\Factory\Section\SectionFactory;
+use App\Factory\Test\TestFactory;
 use App\Repository\QuestionRepository;
 use App\Repository\SectionRepository;
 use App\Repository\TestRepository;
 use App\Repository\TicketRepository;
-use App\Service\FileHandler;
 use App\Service\NormalizerService;
 use App\Service\Paginator;
-use App\Service\QuestionService;
-use App\Service\SectionService;
-use App\Service\TestService;
 use App\Service\ValidationService;
 use App\Twig\Extension\AppUpLoadedAsset;
 use Doctrine\ORM\EntityManagerInterface;
-use League\Flysystem\FilesystemException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
-use ZipArchive;
 
 class TestController extends AbstractController
 {
@@ -76,11 +65,11 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/admin/test/create', name: 'app_api_admin_test_create', methods: 'POST')]
-    public function create(Request $request, ValidationService $validation, EntityManagerInterface $em, TestService $testService): JsonResponse
+    public function create(Request $request, ValidationService $validation, EntityManagerInterface $em, TestFactory $testFactory): JsonResponse
     {
         $data = $request->request->all();
 
-        $test = $testService->make(new Test(), $data);
+        $test = $testFactory->createBuilder()->updateOrCreate($data);
         if (count($validation->validate($test)) > 0) {
             return $this->json(
                 [
@@ -112,11 +101,11 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/admin/test/{id}/edit', name: 'app_api_admin_test_edit', methods: 'POST')]
-    public function edit(Test $test, Request $request, ValidationService $validation, EntityManagerInterface $em, TestService $testService): JsonResponse
+    public function edit(Test $test, Request $request, ValidationService $validation, EntityManagerInterface $em, TestFactory $testFactory): JsonResponse
     {
         $data = $request->request->all();
 
-        $test = $testService->make($test, $data);
+        $test = $testFactory->createBuilder()->updateOrCreate($data, $test);
 
         if (count($validation->validate($test)) > 0) {
             return $this->json([

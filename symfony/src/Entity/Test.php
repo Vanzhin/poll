@@ -100,6 +100,16 @@ class Test
     #[Groups(['handle'])]
     private bool $pass = false;
 
+    #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(
+        message: 'test.alias.not_blank'
+    )]
+    #[Assert\Length(
+        max: 100,
+        maxMessage: 'test.alias.max_length',
+    )]
+    private ?string $alias = null;
+
     /**
      * @return bool
      */
@@ -397,6 +407,18 @@ class Test
     public function setSectionCountToPass(?int $sectionCountToPass): self
     {
         $this->sectionCountToPass = $sectionCountToPass;
+
+        return $this;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function setAlias(string $alias): self
+    {
+        $this->alias = $alias;
 
         return $this;
     }

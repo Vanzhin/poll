@@ -92,6 +92,16 @@ class Category implements EntityWithImageInterface
     #[Groups(['category'])]
     private Collection $test;
 
+    #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(
+        message: 'category.alias.not_blank'
+    )]
+    #[Assert\Length(
+        max: 100,
+        maxMessage: 'category.alias.max_length',
+    )]
+    private ?string $alias = null;
+
     public function __construct()
     {
         $this->test = new ArrayCollection();
@@ -198,6 +208,18 @@ class Category implements EntityWithImageInterface
                 $test->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function setAlias(string $alias): self
+    {
+        $this->alias = $alias;
 
         return $this;
     }

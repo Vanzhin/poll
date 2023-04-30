@@ -31,6 +31,11 @@ class CategoryBuilder
 
             };
 
+            if ($key === 'alias') {
+                $category->setAlias($item);
+
+            };
+
         }
         return $category;
     }
