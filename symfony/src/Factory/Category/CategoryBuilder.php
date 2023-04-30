@@ -37,6 +37,10 @@ class CategoryBuilder
             };
 
         }
+
+        if (!$category->getAlias()) {
+            $category->setAlias(substr($category->getTitle(), 0, 100));
+        }
         return $category;
     }
 
