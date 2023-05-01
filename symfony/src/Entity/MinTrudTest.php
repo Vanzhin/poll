@@ -7,9 +7,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: MinTrudTestRepository::class)]
+#[UniqueEntity(
+    fields: ['originalId'],
+    message: 'min_trud_test.original_id.unique',
+)]
 class MinTrudTest
 {
     #[ORM\Id]
@@ -19,10 +26,15 @@ class MinTrudTest
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(
+        message: 'min_trud_test.title.not_blank'
+    )]
     #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?string $title = null;
 
     #[ORM\Column]
+    #[Groups(['admin'])]
+
     private ?int $originalId = null;
 
     #[ORM\OneToMany(mappedBy: 'minTrudTest', targetEntity: Test::class)]
