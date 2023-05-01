@@ -20,7 +20,7 @@ final class Version20230430073650 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE category ADD alias VARCHAR(100) DEFAULT NULL');
+        $this->addSql('ALTER TABLE category ADD alias VARCHAR(30) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void

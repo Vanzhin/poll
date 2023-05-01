@@ -19,13 +19,13 @@ class AliasesCategoryTestFixtures extends BaseFixtures implements FixtureGroupIn
 
         /** @var Category $category */
         foreach ($categories as $category) {
-            $category->setAlias(substr($category->getTitle(), 0, 100));
+            $category->setAlias(mb_substr($category->getTitle(), 0, 30));
             $manager->persist($category);
 
         }
 
         foreach ($tests as $test) {
-            $test->setAlias(substr($test->getTitle(), 0, 100));
+            $test->setAlias(mb_substr($test->getTitle(), 0, 30));
             $manager->persist($test);
 
         }

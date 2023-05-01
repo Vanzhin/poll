@@ -63,8 +63,9 @@ class TestBuilder
         if (!isset($data['time']) && !$test->getTime()) {
             $test->setTime(6000);
         }
+
         if(!$test->getAlias()){
-            $test->setAlias(substr($test->getTitle(), 0, 100));
+            $test->setAlias(substr($test->getTitle(), 0, 30));
         }
 
 
