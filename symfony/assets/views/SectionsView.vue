@@ -126,7 +126,11 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getTests","getCategorysFooter"]),
+    ...mapGetters([
+      "getTests",
+      "getCategorysFooter",
+      "getCrumbsLength"
+    ]),
     sections () {
       return this.$store.getters.getCategorys
     },
@@ -139,7 +143,9 @@ export default {
       "setPagination", 
       "setCategoryParent",
       "setCategorys",
-      "getCategorysDBFooter"
+      "getCategorysDBFooter",
+      "setCrumbs",
+      "setCrumbsHome"
     ]),
     async categoryUpdate({section}){
       this.setCategoryParent(section)
@@ -148,10 +154,24 @@ export default {
       if (section.test.length > 0) {
         this.setTests(section.test)
         this.$router.push({name: 'area', params: {id: section.id } })
+        this.setCrumbs({crumbs:{
+          name:'area',
+          params: {id: section.id }, 
+          title: `${section.title}/`,
+          iter: this.getCrumbsLength + 1 
+          }
+        })
         return
       } 
       this.setCategorys(section.children)
       this.$router.push({name: 'iter', params: { num: 1, id: section.id } })
+      this.setCrumbs({crumbs:{
+        name:'iter',
+        params: { num: 1, id: section.id }, 
+        title: `${section.title}/` ,
+        iter: this.getCrumbsLength + 1 
+        }
+      })
     },
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
@@ -169,6 +189,7 @@ export default {
   },
   async created(){
     await this.getCategorysDB({})
+    this.setCrumbsHome()
     this.isLoader = false
     
   }

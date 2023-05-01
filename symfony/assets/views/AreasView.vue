@@ -77,7 +77,8 @@
         "getTests", 
         "getCategorys", 
         "getCategoryDescription",
-        "getIsLoaderStatus"
+        "getIsLoaderStatus",
+        "getCrumbsLength"
       ]),
       sectionTitle () {
        
@@ -108,7 +109,7 @@
         "setCategoryParent",
         "setCategorys",
         "setIsLoaderStatus",
-        
+        "setCrumbs",
       ]),
       async categoryUpdate({area}){
         this.getCategorysDB({page:null, parentId: area.id})
@@ -117,11 +118,25 @@
         if (area.test.length > 0) {
           this.setTests(area.test)
           this.$router.push({name: 'area', params: {id: area.id } })
+          this.setCrumbs({crumbs:{
+            name:'area',
+            params: { id: area.id}, 
+            title: `${area.title}/`,
+            iter: this.getCrumbsLength + 1 
+            }
+          })
           return
         } 
-        this.iter = this.$route.params.num
+        this.iter = +this.$route.params.num + 1 
         this.setCategorys(area.children)
-        this.$router.push({name: 'iter', params: { num: ++this.iter, id: area.id }})
+        this.$router.push({name: 'iter', params: { num: this.iter, id: area.id }})
+        this.setCrumbs({crumbs:{
+          name:'iter',
+          params: { num: this.iter, id: area.id}, 
+          title: `${area.title}/`,
+          iter: this.getCrumbsLength + 1 
+          }
+        })
       },
       async categoryUpdateStory(parentId) {
         this.isLoader = true
