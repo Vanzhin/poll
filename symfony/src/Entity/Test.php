@@ -100,14 +100,15 @@ class Test
     #[Groups(['handle'])]
     private bool $pass = false;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 30)]
     #[Assert\NotBlank(
         message: 'test.alias.not_blank'
     )]
     #[Assert\Length(
-        max: 100,
+        max: 30,
         maxMessage: 'test.alias.max_length',
     )]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?string $alias = null;
 
     /**

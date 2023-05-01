@@ -92,14 +92,15 @@ class Category implements EntityWithImageInterface
     #[Groups(['category'])]
     private Collection $test;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 30)]
     #[Assert\NotBlank(
         message: 'category.alias.not_blank'
     )]
     #[Assert\Length(
-        max: 100,
+        max: 30,
         maxMessage: 'category.alias.max_length',
     )]
+    #[Groups(['main', 'admin', 'category', 'result'])]
     private ?string $alias = null;
 
     public function __construct()

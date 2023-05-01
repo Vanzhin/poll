@@ -39,7 +39,7 @@ class CategoryBuilder
         }
 
         if (!$category->getAlias()) {
-            $category->setAlias(substr($category->getTitle(), 0, 100));
+            $category->setAlias(substr($category->getTitle(), 0, 30));
         }
         return $category;
     }

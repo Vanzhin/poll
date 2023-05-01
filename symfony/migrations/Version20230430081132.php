@@ -20,14 +20,14 @@ final class Version20230430081132 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE category CHANGE alias alias VARCHAR(100) NOT NULL');
-        $this->addSql('ALTER TABLE test CHANGE alias alias VARCHAR(100) NOT NULL');
+        $this->addSql('ALTER TABLE category CHANGE alias alias VARCHAR(30) NOT NULL');
+        $this->addSql('ALTER TABLE test CHANGE alias alias VARCHAR(30) NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE category CHANGE alias alias VARCHAR(100) DEFAULT NULL');
-        $this->addSql('ALTER TABLE test CHANGE alias alias VARCHAR(100) DEFAULT NULL');
+        $this->addSql('ALTER TABLE category CHANGE alias alias VARCHAR(30) DEFAULT NULL');
+        $this->addSql('ALTER TABLE test CHANGE alias alias VARCHAR(30) DEFAULT NULL');
     }
 }
