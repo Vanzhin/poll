@@ -33,7 +33,8 @@ const getters = {
 const mutations = {
   [SET_CRUMBS] (state, crumbs) {
     console.log(crumbs)
-    state.crumbs.push(crumbs)
+    // state.crumbs.push(crumbs)
+    state.crumbs = [...state.crumbs, ...crumbs]
     const parsed = JSON.stringify(state.crumbs)
     localStorage.setItem('crumbs', parsed)
     console.log(state.crumbs)
@@ -41,7 +42,7 @@ const mutations = {
   [SET_CRUMBS_HOME] (state) {
     state.crumbs=[{
       name:'home',
-      title: "Разделы/",
+      title: "Разделы",
       iter: 1 
     }]
     const parsed = JSON.stringify(state.crumbs)

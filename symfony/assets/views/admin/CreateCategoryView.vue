@@ -37,6 +37,18 @@
             v-if="description !== ''"
           ></i>
         </div>
+        <label class="label"><b>Заголовок для крошек:</b> </label>
+        <div class="custom-radio img_block">  
+          <input rows="1" 
+            name="alias"
+            v-model= "alias"
+            class="input_alias" 
+          >
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="alias = ''"
+            v-if="alias !== ''"
+          ></i>
+        </div>
         <div class="mb-3 w-100">
           <div class="img_block"
             v-if="imageUrl !== ''"
@@ -91,6 +103,7 @@
         imageFile: "",
         imageUrl: "",
         imageValue: "",
+        alias:'',
         message: null
       }
     },
@@ -175,6 +188,11 @@
     max-width: 50%;
     padding: 0;
     padding-left: 10px;
+    margin: 5px;
+  }
+  .input_alias{
+    width: 22%;
+    border-color: rgb(243 243 238);
     margin: 5px;
   }
   .img_block{

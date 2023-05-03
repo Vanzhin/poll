@@ -63,11 +63,18 @@ export default {
       "getAutchUserToken", 
       "getTicketTitle",
       "getTestTitleActive",
+      "getResultQuestions"
     ]),
     
   },
   methods: {
-    ...mapActions(["getQuestionsDb", "setResultDb", "getAuthRefresh"]),
+    ...mapActions([
+      "getQuestionsDb", 
+      "setResultDb", 
+      "getAuthRefresh"]),
+    ...mapMutations([
+      "SET_RESULT_QUESTIONS"
+    ])
   },
   async mounted(){
    
@@ -77,12 +84,15 @@ export default {
     
     this.loader = true
     window.scroll(0, 0);
-    await this.setResultDb( {token: this.getAutchUserToken, userAuth:this.getIsAutchUser})
+    if (!this.getResultQuestions){
+      await this.setResultDb( {token: this.getAutchUserToken, userAuth:this.getIsAutchUser})
+    }
+    
     
     this.loader = false
   },
   unmounted(){
-   
+   this["SET_RESULT_QUESTIONS"](null)
   }
 
 } 

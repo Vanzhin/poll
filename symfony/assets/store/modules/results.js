@@ -14,7 +14,7 @@ const state = () => ({
  
   result: [],
   resultQuestions:localStorage.getItem('resultQuestions') ?
-    JSON.parse(localStorage.getItem('resultQuestions')): [],
+    JSON.parse(localStorage.getItem('resultQuestions')) : null,
   formInfoVisible: false,
   formInfoParam: "",
   resultId: null,
@@ -23,7 +23,7 @@ const state = () => ({
 })
 
 const actions = {
-  // отаправка результата прохождения теста на сервер
+  // отправка результата прохождения теста на сервер
   async setResultDb({dispatch, commit, state }, {userAuth} ){
     const token = await dispatch("getAutchUserTokenAction")
     try{
@@ -239,9 +239,8 @@ const mutations = {
     state.result = result
   },
   [SET_RESULT_QUESTIONS] (state, questions) {
-   
     state.resultQuestions = questions
-    // localStorage.setItem('resultQuestions', JSON.stringify(questions));
+    localStorage.setItem('resultQuestions', JSON.stringify(questions));
   },
   [SET_RESULT_TICKET_USER] (state, ticket) {
   

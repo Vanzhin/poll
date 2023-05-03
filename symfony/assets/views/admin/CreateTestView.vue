@@ -82,6 +82,18 @@
             v-if="description !== ''"
           ></i>
         </div>
+        <label class="label"><b>Заголовок для крошек:</b> </label>
+        <div class="custom-radio img_block">  
+          <input rows="1" 
+            name="alias"
+            v-model= "alias"
+            class="input_alias" 
+          >
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="alias = ''"
+            v-if="alias !== ''"
+          ></i>
+        </div>
         <label class="label"><b>Укажите время на прохождение теста:</b> </label>
         <div class="custom-radio img_block">  
           <input  
@@ -139,8 +151,9 @@
         parentId: undefined,
         title: "",
         description: "",
+        alias: "",
         time: 1200,
-        sectionCountToPass:"",
+        sectionCountToPass: "",
         message: null,
         isLoader: true,
         operation: this.$route.params.operation,
@@ -281,20 +294,26 @@
   }
   .trud{
     &_select{
-    width: 80%;
-  }
-  &_grup_option{
-    max-height: 50vh;
-    overflow-y: auto;
-  }
-  &_option{
-   
-    &:hover{
-      background-color: rgb(170, 185, 197);
-      cursor: pointer;
+      width: 80%;
+    }
+  
+    &_grup_option{
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    &_option{
+    
+      &:hover{
+        background-color: rgb(170, 185, 197);
+        cursor: pointer;
+      }
     }
   }
-}
+  .input_alias{
+    width: 22%;
+    border: 1px solid rgb(235 235 232);
+    margin: 5px;
+  }
  @media (min-width: 1024px) {
   
  }

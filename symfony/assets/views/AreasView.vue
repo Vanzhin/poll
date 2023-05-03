@@ -57,6 +57,7 @@
   import Loader from '../components/ui/LoaderView.vue'
   import Pagination from '../components/Pagination.vue'
   import HeadesPage from '../components/HeadersPage.vue'
+  import crumbsTitle from '../utils/crumbs.js'
   export default {
     components: {
       Loader,
@@ -118,24 +119,32 @@
         if (area.test.length > 0) {
           this.setTests(area.test)
           this.$router.push({name: 'area', params: {id: area.id } })
-          this.setCrumbs({crumbs:{
-            name:'area',
-            params: { id: area.id}, 
-            title: `${area.title}/`,
-            iter: this.getCrumbsLength + 1 
-            }
+          this.setCrumbs({crumbs:[
+            {
+              name:'area',
+              params: { id: area.id}, 
+              title: `/${crumbsTitle(area)}`,
+              iter: this.getCrumbsLength + 1 
+            },
+            // {
+            //   name:'area',
+            //   params: {id: area.id }, 
+            //   title: `/Тесты`,
+            //   iter: this.getCrumbsLength + 2 
+            // },
+          ]
           })
           return
         } 
         this.iter = +this.$route.params.num + 1 
         this.setCategorys(area.children)
         this.$router.push({name: 'iter', params: { num: this.iter, id: area.id }})
-        this.setCrumbs({crumbs:{
+        this.setCrumbs({crumbs:[{
           name:'iter',
           params: { num: this.iter, id: area.id}, 
-          title: `${area.title}/`,
+          title: `/${crumbsTitle(area)}`,
           iter: this.getCrumbsLength + 1 
-          }
+          }]
         })
       },
       async categoryUpdateStory(parentId) {

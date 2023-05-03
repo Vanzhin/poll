@@ -32,7 +32,9 @@
                   <button class="tablis-header-button"
                     @click="selectReport(result, index)"
                   >
-                    <svg width="25" height="25" viewBox="0 0 25 25" 
+                    <svg 
+                      v-if="!result.answerVisible"
+                      width="25" height="25" viewBox="0 0 25 25" 
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 8.70801H10V7.20801V4.70801H15V7.20801V8.70801H16.5H18.3787L12.5 14.5867L6.62132 8.70801H8.5ZM8.5 4.20801V5.70801V7.20801H7H5.41421C4.52331 7.20801 4.07714 8.28515 4.70711 8.91511L11.7929 16.0009C12.1834 16.3914 12.8166 16.3914 13.2071 16.0009L20.2929 8.91511C20.9229 8.28515 20.4767 7.20801 19.5858 7.20801H18H16.5V5.70801V4.20801C16.5 3.65572 16.0523 3.20801 15.5 3.20801H9.5C8.94772 3.20801 8.5 3.65572 8.5 4.20801ZM2.5 19.208V16.208H4V19.208C4 19.4841 4.22386 19.708 4.5 19.708H20.5C20.7761 19.708 21 19.4841 21 19.208V16.208H22.5V19.208C22.5 20.3126 21.6046 21.208 20.5 21.208H4.5C3.39543 21.208 2.5 20.3126 2.5 19.208Z" fill="white"/>
                     </svg>
@@ -217,7 +219,7 @@
         
         </b><br>
         <h4>Тест: ${result.test.title}</h4>
-        <h4>Билет №: ${result.ticket ? `№ ${result.ticket.title}`: 
+        <h4>${result.ticket ? `Билет № ${result.ticket.title}`: 
           result.mode ? result.mode : '' }</h4>
         <table style=" width: 100%;"  border= "1" cellpadding="3" cellspacing="0">
           <tr>
@@ -226,16 +228,24 @@
           </tr>
         `
         const question = this.getResultQuestions
-       
+          console.log(question)
         question.forEach(element => {
           block += `<tr><td>${element.title}</td><td>`
           if (element.type === "input_one") {
             if (element.result.user_answer[0] !== "") {
-            block +=`(${element.result.user_answer[0] === element.result.true_answer[0]? '+':'-' }) ${element.result.user_answer[0]}`
+              block +=`(${element.result.user_answer[0] === element.result.true_answer ? '+':'-' }) 
+              ${element.result.user_answer[0]}`
             }
-          } else if (element.result.user_answer.length > 0) {
+          } else if (element.type === "checkbox") {
+            if (element.result.user_answer.length > 0) {
+              element.result.user_answer.forEach((uAnswer, index) => {
+                block +=`(${element.result.true_answer.includes(uAnswer)? '+':'-' }) 
+                ${uAnswer >=0 ? element.variant[uAnswer].title: ''} <br>`})
+            }
+          }else if (element.result.user_answer.length > 0) {
             element.result.user_answer.forEach((uAnswer, index) => {
-              block +=`(${uAnswer === element.result.true_answer[index]? '+':'-' }) ${element.variant[uAnswer].title} <br>`              })
+              block +=`(${uAnswer === element.result.true_answer[index]? '+':'-' }) 
+              ${uAnswer >=0 ? element.variant[uAnswer].title: ''} <br>`})
           }
           block +=`</td></tr>`
          
@@ -258,6 +268,7 @@
       
     },
     async created(){
+      window.scroll(0, 0);
       await this.getAuthAccountResultsDb()
       this.results = this.getAuthAccountResult
      

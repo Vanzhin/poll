@@ -78,6 +78,7 @@ import Timer from '../components/ui/Timer.vue'
 import Loader from '../components/ui/LoaderView.vue'
 import HeadersPage from '../components/HeadersPage.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
+import rndOptions from '../utils/rndOptions.js'
 export default {
   components: {
     TestQuestionRadio,
@@ -96,13 +97,6 @@ export default {
       timeEnd: false,
       ticketId: this.$route.params.id,
       ticketTitle:"",
-      rnd: {
-        rnd:"Случайный набор вопросов",
-        rndb:"Случайный билет",
-        rnd20:"Случайный набор из 20 вопросов",
-        rnd20t:"Случайный набор из 20 вопросов на время",
-        rndmax:"Режим тотальной проверки знаний"
-      },
       info:{
         ticket:'',
         mode:'',
@@ -119,7 +113,8 @@ export default {
       "getSelectTicket", 
       "getTestId",
       "getTicket",
-      "getIsLoaderStatus"
+      "getIsLoaderStatus",
+      "getCrumbsLength"
       
     ]),
     testName() {
@@ -142,7 +137,8 @@ export default {
       "saveResultTicketUser", 
       "setIsLoaderStatus",
       "setTicketInfo",
-      "setIsLoaderStatus"
+      "setIsLoaderStatus",
+      "setCrumbs",
     ]),
     async onSubmit(e){
       const question = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
@@ -153,6 +149,13 @@ export default {
         info: this.info
       } 
       await this.saveResultTicketUser(ticket)
+      this.setCrumbs({crumbs:[{
+          name:'/result',
+          params: null, 
+          title: `/Результат` ,
+          iter: this.getCrumbsLength + 1 
+          }]
+        })
       this.$router.push({ path:'/result'})
     },
     timerEnd(){ //написать действия при окончании времени таймера
@@ -166,17 +169,11 @@ export default {
     window.scroll(0, 0)
   },
   async created(){
-    
     this.setIsLoaderStatus({status: true})
-    if (this.ticketId === "rndb" ) { 
-      this.info.ticketModeTitle = this.rnd[this.ticketId]
-      this.ticketId = await this.getRandomTicket
-    }
-    
     const regexp = new RegExp("rnd", 'i');
    
     if ( regexp.test(this.ticketId)){
-      this.info.ticketModeTitle = this.rnd[this.ticketId]
+      this.info.ticketModeTitle = rndOptions[this.ticketId]
       this.info.mode = this.ticketId
     } else {
       this.info.ticketTitle = 'Билет № ' + this.getTicket.title
@@ -185,7 +182,7 @@ export default {
 
     this.info.test = this.getTestId
     this.setTicketInfo(this.info) 
-    
+   
     await this.getQuestionsDb({id: this.ticketId, slug: this.getSlug})
     if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
     this.setIsLoaderStatus({status: false})

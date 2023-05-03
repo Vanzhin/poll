@@ -10,21 +10,25 @@
         </div>
         <div class="page-header-navigation">
           <div class="page-header-navigation-crumbs">
-            <div class="page-header-navigation-crumbs-link"
+            <div
               v-for="(crumb, ind) in crumbs" 
-              @click="crumbsLinkClick(crumb)"
-              >
-              <div 
+            >
+              <div class="page-header-navigation-crumbs-link"
                 v-if="ind < crumbs.length-1"
+                @click="crumbsLinkClick(crumb)"
               >
                 {{ crumb.title }}
               </div>
-            </div>
-            
+              <div class=""
+                v-else
+              >
+                {{ crumb.title }}
+              </div>
+             </div>
           </div>
           <Button
             title="Назад"
-            @click="nextLink"
+            @click="backLink"
           />
         </div>
       </div>
@@ -55,14 +59,14 @@ export default {
     ...mapActions([
       "setCrumbsLength"
     ]),
-    nextLink(toLink){
-      this.$router.go(-1)
+    backLink(toLink){
+      const crumb = this.crumbs.slice(-2,-1)[0]
+      this.$router.push({name: crumb.name, params: crumb.params })
+      this.setCrumbsLength({len:this.crumbs.length-1})
     },
     crumbsLinkClick(crumb){
-      console.log(crumb)
       this.setCrumbsLength({len:crumb.iter})
       this.$router.push({name: crumb.name, params: crumb.params })
-
     }
   }, 
   mounted() {

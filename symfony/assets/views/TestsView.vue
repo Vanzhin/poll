@@ -70,6 +70,7 @@ import { mapGetters, mapActions, mapMutations} from "vuex"
 import Loader from '../components/ui/LoaderView.vue'
 import Pagination from '../components/Pagination.vue'
 import HeadesPage from '../components/HeadersPage.vue'
+import crumbsTitle from '../utils/crumbs.js'
 export default {
   components: {
     Loader,
@@ -100,12 +101,12 @@ export default {
       "setCrumbs"]),
     testLink(test){
       this.$router.push({name: 'test', params: { id: test.id } })
-        this.setCrumbs({crumbs:{
+        this.setCrumbs({crumbs:[{
           name:'test',
           params: {id: test.id}, 
-          title: `${test.title}/`,
+          title: `/${crumbsTitle(test)}`,
           iter: this.getCrumbsLength + 1 
-          }
+          }]
         })
     }
     // :to="{ name: 'test', params: { id: test.id } }"

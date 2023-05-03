@@ -8,8 +8,8 @@ import {
 const state = () => ({
   tickets: [],
   question:{},
-  title: localStorage.getItem('ticketTitle') ?
-  localStorage.getItem('ticketTitle'):"",
+  ticketTitle: localStorage.getItem('ticketTitle') ?
+  JSON.parse(localStorage.getItem('ticketTitle')):"",
   ticket: localStorage.getItem('ticket') ?
     JSON.parse(localStorage.getItem('ticket')):"",
 })
@@ -152,7 +152,7 @@ const getters = {
       return +ticket.id === +id}) 
   },
   getTicketTitle(state) {
-    return state.title
+    return state.ticketTitle
   },
   getTicket(state) {
     return state.ticket
@@ -166,8 +166,8 @@ const mutations = {
   },
   [SET_TICKET_TITLE] (state, title){
     
-    localStorage.setItem('ticketTitle',title);
-    state.title = title
+    localStorage.setItem('ticketTitle',JSON.stringify(title));
+    state.ticketTitle = title
   }, 
   [SET_TICKET] (state, ticket){
     const parsed = JSON.stringify(ticket)
