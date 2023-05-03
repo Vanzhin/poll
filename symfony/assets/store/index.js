@@ -16,6 +16,7 @@ import confirm from './modules/confirm'
 import loader from './modules/loader'
 import results from './modules/results'
 import metriks from './modules/metriks'
+import crumbs from './modules/crumbs'
 export default createStore({
   state,
   mutations,
@@ -34,6 +35,7 @@ export default createStore({
     confirm,
     loader,
     results,
-    metriks
+    metriks,
+    crumbs
   },
 })

@@ -115,6 +115,7 @@ import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 import Loader from '../components/ui/LoaderView.vue'
 import Pagination from '../components/Pagination.vue'
+import crumbsTitle from '../utils/crumbs.js'
 export default {
   components: {
     Loader,
@@ -126,7 +127,11 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getTests","getCategorysFooter"]),
+    ...mapGetters([
+      "getTests",
+      "getCategorysFooter",
+      
+    ]),
     sections () {
       return this.$store.getters.getCategorys
     },
@@ -139,7 +144,9 @@ export default {
       "setPagination", 
       "setCategoryParent",
       "setCategorys",
-      "getCategorysDBFooter"
+      "getCategorysDBFooter",
+      "setCrumbs",
+      "setCrumbsHome"
     ]),
     async categoryUpdate({section}){
       this.setCategoryParent(section)
@@ -148,10 +155,33 @@ export default {
       if (section.test.length > 0) {
         this.setTests(section.test)
         this.$router.push({name: 'area', params: {id: section.id } })
+        this.setCrumbs({crumbs:[
+          
+          {
+          name:'area',
+          params: {id: section.id }, 
+          title: `/${crumbsTitle(section)}`,
+          iter: this.getCrumbsLength + 1 
+          },
+          // {
+          // name:'area',
+          // params: {id: section.id }, 
+          // title: `/Тесты`,
+          // iter: this.getCrumbsLength + 1 
+          // },
+        ]
+        })
         return
       } 
       this.setCategorys(section.children)
       this.$router.push({name: 'iter', params: { num: 1, id: section.id } })
+      this.setCrumbs({crumbs:[{
+        name:'iter',
+        params: { num: 1, id: section.id }, 
+        title: `/${crumbsTitle(section)}` ,
+        iter: this.getCrumbsLength + 1 
+        }]
+      })
     },
     img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
@@ -169,6 +199,7 @@ export default {
   },
   async created(){
     await this.getCategorysDB({})
+    this.setCrumbsHome()
     this.isLoader = false
     
   }
@@ -222,7 +253,7 @@ export default {
   .item{
     margin: 15px 0;
     padding: 0;
-    height: 277px;
+    height: 279px;
     background: #848EA8;
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
@@ -235,11 +266,12 @@ export default {
     
     &-info{
       text-align:left ;
-      height: 137px;
+      height: 146px;
       background: var(--color-fon);
       border-radius: 6px;
       width: 90%;
-      padding: 16px 26px;
+      padding: 13px 26px;
+      overflow: hidden;
       &-title{
         height: 50%;
         font-family: 'Lato';
@@ -248,6 +280,8 @@ export default {
         font-size: 24px;
         line-height: 29px;
         color: var(--color-Black_blue);
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       &-discrabe{
         font-family: 'Lato';
@@ -256,6 +290,10 @@ export default {
         font-size: 14px;
         line-height: 20px;
         color: #66727F;
+        height: 48%;
+        margin-top: 6px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
     &:hover{

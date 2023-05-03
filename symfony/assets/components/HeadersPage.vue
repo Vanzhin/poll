@@ -10,11 +10,25 @@
         </div>
         <div class="page-header-navigation">
           <div class="page-header-navigation-crumbs">
-            Тесты/
+            <div
+              v-for="(crumb, ind) in crumbs" 
+            >
+              <div class="page-header-navigation-crumbs-link"
+                v-if="ind < crumbs.length-1"
+                @click="crumbsLinkClick(crumb)"
+              >
+                {{ crumb.title }}
+              </div>
+              <div class=""
+                v-else
+              >
+                {{ crumb.title }}
+              </div>
+             </div>
           </div>
           <Button
             title="Назад"
-            @click="nextLink"
+            @click="backLink"
           />
         </div>
       </div>
@@ -23,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations} from "vuex"
 import { RouterLink } from 'vue-router'
 import Button from './ui/Button.vue'
 export default {
@@ -36,11 +51,22 @@ export default {
     Button
   },
   computed:{
-   
+    crumbs(){
+      return this.$store.getters.getCrumbs
+    }
   },
   methods: {
-    nextLink(toLink){
-      this.$router.go(-1)
+    ...mapActions([
+      "setCrumbsLength"
+    ]),
+    backLink(toLink){
+      const crumb = this.crumbs.slice(-2,-1)[0]
+      this.$router.push({name: crumb.name, params: crumb.params })
+      this.setCrumbsLength({len:this.crumbs.length-1})
+    },
+    crumbsLinkClick(crumb){
+      this.setCrumbsLength({len:crumb.iter})
+      this.$router.push({name: crumb.name, params: crumb.params })
     }
   }, 
   mounted() {
@@ -69,13 +95,32 @@ export default {
         display: flex;
         justify-content: space-between;
         &-crumbs{
+          display: flex;
           font-weight: 400;
           font-size: 12px;
           line-height: 14px;
           color: var(--color-blue);
+          display: flex;
+          flex-wrap: wrap;
+          &-link{
+            color:var(--color-blue);
+            text-decoration:none;
+            &:hover{
+              cursor: pointer;
+              color: rgb(20, 65, 211);
+            }
+          }
+
         }
         
       }
     }}
- 
+ .crumbs_link{
+  color:var(--color-blue);
+  text-decoration:none;
+  &:hover{
+    cursor: pointer;
+    color: rgb(20, 65, 211);
+  }
+ }
 </style>

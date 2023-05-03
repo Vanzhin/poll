@@ -2,10 +2,15 @@
   <HeadesPage
     title="Тестирование Базовый курс"
     :subTitle="testName"
+    v-if="!getIsLoaderStatus"
   />
   
-  <div class="fon">
-    <div class="container">
+  <div class="fon "
+   
+  >
+    <div class="container"
+      v-if="!getIsLoaderStatus"
+    >
       <div class="wrapper">
         <div class="tickets-block">
           <div class="tickets-block-coll-tickets">
@@ -14,15 +19,18 @@
             </div>
 
             <div class="tickets-block-coll-tickets-block">
-              <RouterLink :to="{ name: 'ticket', params: { id: 'rndmax' } }" 
-                class="tickets-block-coll-tickets-item">
+              <div
+                @click="clickToLink('rndmax')"
+                class="tickets-block-coll-tickets-item"
+              >
                 Тестирование по всем вопросам
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
                   <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
                 </svg>
-              </RouterLink>
+              </div>
             
-              <RouterLink :to="{ name: 'ticket', params: { id: 'rndb' } }"  
+              <div  
+                @click="clickToLink('rnd2b')"
                 class="tickets-block-coll-tickets-item"
                 v-if="ticketsIs()"
               >
@@ -30,38 +38,44 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
                   <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
                 </svg>
-              </RouterLink>
+              </div>
               
-              <RouterLink :to="{ name: 'ticket', params: { id: 'rnd' } }" 
-                class="tickets-block-coll-tickets-item">
+              <div
+                @click="clickToLink('rnd')"
+                class="tickets-block-coll-tickets-item"
+              >
                 Случайный набор
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
                   <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
                 </svg>
-              </RouterLink>
+              </div>
               
-              <RouterLink :to="{ name: 'ticket', params: { id: 'rnd20' } }" 
+              <div
+                @click="clickToLink('rnd20')"
                 class="tickets-block-coll-tickets-item">
                 Случайный набор из 20 вопросов
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
                   <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
                 </svg>
-              </RouterLink>
+              </div>
               
-              <RouterLink :to="{ name: 'ticket', params: { id: 'rnd20t' } }" 
-                class="tickets-block-coll-tickets-item">
+              <div  
+                class="tickets-block-coll-tickets-item"
+                @click="clickToLink('rnd20t')"
+              >
                 Случайный набор из 20 вопросов (таймер)
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
                   <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
                 </svg>
-              </RouterLink>
+              </div>
             
             </div>
-            <div class="tickets-block-coll-tickets-block">
-              <RouterLink :to="{ name: 'ticket', params: { id: ticket.id } }" 
+            <div class="tickets-block-coll-tickets-block"
+              v-if="tickets"
+            >
+              <div 
                 class="tickets-block-coll-tickets-itemticket"
                 v-for="(ticket, ind) in tickets"
-                :key="ticket.id"
                 @click="saveSelectTicket({ticket})"
               >
                 Билет № {{ ticket.title }}
@@ -69,7 +83,7 @@
                   <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" 
                     fill="#FFFFFF"/>
                 </svg>
-              </RouterLink>
+              </div>
             </div>
           </div>
           <div class="tickets-block-coll-info">
@@ -123,6 +137,7 @@
 import { RouterLink } from 'vue-router'
 import { mapGetters, mapActions, mapMutations} from "vuex"
 import HeadesPage from '../components/HeadersPage.vue'
+import rndOptions from '../utils/rndOptions.js'
 export default {
   components: {
     RouterLink,
@@ -134,12 +149,20 @@ export default {
     }
   },
    computed:{
-    ...mapGetters(["getTickets","getTests","getTest"]),
+    ...mapGetters([
+      "getTickets",
+      "getTests",
+      "getTest",
+      "getRandomTicket",
+      "getCrumbsLength",
+      "getIsLoaderStatus"
+    ]),
     
       testName () {
         return this.$store.getters.getTestTitleActive
       },
       tickets () {
+        console.log(this.$store.getters.getTickets)
         return this.$store.getters.getTickets
       },
       
@@ -149,29 +172,46 @@ export default {
       "selectTestId",
       "getTicketsTestIdNoAuthDb",
       "saveSelectTicketStore",
-      "getTestIdDb"
+      "getTestIdDb",
+      "setIsLoaderStatus",
+      "setCrumbs"
     ]),
-     saveSelectTicket({ticket}){
-      this.saveSelectTicketStore({ticket})
-     },
-     ticketsIs() {
+      async saveSelectTicket({ticket}){
+        this.saveSelectTicketStore({ticket})
+        const ticketId = await this.getRandomTicket
+        this.clickToLink(ticketId)
+      },
+      ticketsIs() {
         return this.getTest.ticketCount > 0
+      },
+      clickToLink(id){
+        this.setIsLoaderStatus({status: true})
+
+        this.setCrumbs({crumbs:[{
+          name:'ticket',
+          params: { id }, 
+          title: `/${id.includes('rnd')?rndOptions[id]: 'Билет № ' + id}` ,
+          iter: this.getCrumbsLength + 1 
+          }]
+        })
+        this.$router.push({ name: 'ticket', params: { id } })
       }
     },
     mounted(){
-      // this.$store.dispatch('setTestTitle',{id : this.$route.params.id})
+      
     },
     async created() { 
+      this.setIsLoaderStatus({status: true})
+      const id = +this.$route.params.id
       if (this.getTests) {
-        await this.selectTestId({id : this.$route.params.id})
-        await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
+        await this.selectTestId({id })
+        await this.getTicketsTestIdNoAuthDb({id})
       } else {
-        await this.getTestIdDb({id : this.$route.params.id})
-        // await this.selectTestId({id : this.$route.params.id})
-        await this.getTicketsTestIdNoAuthDb({id : this.$route.params.id})
+        await this.getTestIdDb({id })
+        await this.getTicketsTestIdNoAuthDb({id })
       }
-           
-      this.isLoader = false
+      this.setIsLoaderStatus({status: false})     
+     
     }
   
 } 
@@ -180,8 +220,9 @@ export default {
 <style lang="scss" scoped>
   .fon{
     background-color: var(--color-fon);
+    min-height: 90vh;
   }
-   .tickets{
+  .tickets{
     
     &-block{
       width: 100%;
@@ -251,6 +292,7 @@ export default {
               margin-right: 24px;
             }
             &:hover{
+              cursor: pointer;
               background-color: var(--color-blue);
               color: #FFFFFF;
               path {

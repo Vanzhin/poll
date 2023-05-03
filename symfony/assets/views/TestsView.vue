@@ -3,10 +3,9 @@
     v-if="isLoader"
   />
   <div class=""  v-else>
-    
     <HeadesPage
-    
-      :subTitle="areaTitle"
+      :title="areaTitle"
+      subTitle="Тесты"
     />
     <div class="tests__block">
       <div class="container">
@@ -19,20 +18,34 @@
             <div
               v-if="test.questionCount > test.questionUnPublishedCount"
             >
-              <RouterLink :to="{ name: 'test', params: { id: test.id } }"
-              v-if="getIsAutchUser || index < 3"
+              <div 
+                @click="testLink(test)"
+                v-if="getIsAutchUser || index < 3"
               >
                 <div class="test__card">
                   <div>
                     {{ test.title }}
                   </div>
                 </div>
-              </RouterLink>
+              </div>
               <div class="test__card-limitation"
                 v-else
                 title="У Вас ограниченный доступ. Подпишитесь на нашу группу."
               >
                 {{ test.title }}
+              </div>
+            </div>
+            <div
+              v-else
+            >
+              <div class="test__card-development">
+                <div>
+                  {{ test.title }}
+                </div>
+                <div style="color: red;">
+                  Тест в разработке.
+                </div>
+                
               </div>
             </div>
           </div>
@@ -57,6 +70,7 @@ import { mapGetters, mapActions, mapMutations} from "vuex"
 import Loader from '../components/ui/LoaderView.vue'
 import Pagination from '../components/Pagination.vue'
 import HeadesPage from '../components/HeadersPage.vue'
+import crumbsTitle from '../utils/crumbs.js'
 export default {
   components: {
     Loader,
@@ -70,7 +84,10 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getIsAutchUser"]),
+    ...mapGetters([
+      "getIsAutchUser",
+      "getCrumbsLength",
+    ]),
     areaTitle () {
        return this.$store.getters.getCategoryTitle
       },
@@ -79,7 +96,20 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getCategorysDB"]),
+    ...mapActions([
+      "getCategorysDB",
+      "setCrumbs"]),
+    testLink(test){
+      this.$router.push({name: 'test', params: { id: test.id } })
+        this.setCrumbs({crumbs:[{
+          name:'test',
+          params: {id: test.id}, 
+          title: `/${crumbsTitle(test)}`,
+          iter: this.getCrumbsLength + 1 
+          }]
+        })
+    }
+    // :to="{ name: 'test', params: { id: test.id } }"
   },
   async created(){
     if (!this.tests) {this.isLoader = true}
@@ -170,6 +200,18 @@ export default {
     background-color: #E4E9F0;
     cursor: pointer;
   }
-    
+  .test__card-development{
+    background-color: #FFFFFF;
+    padding: 0 10px;
+    min-width: 0;
+    border: 1px solid var(--color-red);
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--color-blue);
+    min-height: 52px;
+  }
 
 </style>
