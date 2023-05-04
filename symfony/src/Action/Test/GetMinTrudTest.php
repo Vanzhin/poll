@@ -7,6 +7,7 @@ use App\Entity\MinTrudTest;
 use App\Repository\MinTrudTestRepository;
 use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,6 +16,7 @@ class GetMinTrudTest extends BaseAction
     public function __construct(
         private readonly MinTrudTestRepository  $minTrudTestRepository,
         private readonly EntityManagerInterface $em,
+        private readonly LoggerInterface $errorLogger,
         private readonly SerializerService      $serializer
     )
     {
@@ -23,6 +25,7 @@ class GetMinTrudTest extends BaseAction
 
     public function getAll(): JsonResponse
     {
+        $this->errorLogger->error('hello',['error'=>3]);
         return $this->successResponse($this->minTrudTestRepository->findAllSortedByTitle(), ['admin']);
 
     }

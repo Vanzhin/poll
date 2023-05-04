@@ -48,9 +48,8 @@ class CreateMinTrudTest extends BaseAction
                 'data' => $test
             ], ['admin']);
 
-        } catch (\Exception $e) {
+        } catch (\Exception|\Error $e) {
             return $this->errorResponse(['error' => $e->getMessage()]);
-
         }
     }
 }
