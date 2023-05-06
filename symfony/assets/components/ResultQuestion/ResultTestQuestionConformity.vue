@@ -13,8 +13,9 @@
         v-for="(answer, ind ) in question.subtitles" 
         :key="answer"
       >
-        <img :src="answer.image" width="200" 
+        <img :src="answer.image"  
           v-if="answer.image"
+          class="answer-img"
         />  
         <label v-if="answer!==''"
           class="custom-control-label f_sm " 
@@ -98,6 +99,16 @@ export default {
     }
     &-cont{
       padding: 0 29px;
+      @media (max-width: 350px){
+        padding: 0;
+      }
+    }
+    &-img{
+      width: 200px;
+      @media (max-width: 350px){
+       width: 180px;
+       margin: 10px auto;
+      }
     }
   }
   .custom-control {
@@ -106,15 +117,28 @@ export default {
     align-items:flex-start;
     justify-content: space-between;
     min-height: 1.5rem;
+    @media (max-width: 350px){
+      flex-direction: column;
+      margin-top: 10px;
+    }
+
   }
   .f_sm {
       font-size: 0.9rem;
+      @media (max-width: 350px){
+        width: 100%;
+      }
   }
   .custom-control-label {
       flex:1;
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
+      @media (max-width: 350px){
+        margin-left: 0px;
+        flex-wrap: wrap;
+        
+      }
   }
   .resultTrue{
     border: 1px solid #56D062;

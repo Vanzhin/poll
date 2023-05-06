@@ -13,7 +13,7 @@
           : `Данных с результатами не найдено. <br> Пройдите тестирование.`"
       >
       </div>
-        <div class="row">
+       
           <div v-for="(result, index ) in results" 
             :key="result.score + '_' + index"
           >
@@ -89,24 +89,23 @@
                     </div>
                 </div>
                 
-                <div class="container"
+                <div 
                     v-if="result.answerVisible"
                   >
-                    <div class="row">
-                      <div v-for="(question, index ) in getResultQuestions" 
-                        :key="question.id"
-                        v-if="result.answerVisible"
-                      >
-                      <StatistickResultQuestion
-                        :question="question"
-                        :index="index"
-                      />
-                      </div>
+                    <div v-for="(question, index ) in getResultQuestions" 
+                      :key="question.id"
+                      v-if="result.answerVisible"
+                    >
+                    <StatistickResultQuestion
+                      :question="question"
+                      :index="index"
+                    />
                     </div>
                   </div>
               
                   <div class="result-button-block"
-                  v-if="result.answerVisible">
+                    v-if="result.answerVisible"
+                  >
                     <button class="tablis-header-button"
                       @click="selectReport(result, index)"
                     >{{ result.answerVisible ? 'Скрыть':'Подробнее' }}</button>
@@ -123,7 +122,7 @@
               </div>       
             </div>
           </div>
-        </div>
+        
       </div>
     </div>
   </div>
@@ -290,6 +289,12 @@
     font-size: 30px;
     line-height: 40px;
     color: #0B1F33;
+    @media (max-width: 350px) {
+      font-size: 16px;
+      line-height: 19px;
+      padding-top: 35px;
+      padding-bottom: 15px;
+    }
     &-icon{
       width: 25px;
       margin-right: 5px;
@@ -309,6 +314,9 @@
         display: flex;
         justify-content: space-around;
         margin-top: 10px;
+        @media (max-width: 350px){
+         flex-direction: column;
+        }
       }
     }
   }
@@ -317,10 +325,16 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    @media (max-width: 350px){
+      margin-top: 10px;
+    }
     &-container{
       padding-top: 24px;
       padding-bottom: 74px;
       border-bottom: 1px solid var(--color-blue);
+      @media (max-width: 350px) {
+        padding-bottom: 30px;
+      }
     }
     
     &-cell{
@@ -334,6 +348,10 @@
       margin: 0;
       margin-top: 10px;
       padding: 0 15px;
+      @media (max-width: 350px){
+        width: 100%;
+        height: 100px;
+      }
       &-row1{
         display: flex;
         flex-direction: row;
@@ -347,6 +365,10 @@
         color: var(--color-Black_blue);
         border-bottom: 1px solid var(--color-blue);
         height: 58px;
+        @media (max-width: 350px) {
+          font-size: 16px;
+          line-height: 19px;
+        }
       }
       &-row2{
         font-weight: 700;
@@ -365,9 +387,14 @@
       color: #0B1F33;
       justify-content: space-between;
       flex-wrap: wrap;
+      padding-top: 67px;
+      @media (max-width: 350px) {
+        font-size: 16px;
+        line-height: 19px;
+        padding-top: 0px;
+      }
       &-cont{
         display: flex;
-        
       }
       &-title{
         margin-left: 12px;
@@ -380,6 +407,11 @@
         color: var(--color-blue);
         margin-top: 30px;
         align-items: center;
+        @media (max-width: 350px) {
+          font-size: 16px;
+          line-height: 19px;
+          margin-top: 0px;
+        }
       }
       &-button{
         margin-top: 15px;
@@ -396,6 +428,11 @@
         font-size: 18px;
         line-height: 24px;
         color: #FFFFFF;
+        @media (max-width: 350px) {
+          margin: 15px auto;
+          font-size: 16px;
+          line-height: 19px;
+        }
         & svg{
           margin-right: 10px;
         }

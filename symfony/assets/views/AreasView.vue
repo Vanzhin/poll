@@ -6,47 +6,54 @@
       :title="getCategoryTitle"
     />
     <div class="fon">
-      <div  class="wrapper">
-        
-        <div class="tests__block"
-          v-if="areas.length > 0"
-        >
-          <div
-            v-for="(area, index) in areas" 
-            :key="area.id"
-            
+      <div class="container">
+        <div  class="wrapper">
+          
+          <div class="tests__block"
+            v-if="areas.length > 0"
           >
-            <div class="test__card"
-              v-if="getIsAutchUser || index < 3"
-              @click="categoryUpdate({ area })"
+            <div
+              v-for="(area, index) in areas" 
+              :key="area.id"
+              
             >
-              <div>
-                {{ area.id }} - {{ area.title }}
+              <div class="test__card"
+                v-if="getIsAutchUser || index < 3"
+                @click="categoryUpdate({ area })"
+              >
+                <div>
+                  {{ area.title }}
+                </div>
+                <div>
+                  <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.50356 9.39524C9.22523 9.11625 9.22515 8.66465 9.50337 8.38556C9.78263 8.10544 10.2363 8.1053 10.5157 8.38525L14.2949 12.1715C14.6845 12.5619 14.6845 13.1941 14.2949 13.5844L10.5157 17.3707C10.2363 17.6507 9.78263 17.6505 9.50337 17.3704C9.22515 17.0913 9.22523 16.6397 9.50356 16.3607L12.9781 12.878L9.50356 9.39524Z" fill="#269EB7"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="test__card-limitation"
+                v-else
+                title="У Вас ограниченный доступ. Подпишитесь на группу."
+              >
+                {{ area.title }}
               </div>
             </div>
-            <div class="test__card-limitation"
-              v-else
-              title="У Вас ограниченный доступ. Подпишитесь на группу."
-            >
-              {{ area.id }} - {{ area.title }}
-            </div>
-          </div>
-          <div class="test__block-info">
-            Дополнительная информация
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
-            </svg>
+            <div class="test__block-info">
+              Дополнительная информация
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
+              </svg>
 
-          </div>
-        </div> 
-        <div class="tests__block min-heig"
-          v-else
-        > 
-          Данная категория в разработке.
-        </div> 
-        <Pagination
-          type="getCategorysDB"
-        />  
+            </div>
+          </div> 
+          <div class="tests__block min-heig"
+            v-else
+          > 
+            Данная категория в разработке.
+          </div> 
+          <Pagination
+            type="getCategorysDB"
+          />  
+        </div>
       </div>
     </div>
   </div>
@@ -166,27 +173,7 @@
  .min-heig{
   min-height: 20vh;
 }
-  .test__block{
-    margin-bottom: 15px;
-    & a{
-      color: var(--color-blue);
-      text-decoration: none;
-    }
-    &-info{
-      display: flex;
-      align-items: center;
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 24px;
-      color: var(--color-blue);
-      margin-top: 63px;
-      padding-bottom: 63px;
-
-      &:hover{
-        cursor: pointer;
-      }
-    }
-  }
+  
 
 
 

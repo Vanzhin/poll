@@ -108,18 +108,18 @@ export default {
       align-items: center;
       &-element{
          padding: 5px 10px;
-         border: 1px solid rgb(20, 126, 112);
+         
          margin: 0 5px;
          min-width: 10px;
          border-radius: 5px;
+         color: var(--color-blue);
          &.active {
-           
             background-color: var(--color-blue);
             color: var(--color-white)
          }
          &:hover{
             cursor: pointer;
-            border-color: rgb(45, 207, 186);
+            
             background-color: var(--color-hover-logo)
          }
       }

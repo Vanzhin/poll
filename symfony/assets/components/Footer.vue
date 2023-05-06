@@ -148,16 +148,27 @@ export default {
   
   min-height: 433px;
   padding-bottom: 40px;
+  @media (max-width: 350px) {
+    padding-top: 24px;
+    padding-bottom: 28px;
+  }
 }
 .block{
   display: flex;
   align-items:flex-start;
   justify-content: space-between;
-  
   flex-wrap: wrap;
+  @media (max-width: 350px) {
+    align-items: center;
+    justify-content: center;
+  }
 }
 .logo{
+  display: flex;
   width:230px ;
+  @media (max-width: 350px) {
+    margin: auto;
+  }
   &:hover{
     background-color: var(--color-hover-logo);
     cursor: pointer;
@@ -167,6 +178,9 @@ export default {
 .col{
   &-item{
     flex: 1;
+    @media (max-width: 350px) {
+      text-align: center;
+    }
   }
   &-title{
     padding-bottom: 10px;
@@ -176,11 +190,20 @@ export default {
     font-size: 18px;
     line-height: 24px;
     color: var(--color-blue);
+    @media (max-width: 350px) {
+      padding-top: 34px;
+      margin: auto;
+      text-align: center;
+    }
     &-feedback{
       font-size: 14px;
       line-height: 30px;
       color: #000000;
       margin-top: 10px;
+      @media (max-width: 350px) {
+      margin: auto;
+      text-align: center;
+    }
     }
     &-section{
       font-family: var(--font);
@@ -189,6 +212,10 @@ export default {
       font-size: 14px;
       line-height: 30px;
       color: #000000;
+      @media (max-width: 350px) {
+        text-align: center;
+        margin: auto;
+      }
       &:hover{
         cursor: pointer;
       }
@@ -201,6 +228,9 @@ export default {
     font-size: 14px;
     line-height: 17px;
     color: var(--color-blue);
+    @media (max-width: 350px) {
+      text-align: center;
+    }
     &:hover{
         cursor: pointer;
       }
@@ -209,8 +239,16 @@ export default {
     margin-top: 75px;
     margin-bottom: 16px;
     display: flex;
+    @media (max-width: 350px) {
+      margin-top: 34px;
+      justify-content: center;
+    }
     &-item{
       margin-right: 16px ;
+      @media (max-width: 350px) {
+        margin: 0 8px;
+      }
+
       &:hover{
         cursor: pointer;
       }

@@ -27,6 +27,7 @@
              </div>
           </div>
           <Button
+            v-if="winWidth > 350"
             title="Назад"
             @click="backLink"
           />
@@ -44,7 +45,8 @@ export default {
   props: ['title', 'subTitle'],
   data() {
     return {
-      isActive: false
+      isActive: false,
+      
     }
   },
   components:{
@@ -53,7 +55,11 @@ export default {
   computed:{
     crumbs(){
       return this.$store.getters.getCrumbs
+    },
+    winWidth(){
+      return window.screen.width
     }
+
   },
   methods: {
     ...mapActions([
@@ -70,7 +76,10 @@ export default {
     }
   }, 
   mounted() {
-   
+
+  
+    // this.winWidth = window.visualViewport.width
+  
   }
 } 
 
@@ -85,11 +94,19 @@ export default {
       padding: 32px 0;
       font-family: 'Lato';
       font-style: normal;
+      @media (max-width: 330px) {
+        padding: 23px 0;
+      }
       &-title{
         font-weight: 700;
         font-size: 24px;
         line-height: 40px;
         margin-bottom: 25px;
+        @media (max-width: 330px) {
+          font-size: 16px;
+          line-height: 19px;
+          margin-bottom: 13px;
+        }
       }
       &-navigation{
         display: flex;
@@ -115,12 +132,5 @@ export default {
         
       }
     }}
- .crumbs_link{
-  color:var(--color-blue);
-  text-decoration:none;
-  &:hover{
-    cursor: pointer;
-    color: rgb(20, 65, 211);
-  }
- }
+ 
 </style>

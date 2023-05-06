@@ -19,10 +19,12 @@
               v-for="(answer, ind ) in question.result.user_answer" 
               :key="answer"
             >
-              <img :src="question.variant[answer].image" 
-                v-if="question.variant[answer] && question.variant[answer].image"
-                class="img"
-              />  
+              <div class="answer-img-block">
+                <img :src="question.variant[answer].image" 
+                  v-if="question.variant[answer] && question.variant[answer].image"
+                  class="answer-img"
+                />  
+              </div>
               <label v-if="answer!==''"
                 class="custom-control-label f_sm " 
                 :class="classAnswer(ind)"
@@ -39,10 +41,12 @@
               v-for="(answer) in question.result.true_answer" 
               :key="answer"
             >
-              <img :src="question.variant[answer].image" 
-                v-if="question.variant[answer] && question.variant[answer].image"
-                class="img"
-              />  
+              <div class="answer-img-block">
+                <img :src="question.variant[answer].image" 
+                  v-if="question.variant[answer] && question.variant[answer].image"
+                  class="answer-img"
+                />  
+              </div>
               <label v-if="answer!==''"
                 class="custom-control-label f_sm " 
               >{{ question.variant[+answer] ? question.variant[+answer].title: '' }}
@@ -98,11 +102,23 @@ export default {
     border-radius: 6px;
     background-color: var(--color-white);
     border: 1px solid var(--color-red);
+    @media (max-width: 350px){
+      padding: 26px 12px 26px 12px;
+    }
   }
-  .img{
-    height: 130px;
+  .answer-img{
     margin: 5px;
-    max-width: 170px;
+    width: 200px;
+    @media (max-width: 350px){
+      width: 110px;
+    }
+    &-block{
+      @media (max-width: 350px){
+        width: 110px;
+        height: 140px;
+        overflow: hidden;
+      }
+    }
   }
   .answer{
     color:var(--color-blue);
@@ -114,6 +130,9 @@ export default {
     }
     &-cont{
       padding: 0 29px;
+      @media (max-width: 350px){
+        padding: 0 ;
+      }
     }
   }
   .shadow{
@@ -124,10 +143,17 @@ export default {
     display: flex;
     align-items:flex-start;
     min-height: 1.5rem;
-    background-color: rgb(245 245 242);
-    border: 1px solid rgb(167, 167, 163);
-    border-radius: 10px;
-    margin-top: 2px;
+    background: #F1F7FF;
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    margin-top: 10px;
+    @media (max-width: 350px){
+      min-height:52px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      padding: 0 10px;
+    }
   }
   .f_sm {
       font-size: 0.9rem;
@@ -140,6 +166,12 @@ export default {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
+    word-wrap:break-word;
+    width: 100%;
+    @media (max-width: 350px){
+      margin: 0;
+    }
+    
   }
   .resultTrue{
     border: 1px solid #56D062;

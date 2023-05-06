@@ -20,6 +20,7 @@
   --color-hover-logo:#5ab5c86e;
   --font: 'Lato';
 }
+$breakpoint1: 330px;
 
 body {
   margin: 0;
@@ -38,7 +39,6 @@ body {
   box-sizing: border-box;
   font-family: "Lato";
   font-style: normal;
- 
   cursor: nw-default;
 }
 
@@ -57,6 +57,10 @@ ul {margin-top: 0;
     margin: 100px auto;
     font-family: 'Lato';
     font-style: normal;
+    @media (max-width: 350px){
+      max-width: 304px;
+      padding: 24px 10px 29px 10px;
+    }
     &-title{
       font-weight: 700;
       font-size: 24px;
@@ -72,6 +76,13 @@ ul {margin-top: 0;
       line-height: 24px;
       text-align: center;
       color: var(--color-Black_blue);
+      @media (max-width: 350px){
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 19px;
+        margin-bottom: 2px;
+        margin-top: 9px;
+      }
     }}  
 .form {
   display: flex;
@@ -79,6 +90,10 @@ ul {margin-top: 0;
   gap: 16px;
   width: 280px;
   margin: 40px auto 0 auto;
+  @media (max-width: 350px){
+    gap: 0px;
+    margin-top:15px;
+  }
 }
 .text-field {
   min-width: 40%;
@@ -90,6 +105,10 @@ ul {margin-top: 0;
   display: block;
   margin-bottom: 0.25rem;
   color: #0B1F33;
+  @media (max-width: 350px){
+    font-size: 14px;
+    line-height: 19px;
+  }
 }
 .authorise{
   width: 280px;
@@ -125,6 +144,10 @@ ul {margin-top: 0;
   border: 1px solid var(--color-secondary);
   border-radius: var(--radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  @media (max-width: 350px){
+    height: 36px;
+    padding: 2px;
+  }
 }
 textarea {
   width: 100%;
@@ -197,6 +220,14 @@ textarea:hover,
   cursor: pointer;
   text-align: center;
   transition: 0.15s ease-in-out;
+  @media (max-width: 350px){
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19px;
+    height: 37px;
+    width: 84%;
+    margin: 10px auto 0;
+  }
 }
 .btn-search {
   width: 20%;

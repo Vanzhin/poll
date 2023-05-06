@@ -1,5 +1,5 @@
 <template
-v-html="`${metrikScr + metrikNoscr}`"
+  v-html="`${metrikScr + metrikNoscr}`"
 >
   
   <component :is="layout" >

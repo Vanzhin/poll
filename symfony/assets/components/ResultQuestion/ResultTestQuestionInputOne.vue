@@ -61,6 +61,9 @@ export default {
     border-radius: 6px;
     background-color: var(--color-white);
     border: 1px solid var(--color-red);
+    @media (max-width: 350px){
+      padding: 26px 12px 26px 12px;
+    }
   }
 
 
@@ -74,6 +77,9 @@ export default {
     }
     &-cont{
       padding: 0 29px;
+      @media (max-width: 350px){
+        padding: 0 ;
+      }
     }
   }
   .custom-control {
@@ -93,6 +99,9 @@ export default {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
+    @media (max-width: 350px){
+      margin-left: 0;
+    }
   }
   .resultTrue{
     border: 1px solid #56D062;

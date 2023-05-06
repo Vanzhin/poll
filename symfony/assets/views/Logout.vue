@@ -17,7 +17,7 @@
             </svg>
             Удачная авторизация
           </div>
-          <div
+          <div class="form"
             v-else
           >
             <div class="text-field">

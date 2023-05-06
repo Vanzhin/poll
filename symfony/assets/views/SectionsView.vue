@@ -6,13 +6,13 @@
       />
       <div class="" v-else>
         <div class="container">
-          <div class="sections__title">
+          <h1 class="sections__title">
             Сервис <span class="sections__title-select">онлайн-тестирования</span> по промышленной безопасности 
             приветствует вас!
-          </div>
-          <div class="sections__title-h2">
+          </h1>
+          <h2 class="sections__title-h2">
             Выберите область проверки знаний
-          </div>
+          </h2>
         </div>
         <div class="container">
           <div class="sections__block row" >
@@ -230,13 +230,13 @@ export default {
       font-size: 36px;
       line-height: 40px;
       color: var(--color-Black_blue);
+      @media (max-width: 330px) {
+        padding-top: 20px;
+        font-size: 16px;
+        line-height: 19px;
+      }
       &-select{
         color: var(--color-blue);
-        font-family: 'Lato';
-        font-style: normal;
-        font-weight: 700;
-        font-size: 36px;
-        line-height: 40px;
       }
       &-h2{
         margin-top: 50px;
@@ -247,6 +247,9 @@ export default {
         font-size: 24px;
         line-height: 40px;
         color: var(--color-Black_blue);
+        @media (max-width: 330px) {
+        display: none;
+      }
       }
     }
   }
@@ -263,7 +266,10 @@ export default {
     align-items: flex-end;
     background-position: center;
     background-size: cover;
-    
+    @media (max-width: 330px) {
+        height: 234px;
+        margin: 12px 0;
+      }
     &-info{
       text-align:left ;
       height: 146px;
@@ -272,6 +278,10 @@ export default {
       width: 90%;
       padding: 13px 26px;
       overflow: hidden;
+      @media (max-width: 330px) {
+        height: 120px;
+        padding: 13px 22px;
+      }
       &-title{
         height: 50%;
         font-family: 'Lato';
@@ -282,6 +292,10 @@ export default {
         color: var(--color-Black_blue);
         overflow: hidden;
         text-overflow: ellipsis;
+        @media (max-width: 330px) {
+          font-size: 20px;
+          line-height: 24px;
+        }
       }
       &-discrabe{
         font-family: 'Lato';
@@ -294,6 +308,10 @@ export default {
         margin-top: 6px;
         overflow: hidden;
         text-overflow: ellipsis;
+        @media (max-width: 330px) {
+          font-size: 13px;
+          line-height: 17px;
+        }
       }
     }
     &:hover{
@@ -335,6 +353,10 @@ export default {
     font-size: 32px;
     line-height: 40px;
     color: var(--color-blue);
+    @media (max-width: 330px) {
+      font-size: 20px;
+      line-height: 40px;
+    }
   }
   &-text{
     margin-top: 25px;
@@ -342,12 +364,18 @@ export default {
     font-size: 20px;
     line-height: 24px;
     color: var(--color-Black_blue);
+    @media (max-width: 330px) {
+      font-size: 16px;
+      line-height: 19px;
+      margin-top: 0px;
+    }
     &-list{
       margin-top: 56px;
       font-weight: 700;
-      font-size: 20px;
-      line-height: 24px;
       color: var(--color-Black_blue);
+      @media (max-width: 330px) {
+        margin-top: 12px;
+      }
     }
   }
   &-right-block{
@@ -362,13 +390,17 @@ export default {
     line-height: 22px;
     color: var(--color-white);
     @media (max-width: 992px) {
-              width: 87vw;
-              margin-left: 15px;
-              min-height: 250px;
-            }
+      width: 87vw;
+      margin-left: 15px;
+      min-height: 250px;
+    }
     @media (max-width: 350px) {
-      width: 270px;
-      
+      margin: 23px 0 0 0;
+      width: 295px;
+      padding: 22px 9px;
+      font-size: 16px;
+      line-height: 19px;
+
     }
   }
 }
@@ -377,6 +409,12 @@ export default {
   display: flex;
   align-items: center;
   padding: 20px 0;
+  @media (max-width: 350px) {
+    flex-direction:column;
+    justify-content: flex-start;
+    align-items:flex-start;
+    padding-left: 32px;
+  }
   &-fon{
     background: #F1F7FF;
   }
@@ -388,16 +426,27 @@ export default {
     font-size: 18px;
     line-height: 22px;
     color: var(--color-Black_blue);
+    @media (max-width: 350px) {
+      font-size: 16px;
+      line-height: 19px;
+    }
   }
 
 }
 .description{
-  padding: 38px 0 38px 40px;
+  padding: 14px 0 35px 0px;
   min-height: 400px;
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;
   color: #000000;
+  @media (max-width: 350px) {
+    font-size: 16px;
+    line-height: 19px;
+    ul{
+      padding-left: 20px;
+    }
+  }
   &-select{
     color:var(--color-blue);
   }

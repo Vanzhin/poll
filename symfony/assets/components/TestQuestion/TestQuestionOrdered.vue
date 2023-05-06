@@ -105,9 +105,15 @@ export default {
 
 <style lang="scss" scoped>
   .img{
-    height: 130px;
+    
     margin: 5px;
     max-width: 170px;
+    @media (max-width: 350px){
+      max-width: 110px;
+      
+      
+     
+    }
   }
   .shad{
     margin-top: 30px;
@@ -115,7 +121,9 @@ export default {
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
     background-color: var(--color-white);
-
+    @media (max-width: 350px){
+      padding: 20px 10px 18px 10px;
+    }
   }
   .title{
     margin-top: 0;
@@ -126,6 +134,10 @@ export default {
     &-img{
       width: 306px;
       margin-top: 15px;
+      @media (max-width: 350px){
+        width: 180px;
+        margin: 15px auto 0;
+      }
     }
   }
  
@@ -140,6 +152,9 @@ export default {
     border: 1px solid rgb(167, 167, 163);
     border-radius: 10px;
     margin-top: 2px;
+    @media (max-width: 350px){
+      padding-left: 0;
+    }
     &-input{
       margin-left: 5px;
     }
@@ -166,5 +181,12 @@ export default {
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
+      word-wrap: break-word;
+      @media (max-width: 350px){
+        word-wrap: break-word;
+        max-width: 55%;
+        margin-left: 0px;
+       
+      }
   }
 </style>

@@ -16,6 +16,16 @@
           <div class="tickets-block-coll-tickets">
             <div class="tickets-block-coll-tickets-title">
               Выберите тестирование
+              <div
+                class="tickets-block-coll-tickets-title-icon"
+                @click.stop="isVisible = !isVisible"
+              >
+                <svg width="24" height="24" 
+                  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle opacity="0.7" cx="12" cy="12" r="10" fill="#F8B200"/>
+                  <path d="M11.2977 13.5625H12.6977L12.9217 10.602V7.19995H11.0737V10.602L11.2977 13.5625ZM11.0737 17H12.9217V15.068H11.0737V17Z" fill="white"/>
+                </svg>
+              </div>
             </div>
 
             <div class="tickets-block-coll-tickets-block">
@@ -86,7 +96,10 @@
               </div>
             </div>
           </div>
-          <div class="tickets-block-coll-info">
+          <div class="tickets-block-coll-info"
+            :class="{'tickets-block-coll-info-visible': isVisible}"
+            @click.stop="isVisible = !isVisible"
+          >
             <div class="tickets-block-coll-info-item">
               <div>
                 <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -145,7 +158,7 @@ export default {
   },
   data() {
     return {
-     
+      isVisible:false,
     }
   },
    computed:{
@@ -190,7 +203,7 @@ export default {
         this.setCrumbs({crumbs:[{
           name:'ticket',
           params: { id }, 
-          title: `/${id.includes('rnd')?rndOptions[id]: 'Билет № ' + id}` ,
+          title: `/${typeof(id) == 'number' ? 'Билет № ' + id : rndOptions[id] }` ,
           iter: this.getCrumbsLength + 1 
           }]
         })
@@ -221,6 +234,9 @@ export default {
   .fon{
     background-color: var(--color-fon);
     min-height: 90vh;
+    @media (max-width: 350px) {
+      min-height: 66vh;
+    }
   }
   .tickets{
     
@@ -233,6 +249,11 @@ export default {
       padding-top: 28px;
       padding-bottom: 94px;
       flex-wrap: wrap;
+      @media (max-width: 350px) {
+        padding-top: 8px;
+        position: relative;
+        padding-bottom: 0px;
+      }
       &-coll{
         &-info{
           padding: 24px;
@@ -240,13 +261,24 @@ export default {
           min-height: 376px;
           background-color: #ffffff;
           filter: drop-shadow(0px 1px 4px rgba(92, 101, 119, 0.26)) drop-shadow(0px 24px 48px rgba(109, 120, 147, 0.1));
+          @media (max-width: 350px) {
+            width: 296px;
+            position: absolute;
+            top: 50px;
+            display: none;
+          }
+          &-visible{
+            display: block;
+          }
           &-item{
             display: flex;
             margin-bottom: 24px;
+            
             &-title{
               font-weight: 700;
               font-size: 16px;
               line-height: 24px;
+              
             }
             &-text{
               font-weight: 400;
@@ -288,8 +320,17 @@ export default {
               width: 90%;
             }
             
+            
             &:nth-child(odd) {
               margin-right: 24px;
+              @media (max-width: 350px) {
+                margin-right: 0px;
+               
+              }
+            }
+            @media (max-width: 350px) {
+              margin-right: 0px;
+              width: 100%;
             }
             &:hover{
               cursor: pointer;
@@ -313,7 +354,9 @@ export default {
             border-radius: 6px;
             color: #FFFFFF;
             margin-bottom: 15px;
-            
+            @media (max-width: 350px) {
+              width: 136px;
+            }
            
             &:hover{
               background-color: #FFFFFF;
@@ -329,6 +372,19 @@ export default {
             font-size: 20px;
             line-height: 40px;
             margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            @media (max-width: 350px) {
+              font-size: 16px;
+              margin-bottom: 20px;
+            }
+            &-icon{
+                display: none;
+                @media (max-width: 350px) {
+                  display: inline-flex;
+                }
+              }
           }
         }
       }
@@ -341,6 +397,10 @@ export default {
       color: var(--color-blue);
       margin-top: 63px;
       padding-bottom: 63px;
+      @media (max-width: 350px) {
+        margin-top: 30px;
+        padding-bottom: 30px;
+      }
 
       &:hover{
         cursor: pointer;

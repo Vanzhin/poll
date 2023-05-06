@@ -243,6 +243,11 @@ export default {
     flex-direction: column;
     animation: vizible 0.1s linear;
     padding: 30px;
+    @media (max-width: 350px){
+      width: 96%;
+      padding: 10px 0;
+      margin-top: 37px;
+    }
   }
    &__cont-button{
       margin: 10px;

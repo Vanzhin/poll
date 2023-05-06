@@ -11,9 +11,9 @@ import { initYandexMetrika } from 'yandex-metrika-vue3';
 const app = createApp(Appt)
 app.use(router)
 app.use(store)
-app.use(initYandexMetrika, {
-  id: 93328607,
-  env: process.env.NODE_ENV,
-  // other options
-});
+// app.use(initYandexMetrika, {
+//   id: 93328607,
+//   env: process.env.NODE_ENV,
+//   // other options
+// });
 app.mount('#app')

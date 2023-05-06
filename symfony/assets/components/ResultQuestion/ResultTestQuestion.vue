@@ -61,6 +61,9 @@ export default {
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
     display: flex;
+    @media (max-width: 350px){
+      padding: 26px 12px 26px 12px;
+    }
   }
   .title{
     font-weight: 700;
