@@ -56,7 +56,12 @@
           </div>
           <div class="search">
             <input type="text" value="" name="s" placeholder="Поиск..." class="search-input"/>
-            <button class="search-button bi-search"></button>
+            <button class="search-button" >
+              <svg  viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 11.25C17.5 15.116 14.366 18.25 10.5 18.25C6.63401 18.25 3.5 15.116 3.5 11.25C3.5 7.38401 6.63401 4.25 10.5 4.25C14.366 4.25 17.5 7.38401 17.5 11.25ZM15.9568 17.7674C14.4803 19.0049 12.5772 19.75 10.5 19.75C5.80558 19.75 2 15.9444 2 11.25C2 6.55558 5.80558 2.75 10.5 2.75C15.1944 2.75 19 6.55558 19 11.25C19 13.3272 18.2549 15.2303 17.0174 16.7068L22.5303 22.2197C22.8232 22.5126 22.8232 22.9874 22.5303 23.2803C22.2374 23.5732 21.7626 23.5732 21.4697 23.2803L15.9568 17.7674Z" fill="#269EB7"/>
+              </svg>
+
+            </button>
           </div>
           <div class="logo-block">
             <DropDownItems/>
@@ -128,8 +133,16 @@ export default {
   flex-wrap: wrap;
   min-height: 85px;
   padding-bottom: 15px;
+  @media (max-width: 330px) {
+    min-height: 50px;
+    padding-bottom: 0px;
+  }
   &-fix{
     height: 85px;
+    @media (max-width: 330px) {
+      height: 50px;
+      
+    }
   }
   
 }
@@ -137,11 +150,18 @@ export default {
   margin-top: 20px;
   display: flex;
   align-items: center;
-
   
+  @media (max-width: 330px) {
+    margin-top: 0px;
+  }
 }
 .logo{
- 
+  & svg {
+    @media (max-width: 330px) {
+      height: 26px;
+      width: 103px;
+    }
+  }
   &:hover{
     background-color: var(--color-hover-logo);
     cursor: pointer;
@@ -164,12 +184,21 @@ export default {
     flex: 4;
     margin: 25px 50px 0;
   }
+  @media (max-width: 330px) {
+    margin-top: 0px;
+    min-width: 0px;
+    background: var(--color-fon);
+    box-shadow: none;
+  }
 }
 .search-input{
   margin-left: 25px;
   outline: 0;
   width: 80%;
   border:0 #FFFFFF;
+  @media (max-width: 330px) {
+    display: none;
+  }
 }
 .search-input:focus {
     outline-width: 0;
@@ -183,7 +212,12 @@ export default {
   border: 0px;
   color: var(--color-blue);
   background: #FFFFFF;
-  ;
+  @media (max-width: 330px) {
+    background: var(--color-fon);
+    margin-left: 90px;
+    margin-right: 0px;
+  }
+  
 }
 .search-button:hover{
   
@@ -206,6 +240,9 @@ export default {
   height: 85px;
   @media (max-width: 800px) {
     height: 150px;
+  }
+  @media (max-width: 350px) {
+    height: 50px;
   }
 }
 </style>

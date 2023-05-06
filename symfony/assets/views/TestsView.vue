@@ -150,6 +150,9 @@ export default {
       width: 100%;
       padding-top: 24px;
       background: var(--color-fon);
+      @media (max-width: 350px) {
+         padding-top: 0px;
+      }
     }
   
   }
@@ -168,7 +171,10 @@ export default {
       color: var(--color-blue);
       margin-top: 63px;
       padding-bottom: 63px;
-
+      @media (max-width: 350px) {
+        margin-top: 36px;
+        padding-bottom: 29px;
+      }
       &:hover{
         cursor: pointer;
       }
@@ -179,6 +185,7 @@ export default {
     padding: 0 10px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     min-width: 0;
     word-wrap: break-word;
     border: 1px solid #269EB7;
@@ -189,7 +196,10 @@ export default {
     line-height: 24px;
     color: var(--color-blue);
     min-height: 52px;
-    
+    margin-top: 17px;
+    @media (max-width: 350px) {
+      margin-top: 15px;
+    }
   }
   .test__card-limitation{
     border: 1px solid #E0E6EE;

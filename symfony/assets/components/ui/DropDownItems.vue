@@ -1,11 +1,18 @@
 <template>
   <div class="dropdown">
     <button class="btn btn-secondary "  data-bs-toggle="dropdown" aria-expanded="false">
+      <div class="dropdown-button">
         <div class="title"> Личный кабинет</div> 
         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15.4828 10.3529C15.7617 10.0746 16.2133 10.0745 16.4924 10.3527C16.7725 10.632 16.7727 11.0856 16.4927 11.365L12.7064 15.1442C12.3161 15.5339 11.6839 15.5339 11.2936 15.1442L7.50726 11.3651C7.22731 11.0856 7.22745 10.632 7.50757 10.3527C7.78666 10.0745 8.23826 10.0746 8.51725 10.3529L12 13.8275L15.4828 10.3529Z" fill="#269EB7"/>
         </svg>
+      </div>
+      <div class="dropdown-button-mobale">
+        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 7.75C14.5 9.13071 13.3807 10.25 12 10.25C10.6193 10.25 9.5 9.13071 9.5 7.75C9.5 6.36929 10.6193 5.25 12 5.25C13.3807 5.25 14.5 6.36929 14.5 7.75ZM16 7.75C16 9.95914 14.2091 11.75 12 11.75C9.79086 11.75 8 9.95914 8 7.75C8 5.54086 9.79086 3.75 12 3.75C14.2091 3.75 16 5.54086 16 7.75ZM5.5 21.6912C5.5 21.7108 5.5001 21.7304 5.5003 21.75H4.00024L4 21.6912C4 17.3054 7.61421 13.75 12 13.75C16.3858 13.75 20 17.3054 20 21.6912L19.9998 21.75H18.4997C18.4999 21.7304 18.5 21.7108 18.5 21.6912C18.5 18.1482 15.5718 15.25 12 15.25C8.4282 15.25 5.5 18.1482 5.5 21.6912Z" fill="#269EB7"/>
+        </svg>
 
+      </div>
     </button>
     <ul 
       class="dropdown-menu menu" 
@@ -53,6 +60,20 @@ export default {
 </script>   
 
 <style lang="scss" scoped>
+
+.dropdown-button {
+  display: flex;
+  @media (max-width: 330px) {
+    display: none;
+  }
+  &-mobale{
+    display: none;
+    @media (max-width: 330px) {
+    display: flex;
+  }
+  }
+
+}
   .btn{
     display: flex;
     flex-direction: row;
@@ -71,6 +92,12 @@ export default {
     font-size: 16px;
     line-height: 24px;
     color: var(--color-blue);
+    @media (max-width: 330px) {
+      width: 22px;
+      border: 1px solid var(--color-fon);
+      padding:0;
+      justify-content: center;
+    }
     &:hover{
       cursor: pointer;
       background: var(--color-blue);

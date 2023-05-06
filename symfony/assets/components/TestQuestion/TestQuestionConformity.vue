@@ -71,7 +71,9 @@ export default {
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
     background-color: var(--color-white);
-
+    @media (max-width: 350px){
+      padding: 20px 10px 18px 10px;
+    }
   }
   .title{
     margin-top: 0;
@@ -80,9 +82,12 @@ export default {
     line-height: 24px;
     color: var(--color-Black_blue);
     &-img{
-     
       width: 306px;
       margin-top: 15px;
+      @media (max-width: 350px){
+        width: 180px;
+        margin: 15px auto 0;
+      }
     }
   }
   .custom-control {
@@ -90,9 +95,14 @@ export default {
     display: flex;
     align-items:flex-start;
     justify-content: space-between;
+    flex-wrap:wrap;
     min-height: 1.5rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+    margin-top: 10px;
+    @media (max-width: 350px){
+      padding-left: 0;
+    }
   }
   .f_sm {
       font-size: 0.9rem;

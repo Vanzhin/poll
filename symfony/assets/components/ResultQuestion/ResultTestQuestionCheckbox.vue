@@ -13,7 +13,7 @@
           v-for="(answer, ind ) in question.variant" 
           :key="answer"
         >
-          <div class=""> 
+          <div class="answer-cont-img"> 
             <img :src="answer.image" 
               v-if="answer.image"
               class="img"
@@ -74,6 +74,9 @@ export default {
     border-radius: 6px;
     background-color: var(--color-white);
     border: 1px solid var(--color-red);
+    @media (max-width: 350px){
+      padding: 26px 12px 26px 12px;
+    }
   }
   .answer{
     color:var(--color-blue);
@@ -85,12 +88,25 @@ export default {
     }
     &-cont{
       padding: 0 29px;
+      @media (max-width: 350px){
+        padding: 0 ;
+        &-img{
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+      }
+
     }
   }
   .img{
     height: 130px;
     margin: 3px 10px 3px 0;
     max-width: 170px;
+    @media (max-width: 350px){
+      margin: 3px auto;
+      width: 180px;
+    }
   }
   
   .custom-control {
@@ -110,6 +126,10 @@ export default {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
+    @media (max-width: 350px){
+      margin-left: 0px;
+      word-wrap: break-word;
+    }
   }
   .resultTrue{
     border: 1px solid #56D062;

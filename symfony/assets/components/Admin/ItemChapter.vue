@@ -161,6 +161,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      max-width: 84%;
       &-button{
         height: 138px;
         &-flex{
@@ -176,6 +177,7 @@ export default {
       font-weight: 700;
       font-size: 20px;
       line-height: 24px;
+      max-width: 68%;
     }
     
   }

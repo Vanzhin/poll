@@ -17,8 +17,12 @@
       </svg>
     </div>
     <div class="title-cont">
+      <div class="title-num">
+        {{ index+1 }}.
+      </div>
+      
       <div class="title">
-        {{ index+1 }}. {{ question.title }}
+        {{ question.title }}
       </div>
       <img :src="question.image" 
         v-if="question.image"
@@ -54,20 +58,44 @@ export default {
     font-size: 18px;
     line-height: 24px;
     color: var(--color-Black_blue);
-    
+    @media (max-width: 350px){
+      margin-left: 5px;
+      word-wrap:break-word;
+      overflow:hidden;
+      width: 246px;
+    }
+    &-num{
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 24px;
+    }
     
     &-img{
       width: 306px;
       margin-top: 15px;
+      @media (max-width: 350px){
+        width: 180px;
+        margin: 15px auto;
+      }
     }
     &-icon{
       width: 25px;
     }
     &-block{
       display: flex;
+      @media (max-width: 350px){
+        flex-direction:column;
+      }
     }
     &-cont{
       padding-left: 15px;
+      @media (max-width: 350px){
+        margin-top: 10px;
+        padding-left: 0px;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
     }
   }
 </style>
