@@ -7,6 +7,7 @@ use App\Entity\MinTrudTest;
 use App\Repository\MinTrudTestRepository;
 use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
