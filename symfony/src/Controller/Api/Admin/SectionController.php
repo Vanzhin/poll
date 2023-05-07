@@ -8,6 +8,7 @@ use App\Factory\Section\SectionFactory;
 use App\Repository\SectionRepository;
 use App\Service\Paginator;
 use App\Service\SectionService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,11 +53,12 @@ class SectionController extends AbstractController
     }
 
     #[Route('/api/admin/section/create', name: 'app_api_admin_section_create', methods: 'POST')]
-    public function create(Request $request, SectionFactory $factory, SectionService $sectionService): JsonResponse
+    public function create(Request $request, SectionFactory $factory, SectionService $sectionService, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
         $response = $sectionService->saveIfValid($factory->createBuilder()->buildSection($data));
+
         return $this->json($response['response'],
             $response['status'],
             ['charset=utf-8'],

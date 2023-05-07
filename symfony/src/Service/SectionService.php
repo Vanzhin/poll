@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use App\Entity\Question;
 use App\Entity\Section;
 use App\Entity\Test;
 use App\Factory\Section\SectionFactory;
+use App\Repository\QuestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SectionService
@@ -13,6 +15,7 @@ class SectionService
     public function __construct(private readonly EntityManagerInterface $em,
                                 private readonly ValidationService      $validation,
                                 private readonly SectionFactory         $sectionFactory,
+                                private readonly QuestionRepository     $questionRepository,
     )
     {
     }
@@ -56,6 +59,8 @@ class SectionService
                 'sectionId' => $section->getId()
             ];
             $status = 200;
+//  вопросов без секции быть не должно, если в тесте вопрос без секции, я его отправляю в дефолтную секцию
+            $this->attachDefaultSectionToQuestion($section->getTest());
         } catch (\Exception $e) {
             $response = ['error' => $e->getMessage()];
             $status = 501;
@@ -67,8 +72,15 @@ class SectionService
     public function deleteResponse(Section $section): array
     {
         try {
+            if ($section->getTitle() === 'Без секции') {
+                throw new \Exception('Нельзя удалить эту секцию');
+            }
+            //  вопросов без секции быть не должно, если в тесте вопрос без секции, я его отправляю в дефолтную секцию
+            $test = $section->getTest();
             $this->em->remove($section);
             $this->em->flush();
+            $this->attachDefaultSectionToQuestion($test);
+
             $response = [
                 'message' => 'Секция удалена',
             ];
@@ -79,5 +91,23 @@ class SectionService
         } finally {
             return ['response' => $response, 'status' => $status];
         }
+    }
+
+    private function attachDefaultSectionToQuestion(Test $test): void
+    {
+        $questions = $this->questionRepository->getQuestionWithNoSection($test);
+        $defaultSection = $this->createIfNotExist('Без секции', $test);
+        if (count($questions) > 0) {
+            foreach ($questions as $question) {
+                /**
+                 * @var Question $question
+                 */
+                $question->setSection($defaultSection);
+                $this->em->persist($question);
+            }
+
+            $this->em->flush();
+        }
+
     }
 }
