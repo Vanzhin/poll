@@ -16,7 +16,6 @@ class GetMinTrudTest extends BaseAction
     public function __construct(
         private readonly MinTrudTestRepository  $minTrudTestRepository,
         private readonly EntityManagerInterface $em,
-        private readonly LoggerInterface $errorLogger,
         private readonly SerializerService      $serializer
     )
     {
@@ -25,7 +24,6 @@ class GetMinTrudTest extends BaseAction
 
     public function getAll(): JsonResponse
     {
-        $this->errorLogger->error('hello',['error'=>3]);
         return $this->successResponse($this->minTrudTestRepository->findAllSortedByTitle(), ['admin']);
 
     }
