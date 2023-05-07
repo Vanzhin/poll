@@ -84,6 +84,7 @@ class QuestionRepository extends ServiceEntityRepository
 
 
     }
+
     public function getByIdsSortBySection(array $ids)
     {
         return $this->getOrCreateQueryBuilder()
@@ -101,9 +102,19 @@ class QuestionRepository extends ServiceEntityRepository
             ->setParameters(['ids' => $ids])
             ->addOrderBy('se.id')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
 
+
+    }
+
+    public function getQuestionWithNoSection(Test $test): mixed
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('qu.test = :test')
+            ->andWhere('qu.section IS NULL')
+            ->setParameters(['test' => $test])
+            ->getQuery()
+            ->getResult();
 
     }
 
