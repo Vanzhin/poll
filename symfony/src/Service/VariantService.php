@@ -46,63 +46,6 @@ class VariantService
 
     }
 
-    public function questionAnswerUpdate(Variant $variant, bool $flush = false): Question
-    {
-        $question = $variant->getQuestion();
-        switch ($question->getType()->getTitle()) {
-            case 'radio':
-                if ($variant->getIsCorrect()) {
-                    $answers = [$variant->getId()];
-                    $question->setAnswer(array_values($answers));
-
-                } else {
-                    if (in_array($variant->getId(), $question->getAnswer())) {
-                        $question->setAnswer([]);
-                    }
-                }
-
-                break;
-            case 'input_one':
-                $answers = [$variant->getId()];
-                $question->setAnswer(array_values($answers));
-                break;
-            case 'order':
-//            case 'conformity':
-                $answers = $question->getAnswer();
-                if (($key = array_search($variant->getId(), $answers)) !== false) {
-                    unset($answers[$key]);
-                }
-
-                $answers[] = $variant->getId();
-                $question->setAnswer(array_values($answers));
-
-                break;
-            case 'checkbox':
-            case 'checkbox_picture':
-                $answers = $question->getAnswer();
-                if ($variant->getIsCorrect()) {
-
-                    if (!in_array($variant->getId(), $answers)) {
-                        $answers[] = $variant->getId();
-                    }
-                } else {
-                    $answers = array_filter($answers, function ($variantId) use ($variant) {
-                        return $variantId !== $variant->getId();
-                    });
-
-                }
-
-                $question->setAnswer(array_values($answers));
-
-                break;
-        }
-        if ($flush) {
-            $this->em->persist($question);
-            $this->em->flush();
-        }
-
-        return $question;
-    }
 
     public function imageAttach(Variant $variant, UploadedFile $image = null): void
     {
