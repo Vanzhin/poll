@@ -130,6 +130,7 @@ export default {
     ...mapGetters([
       "getTests",
       "getCategorysFooter",
+      "getCrumbsLength"
       
     ]),
     sections () {
@@ -171,6 +172,7 @@ export default {
           // },
         ]
         })
+
         return
       } 
       this.setCategorys(section.children)
@@ -304,7 +306,7 @@ export default {
         font-size: 14px;
         line-height: 20px;
         color: #66727F;
-        height: 48%;
+        height: 53%;
         margin-top: 6px;
         overflow: hidden;
         text-overflow: ellipsis;

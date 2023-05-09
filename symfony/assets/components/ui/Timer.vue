@@ -1,7 +1,7 @@
 <template>
   <div class="timer-cont">
     <div class="timer-cont-fix">
-      <div class="item-timer">
+      <div class="item-timer" :style="`margin-top:-${topPosition}px`">
         <div class="timer"
           :class="classObject"
         >
@@ -26,7 +26,8 @@ export default {
       setIntervalId : '',
       timeMinutStart: this.time * 60,
       timeMinut: this.time * 60 ,
-      strTimer: ''
+      strTimer: '',
+      topPosition:0,
     }
   },
   computed: {
@@ -36,6 +37,9 @@ export default {
         'timer-red': this.timeMinut < this.timeMinutStart * 0.2,
         'timer-end': this.timeMinut <= 0,
       }
+    },
+    winWidth(){
+      return window.screen.width
     }
   },
   methods: {
@@ -56,10 +60,24 @@ export default {
       } 
       --this.timeMinut; // Уменьшаем таймер
     }, 1000)},
-    setIntervalCler(){clearInterval(this.setIntervalId) }
+
+    setIntervalCler(){clearInterval(this.setIntervalId) },
+    setIsFixed(){
+      let scrollY = window.pageYOffset;
+      
+      console.log(scrollY)
+      if (this.winWidth < 350) {
+        if(scrollY < 138) {
+          this.topPosition = scrollY;
+        } else {
+          this.topPosition = 138;
+        }
+      }
+    }
   },
   mounted(){
     this.setIntervalActive()
+    window.addEventListener('scroll', () => this.setIsFixed())
   },
   unmounted(){
     this.setIntervalCler()
@@ -73,7 +91,10 @@ export default {
   .item-timer{
     
     @media (min-width: 1345px) {
-   margin-right: -164px;
+      margin-right: -164px;
+    }
+    @media (max-width: 350px) {
+      margin-left: -13px;
     }
   }
   .timer{
@@ -90,6 +111,13 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 16px;
+    @media (max-width: 350px) {
+      height:30px;
+      font-size: 16px;
+      line-height: 24px;
+      width: 100%;
+      justify-content: center;
+    }
     &-yellow{
       background-color: rgb(213 227 27);
     };
@@ -104,9 +132,16 @@ export default {
       display: flex;
       justify-content: end;
       width: 100%;
+      @media (max-width: 350px) {
+        justify-content:flex-start;
+      }
       &-fix{
         position: fixed;
         z-index: 20;
+        @media (max-width: 350px) {
+          width: 100%;
+          
+        }
       }
     };
     &-icon{

@@ -359,6 +359,7 @@ export default {
             }
            
             &:hover{
+              cursor: pointer;
               background-color: #FFFFFF;
               color: var(--color-blue);
               path {

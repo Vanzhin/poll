@@ -67,6 +67,10 @@ export default {
     border: 1px solid var(--color-blue);
     border-radius: 6px;
     color:var( --color-blue) ;
+    @media (max-width: 350px) {
+      margin: 20px auto 0 auto;
+
+    }
     &:hover{
       background-color: var(--color-blue);
       color:var( --color-white) ;
@@ -77,12 +81,19 @@ export default {
     padding-top: 72px;
     padding-bottom: 90px;
     align-items: center;
+    @media (max-width: 350px) {
+      display: block;
+    }
     &-text{
       margin-left: 13px;
       font-weight: 700;
       font-size: 20px;
       line-height: 40px;
       margin-right: 30px;
+      @media (max-width: 350px) {
+        font-size: 16px;
+        line-height: 19px;
+      }
     }
     
   }
