@@ -62,7 +62,9 @@ class SerializerService
 
         $defaultContext = [
             'charset' => 'utf-8',
+            'json_encode_options' => JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         ];
+
         $this->encoder = [new JsonEncoder()];
         $this->normalizer = [new ObjectNormalizer($classMetadataFactory)];
         $this->serializer = new Serializer($this->normalizer, $this->encoder);

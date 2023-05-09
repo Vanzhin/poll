@@ -25,7 +25,6 @@ class GetMinTrudTest extends BaseAction
     public function getAll(): JsonResponse
     {
         return $this->successResponse($this->minTrudTestRepository->findAllSortedByTitle(), ['admin']);
-
     }
 
     public function get(Request $request): JsonResponse

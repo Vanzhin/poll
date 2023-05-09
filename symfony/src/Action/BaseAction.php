@@ -14,18 +14,19 @@ class BaseAction
     {
     }
 
-    public function errorResponse(array $data, int $code = 422): JsonResponse
+    public function errorResponse(array|string $data, int $status = 422): JsonResponse
     {
-        return new JsonResponse($data, $code, ['charset' => 'utf-8']);
+        if (is_string($data)) {
+            $data = ["error" => $data];
+        }
+        return new JsonResponse($data, $status, []);
 
     }
 
     public function successResponse(array|object $object, array $groups = [], string $format = 'json', bool $json = true, int $status = 200): JsonResponse
     {
         $data = $this->serializer->serializeObject($object, $format, $groups);
-
-        $response = new JsonResponse($data, $status, ['charset' => 'utf-8'], $json);
-        $response->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $response = new JsonResponse($data, $status, [], $json);
         return $response;
     }
 
