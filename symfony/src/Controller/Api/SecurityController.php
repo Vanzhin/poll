@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Action\Security\LinkLoginAction;
 use App\Factory\User\UserFactory;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
@@ -16,44 +17,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class SecurityController extends AbstractController
 {
     #[Route('/api/login_link/{email}', name: 'app_api_login_link')]
-    public function index(string $email,
-                          ValidationService $validator,
-                          UserFactory $userFactory,
-                          Mailer $mailer,
-                          UserRepository $userRepository,
-                          EntityManagerInterface $entityManager): JsonResponse
+    public function index(Request $request, LinkLoginAction $action): JsonResponse
     {
-        if (!$validator->isValid($email, 'email')) {
-            return $this->json(
-                [
-                    'error' => "Указан не верный формат почты ($email).",
-                ],
-                422,
-                ['charset=utf-8'],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-
-        }
-        $user = $userRepository->findOneBy(['email' => $email]);
-        if (!$user) {
-            $user = $userFactory->createBuilder()->buildUser($email);
-            $entityManager->persist($user);
-            $entityManager->flush();
-        }
-
-        try {
-
-            $mailer->sendLoginLinkEmail($user);
-            $data = ['message' => 'Ссылка для входа в личный кабинет отправлена на ' . $user->getEmail()];
-
-        } catch (Exception $e) {
-            $data = ['error' => 'При отправке сообщения произошла ошибка. Пожалуйста, повторите попытку позже.'];
-
-        } finally {
-            return $this->json($data,
-                200,
-                ['charset=utf-8'],
-            )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-        }
+        return $action->sendLink($request);
     }
 
     #[Route('/api/login_link_check', name: 'app_api_login_link_check')]

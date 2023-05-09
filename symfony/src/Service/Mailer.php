@@ -23,11 +23,11 @@ class Mailer
     private string $defaultFromName;
 
 
-    public function __construct(private readonly MailerInterface $mailer,
+    public function __construct(private readonly MailerInterface           $mailer,
                                 private readonly LoginLinkHandlerInterface $loginLinkHandler,
-                                string $appName,
-                                string $defaultFromEmail,
-                                string $defaultFromName)
+                                string                                     $appName,
+                                string                                     $defaultFromEmail,
+                                string                                     $defaultFromName)
     {
         $this->appName = $appName;
         $this->defaultFromEmail = $defaultFromEmail;
@@ -91,14 +91,19 @@ class Mailer
 
     public function sendLoginLinkEmail(User $user): void
     {
-        $email = (new TemplatedEmail())
-            ->from(new Address('welcome@poll.ru', 'poll bot'))
-            ->to(new Address($user->getEmail(), $user->getFirstName()?? 'Пользователь'))
-            ->subject('login link')
-            ->htmlTemplate('emails/login_link.html.twig')
-            ->context(['user' => $user,
-                'appName' => $this->appName,
-                'loginLinkDetails' => $this->loginLinkHandler->createLoginLink($user)]);
-        $this->mailer->send($email);
+        try {
+            $email = (new TemplatedEmail())
+                ->from(new Address('welcome@poll.ru', 'poll bot'))
+                ->to(new Address($user->getEmail(), $user->getFirstName() ?? 'Пользователь'))
+                ->subject('login link')
+                ->htmlTemplate('emails/login_link.html.twig')
+                ->context(['user' => $user,
+                    'appName' => $this->appName,
+                    'loginLinkDetails' => $this->loginLinkHandler->createLoginLink($user)]);
+            $this->mailer->send($email);
+        } catch (\Exception $e) {
+            throw new \Error(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
+        }
+
     }
 }
