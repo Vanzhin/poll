@@ -27,7 +27,9 @@
             >
               {{ info.ticketTitle }}
             </div>
-            <form @submit.prevent="onSubmit">
+            <form @submit.prevent="onSubmit"
+              id="formTest"
+            >
                 <div v-for="(question, index ) in questions" 
                   :key="question.id"
                 >
@@ -139,6 +141,7 @@ export default {
       "setTicketInfo",
       "setIsLoaderStatus",
       "setCrumbs",
+      "setMessageUser"
     ]),
     async onSubmit(e){
       const question = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
@@ -159,7 +162,13 @@ export default {
       this.$router.push({ path:'/result'})
     },
     timerEnd(){ //написать действия при окончании времени таймера
+      console.dir(formTest)
       this.timeEnd = true
+      this.setMessageUser({
+        err: true,
+        mes:'Время отведенное на прохождение теста - закончилось!'
+      })
+      this.onSubmit({target:formTest})
     },
     type(item) {
       return item.type.title ? item.type.title : item.type

@@ -19,7 +19,7 @@
           <path fill-rule="evenodd" clip-rule="evenodd" d="M9.44676 7.82643C9.01325 7.39119 8.31038 7.39119 7.87686 7.82643C7.44335 8.26168 7.44335 8.96735 7.87686 9.40259L10.4381 11.974L7.82514 14.5974C7.39162 15.0327 7.39162 15.7383 7.82514 16.1736C8.25865 16.6088 8.96152 16.6088 9.39503 16.1736L12.008 13.5502L14.605 16.1576C15.0385 16.5928 15.7414 16.5928 16.1749 16.1576C16.6084 15.7223 16.6084 15.0166 16.1749 14.5814L13.5779 11.974L16.1232 9.41862C16.5567 8.98337 16.5567 8.2777 16.1232 7.84246C15.6896 7.40721 14.9868 7.40721 14.5533 7.84246L12.008 10.3979L9.44676 7.82643Z" fill="#EE3F58"/>
         </svg>
       </div>
-      <div>
+      <div class="title-block">
         <div class="title">
           {{ index+1 }}. {{ question.title }}
         </div>
@@ -63,6 +63,7 @@ export default {
     display: flex;
     @media (max-width: 350px){
       padding: 26px 12px 26px 12px;
+      display: block;
     }
   }
   .title{
@@ -71,13 +72,29 @@ export default {
     line-height: 24px;
     color: var(--color-Black_blue);
     margin-left: 15px;
-    
+    word-wrap: break-word;
+    @media (max-width: 350px){
+      margin: 10px 0 0 0 ;
+      width: 270px;
+    }
     &-img{
       width: 306px;
       margin-top: 15px;
+      @media (max-width: 350px){
+        width: 180px;
+        margin: 15px auto;
+      }
     }
     &-icon{
       width: 25px;
+    }
+    &-block{
+      @media (max-width: 350px){
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        
+      }
     }
   }
   

@@ -130,6 +130,7 @@ export default {
     ...mapGetters([
       "getTests",
       "getCategorysFooter",
+      "getCrumbsLength"
       
     ]),
     sections () {
@@ -156,25 +157,20 @@ export default {
         this.setTests(section.test)
         this.$router.push({name: 'area', params: {id: section.id } })
         this.setCrumbs({crumbs:[
-          
           {
-          name:'area',
-          params: {id: section.id }, 
-          title: `/${crumbsTitle(section)}`,
-          iter: this.getCrumbsLength + 1 
+            name:'area',
+            params: {id: section.id }, 
+            title: `/${crumbsTitle(section)}`,
+            iter: this.getCrumbsLength + 1 
           },
-          // {
-          // name:'area',
-          // params: {id: section.id }, 
-          // title: `/Тесты`,
-          // iter: this.getCrumbsLength + 1 
-          // },
         ]
         })
+
         return
       } 
       this.setCategorys(section.children)
       this.$router.push({name: 'iter', params: { num: 1, id: section.id } })
+      
       this.setCrumbs({crumbs:[{
         name:'iter',
         params: { num: 1, id: section.id }, 
@@ -190,12 +186,9 @@ export default {
   },
   mounted(){
     window.scroll(0, 0);
-   
     if ( !this.getCategorysFooter){
       this.getCategorysDBFooter()
     }
-    
-   
   },
   async created(){
     await this.getCategorysDB({})
@@ -304,7 +297,7 @@ export default {
         font-size: 14px;
         line-height: 20px;
         color: #66727F;
-        height: 48%;
+        height: 53%;
         margin-top: 6px;
         overflow: hidden;
         text-overflow: ellipsis;

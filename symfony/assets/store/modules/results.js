@@ -13,12 +13,13 @@ import axios from 'axios';
 const state = () => ({
  
   result: [],
-  resultQuestions:localStorage.getItem('resultQuestions') ?
+  resultQuestions: localStorage.getItem('resultQuestions') ?
     JSON.parse(localStorage.getItem('resultQuestions')) : null,
   formInfoVisible: false,
   formInfoParam: "",
   resultId: null,
-  
+  resultTicketUser: localStorage.getItem('resultTicketUser') ?
+  JSON.parse(localStorage.getItem('resultTicketUser')) : null,
   
 })
 
