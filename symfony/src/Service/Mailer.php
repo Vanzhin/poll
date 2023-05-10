@@ -93,7 +93,7 @@ class Mailer
     {
         try {
             $email = (new TemplatedEmail())
-                ->from(new Address('welcome@poll.ru', 'poll bot'))
+                ->from(new Address($this->defaultFromEmail, $this->defaultFromName))
                 ->to(new Address($user->getEmail(), $user->getFirstName() ?? 'Пользователь'))
                 ->subject('login link')
                 ->htmlTemplate('emails/login_link.html.twig')
