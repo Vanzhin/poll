@@ -30,6 +30,7 @@ class LinkLoginAction extends BaseAction
 
     public function sendLink(Request $request): JsonResponse
     {
+
         try {
             $email = $request->attributes->get('_route_params', [])['email'];
             if (!$this->IsValid($email)) {
@@ -44,7 +45,7 @@ class LinkLoginAction extends BaseAction
             $this->mailer->sendLoginLinkEmail($user);
             return $this->successResponse(['message' => 'Ссылка для входа в личный кабинет отправлена на ' . $user->getEmail()]);
 
-        } catch (\Exception|\Error $e) {
+        } catch (\Exception $e) {
 
             return $this->errorResponse(["error" => $e->getMessage()]);
 

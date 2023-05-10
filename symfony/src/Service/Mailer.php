@@ -102,7 +102,7 @@ class Mailer
                     'loginLinkDetails' => $this->loginLinkHandler->createLoginLink($user)]);
             $this->mailer->send($email);
         } catch (\Exception $e) {
-            throw new \Error(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
+            throw new \Exception(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
         }
 
     }
