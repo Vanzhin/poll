@@ -31,7 +31,7 @@
     computed:{
       ...mapGetters(["getPageName"]),
       pageLink() {
-        return this.getPageName===""? "/": this.getPageName
+        return this.getPageName === ""? "/": this.getPageName
       }
     },
     methods: {
@@ -41,9 +41,8 @@
    async mounted(){
       if (this.$route.params.rtoken !== "" ) {
         await this.getAuthRefresh(this.$route.params.rtoken)
-       
         setTimeout(() => {
-          this.$router.push( this.getPageName===""? "/": this.getPageName)
+          this.$router.push( this.getPageName === ""? "/": this.getPageName)
         },15000);
       }
     }
