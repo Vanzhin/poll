@@ -6,8 +6,8 @@
       v-if="emailSend"
       
     >
-      <p>{{resMessage}} </p>
-      <a :href="link"> переход </a>
+      <h1>{{resMessage}} </h1>
+      
     </div>
       
     <div 

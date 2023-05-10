@@ -10,7 +10,6 @@ const state = () => ({
 })
 
 const actions = {
- 
   setCrumbs({ commit }, {crumbs}){
     commit("SET_CRUMBS", crumbs)
   },
@@ -32,12 +31,9 @@ const getters = {
 }
 const mutations = {
   [SET_CRUMBS] (state, crumbs) {
-    console.log(crumbs)
-    // state.crumbs.push(crumbs)
     state.crumbs = [...state.crumbs, ...crumbs]
     const parsed = JSON.stringify(state.crumbs)
     localStorage.setItem('crumbs', parsed)
-    console.log(state.crumbs)
   },
   [SET_CRUMBS_HOME] (state) {
     state.crumbs=[{
@@ -47,18 +43,15 @@ const mutations = {
     }]
     const parsed = JSON.stringify(state.crumbs)
     localStorage.setItem('crumbs', parsed)
-    console.log(state.crumbs)
   },
   [SET_CRUMBS_LENGTH](state, len) {
     state.crumbs.length = len
   }
-
- 
 }
 export default {
-    namespaced: false,
-    state,
-    actions,
-    getters,
-    mutations
-  }
+  namespaced: false,
+  state,
+  actions,
+  getters,
+  mutations
+}
