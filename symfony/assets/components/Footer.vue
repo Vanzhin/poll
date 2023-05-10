@@ -178,8 +178,12 @@ export default {
 .col{
   &-item{
     flex: 1;
+    margin-right: 40px;
+    margin-bottom: 30px;
     @media (max-width: 350px) {
       text-align: center;
+      margin-right: 0px;
+      margin-bottom: 0px;
     }
   }
   &-title{

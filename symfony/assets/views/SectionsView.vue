@@ -41,7 +41,7 @@
     <div class="container">
       <div class="wrapper">
         <div class="service">
-          <div>
+          <div class="service-left-block">
             <div class="service-title">
               О Сервисе
             </div>
@@ -60,16 +60,15 @@
               </ul>
             </div>
           </div>
-          <div>
-            <div class="service-right-block">
-              В сервисе предоставляются тесты Ростехнадзора по промбезопасности 
-              и по электробезопасности. Сервис поможет подготовиться к аттестации 
-              водителям, занимающимся перевозкой опасных грузов (тесты ДОПОГ), 
-              а также сварщикам (тесты НАКС). Кроме того, представлены тесты 
-              по пожарной безопасности, экологической безопасности и общим 
-              вопросам охраны труда.
-            </div>
+          <div class="service-right-block">
+            В сервисе предоставляются тесты Ростехнадзора по промбезопасности 
+            и по электробезопасности. Сервис поможет подготовиться к аттестации 
+            водителям, занимающимся перевозкой опасных грузов (тесты ДОПОГ), 
+            а также сварщикам (тесты НАКС). Кроме того, представлены тесты 
+            по пожарной безопасности, экологической безопасности и общим 
+            вопросам охраны труда.
           </div>
+          
         </div>
       </div>
     </div>
@@ -213,6 +212,9 @@ export default {
       justify-content: space-between;
       max-width: 1110px;
       margin: auto;
+      @media (max-width: 480px) {
+        justify-content:center;
+      }
     }
     &__title{
       padding-top: 77px;
@@ -223,7 +225,7 @@ export default {
       font-size: 36px;
       line-height: 40px;
       color: var(--color-Black_blue);
-      @media (max-width: 330px) {
+      @media (max-width: 350px) {
         padding-top: 20px;
         font-size: 16px;
         line-height: 19px;
@@ -370,6 +372,9 @@ export default {
         margin-top: 12px;
       }
     }
+  }
+  &-left-block{
+    margin-bottom: 30px;
   }
   &-right-block{
     padding: 32px 9px 40px 27px;

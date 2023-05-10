@@ -133,15 +133,14 @@ export default {
   flex-wrap: wrap;
   min-height: 85px;
   padding-bottom: 15px;
-  @media (max-width: 330px) {
+  @media (max-width: 480px) {
     min-height: 50px;
     padding-bottom: 0px;
   }
   &-fix{
     height: 85px;
-    @media (max-width: 330px) {
+    @media (max-width: 480px) {
       height: 50px;
-      
     }
   }
   
@@ -151,13 +150,13 @@ export default {
   display: flex;
   align-items: center;
   
-  @media (max-width: 330px) {
+  @media (max-width: 480px) {
     margin-top: 0px;
   }
 }
 .logo{
   & svg {
-    @media (max-width: 330px) {
+    @media (max-width: 350px) {
       height: 26px;
       width: 103px;
     }
@@ -184,7 +183,7 @@ export default {
     flex: 4;
     margin: 25px 50px 0;
   }
-  @media (max-width: 330px) {
+  @media (max-width: 480px) {
     margin-top: 0px;
     min-width: 0px;
     background: var(--color-fon);
@@ -196,7 +195,7 @@ export default {
   outline: 0;
   width: 80%;
   border:0 #FFFFFF;
-  @media (max-width: 330px) {
+  @media (max-width: 480px) {
     display: none;
   }
 }
@@ -212,7 +211,9 @@ export default {
   border: 0px;
   color: var(--color-blue);
   background: #FFFFFF;
-  @media (max-width: 330px) {
+  
+  
+  @media (max-width: 350px) {
     background: var(--color-fon);
     margin-left: 90px;
     margin-right: 0px;
@@ -241,7 +242,7 @@ export default {
   @media (max-width: 800px) {
     height: 150px;
   }
-  @media (max-width: 350px) {
+  @media (max-width: 480px) {
     height: 50px;
   }
 }

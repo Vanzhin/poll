@@ -81,6 +81,7 @@ export default {
     padding-top: 72px;
     padding-bottom: 90px;
     align-items: center;
+    flex-wrap: wrap;
     @media (max-width: 350px) {
       display: block;
     }
