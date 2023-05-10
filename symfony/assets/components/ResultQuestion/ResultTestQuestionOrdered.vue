@@ -102,18 +102,18 @@ export default {
     border-radius: 6px;
     background-color: var(--color-white);
     border: 1px solid var(--color-red);
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       padding: 26px 12px 26px 12px;
     }
   }
   .answer-img{
     margin: 5px;
     width: 200px;
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       width: 110px;
     }
     &-block{
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         width: 110px;
         height: 140px;
         overflow: hidden;
@@ -130,7 +130,7 @@ export default {
     }
     &-cont{
       padding: 0 29px;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         padding: 0 ;
       }
     }
@@ -147,7 +147,7 @@ export default {
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
     margin-top: 10px;
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       min-height:52px;
       display: flex;
       align-items: center;
@@ -168,7 +168,7 @@ export default {
     line-height: 24px;
     word-wrap:break-word;
     width: 100%;
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       margin: 0;
     }
     

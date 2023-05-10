@@ -325,6 +325,9 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    @media (max-width: 480px){
+      justify-content:center;
+    }
     @media (max-width: 350px){
       margin-top: 10px;
     }

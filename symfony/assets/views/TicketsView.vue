@@ -249,7 +249,7 @@ export default {
       padding-top: 28px;
       padding-bottom: 94px;
       flex-wrap: wrap;
-      @media (max-width: 350px) {
+      @media (max-width: 480px) {
         padding-top: 8px;
         position: relative;
         padding-bottom: 0px;
@@ -266,6 +266,10 @@ export default {
             position: absolute;
             top: 50px;
             display: none;
+          }
+          @media (max-width: 480px) {
+            width: 100%;
+            min-height:285px;
           }
           &-visible{
             display: block;
@@ -294,13 +298,34 @@ export default {
           }
         }
         &-tickets{
-          
+          display: flex;
+          flex-wrap: wrap;
+          justify-content:space-between;
+          @media (max-width: 480px) {
+            justify-content: center;
+          }
           &-block{
             
             display: flex;
             flex-wrap: wrap;
             justify-content:space-between;
             max-width: 782px;
+
+            &:nth-child(2){
+                @media (max-width: 480px) {
+                  justify-content: center;
+                }
+              }
+            &:nth-child(3){
+              @media (max-width: 480px) {
+                max-width: 380px;
+              }
+            }
+            
+
+
+
+
           }
           &-item{
             text-decoration: none;
@@ -323,12 +348,11 @@ export default {
             
             &:nth-child(odd) {
               margin-right: 24px;
-              @media (max-width: 350px) {
+              @media (max-width: 480px) {
                 margin-right: 0px;
-               
               }
             }
-            @media (max-width: 350px) {
+            @media (max-width: 480px) {
               margin-right: 0px;
               width: 100%;
             }

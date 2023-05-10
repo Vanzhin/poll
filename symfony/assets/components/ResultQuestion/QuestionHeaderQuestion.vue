@@ -58,7 +58,7 @@ export default {
     font-size: 18px;
     line-height: 24px;
     color: var(--color-Black_blue);
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       margin-left: 5px;
       word-wrap:break-word;
       overflow:hidden;
@@ -73,7 +73,7 @@ export default {
     &-img{
       width: 306px;
       margin-top: 15px;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         width: 180px;
         margin: 15px auto;
       }
@@ -83,13 +83,13 @@ export default {
     }
     &-block{
       display: flex;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         flex-direction:column;
       }
     }
     &-cont{
       padding-left: 15px;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         margin-top: 10px;
         padding-left: 0px;
         display: flex;

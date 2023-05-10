@@ -74,7 +74,7 @@ export default {
     border-radius: 6px;
     background-color: var(--color-white);
     border: 1px solid var(--color-red);
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       padding: 26px 12px 26px 12px;
     }
   }
@@ -88,7 +88,7 @@ export default {
     }
     &-cont{
       padding: 0 29px;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         padding: 0 ;
         &-img{
           width: 100%;
@@ -100,12 +100,12 @@ export default {
     }
   }
   .img{
-    height: 130px;
+    
     margin: 3px 10px 3px 0;
-    max-width: 170px;
-    @media (max-width: 350px){
+    width: 180px;
+    @media (max-width: 480px){
       margin: 3px auto;
-      width: 180px;
+      
     }
   }
   
@@ -126,7 +126,7 @@ export default {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       margin-left: 0px;
       word-wrap: break-word;
     }
