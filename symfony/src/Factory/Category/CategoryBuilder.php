@@ -39,7 +39,8 @@ class CategoryBuilder
         }
 
         if (!$category->getAlias()) {
-            $category->setAlias(substr($category->getTitle(), 0, 30));
+            $alias = mb_convert_encoding(substr($category->getTitle(), 0, 30), "UTF-8",);
+            $category->setAlias($alias);
         }
         return $category;
     }

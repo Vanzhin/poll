@@ -65,8 +65,8 @@ class TestBuilder
         }
 
         if(!$test->getAlias()){
-            $test->setAlias(substr($test->getTitle(), 0, 30));
-        }
+            $alias = mb_convert_encoding(substr($test->getTitle(), 0, 30), "UTF-8",);
+            $test->setAlias($alias);        }
 
 
 

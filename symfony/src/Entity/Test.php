@@ -30,10 +30,10 @@ class Test
         message: 'test.title.not_blank'
     )]
     #[Assert\Length(
-        max: 255,
+        max: 750,
         maxMessage: 'test.title.max_length',
     )]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
     private ?string $title = null;
 
