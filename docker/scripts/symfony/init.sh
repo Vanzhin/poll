@@ -16,7 +16,6 @@ if [ ! -f '/app/.firstrun_php' ]; then
     export COMPOSER_ALLOW_SUPERUSER=1
     touch '/app/.firstrun_php'
     info "Running composer install"
-    composer --no-interaction update
     composer --no-interaction install
     composer --no-interaction require doctrine/doctrine-fixtures-bundle --dev
     info "Running migrations"
