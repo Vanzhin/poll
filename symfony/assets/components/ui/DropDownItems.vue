@@ -63,12 +63,12 @@ export default {
 
 .dropdown-button {
   display: flex;
-  @media (max-width: 330px) {
+  @media (max-width: 480px) {
     display: none;
   }
   &-mobale{
     display: none;
-    @media (max-width: 330px) {
+    @media (max-width: 480px) {
     display: flex;
   }
   }
@@ -92,7 +92,7 @@ export default {
     font-size: 16px;
     line-height: 24px;
     color: var(--color-blue);
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       width: 22px;
       border: 1px solid var(--color-fon);
       padding:0;

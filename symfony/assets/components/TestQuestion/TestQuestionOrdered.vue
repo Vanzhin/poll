@@ -183,10 +183,11 @@ export default {
       margin-left: 10px;
       word-wrap: break-word;
       @media (max-width: 350px){
-        word-wrap: break-word;
         max-width: 55%;
         margin-left: 0px;
-       
+      }
+      @media (max-width: 480px){
+        max-width: 43%;
       }
   }
 </style>

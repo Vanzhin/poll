@@ -99,13 +99,13 @@ export default {
     }
     &-cont{
       padding: 0 29px;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         padding: 0;
       }
     }
     &-img{
       width: 200px;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
        width: 180px;
        margin: 10px auto;
       }
@@ -117,7 +117,7 @@ export default {
     align-items:flex-start;
     justify-content: space-between;
     min-height: 1.5rem;
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       flex-direction: column;
       margin-top: 10px;
     }
@@ -125,7 +125,7 @@ export default {
   }
   .f_sm {
       font-size: 0.9rem;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         width: 100%;
       }
   }
@@ -134,7 +134,7 @@ export default {
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         margin-left: 0px;
         flex-wrap: wrap;
         

@@ -243,6 +243,9 @@ export default {
     flex-direction: column;
     animation: vizible 0.1s linear;
     padding: 30px;
+    @media (max-width: 480px){
+      width: 96%;
+    }
     @media (max-width: 350px){
       width: 96%;
       padding: 10px 0;

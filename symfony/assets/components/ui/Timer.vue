@@ -66,7 +66,14 @@ export default {
       let scrollY = window.pageYOffset;
       
       console.log(scrollY)
-      if (this.winWidth < 350) {
+      if (this.winWidth > 350 && this.winWidth < 481 ) {
+        if(scrollY < 230) {
+          this.topPosition = scrollY;
+        } else {
+          this.topPosition = 230
+        }
+      }
+      if (this.winWidth < 351) {
         if(scrollY < 138) {
           this.topPosition = scrollY;
         } else {
@@ -93,7 +100,7 @@ export default {
     @media (min-width: 1345px) {
       margin-right: -164px;
     }
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       margin-left: -13px;
     }
   }
@@ -111,7 +118,7 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 16px;
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       height:30px;
       font-size: 16px;
       line-height: 24px;
@@ -132,13 +139,13 @@ export default {
       display: flex;
       justify-content: end;
       width: 100%;
-      @media (max-width: 350px) {
+      @media (max-width: 480px) {
         justify-content:flex-start;
       }
       &-fix{
         position: fixed;
         z-index: 20;
-        @media (max-width: 350px) {
+        @media (max-width: 480px) {
           width: 100%;
           
         }

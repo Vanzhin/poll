@@ -61,7 +61,7 @@ export default {
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
     display: flex;
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       padding: 26px 12px 26px 12px;
       display: block;
     }
@@ -73,14 +73,14 @@ export default {
     color: var(--color-Black_blue);
     margin-left: 15px;
     word-wrap: break-word;
-    @media (max-width: 350px){
+    @media (max-width: 480px){
       margin: 10px 0 0 0 ;
       width: 270px;
     }
     &-img{
       width: 306px;
       margin-top: 15px;
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         width: 180px;
         margin: 15px auto;
       }
@@ -89,7 +89,7 @@ export default {
       width: 25px;
     }
     &-block{
-      @media (max-width: 350px){
+      @media (max-width: 480px){
         display: flex;
         flex-direction: column;
         justify-content: center;
