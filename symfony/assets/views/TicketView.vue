@@ -259,6 +259,11 @@ export default {
     &-cont{
       padding-top: 30px;
       padding-bottom: 141px;
+      &>button{
+        @media (max-width: 480px) {
+          margin: 0 auto;
+        }
+      }
     }
   }
 @media (min-width: 1024px) {

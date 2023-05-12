@@ -83,6 +83,12 @@ const router = createRouter({
       component: () => import('../views/AreasView.vue')
     },
     {
+      path: '/sectionrout',
+      name: 'sectionrout',
+      meta: {loyout: 'page', autch: false},
+      component: () => import('../views/SectionsRoutView.vue')
+    },
+    {
       path: '/result',
       name: 'result',
       meta: {loyout: 'page', autch: false},

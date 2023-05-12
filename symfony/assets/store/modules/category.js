@@ -38,9 +38,7 @@ const actions = {
     if (parentId) {
       config.url = config.url + `&parent=${parentId}`
     }
-    // if (page) {
-    //   config.url = config.url + `${parentId ? "&" : "?"}` + `page=${page}`
-    // }
+    
     if (page) {
       config.url = config.url + `&page=${page}`
     }
@@ -202,6 +200,9 @@ const getters = {
   },
   getCategory:(state) => (id)=> {
     return state.categorys.find(item => item.id === id) 
+  },
+  getCategoryParent(state) {
+    return state.parent 
   },
   getCategorysFooter(state) {
     return state.categorysFooter

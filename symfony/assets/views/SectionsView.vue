@@ -164,11 +164,10 @@ export default {
           },
         ]
         })
-
         return
       } 
       this.setCategorys(section.children)
-      this.$router.push({name: 'iter', params: { num: 1, id: section.id } })
+      this.$router.push({name: 'iter', params: { num: 1, id: section.id }})
       
       this.setCrumbs({crumbs:[{
         name:'iter',
@@ -187,9 +186,9 @@ export default {
     console.log(window)
     window.scrollY = 0;
     
-    if ( !this.getCategorysFooter){
-      this.getCategorysDBFooter()
-    }
+    
+    this.getCategorysDBFooter()
+    
   },
   async created(){
     await this.getCategorysDB({})
