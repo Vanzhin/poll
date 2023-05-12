@@ -18,9 +18,10 @@
             <div
               v-if="test.questionCount > test.questionUnPublishedCount"
             >
+            <!-- getIsAutchUser || index < 3 -->
               <div 
                 @click="testLink(test)"
-                v-if="getIsAutchUser || index < 3"
+                v-if="true"
               >
                 <div class="test__card">
                   <div>

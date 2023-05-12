@@ -17,8 +17,9 @@
               :key="area.id"
               
             >
+            <!-- getIsAutchUser || index < 3 -->
               <div class="test__card"
-                v-if="getIsAutchUser || index < 3"
+                v-if="true"
                 @click="categoryUpdate({ area })"
               >
                 <div>

@@ -301,8 +301,10 @@ export default {
           display: flex;
           flex-wrap: wrap;
           justify-content:space-between;
+          flex-direction: column;
           @media (max-width: 480px) {
             justify-content: center;
+            
           }
           &-block{
             
@@ -319,13 +321,11 @@ export default {
             &:nth-child(3){
               @media (max-width: 480px) {
                 max-width: 380px;
+                
               }
+              
+
             }
-            
-
-
-
-
           }
           &-item{
             text-decoration: none;

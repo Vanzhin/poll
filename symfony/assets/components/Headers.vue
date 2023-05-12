@@ -70,7 +70,7 @@
       </div>
     </div> 
   </div>
-  <div class="heder-padding"></div>
+  <div class="header-padding"></div>
   
 </template>
 
@@ -237,11 +237,17 @@ export default {
 .fixeds {
   position: fixed;
 }
-.heder-padding{
+.header-padding{
   height: 85px;
-  @media (max-width: 800px) {
-    height: 150px;
+  @media (max-width: 991px) {
+    height: 133px;
   }
+  @media (max-width: 768px) {
+    height: 194px;
+  }
+  @media (max-width: 576px) {
+    height: 133px;
+  } 
   @media (max-width: 480px) {
     height: 50px;
   }
