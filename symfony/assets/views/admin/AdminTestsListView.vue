@@ -5,9 +5,7 @@
     <div class="container">
      
       <AdminTestsView/>
-      <Pagination
-        type="getTestsDB"
-      />
+      
     </div>
   </div>
 </template>
@@ -15,11 +13,11 @@
 <script>
   import AdminTestsView from "./AdminTestsView.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
-  import Pagination from "../../components/Pagination.vue"
+  
   export default {
     components: {
       AdminTestsView,
-      Pagination
+      
     },
     data() {
       return {

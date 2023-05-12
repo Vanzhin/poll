@@ -184,7 +184,9 @@ export default {
     },
   },
   mounted(){
-    window.scroll(0, 0);
+    console.log(window)
+    window.scrollY = 0;
+    
     if ( !this.getCategorysFooter){
       this.getCategorysDBFooter()
     }

@@ -160,7 +160,7 @@ export default {
     
   }
   .item__card{
-    height: 155px;
+    min-height: 155px;
     padding: 20px 43px;
     background: #FFFFFF;
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);

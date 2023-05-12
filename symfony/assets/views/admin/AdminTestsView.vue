@@ -34,19 +34,25 @@
         
           <div class="tests__block"
             v-if="tests.length > 0"
-            >
-              <ItemTest
-                v-for="(item, index) in tests" 
-                :key="item.id"
-                :item="item"
-                :index="index"
-                @click.stop="testRoute(item)"
-              />
-            </div>
+          >
+            <ItemTest
+              v-for="(item, index) in tests" 
+              :key="item.id"
+              :item="item"
+              :index="index"
+              @click.stop="testRoute(item)"
+            />
+           
+          </div>
+          
         </div>
       </div>
     </div>
   </div>
+  <Pagination
+    :type="typePagin"
+    admin=true
+  />
 </template>
  
 <script>
@@ -54,17 +60,20 @@
   import Loader from '../../components/ui/LoaderView.vue'
   import ItemTest from "../../components/Admin/ItemTest.vue"
   import Button from "../../components/ui/ButtonBack.vue"
+  import Pagination from "../../components/Pagination.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
       ItemTest,
-      Button
+      Button,
+      Pagination
     },
     data() {
       return {
         isLoader: true,
         parentId: this.$route.params.id,
+        typePagin: ''
       }
     },
     computed:{ 
@@ -109,8 +118,10 @@
     async created(){
       if (this.parentId){
         await this.getCategorysDB({page: null, parentId: this.parentId, admin: true})
+        this.typePagin='getCategorysDB'
       } else { 
         await this.getTestsDB({}) 
+        this.typePagin='getTestsDB'
       }
       this.isLoader = false
     }

@@ -1,5 +1,5 @@
 <template>
-  <div class="block" 
+  <div class="block-contener" 
     v-if="getPagination.length > 1"
   >
     <div class="block-pagination">
@@ -100,8 +100,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .block{
-  margin-top: 20px;
-  padding-bottom: 30px;
+  &-contener{
+    margin-top: 20px;
+    padding-bottom: 30px;
+  }
   &-pagination{
       display: flex;
       justify-content: center;

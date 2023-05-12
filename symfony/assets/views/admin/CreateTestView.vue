@@ -4,6 +4,7 @@
     <div class="title">
       <h2>Форма редактирования тестов</h2>
     </div>
+    
   </div>
   <Loader
     v-if="isLoader"
@@ -11,6 +12,7 @@
   <div class="container"
     v-else
   >
+    <Button/>
     <div class="row">
       <form @submit.prevent="onSubmit">
         <input type="hidden" 
@@ -133,11 +135,13 @@
 <script>
   import MessageView from "../../components/ui/MessageView.vue"
   import Loader from '../../components/ui/Loader.vue'
+  import Button from "../../components/ui/ButtonBack.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       MessageView,
       Loader,
+      Button
     },
     data() {
       return {
