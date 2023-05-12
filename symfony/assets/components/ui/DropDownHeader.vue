@@ -1,14 +1,14 @@
 <template>
   <div class="btn-group dropup">
     <button class="btn  dropdown-toggle"  data-bs-toggle="dropdown" aria-expanded="false">
-      <div  class="title"> 
-        Все разделы тестирования
-      </div> 
-      <div>
-        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.87954 8.51725C9.60121 8.23826 9.60112 7.78666 9.87935 7.50757V7.50757C10.1586 7.22745 10.6122 7.22731 10.8917 7.50726L14.6709 11.2936C15.0605 11.6839 15.0605 12.3161 14.6709 12.7064L10.8917 16.4927C10.6122 16.7727 10.1586 16.7726 9.87935 16.4924V16.4924C9.60112 16.2133 9.60121 15.7617 9.87954 15.4828L13.3541 12L9.87954 8.51725Z" fill="#269EB7"/>
-        </svg>
+      <div class="">
+          <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.92536 6.8489H21.5414C23.1307 6.88486 23.1307 4.81387 21.5414 4.84983H3.92536C2.33608 4.8138 2.33608 6.88486 3.92536 6.8489Z" fill="#269EB7"/>
+            <path d="M14.9586 11.8498H3.50818C2.47514 11.8139 2.47514 13.8849 3.50818 13.8489H14.9586C15.9917 13.8849 15.9917 11.8139 14.9586 11.8498Z" fill="#269EB7"/>
+            <path d="M18.7202 18.8494H3.74657C2.39568 18.8494 2.39568 20.8494 3.74657 20.8494H18.7202C20.0711 20.8494 20.0711 18.8494 18.7202 18.8494Z" fill="#269EB7"/>
+          </svg>
       </div>
+      
     </button>
     <ul 
       class="dropdown-menu menu" 
@@ -68,17 +68,16 @@ export default {
     line-height: 30px;
   }
   .btn{
-    margin-top: 10px;
+    margin-top: 0px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 0 0 0 10px ;
-    gap: 10px;
-    width: 246px;
-    height: 36px;
-    border: 1px solid var(--color-blue);
-    border-radius: 6px;
+    
+    width: 24px;
+    height: 100%;
+    border: 0px solid var(--color-blue);
+    border-radius: 0px;
     color: var(--color-blue);
     background-color: rgba(255, 255, 255, 0);
     font-family: 'Lato';
@@ -89,13 +88,7 @@ export default {
     color: var(--color-blue);
     &:hover{
       cursor: pointer;
-      background: var(--color-blue);
-      .title{
-        color: var(--color-white);
-      };
-      path{
-        fill:var(--color-white);
-      }
+      transform: scale(1.2);
     }
   }
   .menu{

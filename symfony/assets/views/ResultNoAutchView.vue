@@ -67,7 +67,7 @@ export default {
     border: 1px solid var(--color-blue);
     border-radius: 6px;
     color:var( --color-blue) ;
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       margin: 20px auto 0 auto;
 
     }
@@ -82,7 +82,7 @@ export default {
     padding-bottom: 90px;
     align-items: center;
     flex-wrap: wrap;
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       display: block;
     }
     &-text{
@@ -91,7 +91,7 @@ export default {
       font-size: 20px;
       line-height: 40px;
       margin-right: 30px;
-      @media (max-width: 350px) {
+      @media (max-width: 480px) {
         font-size: 16px;
         line-height: 19px;
       }

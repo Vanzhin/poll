@@ -40,10 +40,19 @@ const actions = {
       const i = await dispatch("getCountQuestionsTest")
     
       url = `/api/test/${slug}/question/${i}`
+    } else if (id === "rndb"){
+      
+      const tickets = await dispatch("getTicketsRND")
+      console.log ("countTicket  - ",tickets )
+
+      const i = Math.floor(Math.random() * (tickets.length - 1)) + 1
+      
+      console.log ("Ticket  - ", i )
+      url = `/api/ticket/${tickets[i].id}/question`
     } else {
       url = `/api/ticket/${id}/question`
     }
-    //getCountQuestionsTest
+    
     try{
       const config = {
         method: 'get',

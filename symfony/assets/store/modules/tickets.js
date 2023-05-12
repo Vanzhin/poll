@@ -6,7 +6,8 @@ import {
  import axios from 'axios';
 
 const state = () => ({
-  tickets: [],
+  tickets: localStorage.getItem('tickets') ?
+  JSON.parse(localStorage.getItem('tickets')):[],
   question:{},
   ticketTitle: localStorage.getItem('ticketTitle') ?
   JSON.parse(localStorage.getItem('ticketTitle')):"",
@@ -128,6 +129,9 @@ const actions = {
       dispatch('setMessageError', e)
     }
   },
+  getTicketsRND({state}) {
+    return state.tickets
+  },
   setTickets ({dispatch, commit}, tickets) {
     commit("SET_TICKETS", tickets)
   },
@@ -162,6 +166,8 @@ const getters = {
 const mutations = {
   
   [SET_TICKETS] (state, tickets){
+    const parsed = JSON.stringify(tickets)
+    localStorage.setItem('tickets', parsed);
     state.tickets = tickets
   },
   [SET_TICKET_TITLE] (state, title){

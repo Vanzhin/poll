@@ -58,6 +58,7 @@
               >
                 <div
                   v-if="index<6"
+                  @click="categoryUpdate({section})"
                 >
                   {{section.title  }}
                 </div>
@@ -114,6 +115,7 @@
 import { RouterLink } from 'vue-router'
 import DropDownFooter from './ui/DropDownFooter.vue'
 import { mapGetters, mapActions, mapMutations} from "vuex"
+import crumbsTitle from '../utils/crumbs.js'
 export default {
   data() {
     return {
@@ -124,13 +126,21 @@ export default {
     DropDownFooter
   },
   computed:{
-    ...mapGetters(["getCategorysFooter"]),
+    ...mapGetters([
+      "getCategorysFooter",
+    ]),
     sections () {
       return this.$store.getters.getCategorysFooter
     },
   },
   methods: {
-    
+    ...mapActions([
+      "setCategoryParent",
+    ]),
+    async categoryUpdate({section}){
+      this.setCategoryParent(section)
+      this.$router.push({name: 'sectionrout'})
+    }
   }, 
   mounted() {
    
@@ -148,7 +158,7 @@ export default {
   
   min-height: 433px;
   padding-bottom: 40px;
-  @media (max-width: 350px) {
+  @media (max-width: 480px) {
     padding-top: 24px;
     padding-bottom: 28px;
   }
@@ -158,15 +168,16 @@ export default {
   align-items:flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  @media (max-width: 350px) {
+  @media (max-width: 480px) {
     align-items: center;
     justify-content: center;
+    flex-direction: column;
   }
 }
 .logo{
   display: flex;
   width:230px ;
-  @media (max-width: 350px) {
+  @media (max-width: 480px) {
     margin: auto;
   }
   &:hover{
@@ -180,7 +191,7 @@ export default {
     flex: 1;
     margin-right: 40px;
     margin-bottom: 30px;
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       text-align: center;
       margin-right: 0px;
       margin-bottom: 0px;
@@ -194,7 +205,7 @@ export default {
     font-size: 18px;
     line-height: 24px;
     color: var(--color-blue);
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       padding-top: 34px;
       margin: auto;
       text-align: center;
@@ -204,7 +215,7 @@ export default {
       line-height: 30px;
       color: #000000;
       margin-top: 10px;
-      @media (max-width: 350px) {
+      @media (max-width: 480px) {
       margin: auto;
       text-align: center;
     }
@@ -216,7 +227,7 @@ export default {
       font-size: 14px;
       line-height: 30px;
       color: #000000;
-      @media (max-width: 350px) {
+      @media (max-width: 480px) {
         text-align: center;
         margin: auto;
       }
@@ -232,7 +243,7 @@ export default {
     font-size: 14px;
     line-height: 17px;
     color: var(--color-blue);
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       text-align: center;
     }
     &:hover{
@@ -243,13 +254,13 @@ export default {
     margin-top: 75px;
     margin-bottom: 16px;
     display: flex;
-    @media (max-width: 350px) {
+    @media (max-width: 480px) {
       margin-top: 34px;
       justify-content: center;
     }
     &-item{
       margin-right: 16px ;
-      @media (max-width: 350px) {
+      @media (max-width: 480px) {
         margin: 0 8px;
       }
 

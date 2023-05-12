@@ -8,13 +8,7 @@
       <div class="wrapper">
         <div class="block">
           <div class="logo-block">
-            <div class="">
-                <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3.92536 6.8489H21.5414C23.1307 6.88486 23.1307 4.81387 21.5414 4.84983H3.92536C2.33608 4.8138 2.33608 6.88486 3.92536 6.8489Z" fill="#269EB7"/>
-                  <path d="M14.9586 11.8498H3.50818C2.47514 11.8139 2.47514 13.8849 3.50818 13.8489H14.9586C15.9917 13.8849 15.9917 11.8139 14.9586 11.8498Z" fill="#269EB7"/>
-                  <path d="M18.7202 18.8494H3.74657C2.39568 18.8494 2.39568 20.8494 3.74657 20.8494H18.7202C20.0711 20.8494 20.0711 18.8494 18.7202 18.8494Z" fill="#269EB7"/>
-                </svg>
-            </div>
+            <DropDownHeader/>
             <RouterLink :to="{ name: 'home'}" class="routerLink"> 
               <div class="logo">
                 <svg width="165" height="42" viewBox="0 0 165 42" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,7 +70,8 @@
 
 <script>
 import { RouterLink } from 'vue-router'
-import DropDownItems from './ui/DropDownItems.vue';
+import DropDownItems from './ui/DropDownItems.vue'
+import DropDownHeader from './ui/DropDownHeader.vue';
 import MessageView from "./ui/MessageView.vue"
 import MyConfirm from './ui/MyConfirm.vue'
 export default {
@@ -88,7 +83,8 @@ export default {
   components:{
     DropDownItems,
     MessageView,
-    MyConfirm
+    MyConfirm,
+    DropDownHeader
   },
   computed:{
     classObject() {

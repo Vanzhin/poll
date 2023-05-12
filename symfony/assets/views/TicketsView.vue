@@ -40,7 +40,7 @@
               </div>
             
               <div  
-                @click="clickToLink('rnd2b')"
+                @click="clickToLink('rndb')"
                 class="tickets-block-coll-tickets-item"
                 v-if="ticketsIs()"
               >
