@@ -55,6 +55,10 @@ test.category.exist: Такого раздела нет
 test.title.exist_in_category: Тест с таким названием уже существует в указанном разделе
 test.alias.not_blank: Псевдоним теста не может быть пустым
 test.alias.max_length: Псевдоним теста не может быть длиннее {{ limit }} символов
+test.title.format: Не верный формат названия
+test.description.format: Не верный формат описания
+test.category.format: Не верный формат категории
+
 
 min_trud_test.title.not_blank: Название теста не может быть пустым
 min_trud_test.original_id.unique: Тест с таким идентификатором уже существует

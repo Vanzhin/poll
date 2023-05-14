@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Action\Test\GetTestListAction;
 use App\Entity\Question;
 use App\Entity\Test;
 use App\Entity\Ticket;
@@ -205,6 +206,12 @@ class TestController extends AbstractController
 
             )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
+    }
+
+    #[Route('/api/search/test', name: 'app_api_test_search', methods: ['GET'])]
+    public function search(Request $request, GetTestListAction $action)
+    {
+        return $action($request);
     }
 
 }

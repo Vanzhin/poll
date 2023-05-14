@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use App\Api\Module\V1\validation\vo\Error;
 use App\Entity\Question;
 use App\Interfaces\EntityWithImageInterface;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\File as FileConstraint;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Image;
@@ -164,6 +166,16 @@ class ValidationService
         }
         if (count($errors) === 0) {
             return null;
+        }
+        return $errors;
+    }
+
+    public function dataValidate(array $data, Collection $constraint): array
+    {
+        $violations = $this->validator->validate($data, $constraint);
+        $errors = [];
+        foreach ($violations as $violation) {
+            $errors[] = implode(', ', [$violation->getPropertyPath(), $violation->getMessage()]);
         }
         return $errors;
     }
