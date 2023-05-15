@@ -3,12 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Category;
-use App\Entity\Question;
 use App\Entity\Test;
+use App\Interfaces\TestRepositoryInterface;
+use App\Repository\Filter\TestFilter;
+use App\Service\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\ParameterType;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,9 +19,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Test[]    findAll()
  * @method Test[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TestRepository extends ServiceEntityRepository
+class TestRepository extends ServiceEntityRepository implements TestRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, Paginator $paginator)
     {
         parent::__construct($registry, Test::class);
     }
@@ -109,31 +108,53 @@ class TestRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function findAllWithFilter(TestFilter $filter): array
+    {
+        $query = $this->buildFilter($filter)
+            ->setFirstResult($filter->getOffset())
+            ->setMaxResults($filter->getLimit());
+
+        return $query->getQuery()->getResult();
+
+    }
 
 
+    public function buildFilter(TestFilter $filter): QueryBuilder
+    {
+        $query = $this->getOrCreateQueryBuilder();
+        if ($filter->getTitle()) {
+            $query->andWhere('te.title LIKE :title')
+                ->setParameter('title', "%{$filter->getTitle()}%");
+        }
+        if ($filter->getDescription()) {
+            $query->andWhere('te.description LIKE :description')
+                ->setParameter('description', "%{$filter->getDescription()}%");
+        }
+        if ($filter->getDateInterval()) {
+            if ($filter->hasDateIntervalFrom()) {
+                $query->andWhere('te.createdAt >= :from')
+                    ->setParameter('from', $filter->getDateInterval()['from']->setTime(00, 00, 00));
+            }
+            if ($filter->hasDateIntervalTo()) {
+                $query->andWhere('te.createdAt <= :to')
+                    ->setParameter('to', $filter->getDateInterval()['to']->setTime(23, 59, 59));
+            }
 
-//    /**
-//     * @return Test[] Returns an array of Test objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+        }
+        if ($filter->getMintrudTests()) {
+            $query->andWhere('te.minTrudTest IN (:minTrudTest)')
+                ->setParameter('minTrudTest', $filter->getMintrudTests());
+        }
+        if ($filter->getCategory()) {
+            $query->andWhere('te.category = :category')
+                ->setParameter('category', (int)$filter->getCategory());
+        }
+        foreach ($filter->getSort() as $property => $direction) {
+            $query->addOrderBy('te.' . $property, $direction);
+        }
 
-//    public function findOneBySomeField($value): ?Test
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $query;
+    }
+
+
 }
