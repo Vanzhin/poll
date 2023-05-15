@@ -26,7 +26,7 @@ class GetTestListAction extends BaseAction
     {
         try {
             $mapper = new TestMapper();
-            $data = array_merge($request->query->all(), json_decode($request->getContent(), true));
+            $data = array_merge($request->query->all() ?? [], json_decode($request->getContent(), true) ?? []);
             $errors = $this->validation->dataValidate($data, $mapper->getValidationCollectionTestList());
 
             if ($errors) {
