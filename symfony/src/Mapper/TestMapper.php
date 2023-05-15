@@ -13,6 +13,10 @@ class TestMapper
         $response = TestFilter::createDefault();
         $filter = $data['filter'] ?? [];
 
+        if (isset($data['sort'])) {
+            $response->setSort($data['sort']);
+        }
+
         if (isset($filter['title'])) {
             $response->setTitle($filter['title']);
         }
@@ -90,9 +94,32 @@ class TestMapper
 
                 ]
             ),
+            'sort' => new Assert\Optional([
+                new Assert\NotNull(),
+                new Assert\NotBlank(),
+                new Assert\Collection($this->getSort()),
+            ]),
         ],
             allowExtraFields: true,
         );
+    }
+
+    private function getSort(): array
+    {
+        //выбираю доступные поля из Test::class, делаю возможность выполнять сортировку только по ним
+// перенести в Test::class? типа Test::getSort();
+//        $properties = array_keys((new \ReflectionClass(Test::class))->getDefaultProperties());
+        $properties = ["id", "title", "description", "category", "minTrudTest", "time", "createdAt", "updatedAt"];
+        $template = new Assert\Optional([
+            new Assert\NotNull(),
+            new Assert\NotBlank(),
+            new Assert\Choice(['ASC', 'DESC'], multiple: false)
+        ]);
+        $sort = [];
+        foreach ($properties as $property) {
+            $sort[$property] = $template;
+        }
+        return $sort;
     }
 
 }

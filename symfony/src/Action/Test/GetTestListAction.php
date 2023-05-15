@@ -33,7 +33,7 @@ class GetTestListAction extends BaseAction
                 return $this->errorResponse(["errors" => $errors]);
             }
             $filter = $mapper->buildTestFilter($data);
-
+//            return $this->successResponse(array_keys((new \ReflectionClass(Test::class))->getDefaultProperties()));
 //            todo убрать $pagination выводить данные самому
 //            return $this->successResponse(
 //                [

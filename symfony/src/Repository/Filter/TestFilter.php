@@ -2,9 +2,6 @@
 
 namespace App\Repository\Filter;
 
-use App\Repository\Filter\vo\test\DateTime;
-use Monolog\DateTimeImmutable;
-
 class TestFilter
 {
     const DEFAULT_PAGE = 1;
@@ -26,8 +23,9 @@ class TestFilter
 
     public static function createDefault(): self
     {
-//        здесь будут дефолтные настройки
-        return new self();
+        $filter = new self();
+        $filter->addSort('title', 'ASC');
+        return $filter;
     }
 
     /**
@@ -131,6 +129,12 @@ class TestFilter
     public function setSort(?array $sort): void
     {
         $this->sort = $sort;
+    }
+
+
+    public function addSort(string $field, string $direction): void
+    {
+        $this->sort[$field] = $direction;
     }
 
     /**

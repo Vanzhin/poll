@@ -149,6 +149,9 @@ class TestRepository extends ServiceEntityRepository implements TestRepositoryIn
             $query->andWhere('te.category = :category')
                 ->setParameter('category', (int)$filter->getCategory());
         }
+        foreach ($filter->getSort() as $property => $direction) {
+            $query->addOrderBy('te.' . $property, $direction);
+        }
 
         return $query;
     }
