@@ -209,7 +209,7 @@ class TestController extends AbstractController
     }
 
     #[Route('/api/search/test', name: 'app_api_test_search', methods: ['GET'])]
-    public function search(Request $request, GetTestListAction $action)
+    public function search(Request $request, GetTestListAction $action): JsonResponse
     {
         return $action($request);
     }
