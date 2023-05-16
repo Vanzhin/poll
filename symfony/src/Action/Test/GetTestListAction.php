@@ -57,7 +57,7 @@ class GetTestListAction extends BaseAction
                     "test" => $pagination,
                     "pagination" => $this->paginator->getInfo($pagination)
                 ],
-                ['result']);
+                ['search']);
 
 
         } catch (\Exception $e) {

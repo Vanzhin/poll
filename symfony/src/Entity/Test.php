@@ -23,7 +23,7 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(
@@ -34,7 +34,7 @@ class Test
         maxMessage: 'test.title.max_length',
     )]
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -61,13 +61,13 @@ class Test
         message: 'test.category.exist'
     )]
     #[ORM\ManyToOne(inversedBy: 'test')]
-    #[Groups(['result'])]
+    #[Groups(['result', 'search'])]
     private ?Category $category = null;
 
-    #[Groups(['admin_test_general', 'category'])]
+    #[Groups(['admin_test_general', 'category', 'search'])]
     private ?int $questionCount = null;
 
-    #[Groups(['admin_test_general', 'category'])]
+    #[Groups(['admin_test_general', 'category', 'search'])]
     private ?int $questionUnPublishedCount = null;
 
     #[Groups(['admin_test_general', 'category', 'handle'])]
@@ -80,14 +80,14 @@ class Test
     private Collection $results;
 
     #[ORM\ManyToOne(inversedBy: 'tests')]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'report'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search', 'report'])]
     private ?MinTrudTest $minTrudTest = null;
 
     #[ORM\Column(options: ['default' => 6000])]
     #[Assert\GreaterThanOrEqual(
         value: 1200,
     )]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search'])]
     private ?int $time = null;
 
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
@@ -108,7 +108,7 @@ class Test
         max: 30,
         maxMessage: 'test.alias.max_length',
     )]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search'])]
     private ?string $alias = null;
 
     /**
