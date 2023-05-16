@@ -225,6 +225,7 @@ const actions = {
 
 const getters = {
   getTests(state) {
+    console.log(state.tests)
     return state.tests
   },
   getTestTitle(state) {
@@ -234,6 +235,7 @@ const getters = {
     return state.test ? state.test.title : ''
   },
   getTest(state) {
+    
     return state.test
   },
   getSlug(state) {

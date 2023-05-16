@@ -12,7 +12,7 @@
             v-if="!this.$route.params.id"
           >
             <label class="label">Укажите тест для импорта</label>
-            <select  name="hero" v-model="selectedId">
+            <select  name="hero" v-model="selectedId" class="select">
               <option disabled>Выберите тест</option>
               <option 
                 v-for="(item, index) in getTests"
@@ -377,6 +377,9 @@
       outline: 2px solid rgb(233, 50, 18);
       background-color: rgba(245, 30, 14, 0.336);
     }
+  }
+  .select{
+    width: 100%;
   }
  @media (min-width: 1024px) {
   
