@@ -17,6 +17,7 @@ import loader from './modules/loader'
 import results from './modules/results'
 import metriks from './modules/metriks'
 import crumbs from './modules/crumbs'
+import searchQuery from './modules/searchQuery'
 export default createStore({
   state,
   mutations,
@@ -36,6 +37,7 @@ export default createStore({
     loader,
     results,
     metriks,
-    crumbs
+    crumbs,
+    searchQuery
   },
 })

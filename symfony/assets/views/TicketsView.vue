@@ -300,7 +300,7 @@ export default {
         &-tickets{
           display: flex;
           flex-wrap: wrap;
-          justify-content:space-between;
+         
           flex-direction: column;
           @media (max-width: 480px) {
             justify-content: center;

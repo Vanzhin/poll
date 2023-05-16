@@ -76,6 +76,7 @@ import DropDownItems from './ui/DropDownItems.vue'
 import DropDownHeader from './ui/DropDownHeader.vue';
 import MessageView from "./ui/MessageView.vue"
 import MyConfirm from './ui/MyConfirm.vue'
+import { mapGetters, mapActions, mapMutations} from "vuex"
 export default {
   data() {
     return {
@@ -98,6 +99,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      "getSearchDb",
+    ]),
     setIsActive(){
       let scrollY = window.pageYOffset;
       
@@ -107,7 +111,12 @@ export default {
         this.isActive=false;
       }
     },
-    searchQuery(){
+    async searchQuery(){
+      console.log("this.searchValue - ", this.searchValue)
+      
+      
+      await this.getSearchDb({limit:25, page:1, filter:this.searchValue})
+      this.$router.push({name: 'search' })
       
     }
   }, 
