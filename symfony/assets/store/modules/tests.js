@@ -225,7 +225,6 @@ const actions = {
 
 const getters = {
   getTests(state) {
-    console.log(state.tests)
     return state.tests
   },
   getTestTitle(state) {

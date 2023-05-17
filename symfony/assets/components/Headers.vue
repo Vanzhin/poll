@@ -112,10 +112,7 @@ export default {
       }
     },
     async searchQuery(){
-      console.log("this.searchValue - ", this.searchValue)
-      console.log(this.$route)
-      
-      await this.getSearchDb({limit:25, page:1, filter:this.searchValue})
+      await this.getSearchDb({limit:1, page:1, data:this.searchValue})
       this.searchValue = ''
       if (this.$route.meta.loyout === "admin"){
         this.$router.push({name: 'adminTestsList' })

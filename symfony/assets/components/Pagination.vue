@@ -59,7 +59,8 @@ export default {
       "getTestsDB", 
       "getQuestionsTestIdDb",
       "setIsLoaderStatus",
-      "getTicketsTestIdDb"
+      "getTicketsTestIdDb",
+      "getSearchDb"
     ]),
     async paginate (page){
       switch (page) {
@@ -83,15 +84,14 @@ export default {
         }
       }
       this.setIsLoaderStatus({status:true})
-     
-     
-      const data = {
+           
+      let data = {
         page: this.currentPage, 
         parentId: this.$route.params.id||null,
         id: this.$route.params.id||null,
         admin: this.admin
       }
-     
+      
       await this[this.type](data)
       this.setIsLoaderStatus({status:false})
     }

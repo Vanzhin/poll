@@ -1,41 +1,41 @@
 import { 
   SET_SEARCH_RESULT,
   SET_SEARCH_SING_TRUE,
-  SET_SEARCH_SING_FALSE
+  SET_SEARCH_SING_FALSE,
+  SET_SEARCH_VALUE
 } from './mutation-types.js'
 import axios from 'axios';
 
 const state = () => ({
   searchResult: [],
-  searchSign: false
+  searchSign: false,
+  searchValue: ''
 })
 
 const actions = {
-  async getSearchDb({dispatch, commit },{filter='',limit = 25, page = 1, data=''}) {
+  async getSearchDb({dispatch, commit, state },{filter = '', limit = 1, page = 1, data = state.searchValue}) {
+    
     const config = {
-      method: 'get',
+      method: 'post',
       url: `/api/search/test?limit=${limit}&page=${page}`,
       maxBodyLength: Infinity,
       headers: { 
         Accept: 'application/json', 
         'Content-Type': 'application/json',
       },
-      data: JSON.stringify({"filter": {
-          "title": "тест"
-        }}
-      )
-
-      
+      data: JSON.stringify({
+        "filter": {
+          "title": data
+        }
+      })
     };
     if (filter !== ''){
       config.url += `&filter[title]=${filter}`
     }
+    commit("SET_SEARCH_VALUE", data );
     try{
-      console.log(config)
       await axios(config)
         .then(({data})=>{
-          console.log('data - ', data)
-          
           dispatch("setPagination", data.pagination);
           commit("SET_TESTS", data.test);
           commit("SET_SEARCH_SING_TRUE");
@@ -46,7 +46,6 @@ const actions = {
       dispatch('setMessageError', e)
     }
   },
-  
 };
 
 const getters = {
@@ -67,8 +66,10 @@ const mutations = {
     state.searchSign = true
   },
   [SET_SEARCH_SING_FALSE](state) {
-    console.log('есть нуль')
     state.searchSign = false
+  },
+  [SET_SEARCH_VALUE](state, value) {
+    state.searchValue = value
   },
 }
 export default {

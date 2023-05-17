@@ -184,7 +184,7 @@ export default {
     },
   },
   mounted(){
-    console.log(window)
+    // console.log(window)
     window.scrollY = 0;
     
     

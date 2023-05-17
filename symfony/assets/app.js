@@ -9,7 +9,7 @@ import store from './store/index';
 import VueMeta from 'vue-3-meta'
 
 const app = createApp(Appt)
-
+// app.use(VueMeta)
 app.use(router)
 app.use(store)
 app.mount('#app')

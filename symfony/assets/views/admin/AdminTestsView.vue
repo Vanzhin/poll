@@ -54,8 +54,8 @@
     </div>
   </div>
   <Pagination
-    :type="typePagin"
-    admin=true
+    :type = "typePagin"
+    admin = true
   />
 </template>
  
@@ -119,8 +119,17 @@
       },
       
     },
-    async mounted(){},
+    mounted(){
+      
+    },
+    updated(){
+      if (this.getSearchSign){
+        this.typePagin='getSearchDb'
+      }
+      this.isLoader = false
+    },
     async created(){
+      
       if (!this.getSearchSign){
         if (this.parentId){
           await this.getCategorysDB({page: null, parentId: this.parentId, admin: true})
@@ -129,6 +138,8 @@
           await this.getTestsDB({}) 
           this.typePagin='getTestsDB'
         }
+      } else {
+        this.typePagin='getSearchDb'
       }
       this.isLoader = false
     }
