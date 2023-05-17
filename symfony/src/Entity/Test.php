@@ -43,7 +43,7 @@ class Test
 
     #[ORM\Column(length: 255, unique: true)]
     #[Gedmo\Slug(fields: ['title'])]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'test', targetEntity: Question::class, orphanRemoval: true)]
