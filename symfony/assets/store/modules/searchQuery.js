@@ -1,11 +1,13 @@
 import { 
   SET_SEARCH_RESULT,
+  SET_SEARCH_SING_TRUE,
+  SET_SEARCH_SING_FALSE
 } from './mutation-types.js'
 import axios from 'axios';
 
 const state = () => ({
-  searchResult: []
-  
+  searchResult: [],
+  searchSign: false
 })
 
 const actions = {
@@ -35,7 +37,8 @@ const actions = {
           console.log('data - ', data)
           
           dispatch("setPagination", data.pagination);
-          commit("SET_SEARCH_RESULT", data.test);
+          commit("SET_TESTS", data.test);
+          commit("SET_SEARCH_SING_TRUE");
           
         })
     } catch (e) {
@@ -51,13 +54,22 @@ const getters = {
     return state.searchResult
   },
   
+  getSearchSign(state) {
+    return state.searchSign
+  },
 }
 
 const mutations = {
   [SET_SEARCH_RESULT](state, search) {
     state.searchResult = search
   },
-  
+  [SET_SEARCH_SING_TRUE](state) {
+    state.searchSign = true
+  },
+  [SET_SEARCH_SING_FALSE](state) {
+    console.log('есть нуль')
+    state.searchSign = false
+  },
 }
 export default {
   namespaced: false,

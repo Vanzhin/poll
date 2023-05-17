@@ -91,7 +91,8 @@ export default {
     ]),
     
     tests () {
-      return this.$store.getters.getSearchResult
+      return this.$store.getters.getTests
+      // getSearchResult
     },
   },
   methods: {
