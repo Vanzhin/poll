@@ -85,7 +85,7 @@
             >
               <div 
                 class="tickets-block-coll-tickets-itemticket"
-                v-for="(ticket, ind) in tickets"
+                v-for="(ticket) in tickets"
                 @click="saveSelectTicket({ticket})"
               >
                 Билет № {{ ticket.title }}
@@ -175,7 +175,6 @@ export default {
         return this.$store.getters.getTestTitleActive
       },
       tickets () {
-        console.log(this.$store.getters.getTickets)
         return this.$store.getters.getTickets
       },
       
@@ -300,7 +299,7 @@ export default {
         &-tickets{
           display: flex;
           flex-wrap: wrap;
-          justify-content:space-between;
+         
           flex-direction: column;
           @media (max-width: 480px) {
             justify-content: center;

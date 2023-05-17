@@ -15,6 +15,10 @@
               <div
                 v-if="parentId"
               >{{getCategoryTitle }}</div>
+              <div 
+              v-if="getSearchSign"
+              > Результаты поиска
+              </div>
               <div>Тесты</div>
             </div>
             <div class="title-create"
@@ -50,8 +54,8 @@
     </div>
   </div>
   <Pagination
-    :type="typePagin"
-    admin=true
+    :type = "typePagin"
+    admin = true
   />
 </template>
  
@@ -82,6 +86,7 @@
         "getMessage",
         "getCategoryTitle",
         "getTests", 
+        "getSearchSign"
       ]),
       tests(){
         if (!this.getTests) {this.$router.go(-1)}
@@ -114,14 +119,27 @@
       },
       
     },
-    async mounted(){},
+    mounted(){
+      
+    },
+    updated(){
+      if (this.getSearchSign){
+        this.typePagin='getSearchDb'
+      }
+      this.isLoader = false
+    },
     async created(){
-      if (this.parentId){
-        await this.getCategorysDB({page: null, parentId: this.parentId, admin: true})
-        this.typePagin='getCategorysDB'
-      } else { 
-        await this.getTestsDB({}) 
-        this.typePagin='getTestsDB'
+      
+      if (!this.getSearchSign){
+        if (this.parentId){
+          await this.getCategorysDB({page: null, parentId: this.parentId, admin: true})
+          this.typePagin='getCategorysDB'
+        } else { 
+          await this.getTestsDB({}) 
+          this.typePagin='getTestsDB'
+        }
+      } else {
+        this.typePagin='getSearchDb'
       }
       this.isLoader = false
     }

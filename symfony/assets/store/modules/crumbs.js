@@ -44,7 +44,7 @@ const mutations = {
     const parsed = JSON.stringify(state.crumbs)
     localStorage.setItem('crumbs', parsed)
   },
-  [SET_CRUMBS_LENGTH](state, len) {
+  [SET_CRUMBS_LENGTH] (state, len) {
     state.crumbs.length = len
   }
 }

@@ -234,6 +234,7 @@ const getters = {
     return state.test ? state.test.title : ''
   },
   getTest(state) {
+    
     return state.test
   },
   getSlug(state) {

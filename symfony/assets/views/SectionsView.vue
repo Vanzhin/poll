@@ -116,6 +116,7 @@ import Loader from '../components/ui/LoaderView.vue'
 import Pagination from '../components/Pagination.vue'
 import crumbsTitle from '../utils/crumbs.js'
 export default {
+  
   components: {
     Loader,
     Pagination
@@ -183,7 +184,7 @@ export default {
     },
   },
   mounted(){
-    console.log(window)
+    // console.log(window)
     window.scrollY = 0;
     
     
