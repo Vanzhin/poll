@@ -19,9 +19,18 @@ class ExceptionListener
     {
         // You get the exception object from the received event
         $exception = $event->getThrowable();
+        $request = $event->getRequest();
         $logContext = [
-            "file" =>$exception->getFile(),
-            "line" => $exception->getLine()
+            "file" => $exception->getFile(),
+            "line" => $exception->getLine(),
+            "route_parameters" => [
+                "uri" => $request->getRequestUri(),
+                "method" => $request->getMethod(),
+                "post" => $request->getContentTypeFormat() === 'form' ? $request->request->all() : json_decode($request->getContent(), true),
+                "user" => $request->getUser(),
+            ]
+
+
         ];
 
         $this->logger->error($exception->getMessage(), $logContext);
@@ -37,10 +46,10 @@ class ExceptionListener
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         $json = [
+            "message" => $exception->getMessage(),
             "result" => "error",
-            "status" =>$response->getStatusCode(),
+            "status" => $response->getStatusCode(),
             "data" => $logContext,
-            "message" =>$exception->getMessage()
         ];
         $response->setContent(json_encode($json, true));
 

@@ -9,7 +9,7 @@ when@dev:
             filter_for_errors:
                 type: fingers_crossed
                 # if *one* log is error or higher, pass *all* to file_log
-                action_level: warning
+                action_level: NOTICE
                 channels: [ "!event", "!security", "!doctrine" ]
                 handler: file_log
 
@@ -18,6 +18,21 @@ when@dev:
                 type: rotating_file
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 max_files: 1
+                formatter: 'monolog.formatter.json'
+
+            message:
+                type: fingers_crossed
+                action_level: error
+                excluded_http_codes: [ 400, 401, 403, 404 ]
+                buffer_size: 50
+                handler: deduplicated
+            deduplicated:
+                    type: deduplication
+                    handler: telegram
+            telegram: # Важна только эта часть
+                    type: service
+                    id: Monolog\Handler\TelegramBotHandler
+                    level: debug
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:

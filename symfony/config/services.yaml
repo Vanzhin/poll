@@ -63,6 +63,11 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    Monolog\Handler\TelegramBotHandler:
+        arguments:
+            - '%env(TELEGRAM_BOT_KEY)%'
+            - '%env(TELEGRAM_CHANNEL)%'
+
     App\EventListener\ExceptionListener:
         tags: [kernel.event_listener, kernel.exception]
     App\EventListener\ResponseListener:

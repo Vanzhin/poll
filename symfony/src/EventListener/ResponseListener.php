@@ -17,14 +17,13 @@ class ResponseListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        $response=$event->getResponse();
-        if($response->getStatusCode()>=400){
-            $this->logger->error('hello');
-
-            throw new Exception('gopa');
-        }
-        // sends the modified response object to the event
-        $event->setResponse($response);
+//        $response = $event->getResponse();
+//        if ($response->getStatusCode() >= 400) {
+//
+//            throw new Exception('gopa');
+//        }
+//        // sends the modified response object to the event
+//        $event->setResponse($response);
     }
 
 }
