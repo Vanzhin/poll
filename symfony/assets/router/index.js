@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import TestsView from '../views/TestsView.vue'
 import store from '../store/index';
 const router = createRouter({
   history: createWebHistory(""),
@@ -77,7 +75,6 @@ const router = createRouter({
     },
     {
       path: '/iter/:num/group/:id',
-      // path: '/?iter=1/group/:id',
       name: 'iter',
       meta: {loyout: 'page', autch: false},
       component: () => import('../views/AreasView.vue')
@@ -122,6 +119,13 @@ const router = createRouter({
       name: 'createQuestion',
       meta: {loyout: 'page', autch: true},
       component: () => import('../views/admin/CreateQuestionView.vue')
+    },
+    {
+      path: '/search',
+      name: 'search',
+      meta: {loyout: 'page', autch: false},
+      
+      component: () => import('../views/TestsSearchView.vue')
     },
     {
       path: '/admin',

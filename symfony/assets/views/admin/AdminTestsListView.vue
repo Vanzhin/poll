@@ -28,9 +28,13 @@
     },
     methods: { 
       ...mapActions(["saveQuestionDb", "setMessage"]),
-      ...mapMutations([]),
+      ...mapMutations(["SET_SEARCH_SING_FALSE"]),
     },
-    async mounted(){}
+
+    async mounted(){},
+    unmounted(){
+      this["SET_SEARCH_SING_FALSE"]()
+    }
    
  } 
  
