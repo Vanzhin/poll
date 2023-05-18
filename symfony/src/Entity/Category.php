@@ -75,7 +75,7 @@ class Category implements EntityWithImageInterface
 
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Category::class, orphanRemoval: true)]
-    #[ORM\OrderBy(['lft' => 'ASC'])]
+    #[ORM\OrderBy(['title' => 'ASC'])]
     #[Groups(['admin', 'category'])]
     #[MaxDepth(1)]
     private Collection $children;
@@ -90,6 +90,7 @@ class Category implements EntityWithImageInterface
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Test::class, orphanRemoval: true)]
     #[Groups(['category'])]
+    #[ORM\OrderBy(['title' => 'ASC'])]
     private Collection $test;
 
     #[ORM\Column(length: 30)]
