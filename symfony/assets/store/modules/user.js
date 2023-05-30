@@ -170,8 +170,10 @@ const actions = {
           commit("SET_IS_AUTCH_USER", true)
         })
     } catch (e) {
+      console.log(e)
       if (e.response.data.message === "No refresh_token found." ||
-      e.response.data.message === "JWT Refresh Token Not Found"
+      e.response.data.message === "JWT Refresh Token Not Found" ||
+      e.response.data.message === "Invalid JWT Refresh Token"
       ) {
         commit("SET_DELETE_USER_TOKEN", '');
         commit("SET_IS_AUTCH_USER", false)

@@ -13,7 +13,7 @@ const state = () => ({
 })
 
 const actions = {
-  async getSearchDb({dispatch, commit, state },{filter = '', limit = 1, page = 1, data = state.searchValue}) {
+  async getSearchDb({dispatch, commit, state },{filter = '', limit = 6, page = 1, data = state.searchValue}) {
     
     const config = {
       method: 'post',
