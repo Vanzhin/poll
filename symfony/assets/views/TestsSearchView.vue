@@ -61,7 +61,7 @@
       </div>
     </div> 
     <Pagination
-        type="getTestsDB"
+        type="getSearchDb"
       />
   </div>
 </template>

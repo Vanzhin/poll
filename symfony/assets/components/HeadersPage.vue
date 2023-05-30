@@ -2,12 +2,12 @@
   <div class="page-header">
     <div class="container">
       <div class="wrapper">
-        <div class="page-header-title">
+        <h1 class="page-header-title">
           {{ title }}
-        </div>
-        <div class="page-header-title">
+        </h1>
+        <h2 class="page-header-title">
           {{ subTitle }}
-        </div>
+        </h2>
         <div class="page-header-navigation">
           <div class="page-header-navigation-crumbs">
             <div
