@@ -7,6 +7,7 @@ use App\Repository\CategoryRepository;
 use App\Service\NormalizerService;
 use App\Service\Paginator;
 use App\Twig\Extension\AppUpLoadedAsset;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,8 +18,12 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 class CategoryController extends AbstractController
 {
     #[Route('/api/category', name: 'app_api_category_index')]
-    public function index(Request $request, AppUpLoadedAsset $upLoadedAsset, Paginator $paginator, CategoryRepository $repository, NormalizerService $normalizerService): JsonResponse
+    public function index(Request $request, AppUpLoadedAsset $upLoadedAsset, Paginator $paginator, CategoryRepository $repository, NormalizerService $normalizerService,  LoggerInterface $telegramLogger): JsonResponse
     {
+        $telegramLogger->error('testMessage', ['meQWEE'=>'sssss!!@!@!SSSD']);
+
+//        throw new \Exception('ХУ!Й');
+
         $parentId = $request->query->get('parent');
         $pagination = $paginator->getPagination($repository->findAllChildrenQuery(!is_null($parentId) && !is_null($repository->find($parentId)) ? $parentId : null));
         if ($pagination->count() > 0) {
@@ -37,6 +42,7 @@ class CategoryController extends AbstractController
                 unset($response['pagination']);
             }
         }
+
         return $this->json(
             $response,
             200,
@@ -55,6 +61,7 @@ class CategoryController extends AbstractController
     #[Route('/api/category/{id}/children', name: 'app_api_category_children')]
     public function getChildren(Category $category, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
+
         return $this->json(
             $category->getChildren(),
             200,
