@@ -5,7 +5,7 @@
     v-if="!getIsLoaderStatus"
     >
       <HeadersPage
-        title="Тестирование Базовый курс"
+        :title="crumbs"
         :subTitle="testName"
       />
       
@@ -125,7 +125,9 @@ export default {
     questions() {
       return this.$store.getters.getQuestions
     },
-    
+    crumbs(){
+        return this.$store.getters.getCrumbs[1].title.slice(1)
+      },
   },
   watch:{
       $route(newRout){
