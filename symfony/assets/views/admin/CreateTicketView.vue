@@ -36,19 +36,29 @@
           ></i>
         </div>
         <div class="block_number">
-          <label for="number" class="label"> Количество вопросов:</label>
+          <label for="number" class="label"> Количество вопросов в билете:</label>
           <label for="number" class="label"> {{ numberQuestions }}</label>
+        </div>
+        <div class="block_number">
+          <label class="label"> Вопросы списком</label>
+          <input type="checkbox"
+            name="list_check"
+            v-model= "listСheck"
+            class="textarea_input" 
+          /> 
         </div>
         <div class="questions-block">  
           <div class="questions-item"
-            
             v-for="(question, index ) in questions"
             :key="question.id"
             :title="question.title"
             @click="selectQuestion({question, index })"
-            :class="{'questions-item-select': question.select}"
+            :class="{
+              'questions-item-select': question.select,
+              'questions-item-list': listСheck
+              }"
             >  
-            {{ index + 1 }}
+            {{listСheck ? `${index + 1} ${question.title}` :index + 1 }}
           </div>
         </div>
         <br> 
@@ -80,7 +90,8 @@
         operation: this.$route.params.operation,
         numberQuestions: 0,
         questions:[],
-        ticketQuestions: []
+        ticketQuestions: [],
+        listСheck: false,
       }
     },
     computed:{ 
@@ -172,7 +183,7 @@
             const num = this.questions.findIndex((item)=>item.id === question.id)
             console.log(num)
             console.log(this.questions[num])
-            if (num > 0) {this.questions[num].select = true}
+            if (num >= 0) {this.questions[num].select = true}
             return question.id
           }
         )
@@ -217,7 +228,7 @@
     }
     &-item{
       width: 45px;
-      height: 30px;
+      min-height: 30px;
       border-radius: 6px;
       background-color: rgb(141 135 135);
       border: 2px solid rgb(141 135 135);
@@ -229,6 +240,10 @@
       }
       &-select{
         background-color: rgb(139, 118, 72);
+      }
+      &-list{
+        width: 100%;
+        text-align: left;
       }
     }
   }
