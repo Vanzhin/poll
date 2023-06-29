@@ -69,7 +69,7 @@ class Question implements EntityWithImageInterface
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Variant::class, cascade: ["persist", "remove"])]
     #[Groups(['main', 'admin_question', 'test', 'handle', 'result', 'result_answer'])]
-    #[ORM\OrderBy(["correct" => "ASC"])]
+//    #[ORM\OrderBy(["correct" => "ASC"])]
     private Collection $variant;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -103,6 +103,11 @@ class Question implements EntityWithImageInterface
 
 
     private array $subtitleIds;
+
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['main', 'admin_question'])]
+
+    private bool $shuffleVariants;
 
     /**
      * @return array|null
@@ -383,6 +388,22 @@ class Question implements EntityWithImageInterface
             $subtitleIds[] = (int)$subtitle->getId();
         }
         return $subtitleIds;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShuffleVariants(): bool
+    {
+        return $this->shuffleVariants;
+    }
+
+    /**
+     * @param bool $shuffleVariants
+     */
+    public function setShuffleVariants(bool $shuffleVariants): void
+    {
+        $this->shuffleVariants = $shuffleVariants;
     }
 
 }
