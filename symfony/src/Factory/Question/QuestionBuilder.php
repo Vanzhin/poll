@@ -26,6 +26,11 @@ class QuestionBuilder
             $data['published'] = false;
         }
         foreach ($data as $key => $item) {
+            if ($key === 'shuffleVariants') {
+                $question->setShuffleVariants(filter_var($item, FILTER_VALIDATE_BOOLEAN));
+                continue;
+            };
+
             if ($key === 'title') {
                 $question->setTitle($item);
                 continue;
@@ -77,7 +82,6 @@ class QuestionBuilder
             $question->setAuthor($user);
 
         }
-
         return $question;
     }
 

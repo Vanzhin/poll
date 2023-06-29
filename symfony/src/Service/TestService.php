@@ -127,18 +127,20 @@ class TestService
     {
         foreach ($questions as $question) {
             $variants = $question->getVariant()->toArray();
-            shuffle($variants);
-            $subtitles = $question->getSubTitles()->toArray();
-            shuffle($subtitles);
-            $question->getSubtitles()->clear();
-            $question->getVariant()->clear();
+            if($question->isShuffleVariants()){
+                shuffle($variants);
+                $subtitles = $question->getSubTitles()->toArray();
+                shuffle($subtitles);
+                $question->getSubtitles()->clear();
+                $question->getVariant()->clear();
 
-            foreach ($variants as $variant) {
-                $question->addVariant($variant);
-            }
-            foreach ($subtitles as $subtitle) {
-                $question->addSubtitle($subtitle);
-            }
+                foreach ($variants as $variant) {
+                    $question->addVariant($variant);
+                }
+                foreach ($subtitles as $subtitle) {
+                    $question->addSubtitle($subtitle);
+                }
+            };
         }
 
         return $questions;
