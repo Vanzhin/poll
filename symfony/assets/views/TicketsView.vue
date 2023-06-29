@@ -1,6 +1,6 @@
 <template>
   <HeadesPage
-    title="Тестирование Базовый курс"
+    :title="crumbs"
     :subTitle="testName"
     v-if="!getIsLoaderStatus"
   />
@@ -177,6 +177,9 @@ export default {
       tickets () {
         return this.$store.getters.getTickets
       },
+      crumbs(){
+        return this.$store.getters.getCrumbs[1].title.slice(1)
+      },
       
     },
     methods: {
@@ -190,23 +193,22 @@ export default {
     ]),
       async saveSelectTicket({ticket}){
         this.saveSelectTicketStore({ticket})
-        const ticketId = await this.getRandomTicket
-        this.clickToLink(ticketId)
+        this.clickToLink(ticket)
       },
       ticketsIs() {
         return this.getTest.ticketCount > 0
       },
       clickToLink(id){
         this.setIsLoaderStatus({status: true})
-
+        const ticketId = typeof(id) == 'string' ? id : id.id
         this.setCrumbs({crumbs:[{
           name:'ticket',
-          params: { id }, 
-          title: `/${typeof(id) == 'number' ? 'Билет № ' + id : rndOptions[id] }` ,
+          params: { id: ticketId}, 
+          title: `/${typeof(id) == 'string' ? rndOptions[id]:'Билет № ' + id.title   }` ,
           iter: this.getCrumbsLength + 1 
           }]
         })
-        this.$router.push({ name: 'ticket', params: { id } })
+        this.$router.push({ name: 'ticket', params: { id:ticketId } })
       }
     },
     mounted(){
