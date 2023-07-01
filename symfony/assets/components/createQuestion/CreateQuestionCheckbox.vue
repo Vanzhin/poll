@@ -119,7 +119,7 @@ export default {
         this.answers.push({id:'a' + (this.uniqueNumber), title:"", image:"", value:""})
       } else {
         const arr = this.answerSelect.filter(item =>{ 
-         return item !== this.answers[this.answers.length - 1].id})
+          return item !== this.answers[this.answers.length - 1].id})
         this.answerSelect = arr
         this.answers.pop()
       }
@@ -145,7 +145,6 @@ export default {
     },
   },
   created(){
-
     if (this.operationEdit) {
       this.answerSelect = this.getQuestion.answer
       this.uniqueNumber = this.numberAnswers = this.getQuestion.variant.length
