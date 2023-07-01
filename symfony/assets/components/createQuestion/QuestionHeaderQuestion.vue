@@ -40,6 +40,25 @@
       >
       <label class="label">Опубликовать</label>
     </div>
+    <div class="published"
+    v-if="typeQuestion !=='input_one'"
+    >
+      <input  class="" type="checkbox" checked 
+        v-model="questionShuffleVariants"
+      >
+      <input  class="" type="hidden" 
+        :value="questionShuffleVariants"
+        
+        name="question[shuffleVariants]"
+      >
+      <label class="label">Варианты ответов перемешивать -</label>
+      <label class="label"
+        v-if="questionShuffleVariants"
+      >Да</label>
+      <label class="label"
+        v-else
+      >Нет</label>
+    </div>
   </div>
 </template>
 <script>
@@ -52,9 +71,11 @@ export default {
       questionTitle:"",
       questionImgUrl:"",
       questionImgValue:"",
+      questionShuffleVariants: true,
       questionImgFormVisible: true,
       operationEdit: this.$route.params.operation === "edit",
-      published: true
+      published: true,
+      typeQuestion:""
     }
   },
   computed:{
@@ -79,10 +100,13 @@ export default {
     },
   },
   created(){
-    
+    // console.log(this.getQuestion)
+    this.typeQuestion = this.getQuestion.type.title
     if (this.operationEdit){
       this.questionTitle = this.getQuestion.title ? this.getQuestion.title : ''
       this.questionImgUrl = this.getQuestion.image ? this.getQuestion.image : ''
+      this.questionShuffleVariants = this.getQuestion.shuffleVariants
+
     }
   } 
 }
