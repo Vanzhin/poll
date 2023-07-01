@@ -12,8 +12,9 @@
           </h2>
         </div>
         <div class="b-container">
-          <div class="sections__block row" >
+          <div class="sections__block row" v-if="sections !==''">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
+              
               v-for="section in sections" 
               :key="section.id"
               :style="`background-image: url(${section.image ? section.image 
@@ -25,7 +26,7 @@
               </div>
             </div>
           </div>
-          <Pagination
+          <ThePagination
             type="getCategorysDB"
           />
         </div> 
@@ -108,10 +109,23 @@
     ogImage: 'https://example.com/image.png',
     twitterCard: 'summary_large_image',
   })
-  const url = 'https://test.9784023.ru/api/category?limit=6'
-  const res = await useAsyncData( () => $fetch(url))
-  const sections = res.data.value.children
+  const url = 'https://test.9784023.ru'
+  // const res = await useAsyncData( () => $fetch(`${url}/api/category?limit=6`))
+  const {data:section} = await useAsyncData(
+    'section',  
+    () => $fetch(`${url}/api/category?limit=6`)
+  )
+  
+  console.log(section.value)
+  section.value.url = ''
+  const paginatios = useState('paginatios', () => section.value.pagination
+)
+
+  // const sections = res.data.value.children
+  const sections = section.value.children
+
   console.log(sections)
+  console.log(paginatios)
 </script>
 <style lang="scss" scoped>
   .fon{
@@ -119,7 +133,6 @@
   }
   .sections{
     min-height: 100vh;
-    
     &__block{
       display: flex;
       flex-wrap: wrap;

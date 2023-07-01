@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown">
+  <div class="d-dropdown">
     <button class="btn btn-secondary "  data-bs-toggle="dropdown" aria-expanded="false">
       <div class="dropdown-button">
         <div class="title"> Личный кабинет</div> 

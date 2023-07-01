@@ -8,16 +8,13 @@
             <path d="M18.7202 18.8494H3.74657C2.39568 18.8494 2.39568 20.8494 3.74657 20.8494H18.7202C20.0711 20.8494 20.0711 18.8494 18.7202 18.8494Z" fill="#269EB7"/>
           </svg>
       </div>
-      
     </button>
     <ul 
       class="dropdown-menu menu" 
       aria-labelledby="dropdownMenuButton1"
     >
-      
       <li 
         class="dropdown-item menu_li"
-        
       >
         hhhhh
       </li>
