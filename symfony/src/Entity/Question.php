@@ -104,10 +104,10 @@ class Question implements EntityWithImageInterface
 
     private array $subtitleIds;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'boolean', )]
     #[Groups(['main', 'admin_question'])]
 
-    private bool $shuffleVariants;
+    private bool $shuffleVariants = true;
 
     /**
      * @return array|null
