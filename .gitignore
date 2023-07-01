@@ -16,3 +16,4 @@ symfony/config/jwt
 docker/db/mysql/data/
 
 docker/nginx/logs/
+test_nuxt/node_modules
