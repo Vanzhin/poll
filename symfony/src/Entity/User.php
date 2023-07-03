@@ -60,6 +60,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private ?WorkerCard $workerCard = null;
 
+    #[ORM\ManyToOne(inversedBy: 'user')]
+    private ?Company $company = null;
+
     /**
      * @return WorkerCard|null
      */
@@ -237,6 +240,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $question->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }

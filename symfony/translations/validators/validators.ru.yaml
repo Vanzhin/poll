@@ -45,6 +45,10 @@ category.title.unique: Раздел с таким названием уже су
 category.alias.not_blank: Псевдоним раздела не может быть пустым
 category.alias.max_length: Псевдоним раздела не может быть длиннее {{ limit }} символов
 
+company.tin.regex: Не корректно введен ИНН
+company.title.not_blank: Название компании не может быть пустым
+company.title.max_length: Название компании не может быть длиннее {{ limit }} символов
+
 file.extension: Расширение загружаемого файла не {{ extensions }}
 file.size.max: Файл {{ name }} слишком большой ({{ size }} {{ suffix }}). Максимально допустимый размер {{ limit }} {{ suffix }}
 file.is.null: Файл не найден
