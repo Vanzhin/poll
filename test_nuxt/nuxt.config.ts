@@ -5,7 +5,16 @@ export default defineNuxtConfig({
   modules: [
     // "@/node_modules/bootstrap/dist/js/bootstrap.min.js"
     // 'bootstrap-vue/nuxt'
+    '@pinia/nuxt',
+    
   ],
+  // pinia: {
+  //   autoImports: [
+  //     // automatically imports `defineStore`
+  //     'defineStore', // import { defineStore } from 'pinia'
+  //     ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+  //   ],
+  // },
   
   css: [
     "bootstrap/dist/css/bootstrap.min.css",

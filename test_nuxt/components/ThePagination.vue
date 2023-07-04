@@ -5,12 +5,12 @@
 
 
     <div class="block-contener" 
-      v-if="state.pagination.length > 1"
+      v-if="pagination.length > 1"
     >
       <div class="block-pagination">
         <div class="block-pagination-element"
           @click = "paginate('-1')"
-          v-if="parseInt(state.pagination[0].label) > 1"
+          v-if="parseInt(pagination[0].label) > 1"
         >
           <span>
             &laquo; Назад
@@ -18,7 +18,7 @@
         </div>
 
         <div 
-          v-for="(item, key) in state.pagination"
+          v-for="(item) in pagination"
           :key = "item.label" 
           class="block-pagination-element" 
           :class="{active:item.active}"
@@ -43,66 +43,47 @@
   </div>
 </template>
 <script setup>
+  import { usePaginationStore } from '../stores/PaginationStore'
+  const store = usePaginationStore()
+  const router = useRouter()
 
+console.log('store ',store)
 
-const pagination = useState('paginatios').value
+const pagination = store.paginations
 console.log('pagination ',pagination)
 
-const state = {
-  pagination:[],
-  activePage: 1,
-  totalItemsPage: 0,
-  paginVisible: 10,
-  paginLeft: 1,
-  paginRight: 10,
-  totalPages: 1,
-  totalItem: null
-}
-
-let  pagin = []
-      
-      state.totalItemsPage = pagination.limit
-      state.activePage = pagination.currentPage
-      state.totalPages = pagination.totalPages
-      state.totalItem = pagination.totalItem
-      
-      if (pagination.totalPages <= state.paginVisible){
-        const len =  pagination.totalPages
-        state.paginRight = pagination.totalPages
-        pagin = Array.from({length: len}).map((inp, index) => { 
-          return {label: index + 1 , active: index + 1  === state.activePage ? 
-            true : false,
-          }})
-      } else {
-        if (state.activePage === 1 ) {state.paginRight = state.paginVisible }
-        if ( state.paginRight < state.activePage ) { 
-          if ( (state.activePage + state.paginVisible - 1) < state.totalPages){
-            state.paginRight = state.activePage + state.paginVisible - 1
-          } else {
-            state.paginRight = state.totalPages
-          }
-          state.paginLeft = state.paginRight - (state.paginVisible - 1)
-        } else if (state.paginLeft > state.activePage ) {
-          if ( (state.activePage - state.paginVisible + 1) > 0){
-            state.paginLeft = state.activePage - (state.paginVisible - 1)
-          } else {
-            state.paginLeft = 1
-          }
-          state.paginRight = state.paginLeft + state.paginVisible - 1
-        } 
-        const len = state.paginVisible
-        pagin = Array.from({length: len}).map((inp, index) => { 
-          return {label: state.paginLeft + index , active: state.paginLeft + index === state.activePage ? 
-            true : false,
-        }})
-      }
-    
-    
-    state.pagination = pagin
-    const nextTotalPriznak = (state.totalPages > 10) ? 
-          (parseInt( state.pagination[9].label) < state.totalPages) ? true : false
+  const nextTotalPriznak = (store.totalPages > 10) ? 
+          (parseInt( store.pagination[9].label) < store.totalPages) ? true : false
         : false
   console.log(nextTotalPriznak)
+
+  function paginate (pag) {
+    console.log("pag -- ", pag)
+    
+    switch (pag) {
+        case '-1' : {
+          if (store.activePage > 1) {
+            store.activePageToChange( parseInt(store.paginations[0].label) - 1)
+          } else { return }
+        break;
+        }
+        case '+1' : {
+         
+          if  (store.activePage = parseInt(store.paginations[9].label) < store.totalPages) {
+            store.activePageToChange (parseInt(store.paginations[9].label) + 1)
+          } else { return }
+        break;
+        }
+        default:{
+          console.log("activePage -- ", store.activePage)
+          // activePage = useState('activePage', () => pag)
+          store.activePageToChange(pag)
+          console.log("activePage -- ", store.activePage)
+          // router.push({ path: `/page/${pag}` })
+          navigateTo(`${store.url}${pag>1? '/page/'+ pag :'/'}`)
+        }
+      }
+  }
 
 // { "currentPage": 1, "totalPages": 3, "totalItem": 15, "totalItemsPerPage": 6, "limit": 6 }
 </script>
