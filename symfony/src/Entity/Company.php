@@ -6,20 +6,25 @@ use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
+#[UniqueEntity(fields: ['tin'], message: 'company.tin.unique')]
 class Company
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['admin_user'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: false)]
     #[Assert\NotBlank(message: 'company.title.not_blank')]
     #[Assert\Length(max: 255, maxMessage: 'company.title.max_length')]
+    #[Groups(['admin_user'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 12, unique: true)]
@@ -27,14 +32,18 @@ class Company
         pattern: '/^\d{10}(\d{2})?\s?$/',
         message: 'company.tin.regex'
     )]
+//    #[Assert\Unique(message: 'company.tin.unique')]
+//    #[Assert\Unique]
+    #[Groups(['admin_user'])]
     private ?string $tin = null;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class, orphanRemoval: true)]
+    #[Groups(['admin_user'])]
     private Collection $users;
 
-    public function __construct()
+    public function __construct(User $user)
     {
-        $this->users = new ArrayCollection();
+        $this->users = new ArrayCollection([$user]);
     }
 
     public function getId(): ?int
@@ -69,7 +78,7 @@ class Company
     /**
      * @return Collection<int, User>
      */
-    public function getUser(): Collection
+    public function getUsers(): Collection
     {
         return $this->users;
     }

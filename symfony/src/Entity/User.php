@@ -41,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     #[Groups(['account', 'user', 'admin_user', 'report'])]
-    #[Assert\NotBlank(message: 'user.first_name.not_blank')]
+//    #[Assert\NotBlank(message: 'user.first_name.not_blank')]
     private string|null $firstName = null;
 
     /**
@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'user')]
     private ?Company $company = null;
 
-    #[ORM\Column(length: 255, unique: true, nullable: false)]
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
     private ?string $login = null;
 
     /**
