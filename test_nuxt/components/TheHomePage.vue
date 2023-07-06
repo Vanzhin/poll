@@ -17,21 +17,23 @@
         </div>
         <div class="b-container" 
           v-else>
-          <div class="sections__block row" v-if="category.categorys !==''">
+          <div class="sections__block row" v-if="category.getCategogys !==''">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
-              
-              v-for="section in category.categorys" 
+             
+              v-for="section in  sections.children" 
               :key="section.id"
               :style="`background-image: url(${section.image ? section.image 
                 :'http://test2-open/img/item_fon.png'});`"
               @click="categoryUpdate({section})"
-            >
+            > <!-- category.getCategogys -->
               <div class="item-info">
                 <div class="item-info-title">{{ section.title }}</div>
                 <div class="item-info-discrabe">{{ section.description }}</div>
               </div>
             </div>
           </div>
+          {{ page }}
+          <p><button @click="page--">Previous</button> - <button @click="page++">Next</button></p>
           <ThePagination
             type="getCategorysDB"
           />
@@ -124,35 +126,39 @@
   })
   
   const page = ref(route.params.page ? +route.params.page: 1)
-  // const page = store.activePage
-  console.log(page)
+  // const page = ref(store.activePage)
+  console.log(page.value)
   
+  
+  // const url = `${urlApi}/api/category?limit=6${page.value > 1? '&page=' + page.value: ''}`
   const url = `${urlApi}/api/category?limit=6${page.value > 1? '&page=' + page.value: ''}`
-  const { data: section, pending, error } = await useFetch(() => url,{
-      mode: 'no-cors',
+  
+  const { data: sections, pending, error } = await useFetch(() =>  url,
+    {
       lazy: true,
-      watch: [page]
       
     })
+    
+    let timerId = setInterval(() => {
+      console.log(pending.value)
+      if ( !pending.value) {
+        clearInterval(timerId)
+        console.log(sections.value)
+        store.paginationsAll(sections.value.pagination)
+        category.categorysToChange(sections.value.children)
+        console.log(category.getCategogys)
+      }
+    }, 200);
   
-  // const {data:section} = await useAsyncData(
-  //   'section',  
-  //   () => $fetch(url,{
-  //     mode: 'no-cors',
-     
-  //   }),
-   
-  // )
+    store.paginationsAll(sections.value.pagination?sections.value.pagination:[])
+    category.categorysToChange(sections.value.children? sections.value.children:[]) 
+
   
-  console.log(section)
-  console.log(section.value)
-  store.paginationsAll(section.value.pagination)
-  category.categorysToChange(section.value.children)
-  // console.log(sections)
+
   function categoryUpdate({section}){
     console.log(section)
     if (section.children.length > 0) {
-      navigateTo(`iter/1/group/${section.id}`)
+      navigateTo(`/iter/1/group/${section.id}`)
     }
   }
 </script>

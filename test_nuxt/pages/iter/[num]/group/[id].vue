@@ -7,11 +7,15 @@
       <div class="fon">
         <div class="container">
           <div  class="wrapper">
+            <div
+              v-if="pending"
+              >Загрузка...
+            </div>
             <div class="tests__block"
-              v-if="category.categorys.length > 0"
-            >
+              v-else-if="sections.children.length > 0"
+              >
               <div
-                v-for="(area) in category.categorys" 
+                v-for="(area) in sections.children" 
                 :key="area.id"
               >
                 <div class="test__card"
@@ -47,9 +51,12 @@
             > 
               Данная категория в разработке.
             </div> 
-            <Pagination
+            <ThePagination
+            type="getCategorysDB"
+          />
+            <!-- <Pagination
               type="getCategorysDB"
-            />  
+            />   -->
           </div>
         </div>
       </div>
@@ -74,22 +81,38 @@
     ogImage: 'https://example.com/image.png',
     twitterCard: 'summary_large_image',
   })
-  const page = store.activePage
-  console.log(page)
-
+  // const page = store.activePage
+  // console.log(page)
+  const page = ref(route.params.page ? +route.params.page: 1)
+  // const page = ref(store.activePage)
+  console.log(page.value)
   let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
-  if (parentId !== '') {url = url + `&parent=${parentId}`}
-  
-  const { data: section, pending, error } = await useFetch(() => url,{
-      mode: 'no-cors',
+  if (parentId.value !== '') {url = url + `&parent=${parentId.value}`}
+  console.log(url)
+
+ 
+    const { data: sections, pending, error } = await useFetch(() => url, 
+    {
       lazy: true,
-      watch: [parentId]
-  })
-     
-  console.log(section)
-  console.log(section.value)
-  // store.paginationsAll(section.value.pagination)
-  // category.categorysToChange(section.value.children)  
+    })
+    let timerId = setInterval(() => {
+      console.log(pending.value)
+      if ( !pending.value) {
+        clearInterval(timerId)
+        console.log(sections.value)
+        store.paginationsAll(sections.value.pagination)
+        category.categorysToChange(sections.value.children)
+        console.log(category.getCategogys)
+      }
+    }, 200);
+    console.log(sections)
+    console.log(sections.value)
+    store.paginationsAll(sections.value?sections.value.pagination:[])
+    category.categorysToChange(sections.value? sections.value.children:[]) 
+    console.log(category.getCategogys)
+  // async function getCategogysAPI(url) { }
+  
+  // getCategogysAPI(url)
 
 </script>
 <style lang="scss" scoped>

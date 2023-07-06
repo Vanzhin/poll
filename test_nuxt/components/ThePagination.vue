@@ -47,10 +47,10 @@
   const store = usePaginationStore()
   const router = useRouter()
 
-console.log('store ',store)
+  console.log('store ',store)
 
-const pagination = store.paginations
-console.log('pagination ',pagination)
+  const pagination = store.paginations
+  console.log('pagination ',pagination)
 
   const nextTotalPriznak = (store.totalPages > 10) ? 
           (parseInt( store.pagination[9].label) < store.totalPages) ? true : false
@@ -80,7 +80,7 @@ console.log('pagination ',pagination)
           store.activePageToChange(pag)
           console.log("activePage -- ", store.activePage)
           // router.push({ path: `/page/${pag}` })
-          navigateTo(`${store.url}${pag>1? '/page/'+ pag :'/'}`)
+           navigateTo(`${store.url}${pag>1? '/page/'+ pag :'/'}`)
         }
       }
   }

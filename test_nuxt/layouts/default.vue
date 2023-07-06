@@ -3,6 +3,6 @@
     <TheHeader />
     
     <slot />
-    <!-- <TheFooter /> -->
+    <TheFooter />
   </div>
 </template>
