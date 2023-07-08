@@ -20,6 +20,12 @@ export const usePaginationStore = defineStore('pagination', {
     },
     paginationsAll(pagination) {
       console.log(pagination)
+      if (pagination) {}
+      else {
+        this.paginations =[]
+        this.activePage = 1
+        return
+      }
       let  pagin = []
       
       this.totalItemsPage = pagination.limit

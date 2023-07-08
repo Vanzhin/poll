@@ -111,29 +111,35 @@
   import { storeToRefs } from 'pinia'
   // import { usePaginationStore } from '../stores/PaginationStore'
   import { useCategoryStore } from '../stores/CategoryStore'
+  import { useTestsStore } from '../stores/TestsStore'
   // const store = usePaginationStore()
   const categorys = useCategoryStore()
+  const tests = useTestsStore()
   const {getCategogys} = storeToRefs(categorys)
   const route = useRoute()
   const page = ref(route.params.page ? +route.params.page: 1)
   
-   console.log(page.value)
+  console.log(page.value)
   
-  
-   
-  
-
   categorys.getApiCategorys({
     page: page.value > 1 ? page.value: '',
   })
 
   async function categoryUpdate({section}){
     console.log(section)
-    if (section.children.length > 0) {
+    if (section.test.length > 0 ){
+      await tests.getApiTests({
+        parentId: section.id
+      })
+      navigateTo(`/area/${section.id}`)
+    } else if (section.children.length > 0) {
       await categorys.getApiCategorys({
        
         parentId: section.id
       })
+      navigateTo(`/iter/1/group/${section.id}`)
+      
+    }  else {
       navigateTo(`/iter/1/group/${section.id}`)
       
     }
