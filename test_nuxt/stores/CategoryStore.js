@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { usePaginationStore } from './PaginationStore'
+
 export const useCategoryStore = defineStore('gategory', {
   state: () => ({
     // categorys: localStorage.getItem('categorys') ?
@@ -19,33 +21,36 @@ export const useCategoryStore = defineStore('gategory', {
       this.categorys = categorys
     },
     async getApiCategorys({ page = null, parentId = null, admin = null, limit = 6 }){
-      const config = {
-        method: 'get',
-        url: `/api${admin ? '/admin': '' }/category?limit=6`,
-        headers: { 
-          Accept: 'application/json', 
-        }
-      };
+   
+      // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
+      let url = `${urlApi}/api/category`
+      // if (admin) { 
+      //   config.headers.Authorization = `Bearer ${token}`
+      // }
+      let query = { limit }
+      if (parentId) { query.parent = parentId }
       
-      if (admin) { 
-        config.headers.Authorization = `Bearer ${token}`
-      }
-  
-      if (parentId) {
-        config.url = config.url + `&parent=${parentId}`
-      }
+      if (page) { query.page = page }
       
-      if (page) {
-        config.url = config.url + `&page=${page}`
-      }
-
+      console.log(query)
       try {
-        this.userData = await api.post({ login, password })
-        showTooltip(`Welcome back ${this.userData.name}!`)
+        // this.userData = await api.post({ login, password })
+        const { data: sections, pending, error } = await useFetch(() =>  url,
+        {
+          
+          lazy: true,
+          query:query,
+          
+        })
+        console.log("sections", sections.value.value)
+        console.log("sections", sections.value)
+        console.log("sections", sections)
+        this.categorys = sections.value.children
+        const pagination = usePaginationStore()
+        pagination.paginationsAll(sections.value.pagination)
       } catch (error) {
-        showTooltip(error)
-        // let the form component display the error
-        return error
+        console.log(error)
+       
       }
     }
    

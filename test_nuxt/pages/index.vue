@@ -1,35 +1,20 @@
 <template>
   <div >
-    
     <TheHomePage />
-   
-  </div>
-  
-</template>
-<!-- 
-<template>
-  <div>
-    <p>Result of <code>https://dummyjson.com/products/</code><input type="number" v-model="id" /></p>
-    <p><button @click="id--">Previous</button> - <button @click="id++">Next</button></p>
-    <p v-if="pending">Fetching...</p>
-    <pre v-else-if="error">{{ error }}</pre>
-    <pre v-else>{{ product }}</pre>
-    <NuxtLink to="/">Back home</NuxtLink>
   </div>
 </template>
-
-
-
-
 <script setup>
-const id = ref(1)
-const { data: product, pending, error } = await useFetch(() => `https://dummyjson.com/products/${id.value}`)
+const route = useRoute()
+const page = ref(route.params.page ? +route.params.page: 1)
 
-/* Same as:
-const { data: product, pending, error } = await useAsyncData(() => {
-  return $fetch(`https://dummyjson.com/products/${id.value}`)
-}, {
-  watch: [id]
+
+
+useSeoMeta({
+  title: `Амулет Тест | `,
+  ogTitle: 'Амулет Тест | ',
+  description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
+  ogDescription: 'This is my amazing site, let me tell you all about it.',
+  ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image',
 })
-*/
-</script> -->
+</script>

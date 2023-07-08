@@ -1,21 +1,23 @@
 <template>
   <div>
-    <div class=""  v-if="!pending">
+    <div class="" >
       <!-- <HeadesPage
         :title="getCategoryTitle"
       /> -->
       <div class="fon">
         <div class="container">
           <div  class="wrapper">
-            <div
+            <!-- <div
               v-if="pending"
               >Загрузка...
-            </div>
+            </div> -->
+           
             <div class="tests__block"
-              v-else-if="sections.children.length > 0"
+              v-if="categorys.categorys.length > 0"
               >
+               
               <div
-                v-for="(area) in sections.children" 
+                v-for="(area) in getCategogys" 
                 :key="area.id"
               >
                 <div class="test__card"
@@ -43,20 +45,15 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
                 </svg>
-
               </div>
             </div> 
             <div class="tests__block min-heig"
-              v-else
+               v-else
             > 
+           
               Данная категория в разработке.
             </div> 
-            <ThePagination
-            type="getCategorysDB"
-          />
-            <!-- <Pagination
-              type="getCategorysDB"
-            />   -->
+            <ThePagination />
           </div>
         </div>
       </div>
@@ -64,13 +61,16 @@
   </div>
 </template>
 <script setup>
+   import { storeToRefs } from 'pinia'
   import { usePaginationStore } from '../../../../stores/PaginationStore'
   import { useCategoryStore } from '../../../../stores/CategoryStore'
-  const store = usePaginationStore()
-  const category = useCategoryStore()
+  
+  const categorys = useCategoryStore()
+  const {getCategogys} = storeToRefs(categorys)
   const route = useRoute()
   const parentId = ref(+route.params.id)
   const iterNum = ref(+route.params.num)
+  console.log(categorys)
   console.log(route.params)
   console.log(parentId)
   useSeoMeta({
@@ -81,38 +81,17 @@
     ogImage: 'https://example.com/image.png',
     twitterCard: 'summary_large_image',
   })
-  // const page = store.activePage
-  // console.log(page)
-  const page = ref(route.params.page ? +route.params.page: 1)
-  // const page = ref(store.activePage)
-  console.log(page.value)
-  let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
-  if (parentId.value !== '') {url = url + `&parent=${parentId.value}`}
-  console.log(url)
-
- 
-    const { data: sections, pending, error } = await useFetch(() => url, 
-    {
-      lazy: true,
-    })
-    let timerId = setInterval(() => {
-      console.log(pending.value)
-      if ( !pending.value) {
-        clearInterval(timerId)
-        console.log(sections.value)
-        store.paginationsAll(sections.value.pagination)
-        category.categorysToChange(sections.value.children)
-        console.log(category.getCategogys)
-      }
-    }, 200);
-    console.log(sections)
-    console.log(sections.value)
-    store.paginationsAll(sections.value?sections.value.pagination:[])
-    category.categorysToChange(sections.value? sections.value.children:[]) 
-    console.log(category.getCategogys)
-  // async function getCategogysAPI(url) { }
   
-  // getCategogysAPI(url)
+  const page = ref(route.params.page ? +route.params.page: 1)
+  
+  console.log(page.value)
+  
+    
+    categorys.getApiCategorys({
+      page: page.value > 1 ? page.value: '',
+      parentId: parentId.value,
+
+    })
 
 </script>
 <style lang="scss" scoped>

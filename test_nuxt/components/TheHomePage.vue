@@ -11,16 +11,16 @@
             Выберите область проверки знаний
           </h2>
         </div>
-        <div
+        <!-- <div
           v-if="pending"
           >Загрузка...
-        </div>
+        </div> -->
         <div class="b-container" 
-          v-else>
-          <div class="sections__block row" v-if="category.getCategogys !==''">
+         >
+          <div class="sections__block row" v-if="categorys.getCategogys !==''">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
              
-              v-for="section in  sections.children" 
+              v-for="section in  getCategogys" 
               :key="section.id"
               :style="`background-image: url(${section.image ? section.image 
                 :'http://test2-open/img/item_fon.png'});`"
@@ -32,11 +32,9 @@
               </div>
             </div>
           </div>
-          {{ page }}
-          <p><button @click="page--">Previous</button> - <button @click="page++">Next</button></p>
-          <ThePagination
-            type="getCategorysDB"
-          />
+         
+         
+          <ThePagination />
         </div> 
         
       </div>
@@ -110,55 +108,34 @@
   </div>
 </template>
 <script setup>
-  import { usePaginationStore } from '../stores/PaginationStore'
+  import { storeToRefs } from 'pinia'
+  // import { usePaginationStore } from '../stores/PaginationStore'
   import { useCategoryStore } from '../stores/CategoryStore'
-  const store = usePaginationStore()
-  const category = useCategoryStore()
+  // const store = usePaginationStore()
+  const categorys = useCategoryStore()
+  const {getCategogys} = storeToRefs(categorys)
   const route = useRoute()
-  
-  useSeoMeta({
-    title: 'Амулет Тест | ',
-    ogTitle: 'Амулет Тест | ',
-    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: 'https://example.com/image.png',
-    twitterCard: 'summary_large_image',
-  })
-  
   const page = ref(route.params.page ? +route.params.page: 1)
-  // const page = ref(store.activePage)
-  console.log(page.value)
+  
+   console.log(page.value)
   
   
-  // const url = `${urlApi}/api/category?limit=6${page.value > 1? '&page=' + page.value: ''}`
-  const url = `${urlApi}/api/category?limit=6${page.value > 1? '&page=' + page.value: ''}`
-  
-  const { data: sections, pending, error } = await useFetch(() =>  url,
-    {
-      lazy: true,
-      
-    })
-    
-    let timerId = setInterval(() => {
-      console.log(pending.value)
-      if ( !pending.value) {
-        clearInterval(timerId)
-        console.log(sections.value)
-        store.paginationsAll(sections.value.pagination)
-        category.categorysToChange(sections.value.children)
-        console.log(category.getCategogys)
-      }
-    }, 200);
-  
-    store.paginationsAll(sections.value.pagination?sections.value.pagination:[])
-    category.categorysToChange(sections.value.children? sections.value.children:[]) 
-
+   
   
 
-  function categoryUpdate({section}){
+  categorys.getApiCategorys({
+    page: page.value > 1 ? page.value: '',
+  })
+
+  async function categoryUpdate({section}){
     console.log(section)
     if (section.children.length > 0) {
+      await categorys.getApiCategorys({
+       
+        parentId: section.id
+      })
       navigateTo(`/iter/1/group/${section.id}`)
+      
     }
   }
 </script>

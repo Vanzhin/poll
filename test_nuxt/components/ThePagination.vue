@@ -1,24 +1,19 @@
 <template>
   <div>
-    пагинация
-    <!-- {{ pagination }} -->
-
-
     <div class="block-contener" 
-      v-if="pagination.length > 1"
+      v-if="pagination.paginations.length > 1"
     >
       <div class="block-pagination">
         <div class="block-pagination-element"
           @click = "paginate('-1')"
-          v-if="parseInt(pagination[0].label) > 1"
+          v-if="parseInt(pagination.paginations[0].label) > 1"
         >
           <span>
             &laquo; Назад
           </span>
         </div>
-
         <div 
-          v-for="(item) in pagination"
+          v-for="(item) in pagination.paginations"
           :key = "item.label" 
           class="block-pagination-element" 
           :class="{active:item.active}"
@@ -28,7 +23,6 @@
             {{item.label}}
           </span>
         </div>
-        
         <div class="block-pagination-element"
           @click = "paginate('+1')"
           v-if="nextTotalPriznak"
@@ -39,51 +33,64 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 <script setup>
   import { usePaginationStore } from '../stores/PaginationStore'
-  const store = usePaginationStore()
-  const router = useRouter()
+  import { useCategoryStore } from '../stores/CategoryStore'
+  const pagination = usePaginationStore()
+  const categorys = useCategoryStore()
+  
+  console.log('store ',pagination)
 
-  console.log('store ',store)
+  const paginations = pagination.paginations
+  console.log('pagination ',paginations)
 
-  const pagination = store.paginations
-  console.log('pagination ',pagination)
-
-  const nextTotalPriznak = (store.totalPages > 10) ? 
-          (parseInt( store.pagination[9].label) < store.totalPages) ? true : false
+  const nextTotalPriznak = (pagination.totalPages > 10) ? 
+          (parseInt( pagination.paginations[9].label) < pagination.totalPages) ? true : false
         : false
   console.log(nextTotalPriznak)
 
-  function paginate (pag) {
+ function paginate (pag) {
     console.log("pag -- ", pag)
     
     switch (pag) {
         case '-1' : {
-          if (store.activePage > 1) {
-            store.activePageToChange( parseInt(store.paginations[0].label) - 1)
+          if (pagination.activePage > 1) {
+            pagination.activePageToChange( parseInt(pagination.paginations[0].label) - 1)
           } else { return }
         break;
         }
         case '+1' : {
          
-          if  (store.activePage = parseInt(store.paginations[9].label) < store.totalPages) {
-            store.activePageToChange (parseInt(store.paginations[9].label) + 1)
+          if  (pagination.activePage = parseInt(pagination.paginations[9].label) < pagination.totalPages) {
+            pagination.activePageToChange (parseInt(pagination.paginations[9].label) + 1)
           } else { return }
         break;
         }
         default:{
-          console.log("activePage -- ", store.activePage)
-          // activePage = useState('activePage', () => pag)
-          store.activePageToChange(pag)
-          console.log("activePage -- ", store.activePage)
+          console.log("activePage -- ", pagination.activePage)
+         
+          preNavigation (pag)
+
+          console.log("activePage -- ", pagination.activePage)
           // router.push({ path: `/page/${pag}` })
-           navigateTo(`${store.url}${pag>1? '/page/'+ pag :'/'}`)
+
+         
         }
       }
   }
+
+async function preNavigation (pag) {
+  pagination.activePageToChange(pag)
+  await categorys.getApiCategorys({
+    page: pag > 1 ? pag: '',
+  })
+  navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :'/'}`)
+}
+
+
+
 
 // { "currentPage": 1, "totalPages": 3, "totalItem": 15, "totalItemsPerPage": 6, "limit": 6 }
 </script>
