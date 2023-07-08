@@ -1,19 +1,18 @@
 <template>
-  
-      
-  <div class=""  v-if="!getIsLoaderStatus">
-    <HeadesPage
+  <div class=""  >
+  <!-- v-if="!getIsLoaderStatus"> -->
+    <!-- <HeadesPage
       :title="getCategoryTitle"
-    />
+    /> -->
     <div class="fon">
       <div class="container">
         <div  class="wrapper">
-          
           <div class="tests__block"
-            v-if="areas.length > 0"
+            
           >
+          <!-- v-if="tests.tests.length > 0" -->
             <div
-              v-for="(area) in areas" 
+              v-for="(area) in getTests" 
               :key="area.id"
               
             >
@@ -47,131 +46,60 @@
             </div>
           </div> 
           <div class="tests__block min-heig"
-            v-else
+            
           > 
+          <!-- v-else -->
             Данная категория в разработке.
           </div> 
-          <Pagination
-            type="getCategorysDB"
-          />  
+          <!-- <Pagination />   -->
         </div>
       </div>
     </div>
   </div>
+    
 </template>
- 
-<script>
-  import { mapGetters, mapActions, mapMutations} from "vuex"
-  import Loader from '../components/ui/LoaderView.vue'
-  import Pagination from '../components/Pagination.vue'
-  import HeadesPage from '../components/HeadersPage.vue'
-  import crumbsTitle from '../utils/crumbs.js'
-  export default {
-    components: {
-      Loader,
-      Pagination,
-      HeadesPage
-    },
-    data() {
-      return {
-        isLoader: false,
-        iter: this.$route.params.num,
-        parentId: this.$route.params.id,
-      }
-    },
-    computed:{
-      ...mapGetters([
-        "getIsAutchUser", 
-        "getCategoryTitle", 
-        "getTests", 
-        "getCategorys", 
-        "getCategoryDescription",
-        "getIsLoaderStatus",
-        "getCrumbsLength"
-      ]),
-      sectionTitle () {
-       
-        return this.$store.getters.getSectionTitle(this.$route.params.id)
-      },
-      areas () {
-        return this.getCategorys || []
-      },
-    },
-    // watch:{
-    //   parentId(newParentId){
-    //     console.log("newParentId -", newParentId)
-    //     this.categoryUpdate({id:newParentId, title:''})
-    //   }
-    // },
-    watch:{
-      $route(newRout){
-       
-        this.categoryUpdateStory(newRout.params.id)
-      }
-    },
-    methods: {
-      ...mapActions([
-        "getCategorysDB", 
-        "setCategoryTitle",
-        "setTests",
-        "setPagination", 
-        "setCategoryParent",
-        "setCategorys",
-        "setIsLoaderStatus",
-        "setCrumbs",
-      ]),
-      async categoryUpdate({area}){
-        this.getCategorysDB({page:null, parentId: area.id})
-        this.setCategoryParent(area)
-        this.setPagination(null)
-        if (area.test.length > 0) {
-          this.setTests(area.test)
-          this.$router.push({name: 'area', params: {id: area.id } })
-          this.setCrumbs({crumbs:[
-            {
-              name:'area',
-              params: { id: area.id}, 
-              title: `/${crumbsTitle(area)}`,
-              iter: this.getCrumbsLength + 1 
-            },
-            // {
-            //   name:'area',
-            //   params: {id: area.id }, 
-            //   title: `/Тесты`,
-            //   iter: this.getCrumbsLength + 2 
-            // },
-          ]
-          })
-          return
-        } 
-        this.iter = +this.$route.params.num + 1 
-        this.setCategorys(area.children)
-        this.$router.push({name: 'iter', params: { num: this.iter, id: area.id }})
-        this.setCrumbs({crumbs:[{
-          name:'iter',
-          params: { num: this.iter, id: area.id}, 
-          title: `/${crumbsTitle(area)}`,
-          iter: this.getCrumbsLength + 1 
-          }]
-        })
-      },
-      async categoryUpdateStory(parentId) {
-        this.isLoader = true
-        await this.getCategorysDB({page: null, parentId})
-        this.isLoader = false
-      }
-    },
-    async mounted() {},
-    async created() {
-      if (!this.getCategorys) {this.setIsLoaderStatus({status: true})}
-      await this.getCategorysDB({page: null, parentId: this.parentId})
-      this.setIsLoaderStatus({status: false})
-    }
-  } 
- 
+
+<script setup>
+  import { storeToRefs } from 'pinia'
+  import { usePaginationStore } from '../../stores/PaginationStore'
+  import { useTestsStore } from '../../stores/TestsStore'
+  
+  const tests = useTestsStore()
+  const {getTests} = storeToRefs(tests)
+
+  const route = useRoute()
+  const parentId = ref(+route.params.id)
+  const iterNum = ref(+route.params.num)
+  console.log(tests)
+  console.log(route.params)
+  console.log(parentId)
+  useSeoMeta({
+    title: 'Амулет Тест | Категория | Тесты',
+    ogTitle: 'Амулет Тест | ',
+    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
+    ogDescription: 'This is my amazing site, let me tell you all about it.',
+    ogImage: 'https://example.com/image.png',
+    twitterCard: 'summary_large_image',
+  })
+  
+  const page = ref(route.params.page ? +route.params.page: 1)
+  
+  console.log(page.value)
+  
+    
+  tests.getApiTests({
+    page: page.value > 1 ? page.value: '',
+    parentId: parentId.value,
+
+  })
+
+  function categoryUpdate({ area }){
+
+  }
+
 </script>
 <style lang="scss" scoped>
- .min-heig{
+  .min-heig{
   min-height: 20vh;
 }
 .tests{
