@@ -23,14 +23,10 @@ class UpdateAction extends BaseAction
         parent::__construct($serializer);
     }
 
-    public function run(int $id, Request $request): JsonResponse
+    public function run(Company $company, Request $request): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
-            $company = $this->entityManager->find(Company::class, $id);
-            if (!$company) {
-                throw new \Exception(sprintf('Компания с идентификатором %s не обнаружена', $id));
-            }
             $updated = $this->companyFactory->createBuilder()->buildCompany($data, $company);
             $errors = $this->validator->validate($updated);
 

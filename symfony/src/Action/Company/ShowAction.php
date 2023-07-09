@@ -18,13 +18,13 @@ class ShowAction extends BaseAction
         parent::__construct($serializer);
     }
 
-    public function run(int $id): JsonResponse
+    public function run(Company $company): JsonResponse
     {
         try {
-            $company = $this->entityManager->find(Company::class, $id);
-            if (!$company) {
-                throw new \Exception(sprintf('Компания с идентификатором %s не обнаружена', $id));
-            }
+//            $company = $this->entityManager->find(Company::class, $id);
+//            if (!$company) {
+//                throw new \Exception(sprintf('Компания с идентификатором %s не обнаружена', $id));
+//            }
             return $this->successResponse($company, ['admin_user']);
 
         } catch (\Exception $e) {
