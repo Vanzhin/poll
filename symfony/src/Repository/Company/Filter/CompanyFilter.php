@@ -50,6 +50,7 @@ class CompanyFilter implements \JsonSerializable
     {
         return $this->page;
     }
+
     public function setPage(int $page): void
     {
         $this->page = $page;
@@ -99,6 +100,16 @@ class CompanyFilter implements \JsonSerializable
     public function setDateInterval(?\DateTimeImmutable $from, ?\DateTimeImmutable $to): void
     {
         $this->dateInterval = ['from' => $from, 'to' => $to];
+    }
+
+    public function hasDateIntervalTo(): bool
+    {
+        return isset($this->dateInterval['to']);
+    }
+
+    public function hasDateIntervalFrom(): bool
+    {
+        return isset($this->dateInterval['from']);
     }
 
     /**

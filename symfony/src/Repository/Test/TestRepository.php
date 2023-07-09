@@ -4,7 +4,7 @@ namespace App\Repository\Test;
 
 use App\Entity\Category;
 use App\Entity\Test;
-use App\Interfaces\TestRepositoryInterface;
+use App\Repository\Interfaces\TestRepositoryInterface;
 use App\Repository\Test\Filter\TestFilter;
 use App\Service\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

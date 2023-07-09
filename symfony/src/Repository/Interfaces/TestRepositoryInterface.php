@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Interfaces;
+namespace App\Repository\Interfaces;
 
 use App\Entity\Test;
 use App\Repository\Test\Filter\TestFilter;

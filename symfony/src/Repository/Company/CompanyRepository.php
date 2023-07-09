@@ -3,7 +3,10 @@
 namespace App\Repository\Company;
 
 use App\Entity\Company;
+use App\Repository\Company\Filter\CompanyFilter;
+use App\Repository\Interfaces\CompanyRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,7 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Company[]    findAll()
  * @method Company[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CompanyRepository extends ServiceEntityRepository
+class CompanyRepository extends ServiceEntityRepository implements CompanyRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -39,28 +42,44 @@ class CompanyRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Company[] Returns an array of Company objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findAllWithFilter(CompanyFilter $filter): array
+    {
+        $query = $this->buildFilter($filter)
+            ->setFirstResult($filter->getOffset())
+            ->setMaxResults($filter->getLimit());
 
-//    public function findOneBySomeField($value): ?Company
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $query->getQuery()->getResult();
+
+    }
+
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('co');
+    }
+
+    public function buildFilter(CompanyFilter $filter): QueryBuilder
+    {
+        $query = $this->getOrCreateQueryBuilder();
+        if ($filter->getTitle()) {
+            $query->andWhere('co.title LIKE :title')
+                ->setParameter('title', "%{$filter->getTitle()}%");
+        }
+
+        if ($filter->getDateInterval()) {
+            if ($filter->hasDateIntervalFrom()) {
+                $query->andWhere('co.createdAt >= :from')
+                    ->setParameter('from', $filter->getDateInterval()['from']);
+            }
+            if ($filter->hasDateIntervalTo()) {
+                $query->andWhere('co.createdAt <= :to')
+                    ->setParameter('to', $filter->getDateInterval()['to']);
+            }
+        }
+
+        foreach ($filter->getSort() as $property => $direction) {
+            $query->addOrderBy('co.' . $property, $direction);
+        }
+
+        return $query;
+    }
 }

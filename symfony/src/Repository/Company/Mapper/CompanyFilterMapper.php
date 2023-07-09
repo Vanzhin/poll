@@ -68,6 +68,17 @@ class CompanyFilterMapper
                 new Assert\NotBlank(),
                 new Assert\Collection($this->getSort()),
             ]),
+            'page' => new Assert\Optional([
+                new Assert\Positive(),
+                new Assert\NotNull(),
+                new Assert\Type('digit')
+            ]),
+            'limit' => new Assert\Optional([
+                new Assert\Positive(),
+                new Assert\NotNull(),
+                new Assert\Type('digit')
+
+            ]),
         ]);
     }
 
