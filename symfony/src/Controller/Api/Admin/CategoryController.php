@@ -5,14 +5,12 @@ namespace App\Controller\Api\Admin;
 use App\Entity\Category;
 use App\Factory\Category\CategoryFactory;
 use App\Repository\CategoryRepository;
-use App\Repository\TestRepository;
+use App\Repository\Test\TestRepository;
 use App\Service\CategoryService;
-use App\Service\FileUploader;
 use App\Service\NormalizerService;
 use App\Service\Paginator;
 use App\Service\ValidationService;
 use App\Twig\Extension\AppUpLoadedAsset;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -109,7 +107,7 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/api/admin/category/{id}/edit', name: 'app_api_admin_category_update', methods: 'POST')]
-    public function edit(Category $category, Request $request, ValidationService $validation, CategoryService $categoryService, CategoryFactory $factory ): JsonResponse
+    public function edit(Category $category, Request $request, ValidationService $validation, CategoryService $categoryService, CategoryFactory $factory): JsonResponse
     {
         $data = $request->request->all();
         $image = $request->files->get('categoryImage', false);

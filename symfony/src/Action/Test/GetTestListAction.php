@@ -4,7 +4,7 @@ namespace App\Action\Test;
 
 use App\Action\BaseAction;
 use App\Interfaces\TestRepositoryInterface;
-use App\Mapper\TestMapper;
+use App\Repository\Test\Mapper\TestMapper;
 use App\Service\Paginator;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
@@ -16,7 +16,7 @@ class GetTestListAction extends BaseAction
         private readonly ValidationService       $validation,
         private readonly TestRepositoryInterface $testRepository,
         private readonly Paginator               $paginator,
-        private readonly SerializerService       $serializer
+        SerializerService                        $serializer
     )
     {
         parent::__construct($serializer);
@@ -49,7 +49,7 @@ class GetTestListAction extends BaseAction
 
             $pagination = $this->paginator->getPagination($this->testRepository->buildFilter($filter));
             if (!$pagination->count() > 0) {
-                throw new \Exception('нет такой страницы', 404);
+                throw new \Exception('Такой страницы нет', 404);
 
             }
             return $this->successResponse(

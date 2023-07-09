@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Filter\vo\test;
+namespace App\Repository\Test\Filter\vo;
 
 class DateTime extends \DateTimeImmutable implements \JsonSerializable
 {

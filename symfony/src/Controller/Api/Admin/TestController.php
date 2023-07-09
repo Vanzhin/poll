@@ -8,7 +8,7 @@ use App\Entity\Test;
 use App\Factory\Test\TestFactory;
 use App\Repository\QuestionRepository;
 use App\Repository\SectionRepository;
-use App\Repository\TestRepository;
+use App\Repository\Test\TestRepository;
 use App\Repository\TicketRepository;
 use App\Service\NormalizerService;
 use App\Service\Paginator;

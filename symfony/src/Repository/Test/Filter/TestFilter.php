@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Filter;
+namespace App\Repository\Test\Filter;
 
 class TestFilter
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Test;
 
 use App\Entity\Category;
 use App\Entity\Test;
 use App\Interfaces\TestRepositoryInterface;
-use App\Repository\Filter\TestFilter;
+use App\Repository\Test\Filter\TestFilter;
 use App\Service\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -155,6 +155,4 @@ class TestRepository extends ServiceEntityRepository implements TestRepositoryIn
 
         return $query;
     }
-
-
 }

@@ -5,7 +5,6 @@ namespace App\Controller\Api\Admin\Company\Action;
 use App\Action\BaseAction;
 use App\Entity\Company;
 use App\Service\SerializerService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ShowAction extends BaseAction
@@ -17,11 +16,7 @@ class ShowAction extends BaseAction
 
     public function run(Company $company): JsonResponse
     {
-        try {
-            return $this->successResponse($company, ['admin_user']);
+        return $this->successResponse($company, ['admin_user']);
 
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage());
-        }
     }
 }

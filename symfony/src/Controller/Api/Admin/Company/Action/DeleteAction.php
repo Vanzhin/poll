@@ -20,14 +20,10 @@ class DeleteAction extends BaseAction
 
     public function run(Company $company): JsonResponse
     {
-        try {
-            $this->entityManager->remove($company);
-            $this->entityManager->flush();
+        $this->entityManager->remove($company);
+        $this->entityManager->flush();
 
-            return $this->successResponse($company, ['admin_user']);
+        return $this->successResponse($company, ['admin_user']);
 
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage());
-        }
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Interfaces;
 
 use App\Entity\Test;
-use App\Repository\Filter\TestFilter;
+use App\Repository\Test\Filter\TestFilter;
 
 interface TestRepositoryInterface
 {

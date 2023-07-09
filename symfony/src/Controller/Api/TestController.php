@@ -7,7 +7,7 @@ use App\Entity\Question;
 use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Repository\QuestionRepository;
-use App\Repository\TestRepository;
+use App\Repository\Test\TestRepository;
 use App\Service\NormalizerService;
 use App\Service\QuestionHandler;
 use App\Service\SessionService;

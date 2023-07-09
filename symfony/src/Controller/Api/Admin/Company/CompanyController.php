@@ -2,10 +2,7 @@
 
 namespace App\Controller\Api\Admin\Company;
 
-use App\Controller\Api\Admin\Company\Action\CreateAction;
-use App\Controller\Api\Admin\Company\Action\DeleteAction;
-use App\Controller\Api\Admin\Company\Action\ShowAction;
-use App\Controller\Api\Admin\Company\Action\UpdateAction;
+use App\Controller\Api\Admin\Company\Action as Action;
 use App\Entity\Company;
 use App\Security\Voter\CompanyVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,10 +16,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CompanyController extends AbstractController
 {
     public function __construct(
-        private readonly CreateAction $createAction,
-        private readonly ShowAction   $showAction,
-        private readonly UpdateAction $updateAction,
-        private readonly DeleteAction $deleteAction,
+        private readonly Action\CreateAction $createAction,
+        private readonly Action\ShowAction   $showAction,
+        private readonly Action\UpdateAction $updateAction,
+        private readonly Action\DeleteAction $deleteAction,
+        private readonly Action\ListAction   $listAction,
     )
     {
     }
@@ -57,5 +55,12 @@ class CompanyController extends AbstractController
     public function delete(Company $company): JsonResponse
     {
         return $this->deleteAction->run($company);
+    }
+
+    #[Route('/list', name: 'list', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function list(Request $request): JsonResponse
+    {
+        return $this->listAction->run($request);
     }
 }

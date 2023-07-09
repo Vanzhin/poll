@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Mapper;
+namespace App\Repository\Test\Mapper;
 
 
-use App\Repository\Filter\TestFilter;
+use App\Repository\Test\Filter\TestFilter;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TestMapper
@@ -78,8 +78,6 @@ class TestMapper
                                 new Assert\NotBlank()
                             ])
                         ])
-
-
                     ]),
                     'mintrud_tests' => new Assert\Optional(
                         [
