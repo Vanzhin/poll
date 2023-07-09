@@ -83,6 +83,16 @@ class Company
         return $this->users;
     }
 
+    /**
+     * @return Collection<int, User>
+     */
+    public function getAdmins(): Collection
+    {
+        return $this->users->filter(function (User $user) {
+            return in_array('ROLE_ADMIN', $user->getRoles());
+        });
+    }
+
     public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {

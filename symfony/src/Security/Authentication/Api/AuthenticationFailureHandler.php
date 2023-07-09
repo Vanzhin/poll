@@ -18,7 +18,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         $this->sessionService->set($exception->getMessage(), 'error');
-        return new RedirectResponse('/test/1');
+        return new RedirectResponse('/');
 
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\Api\Admin;
+namespace App\Controller\Api\Admin\Company;
 
-use App\Action\Company\CreateAction;
-use App\Action\Company\DeleteAction;
-use App\Action\Company\ShowAction;
-use App\Action\Company\UpdateAction;
+use App\Controller\Api\Admin\Company\Action\CreateAction;
+use App\Controller\Api\Admin\Company\Action\DeleteAction;
+use App\Controller\Api\Admin\Company\Action\ShowAction;
+use App\Controller\Api\Admin\Company\Action\UpdateAction;
 use App\Entity\Company;
 use App\Security\Voter\CompanyVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

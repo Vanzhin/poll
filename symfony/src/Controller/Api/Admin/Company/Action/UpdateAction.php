@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Action\Company;
+namespace App\Controller\Api\Admin\Company\Action;
 
 use App\Action\BaseAction;
 use App\Entity\Company;

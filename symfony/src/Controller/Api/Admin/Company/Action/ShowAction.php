@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Action\Company;
+namespace App\Controller\Api\Admin\Company\Action;
 
 use App\Action\BaseAction;
 use App\Entity\Company;
@@ -8,12 +8,9 @@ use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class DeleteAction extends BaseAction
+class ShowAction extends BaseAction
 {
-    public function __construct(
-        SerializerService                       $serializer,
-        private readonly EntityManagerInterface $entityManager,
-    )
+    public function __construct(SerializerService $serializer)
     {
         parent::__construct($serializer);
     }
@@ -21,9 +18,6 @@ class DeleteAction extends BaseAction
     public function run(Company $company): JsonResponse
     {
         try {
-            $this->entityManager->remove($company);
-            $this->entityManager->flush();
-
             return $this->successResponse($company, ['admin_user']);
 
         } catch (\Exception $e) {

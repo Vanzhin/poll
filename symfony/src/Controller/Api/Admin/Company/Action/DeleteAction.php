@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Action\Company;
+namespace App\Controller\Api\Admin\Company\Action;
 
 use App\Action\BaseAction;
 use App\Entity\Company;
@@ -8,7 +8,7 @@ use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ShowAction extends BaseAction
+class DeleteAction extends BaseAction
 {
     public function __construct(
         SerializerService                       $serializer,
@@ -21,10 +21,9 @@ class ShowAction extends BaseAction
     public function run(Company $company): JsonResponse
     {
         try {
-//            $company = $this->entityManager->find(Company::class, $id);
-//            if (!$company) {
-//                throw new \Exception(sprintf('Компания с идентификатором %s не обнаружена', $id));
-//            }
+            $this->entityManager->remove($company);
+            $this->entityManager->flush();
+
             return $this->successResponse($company, ['admin_user']);
 
         } catch (\Exception $e) {

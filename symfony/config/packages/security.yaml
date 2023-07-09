@@ -49,6 +49,13 @@ security:
                 check_path: /api/token/refresh # or, you may use the `api_refresh_token` route name
             logout:
                 path: /api/token/invalidate
+            login_link:
+                check_route: app_api_login_link_check
+                signature_properties: [ 'id' ]
+                # lifetime in seconds
+                lifetime: 7776000
+                success_handler: App\Security\Authentication\Api\AuthenticationSuccessHandler
+                failure_handler: App\Security\Authentication\Api\AuthenticationFailureHandler
 
 #        main:
 #            lazy: true
