@@ -11,12 +11,13 @@
             Выберите область проверки знаний
           </h2>
         </div>
-        <!-- <div
-          v-if="pending"
-          >Загрузка...
-        </div> -->
+        <UiLoaderView
+          v-if="loader.isLoader"
+          />
+        
         <div class="b-container" 
-         >
+         v-else
+        >
           <div class="sections__block row" v-if="categorys.getCategogys !==''">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
              
@@ -112,13 +113,14 @@
   // import { usePaginationStore } from '../stores/PaginationStore'
   import { useCategoryStore } from '../stores/CategoryStore'
   import { useTestsStore } from '../stores/TestsStore'
+  import { useLoaderStore } from '../stores/Loader'
   // const store = usePaginationStore()
   const categorys = useCategoryStore()
   const tests = useTestsStore()
   const {getCategogys} = storeToRefs(categorys)
   const route = useRoute()
   const page = ref(route.params.page ? +route.params.page: 1)
-  
+  const loader = useLoaderStore()
   console.log(page.value)
   
   categorys.getApiCategorys({
@@ -128,12 +130,12 @@
   async function categoryUpdate({section}){
     console.log(section)
     if (section.test.length > 0 ){
-      await tests.getApiTests({
+      tests.getApiTests({
         parentId: section.id
       })
       navigateTo(`/area/${section.id}`)
     } else if (section.children.length > 0) {
-      await categorys.getApiCategorys({
+      categorys.getApiCategorys({
        
         parentId: section.id
       })

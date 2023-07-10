@@ -1,16 +1,23 @@
 <template>
-  <div class=""  >
+  <div class="sections"  >
   <!-- v-if="!getIsLoaderStatus"> -->
     <!-- <HeadesPage
       :title="getCategoryTitle"
     /> -->
     <div class="fon">
       <div class="container">
-        <div  class="wrapper">
+        <UiLoaderView
+            v-if="loader.isLoader"
+          />
+        <div  class="wrapper" 
+          v-else 
+        >
+         
+          
           <div class="tests__block"
-            
+            v-if="tests.tests.length > 0"
           >
-          <!-- v-if="tests.tests.length > 0" -->
+            <!--  -->
             <div
               v-for="(area) in getTests" 
               :key="area.id"
@@ -42,13 +49,12 @@
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
               </svg>
-
             </div>
           </div> 
           <div class="tests__block min-heig"
-            
+            v-else
           > 
-          <!-- v-else -->
+          <!--  -->
             Данная категория в разработке.
           </div> 
           <!-- <Pagination />   -->
@@ -63,10 +69,10 @@
   import { storeToRefs } from 'pinia'
   import { usePaginationStore } from '../../stores/PaginationStore'
   import { useTestsStore } from '../../stores/TestsStore'
-  
+  import { useLoaderStore } from '../../stores/Loader'
   const tests = useTestsStore()
   const {getTests} = storeToRefs(tests)
-
+  const loader = useLoaderStore()
   const route = useRoute()
   const parentId = ref(+route.params.id)
   const iterNum = ref(+route.params.num)
@@ -99,7 +105,10 @@
 
 </script>
 <style lang="scss" scoped>
-  .min-heig{
+.sections{
+    min-height: 100vh;
+  }
+.min-heig{
   min-height: 20vh;
 }
 .tests{

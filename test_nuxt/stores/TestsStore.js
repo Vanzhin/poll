@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
-
+import { useLoaderStore } from './Loader'
 export const useTestsStore = defineStore('tests', {
   state: () => ({
     
@@ -15,7 +15,8 @@ export const useTestsStore = defineStore('tests', {
       this.categorys = categorys
     },
     async getApiTests({ page = null, parentId = null, admin = null, limit = 6 }){
-   
+      const loader = useLoaderStore()
+      loader.setIsLoaderStutus(true)
       // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
       let url = `${urlApi}/api/category`
       // if (admin) { 
@@ -34,12 +35,22 @@ export const useTestsStore = defineStore('tests', {
           lazy: true,
           query:query,
         })
-        console.log("sections", sections.value.value)
-        console.log("sections", sections.value)
-        console.log("sections", sections)
-        this.tests = sections.value.test
-        const pagination = usePaginationStore()
-        pagination.paginationsAll(sections.value.pagination)
+        let timerId = setInterval(() => {
+          console.log('pending.value-',pending.value)
+          if ( !pending.value) {
+            clearInterval(timerId)
+
+
+              console.log("sections", sections.value.value)
+              console.log("sections", sections.value)
+              console.log("sections", sections)
+              this.tests = sections.value.test
+              const pagination = usePaginationStore()
+              pagination.paginationsAll(sections.value.pagination)
+              loader.setIsLoaderStutus(false)
+            }
+          }, 200);
+
       } catch (error) {
         console.log(error)
       }

@@ -1,17 +1,22 @@
 <template>
   <div>
-    <div class="" >
-      <!-- <HeadesPage
-        :title="getCategoryTitle"
-      /> -->
+    <div class="sections" >
+      <TheHeaderVsPage
+        title="getCategoryTitle"
+      />
       <div class="fon">
         <div class="container">
-          <div  class="wrapper">
+          <UiLoaderView
+              v-if="loader.isLoader"
+            />
+          <div  class="wrapper"
+            v-else
+          >
             <!-- <div
               v-if="pending"
               >Загрузка...
             </div> -->
-           
+            
             <div class="tests__block"
               v-if="categorys.categorys"
               >
@@ -61,10 +66,10 @@
   </div>
 </template>
 <script setup>
-   import { storeToRefs } from 'pinia'
-  import { usePaginationStore } from '../../../../stores/PaginationStore'
+  import { storeToRefs } from 'pinia'
   import { useCategoryStore } from '../../../../stores/CategoryStore'
-  
+  import { useLoaderStore } from '../../../../stores/Loader'
+  const loader = useLoaderStore()
   const categorys = useCategoryStore()
   const {getCategogys} = storeToRefs(categorys)
   const route = useRoute()
@@ -95,6 +100,9 @@
 
 </script>
 <style lang="scss" scoped>
+.sections{
+    min-height: 100vh;
+  }
  .min-heig{
   min-height: 20vh;
 }

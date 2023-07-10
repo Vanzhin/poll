@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
+import { useLoaderStore } from './Loader'
 
 export const useCategoryStore = defineStore('gategory', {
   state: () => ({
@@ -21,7 +22,7 @@ export const useCategoryStore = defineStore('gategory', {
       this.categorys = categorys
     },
     async getApiCategorys({ page = null, parentId = null, admin = null, limit = 6 }){
-   
+      const loader = useLoaderStore()
       // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
       let url = `${urlApi}/api/category`
       // if (admin) { 
@@ -33,6 +34,7 @@ export const useCategoryStore = defineStore('gategory', {
       if (page) { query.page = page }
       
       console.log(query)
+      loader.setIsLoaderStutus(true)
       try {
         // this.userData = await api.post({ login, password })
         const { data: sections, pending, error } = await useFetch(() =>  url,
@@ -42,12 +44,21 @@ export const useCategoryStore = defineStore('gategory', {
           query:query,
           
         })
-        console.log("sections", sections.value.value)
-        console.log("sections", sections.value)
-        console.log("sections", sections)
-        this.categorys = sections.value.children
-        const pagination = usePaginationStore()
-        pagination.paginationsAll(sections.value.pagination)
+        let timerId = setInterval(() => {
+          console.log('pending.value-',pending.value)
+          if ( !pending.value) {
+            clearInterval(timerId)
+            
+            console.log("sections", sections.value)
+            this.categorys = sections.value.children
+            console.log('error - ',sections.value.pagination.hasOwnProperty(error))
+            const pagination = usePaginationStore()
+            pagination.paginationsAll(sections.value.pagination)
+            loader.setIsLoaderStutus(false)
+          }
+        }, 200);
+
+        
       } catch (error) {
         console.log(error)
        

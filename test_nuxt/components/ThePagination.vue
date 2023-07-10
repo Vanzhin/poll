@@ -83,7 +83,8 @@
 
 async function preNavigation (pag) {
   pagination.activePageToChange(pag)
-  await categorys.getApiCategorys({
+  // await
+   categorys.getApiCategorys({
     page: pag > 1 ? pag: '',
   })
   navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :'/'}`)
