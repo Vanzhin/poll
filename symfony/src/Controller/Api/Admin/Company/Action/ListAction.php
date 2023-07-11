@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\Admin\Company\Action;
 
-use App\Action\BaseAction;
+use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Repository\Company\CompanyRepository;
 use App\Repository\Company\Mapper\CompanyFilterMapper;
 use App\Service\Paginator;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ListAction extends BaseAction
+class ListAction extends NewBaseAction
 {
     public function __construct(
         SerializerService                  $serializer,

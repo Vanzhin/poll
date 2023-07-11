@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\Admin\Company\Action;
 
-use App\Action\BaseAction;
+use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Event\CompanyCreatedEvent;
 use App\Factory\Company\CompanyFactory;
 use App\Factory\User\UserFactory;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class CreateAction extends BaseAction
+class CreateAction extends NewBaseAction
 {
     public function __construct(
         SerializerService                         $serializer,

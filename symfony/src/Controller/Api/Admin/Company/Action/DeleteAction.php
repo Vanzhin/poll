@@ -2,13 +2,13 @@
 
 namespace App\Controller\Api\Admin\Company\Action;
 
-use App\Action\BaseAction;
+use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Entity\Company;
 use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class DeleteAction extends BaseAction
+class DeleteAction extends NewBaseAction
 {
     public function __construct(
         SerializerService                       $serializer,

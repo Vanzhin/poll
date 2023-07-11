@@ -2,12 +2,12 @@
 
 namespace App\Controller\Api\Admin\Company\Action;
 
-use App\Action\BaseAction;
+use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Entity\Company;
 use App\Service\SerializerService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ShowAction extends BaseAction
+class ShowAction extends NewBaseAction
 {
     public function __construct(SerializerService $serializer)
     {
