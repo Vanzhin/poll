@@ -70,8 +70,8 @@
         }
         default:{
           console.log("activePage -- ", pagination.activePage)
-         
-          preNavigation (pag)
+          pagination.activePageToChange(pag)
+          navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :'/'}`)
 
           console.log("activePage -- ", pagination.activePage)
           // router.push({ path: `/page/${pag}` })
@@ -80,18 +80,6 @@
         }
       }
   }
-
-async function preNavigation (pag) {
-  pagination.activePageToChange(pag)
-  // await
-   categorys.getApiCategorys({
-    page: pag > 1 ? pag: '',
-  })
-  navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :'/'}`)
-}
-
-
-
 
 // { "currentPage": 1, "totalPages": 3, "totalItem": 15, "totalItemsPerPage": 6, "limit": 6 }
 </script>

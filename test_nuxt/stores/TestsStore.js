@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
 import { useLoaderStore } from './Loader'
+import { useCategoryStore } from './CategoryStore'
 export const useTestsStore = defineStore('tests', {
   state: () => ({
+    parent: '',
+    tests:[],
     
-    tests:[]
   }),
   getters: {
     getTests: (state) => state.tests,
@@ -46,6 +48,10 @@ export const useTestsStore = defineStore('tests', {
               console.log("sections", sections)
               this.tests = sections.value.test
               const pagination = usePaginationStore()
+              if (sections.value.parent){
+                const categorys = useCategoryStore()
+                categorys.setParentCategory(sections.value.parent)
+              }
               pagination.paginationsAll(sections.value.pagination)
               loader.setIsLoaderStutus(false)
             }

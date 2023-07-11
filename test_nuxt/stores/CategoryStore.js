@@ -11,15 +11,20 @@ export const useCategoryStore = defineStore('gategory', {
     //   JSON.parse(localStorage.getItem('categoryParent')): null,
     // categorysFooter: localStorage.getItem('categorysFooter') ?
     //   JSON.parse(localStorage.getItem('categorysFooter')): null,
-    categorys:[]
+    categorys:[],
+    parent: ''
   }),
   getters: {
     getCategogys: (state) => state.categorys,
+    getCategoryTitle: (state) => state.parent.title
   },
   actions: {
     categorysToChange(categorys) {
       console.log('categorysToChange-',categorys)
       this.categorys = categorys
+    },
+    setParentCategory(parent){
+      this.parent = parent
     },
     async getApiCategorys({ page = null, parentId = null, admin = null, limit = 6 }){
       const loader = useLoaderStore()
@@ -55,6 +60,9 @@ export const useCategoryStore = defineStore('gategory', {
             const pagination = usePaginationStore()
             pagination.paginationsAll(sections.value.pagination)
             loader.setIsLoaderStutus(false)
+            if (sections.value.parent) {
+              this.parent = sections.value.parent
+            }
           }
         }, 200);
 

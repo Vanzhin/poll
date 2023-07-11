@@ -2,7 +2,7 @@
   <div>
     <div class="sections" >
       <TheHeaderVsPage
-        title="getCategoryTitle"
+        :title="categorys.getCategoryTitle"
       />
       <div class="fon">
         <div class="container">
@@ -27,7 +27,7 @@
               >
                 <div class="test__card"
                   v-if="true"
-                  @click="categoryUpdate({ area })"
+                  @click="categoryUpdate({section: area })"
                 >
                   <div>
                     {{ area.title }}
@@ -88,16 +88,34 @@
   })
   
   const page = ref(route.params.page ? +route.params.page: 1)
-  
   console.log(page.value)
-  
     
-    categorys.getApiCategorys({
-      page: page.value > 1 ? page.value: '',
-      parentId: parentId.value,
+  categorys.getApiCategorys({
+    page: page.value > 1 ? page.value: '',
+    parentId: parentId.value,
 
-    })
-
+  })
+  
+  async function categoryUpdate({section}){
+    iterNum.value++
+    console.log(section)
+    if (section.test.length > 0 ){
+      // tests.getApiTests({
+      //   parentId: section.id
+      // })
+      navigateTo(`/area/${section.id}`)
+    } else if (section.children.length > 0) {
+      // categorys.getApiCategorys({
+       
+      //   parentId: section.id
+      // })
+      navigateTo(`/iter/${iterNum.value}/group/${section.id}`)
+      
+    }  else {
+      navigateTo(`/iter/${iterNum.value}/group/${section.id}`)
+      
+    }
+  }
 </script>
 <style lang="scss" scoped>
 .sections{

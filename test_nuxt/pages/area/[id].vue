@@ -1,47 +1,54 @@
 <template>
-  <div class="sections"  >
-  <!-- v-if="!getIsLoaderStatus"> -->
-    <!-- <HeadesPage
-      :title="getCategoryTitle"
-    /> -->
-    <div class="fon">
-      <div class="container">
-        <UiLoaderView
-            v-if="loader.isLoader"
-          />
-        <div  class="wrapper" 
-          v-else 
-        >
-         
-          
-          <div class="tests__block"
-            v-if="tests.tests.length > 0"
-          >
-            <!--  -->
+  <div class="sections" >
+    <UiLoaderView
+      v-if="loader.isLoader"
+    />
+    <div class=""  v-else>
+      <TheHeaderVsPage
+        :title="categorys.getCategoryTitle"
+        subTitle="Тесты"
+      />
+      <div class="tests__block">
+        <div class="container">
+          <div class="wrapper">
             <div
-              v-for="(area) in getTests" 
-              :key="area.id"
-              
+              v-for="(test ) in getTests" 
+              :key="test.id"
+              class="test__block"
             >
-            <!-- getIsAutchUser || index < 3 -->
-              <div class="test__card"
-                v-if="true"
-                @click="categoryUpdate({ area })"
+              <div
+                v-if="test.questionCount > test.questionUnPublishedCount"
               >
-                <div>
-                  {{ area.title }}
+              <!-- getIsAutchUser || index < 3 -->
+                <div 
+                  @click="testLink({test})"
+                  v-if="true"
+                >
+                  <div class="test__card">
+                    <div>
+                      {{ test.title }}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.50356 9.39524C9.22523 9.11625 9.22515 8.66465 9.50337 8.38556C9.78263 8.10544 10.2363 8.1053 10.5157 8.38525L14.2949 12.1715C14.6845 12.5619 14.6845 13.1941 14.2949 13.5844L10.5157 17.3707C10.2363 17.6507 9.78263 17.6505 9.50337 17.3704C9.22515 17.0913 9.22523 16.6397 9.50356 16.3607L12.9781 12.878L9.50356 9.39524Z" fill="#269EB7"/>
-                  </svg>
+                <div class="test__card-limitation"
+                  v-else
+                  title="У Вас ограниченный доступ. Подпишитесь на нашу группу."
+                >
+                  {{ test.title }}
                 </div>
               </div>
-              <div class="test__card-limitation"
+              <div
                 v-else
-                title="У Вас ограниченный доступ. Подпишитесь на группу."
               >
-                {{ area.title }}
+                <div class="test__card-development">
+                  <div>
+                    {{ test.title }}
+                  </div>
+                  <div style="color: red;">
+                    Тест в разработке.
+                  </div>
+                  
+                </div>
               </div>
             </div>
             <div class="test__block-info">
@@ -49,20 +56,16 @@
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
               </svg>
+
             </div>
-          </div> 
-          <div class="tests__block min-heig"
-            v-else
-          > 
-          <!--  -->
-            Данная категория в разработке.
-          </div> 
-          <!-- <Pagination />   -->
+          </div>
         </div>
-      </div>
+      </div> 
+      <!-- <Pagination
+        type="getTestsDB"
+      /> -->
     </div>
   </div>
-    
 </template>
 
 <script setup>
@@ -70,6 +73,8 @@
   import { usePaginationStore } from '../../stores/PaginationStore'
   import { useTestsStore } from '../../stores/TestsStore'
   import { useLoaderStore } from '../../stores/Loader'
+  import { useCategoryStore } from '../../stores/CategoryStore'
+  const categorys = useCategoryStore()
   const tests = useTestsStore()
   const {getTests} = storeToRefs(tests)
   const loader = useLoaderStore()
@@ -96,51 +101,52 @@
   tests.getApiTests({
     page: page.value > 1 ? page.value: '',
     parentId: parentId.value,
-
   })
 
-  function categoryUpdate({ area }){
-
+  function testLink({ test }){
+    navigateTo(`/test/${test.id}`)
   }
 
 </script>
-<style lang="scss" scoped>
-.sections{
+
+<style lang="scss">
+  .sections{
     min-height: 100vh;
   }
-.min-heig{
-  min-height: 20vh;
-}
-.tests{
-  &__block{
+  .tests{
+    &-header{
+      width: 100%;
+      background-color: #F1F7FF;
+      padding: 32px 0;
+      font-family: 'Lato';
+      font-style: normal;
+      &-title{
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 40px;
+        margin-bottom: 25px;
+      }
+      &-navigation{
+        display: flex;
+        justify-content: space-between;
+        &-crumbs{
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 14px;
+          color: var(--color-blue);
+        }
+        
+      }
+    }
+    &__block{
       width: 100%;
       padding-top: 24px;
       background: var(--color-fon);
       @media (max-width: 350px) {
-         padding-top: 0px;
+        padding-top: 0px;
       }
     }
-}
-.test__card, .test__card-limitation{
-    background-color: #FFFFFF;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-width: 0;
-    word-wrap: break-word;
-    border: 1px solid #269EB7;
-    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
-    border-radius: 6px;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: var(--color-blue);
-    min-height: 52px;
-    margin-top: 17px;
-    @media (max-width: 350px) {
-      margin-top: 15px;
-    }
+
   }
   .test__block{
     margin-bottom: 15px;
@@ -166,6 +172,27 @@
       }
     }
   }
+  .test__card, .test__card-limitation{
+    background-color: #FFFFFF;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 0;
+    word-wrap: break-word;
+    border: 1px solid #269EB7;
+    box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
+    border-radius: 6px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--color-blue);
+    min-height: 52px;
+    margin-top: 17px;
+    @media (max-width: 350px) {
+      margin-top: 15px;
+    }
+  }
   .test__card-limitation{
     border: 1px solid #E0E6EE;
     color: #E0E6EE;
@@ -189,7 +216,4 @@
     min-height: 52px;
   }
 
- @media (min-width: 1024px) {
-  
- }
 </style>
