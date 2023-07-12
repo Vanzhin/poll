@@ -15,7 +15,8 @@
       aria-labelledby="dropdownMenuButton1"
     >
       
-      <li v-for="category, index in getCategorysFooter"
+      <li v-for="category in getCategorysFooter"
+        :key="category.id"
         class="dropdown-item menu_li"
         @click="categoryUpdate({section:category})" 
       >

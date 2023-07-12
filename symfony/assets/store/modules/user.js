@@ -243,7 +243,7 @@ const getters = {
     return state.role
   },
   getUserAdmin(state) {
-    return state.role === "ROLE_ADMIN"
+    return state.role === "ROLE_SUPER_ADMIN"
   },
   getAutchUserProfile(state) {
     return state.profile
