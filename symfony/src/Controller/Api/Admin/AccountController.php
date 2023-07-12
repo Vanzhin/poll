@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\Admin;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Factory\User\UserFactory;
 use App\Repository\UserRepository;
 use App\Service\Paginator;

@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Question;
 use App\Entity\Test;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Factory\Answer\AnswerFactory;
 use App\Factory\Result\ResultFactory;
 use Doctrine\ORM\EntityManagerInterface;

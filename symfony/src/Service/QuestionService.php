@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Question;
 use App\Entity\Subtitle;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Entity\Variant;
 use App\Factory\Question\QuestionFactory;
 use App\Factory\Subtitle\SubtitleFactory;

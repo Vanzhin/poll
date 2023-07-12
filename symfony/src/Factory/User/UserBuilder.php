@@ -2,8 +2,8 @@
 
 namespace App\Factory\User;
 
-use App\Entity\User;
-use App\Entity\WorkerCard;
+use App\Entity\User\User;
+use App\Entity\User\vo\WorkerCard;
 use App\Enum\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

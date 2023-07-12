@@ -1,7 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
+use App\Entity\Company;
+use App\Entity\Profile;
+use App\Entity\Question;
+use App\Entity\Result;
+use App\Entity\User\vo\WorkerCard;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,7 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(message: 'user.email.not_blank')]
     #[Assert\Email(message: 'user.email.format')]
-    #[Groups(['user', 'admin_user'])]
+    #[Groups(['user', 'admin_user', 'user_editable'])]
     private ?string $email = null;
 
     #[ORM\Column]

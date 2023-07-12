@@ -3,7 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\RefreshToken;
-use App\Entity\User;
+use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;

@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\User\User;
 use App\Repository\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
 class Profile
@@ -14,30 +17,51 @@ class Profile
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: 'profile.profile.first_name.not_blank')]
+    #[Assert\NotNull(message: 'profile.profile.first_name.not_blank')]
+    #[Assert\LessThanOrEqual(100)]
     private ?string $firstName = null;
 
+    #[Assert\NotBlank(message: 'profile.profile.middle_name.not_blank')]
+    #[Assert\NotNull(message: 'profile.profile.middle_name.not_blank')]
+    #[Assert\LessThanOrEqual(100)]
     #[ORM\Column(length: 100)]
     private ?string $middleName = null;
 
+    #[Assert\NotBlank(message: 'profile.profile.last_name.not_blank')]
+    #[Assert\NotNull(message: 'profile.profile.last_name.not_blank')]
+    #[Assert\LessThanOrEqual(150)]
     #[ORM\Column(length: 150)]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\LessThanOrEqual(255)]
     private ?string $position = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\LessThanOrEqual(255)]
     private ?string $department = null;
 
     #[ORM\Column(length: 15, nullable: true)]
+    #[Assert\Regex(pattern: '/^\d{3}-\d{3}-\d{3} \d{2}$/', message: 'profile.snils.format')]
     private ?string $snils = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\LessThanOrEqual(255)]
     private ?string $diploma = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\LessThanOrEqual(255)]
     private ?string $citizenship = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Choice([
+        'среднее профессиональное образование',
+        'высшее образование - бакалавриат',
+        'высшее образование - специалитет, магистратура',
+        'высшее образование - подготовка кадров высшей квалификации'
+    ],
+        message: 'profile.education.choice')]
     private ?string $educationLevel = null;
 
     #[ORM\OneToOne(mappedBy: 'profile', cascade: ['persist', 'remove'])]
