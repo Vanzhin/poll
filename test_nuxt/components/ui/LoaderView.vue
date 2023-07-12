@@ -12,6 +12,8 @@
 <style lang="scss" scoped>
 .loader-container{
     position: relative;
+    width: 100%;
+    height: 90vh;
 }
 
   .loader-block{

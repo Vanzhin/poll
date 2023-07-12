@@ -1,6 +1,11 @@
 <template>
   <div class="sections fon">
-    <div class="wrapper">
+    <UiLoaderView
+          v-if="loader.isLoader"
+          />
+    <div class="wrapper"
+    
+    v-else>
       <div class="" >
         <div class="b-container">
           <h1 class="sections__title">
@@ -11,12 +16,10 @@
             Выберите область проверки знаний
           </h2>
         </div>
-        <UiLoaderView
-          v-if="loader.isLoader"
-          />
+        
         
         <div class="b-container" 
-         v-else
+        
         >
           <div class="sections__block row" v-if="categorys.getCategogys !==''">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"

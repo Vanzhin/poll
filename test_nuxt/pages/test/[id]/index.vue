@@ -1,23 +1,19 @@
 <template>
-  <!-- <HeadesPage
-    :title="crumbs"
-    :subTitle="testName"
-    v-if="!getIsLoaderStatus"
-  /> -->
-  
-  <div class="fon "
-   
-  >
-    <UiLoaderView
+ <UiLoaderView
       v-if="loader.isLoader"
     />
-    <div class="container"
-      v-else
-    >
-    <TheHeaderVsPage
+  
+  <div class="section fon "
+    v-else
+  >
+     <TheHeaderVsPage
         title=""
         :subTitle="tickets.testTitle"
       />
+    <div class="container"
+     
+    >
+   
       <div class="wrapper">
         <div class="tickets-block">
           <div class="tickets-block-coll-tickets">

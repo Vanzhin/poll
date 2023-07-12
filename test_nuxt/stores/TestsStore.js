@@ -6,15 +6,19 @@ export const useTestsStore = defineStore('tests', {
   state: () => ({
     parent: '',
     tests:[],
-    
+    testActive: null
   }),
   getters: {
     getTests: (state) => state.tests,
   },
   actions: {
-    testsToChange(categorys) {
-      console.log('categorysToChange-',categorys)
-      this.categorys = categorys
+    testsToChange(tests) {
+      console.log('categorysToChange-',tests)
+      this.tests = tests
+    },
+    testsActiveSave(test) {
+      console.log('categorysToChange-',test)
+      this.testActive = test
     },
     async getApiTests({ page = null, parentId = null, admin = null, limit = 6 }){
       const loader = useLoaderStore()
