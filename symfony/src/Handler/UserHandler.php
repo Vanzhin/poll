@@ -2,7 +2,7 @@
 
 namespace App\Handler;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Factory\User\UserFactory;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
