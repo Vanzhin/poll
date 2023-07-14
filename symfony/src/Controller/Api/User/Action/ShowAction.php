@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Api\Admin\User\Action;
+namespace App\Controller\Api\User\Action;
 
 use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Entity\User\User;

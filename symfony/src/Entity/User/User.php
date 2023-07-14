@@ -40,7 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(['user', 'admin_user'])]
+    #[Groups(['user', 'admin_user', 'user_editable'])]
     private array $roles = [];
 
 
@@ -69,10 +69,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Company $company = null;
 
     #[ORM\Column(length: 255, unique: true, nullable: true)]
+    #[Groups(['user_editable'])]
+    #[Assert\NotBlank(message: 'user.login.not_blank')]
+    #[Assert\NotNull(message: 'user.login.not_null')]
     private ?string $login = null;
 
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
+    #[Groups(['user_editable'])]
     private ?Profile $profile = null;
+
+    #[ORM\Column]
+    #[Groups(['user_editable'])]
+    private ?bool $isActive = null;
 
     /**
      * @return WorkerCard|null
@@ -287,6 +295,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfile(?Profile $profile): self
     {
         $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function isIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

@@ -72,7 +72,7 @@ class SerializerService
         $contextBuilder = (new ObjectNormalizerContextBuilder())
             ->withContext($defaultContext)
             ->withGroups($groups)
-            ->withSkipNullValues(true)
+            ->withSkipNullValues(false)
             ->withCallbacks([
                 'image' => $this->normalizerService->imageCallback($this->upLoadedAsset),
             ]);

@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Controller\Api\Admin\User;
+namespace App\Controller\Api\User;
 
-use App\Controller\Api\Admin\User\Action as Actions;
+use App\Controller\Api\User\Action\CreateCompanyUserAction;
+use App\Controller\Api\User\Action\ShowAction;
+use App\Entity\Company;
 use App\Entity\User\User;
+use App\Security\Voter\CompanyVoter;
 use App\Security\Voter\UserVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +19,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class UserController extends AbstractController
 {
     public function __construct(
-        private readonly Actions\ShowAction $showAction
+        private readonly ShowAction              $showAction,
+        private readonly CreateCompanyUserAction $createAction,
     )
     {
     }
@@ -28,6 +32,18 @@ class UserController extends AbstractController
             throw new AccessDeniedException();
         };
         return $this->showAction->run($user);
+    }
+
+    #[Route('/company/{id<\d+>}', name: 'create_in_company', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function create(Request $request, Company $company): JsonResponse
+    {
+        if (!$this->isGranted(CompanyVoter::MANAGE, $company)) {
+            throw new AccessDeniedException();
+        };
+
+
+        return $this->createAction->run($request, $company);
     }
 
 }
