@@ -23,7 +23,7 @@ class DeleteAction extends NewBaseAction
         $this->entityManager->remove($company);
         $this->entityManager->flush();
 
-        return $this->successResponse($company, ['admin_user']);
+        return $this->successResponse($company, ['admin_user'], 'Компания удалена');
 
     }
 }

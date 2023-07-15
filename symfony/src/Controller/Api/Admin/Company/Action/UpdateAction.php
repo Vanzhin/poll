@@ -35,7 +35,7 @@ class UpdateAction extends NewBaseAction
         $this->entityManager->persist($updated);
         $this->entityManager->flush();
 
-        return $this->successResponse($updated, ['admin_user']);
+        return $this->successResponse($updated, ['admin_user'], 'Компания обновлена');
 
     }
 }

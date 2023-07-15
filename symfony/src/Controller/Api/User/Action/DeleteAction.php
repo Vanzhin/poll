@@ -22,6 +22,6 @@ class DeleteAction extends NewBaseAction
     {
         $this->entityManager->remove($user);
         $this->entityManager->flush();
-        return $this->successResponse($user, ['user_editable']);
+        return $this->successResponse($user, ['user_editable'], 'Пользователь удален');
     }
 }

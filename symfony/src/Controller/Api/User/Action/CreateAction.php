@@ -57,6 +57,6 @@ class CreateAction extends NewBaseAction
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        return $this->successResponse($user, ['user_editable']);
+        return $this->successResponse($user, ['user_editable'], 'Пользователь создан');
     }
 }

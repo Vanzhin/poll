@@ -23,12 +23,13 @@ class NewBaseAction
 
     }
 
-    public function successResponse(array|object $object, array $groups = [], string $format = 'json', bool $json = true, int $status = 200): JsonResponse
+    public function successResponse(array|object $object, array $groups = [], string $message = 'Успешное выполнение',string $format = 'json', int $status = 200): JsonResponse
     {
         $data = [
             'result' => 'success',
             'status' => $status,
             'data' => json_decode($this->serializer->serializeObject($object, $format, $groups), true),
+            'message' => $message,
         ];
         return new JsonResponse($data, $status, []);
     }

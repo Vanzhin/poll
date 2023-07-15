@@ -58,6 +58,6 @@ class CreateAction extends NewBaseAction
         $event = new CompanyCreatedEvent($company);
         $this->dispatcher->dispatch($event, CompanyCreatedEvent::NAME);
 
-        return $this->successResponse($company, ['admin_user']);
+        return $this->successResponse($company, ['admin_user'], 'Компания создана');
     }
 }
