@@ -12,10 +12,19 @@ user.login.not_blank: Логин не может быть пустым
 user.login.not_null: Необходимо указать логин
 
 profile.snils.format: Не верный формат СНИЛС
-profile.first_name.not_blank: Имя пользователя не может быть пустой
+profile.first_name.not_blank: Имя пользователя не может быть пустым
+profile.first_name.not_null: Имя пользователя  - обязательный параметр
 profile.middle_name.not_blank: Отчество пользователя не может быть пустым
+profile.middle_name.not_null: Отчество пользователя  - обязательный параметр
 profile.last_name.not_blank: Фамилия пользователя не может быть пустой
+profile.last_name.not_null: Фамилия пользователя  - обязательный параметр
 profile.education.choice: Не верный уровень образования
+profile.first_name.length: Имя не может быть длиннее {{ limit }} символов
+profile.middle_name.length: Отчество не может быть длиннее {{ limit }} символов
+profile.last_name.length: Фамилия не может быть длиннее {{ limit }} символов
+profile.department.length: Название подразделения не может быть длиннее {{ limit }} символов
+profile.diploma.length: Название диплома не может быть длиннее {{ limit }} символов
+profile.citizenship.length: Название гражданства не может быть длиннее {{ limit }} символов
 
 worker_card.middle_name.not_blank: Отчество пользователя не может быть пустым
 worker_card.last_name.not_blank: Фамилия пользователя не может быть пустой

@@ -4,6 +4,7 @@ namespace App\Controller\Api\User\Action;
 
 use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Entity\User\User;
+use App\Factory\Profile\ProfileFactory;
 use App\Factory\User\UserFactory;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
@@ -18,6 +19,7 @@ class UpdateAction extends NewBaseAction
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidationService      $validator,
         private readonly UserFactory            $userFactory,
+        private readonly ProfileFactory         $profileFactory
     )
     {
         parent::__construct($serializer);
@@ -27,17 +29,27 @@ class UpdateAction extends NewBaseAction
     {
         $data = json_decode($request->getContent(), true);
         $company = $user->getCompany();
-        $user = $this->userFactory->createBuilder()->buildCompanyUser($data, $company, $user);
-        $errors = $this->validator->validate($user);
-        if ($this->validator->userPasswordValidate($data['password'])) {
-            foreach ($this->validator->userPasswordValidate($data['password']) as $error) {
-                $errors[] = $error;
+        $profile = $this->profileFactory->createBuilder()->buildProfile($data['profile'] ?? [], $user->getProfile());
+        if (!empty($this->validator->validate($profile))) {
+            throw new \Exception(implode(', ', $this->validator->validate($profile)));
+        }
 
+        $user = $this->userFactory->createBuilder()->buildCompanyUser($data ?? [], $company, $user, $profile);
+        if (!empty($this->validator->validate($user))) {
+            throw new \Exception(implode(', ', $this->validator->validate($user)));
+        }
+        $errors = [];
+        if (isset($data['password'])) {
+            if ($this->validator->userPasswordValidate($data['password'])) {
+                foreach ($this->validator->userPasswordValidate($data['password']) as $error) {
+                    $errors[] = $error;
+                }
+            }
+            if ($data['password'] !== $data['confirmPassword']) {
+                $errors[] = 'Пароли не совпадают.';
             }
         }
-        if ($data['password'] !== $data['confirmPassword']) {
-            $errors[] = 'Пароли не совпадают.';
-        }
+
         if ($errors) {
             throw new \Exception(implode(', ', $errors));
         }
