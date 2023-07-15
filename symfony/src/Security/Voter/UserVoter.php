@@ -19,6 +19,7 @@ class UserVoter extends Voter
     public function __construct(private readonly Security $security)
     {
     }
+
     protected function supports(string $attribute, mixed $subject): bool
     {
         // replace with your own logic
@@ -39,7 +40,9 @@ class UserVoter extends Voter
          */
         switch ($attribute) {
             case self::VIEW:
-                if ($subject->getCompany()->getUsers()->contains($user)) {
+            case self::EDIT:
+            case self::CREATE:
+                if ($this->security->isGranted('ROLE_ADMIN') && $subject->getCompany()?->getUsers()->contains($user)) {
                     return true;
                 }
                 if ($subject->getUserIdentifier() === $user->getUserIdentifier()) {
@@ -48,6 +51,18 @@ class UserVoter extends Voter
                 if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
                     return true;
                 }
+                break;
+            case self::DELETE:
+                if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                    return true;
+                }
+                if(in_array('ROLE_ADMIN', $subject->getRoles())){
+                    return false;
+                }
+                if ($this->security->isGranted('ROLE_ADMIN') && $subject->getCompany()?->getUsers()->contains($user)) {
+                    return true;
+                }
+
                 break;
         }
 

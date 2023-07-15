@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class CreateCompanyUserAction extends NewBaseAction
+class CreateAction extends NewBaseAction
 {
     public function __construct(
         SerializerService                       $serializer,
@@ -33,7 +33,6 @@ class CreateCompanyUserAction extends NewBaseAction
         if ($this->validator->userPasswordValidate($data['password'])) {
             foreach ($this->validator->userPasswordValidate($data['password']) as $error) {
                 $errors[] = $error;
-
             }
         }
         if ($data['password'] !== $data['confirmPassword']) {
@@ -43,13 +42,9 @@ class CreateCompanyUserAction extends NewBaseAction
             throw new \Exception(implode(', ', $errors));
         }
 
-
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
         return $this->successResponse($user, ['user_editable']);
-
-
     }
-
 }
