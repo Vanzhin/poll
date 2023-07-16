@@ -1,0 +1,3 @@
+<template>
+  Компания{{  }}
+</template>

@@ -75,7 +75,9 @@ const getters = {
 const mutations = {
   GET_COURCES(state, cources) {
     state.cources = {
-      active: 0, list: cources, isLoaded: true
+      active: 0, 
+      list: cources, 
+      isLoaded: true
     }
   },
   

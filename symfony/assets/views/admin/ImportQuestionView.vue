@@ -15,7 +15,8 @@
             <select  name="hero" v-model="selectedId" class="select">
               <option disabled>Выберите тест</option>
               <option 
-                v-for="(item, index) in getTests"
+                v-for="(item) in getTests"
+                :key="item.id"
                 :value="item.id" 
               >{{item.title}}</option>
             </select>
@@ -92,14 +93,19 @@
         <h5>При импорте обнаруженны ошибки в следующих вопросах:</h5>
         <ol>
           <li 
-            v-for="(item, index) in getQuestionsImportError"
+            v-for="(item) in getQuestionsImportError"
+            :key="item.id"
             class="question-item"
           >
-           
-              <h6 
-                v-if="typeof item.type === 'object'"
-                v-for="(type) in item.type"
-                >{{type}}!</h6>
+              <div
+              v-if="typeof item.type === 'object'"
+              >
+                <h6 
+                  v-for="(type) in item.type"
+                  :key="type"
+                  >{{type}}!
+                </h6>
+              </div>
               <h6 v-else>{{item.type}}!</h6>
               <p>Вопрос: {{ item.question.title || ""}}</p>
               <div
@@ -108,7 +114,8 @@
               >
                 Варинты ответов:
                 <div class="variants "
-                  v-for="(variant, index) in item.question.variant"
+                  v-for="(variant) in item.question.variant"
+                  :key="variant.title"
                 >
                 <i class="bi bi-check-square "
                   v-if="variant.correct"

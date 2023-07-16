@@ -53,6 +53,8 @@ export default {
         icon:`<i class="bi bi-cloud-arrow-down"></i>`},
       {title: 'Пользователи', url: '/admin/users',
         icon:` <i class="bi bi-people"></i>`},
+      {title: 'Компании', url: '/admin/company',
+        icon:` <i class="bi bi-people"></i>`},
        
     ]
   })

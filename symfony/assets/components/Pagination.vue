@@ -13,7 +13,7 @@
       </div>
 
       <div 
-        v-for="(item, key) in getPagination"
+        v-for="(item) in getPagination"
         :key = "item.label" 
         class="block-pagination-element" 
         :class="{active:item.active}"
@@ -60,7 +60,8 @@ export default {
       "getQuestionsTestIdDb",
       "setIsLoaderStatus",
       "getTicketsTestIdDb",
-      "getSearchDb"
+      "getSearchDb",
+      "getCompanyList"
     ]),
     async paginate (page){
       switch (page) {

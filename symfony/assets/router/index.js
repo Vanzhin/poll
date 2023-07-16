@@ -183,10 +183,29 @@ const router = createRouter({
       component: () => import('../views/admin/AdminUsersView.vue')
     },
     {
+      path: '/admin/company',
+      name: 'adminСompanyList',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminСompanyListView.vue')
+    },
+    {
+      path: '/admin/company/:id',
+      name: 'adminCompany',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/AdminCompanyView.vue'),
+    },
+    {
+      path: '/admin/company/:id/:operation', 
+      name: 'adminCompanyCreate', 
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateCompanyView.vue') 
+    },
+    {
       path: '/admin/category/:id/:operation',
       name: 'adminCategoryCreate',
       meta: {loyout: 'admin', autch: true, admin: true},
-      component: () => import('../views/admin/CreateCategoryView.vue')
+      component: () => import('../views/admin/CreateCategoryView.vue'),
+      
     },
     {
       path: '/admin/iter/:num/group/:id',
@@ -262,7 +281,7 @@ router.beforeEach((to, from, next) => {
     next('/logout')
   } else {
       if (requireRole ){
-        if (role === "ROLE_ADMIN") {
+        if (role === "ROLE_SUPER_ADMIN") {
           next()
         } else {alert( "у вас нет прав доступа.")
         next('/')}

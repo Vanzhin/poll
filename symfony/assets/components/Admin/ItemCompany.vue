@@ -5,27 +5,24 @@
     <div class="">
       <div class="item__card" >
         <div class="item__card-block">
-          <div class="item__card__img">
-            <img :src="item.image" alt="" class="item__card__img"
-              v-if="item.image"
-            >
-          </div>
+          
           <div class="item__card-title">
             {{ item.id }} - {{ item.title }}
+            <p>ИНН - {{ item.tin }}</p>
           </div>
         </div>
         <div class="item__card-block-button">
           <div class="item__card-block-button-flex" >
             <div class=" btn-center"
               title="Редактировать"
-              @click.stop="editCategory"
+              @click.stop="editCompany"
             >
               <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M18.2407 6.75552L17.2857 5.71353C16.9165 5.31072 16.2924 5.27879 15.884 5.64183L14.3216 7.03088L16.6198 9.56793L18.1714 8.17538C18.5854 7.80377 18.6166 7.16567 18.2407 6.75552ZM5.5 14.8737L13.2006 8.02756L15.5035 10.5699L7.90674 17.388H5.5V14.8737ZM19.3465 5.74204L18.3915 4.70005C17.4686 3.69303 15.9083 3.61321 14.8874 4.5208L4.33557 13.9019C4.12212 14.0916 4 14.3636 4 14.6492V17.888C4 18.4403 4.44772 18.888 5 18.888H8.09822C8.34478 18.888 8.58266 18.7969 8.76616 18.6322L19.1733 9.29171C20.2084 8.36268 20.2863 6.76743 19.3465 5.74204ZM20 20.3847H4V21.8847H20V20.3847Z" fill="#269EB7"/>
               </svg>
             </div>
            
-            <div class=" btn-center"
+            <!-- <div class=" btn-center"
               title="Добавить вложенную категорию"
               @click.stop="createChildrenCategory"
               v-if="item.test.length === 0"
@@ -39,10 +36,10 @@
               @click.stop="createChildrenTest"
               v-if="item.children.length === 0"
             >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
-              <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-            </svg>
-            </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
+                <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+              </svg>
+            </div> -->
             <div class=" btn-center" 
               title="Удалить"
               @click.stop="deleteVisibleConfirm"
@@ -82,33 +79,42 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(["getIsAutchUser", "getCategoryParendId","getGonfimAction",
+    ...mapGetters([
+      "getIsAutchUser", 
+      "getGonfimAction",
       "getGonfimMessage"]),
   },
   methods:{
-    ...mapActions(["deleteCategoryDb", "setConfirmMessage",]),
-    img(item){
-      const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
-      return img
+    ...mapActions([
+      "setConfirmMessage",
+      "setCompanyStore",
+      "deleteCompanyDb"
+    ]),
+    ...mapMutations(['SET_COMPANY']),
+    // img(item){
+    //   const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
+    //   return img
+    // },
+    // childToggle(){
+    //   this.childVisible = !this.childVisible
+    // },
+   
+    async editCompany(){
+      this.SET_COMPANY(this.item)
+      this.$router.push({name: 'adminCompanyCreate', params: {operation:"edit", id: this.item.id  } })
     },
-    childToggle(){
-      this.childVisible = !this.childVisible
-    },
-    editCategory(){
-      this.$router.push({name: 'adminCategoryCreate', params: {operation:"edit" , id: this.item.id } })
-    },
-    async deleteCategoty(){
-      console.log('Удаляю категорию № - ',this.item.id)
-      this.deleteCategoryDb({id: this.item.id, parentId: this.getCategoryParendId, })
+    async deleteCompany(){
+      console.log('Удаляю компанию № - ',this.item.id)
+      this.deleteCompanyDb({id: this.item.id })
       
     },
     deleteVisibleConfirm(){
 
-      this.setConfirmMessage("При удалении раздела, так же будут удалены все его внутренние области. Вы, действительно хотите это сделать?")
+      this.setConfirmMessage("При удалении компании, так же будут удалены все связанные данные. Вы, действительно хотите это сделать?")
       let timerId = setInterval(() => {
         if (this.getGonfimAction) {
           clearInterval(timerId)
-          if (this.getGonfimAction === "yes"){this.deleteCategoty()}
+          if (this.getGonfimAction === "yes"){this.deleteCompany()}
           
         }
       }, 200);
@@ -177,7 +183,7 @@ export default {
       font-weight: 700;
       font-size: 20px;
       line-height: 24px;
-      max-width: 68%;
+      max-width: 100%;
     }
     
   }
