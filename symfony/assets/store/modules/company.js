@@ -177,7 +177,7 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log(data)
-          dispatch('setMessage', data)
+          dispatch('setMessage', {message:'Удаление компании из БД прошло успешно.'})
           dispatch("getCompanyListDB",  { });
         })
     } catch (e) {
