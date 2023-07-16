@@ -1,11 +1,13 @@
 import { 
-  SET_COMPANY_LIST
+  SET_COMPANY_LIST,
+  SET_COMPANY
 } from './mutation-types.js'
 
 import axios from 'axios';
 
 const state = () => ({
   companyList: [],
+  company:{}
 })
 
 const actions = {
@@ -20,7 +22,7 @@ const actions = {
     }
     
     const config = {
-      method: 'get',
+      method: 'post',
       maxBodyLength: Infinity,
       url: `/api/admin/company/list?page=${page}&limit=${limit}`,
       headers: { 
@@ -34,27 +36,27 @@ const actions = {
     console.log(config) 
   try{
     await axios(config)
-      .then((response)=>{
-        console.log(response)
-        // commit(SET_COMPANY_LIST, data.list);
+      .then(({data})=>{
+        console.log(data)
+        commit(SET_COMPANY_LIST, data.data.list);
         
-        // dispatch("setPagination", data.pagination);
+        dispatch("setPagination", data.data.pagination);
         
       })
   } catch (e) {
     console.log(e) 
-    // if (e.response.data.message === "Expired JWT Token") {
-    //   await dispatch('getAuthRefresh')
-    //   await dispatch('getCompanyListDB', { page, limit, filter, sort})
-    // } else {
-    //   commit(SET_COMPANY_LIST, null);
-    //   dispatch("setPagination", null);
+    if (e.response.data.message === "Expired JWT Token") {
+      await dispatch('getAuthRefresh')
+      await dispatch('getCompanyListDB', { page, limit, filter, sort})
+    } else {
+      commit(SET_COMPANY_LIST, null);
+      dispatch("setPagination", null);
       dispatch('setMessageError', e)
-    // }
+    }
   }
   },
   //запрос на создание компании
-  async createCompany({dispatch, commit}, {id, conpanySend}){
+  async createCompanyDb({dispatch, commit}, {id, conpanySend}){
     const token = await dispatch("getAutchUserTokenAction")
     const data = new FormData(conpanySend);
     let dataJSON = {}
@@ -90,16 +92,125 @@ const actions = {
       }
     }
   },
+  //запрос на получение данных компании
+  async getCompanyIdDB({dispatch, commit}, {id}){
+    const token = await dispatch("getAutchUserTokenAction")
+    const config = {
+      method: 'get',
+      url: `/api/admin/company/${id}`,
+      headers: { 
+        Accept: 'application/json', 
+        Authorization: `Bearer ${token}`
+      },
+      
+    };
+    console.log(config)
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log(data)
+          commit(SET_COMPANY, data.data);
+        })
+    } catch (e) {
+      console.log(e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getCompanyIdDB', {id})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  // запрос на редактирование данных компании
+  async editCompanyDb({dispatch, commit}, {id, conpanySend}){
+    const token = await dispatch("getAutchUserTokenAction")
+    const data = new FormData(conpanySend);
+    let dataJSON = {}
+    for(let [name, value] of data) {
+      // console.dir(`${name} = ${value}`); 
+      dataJSON[name] = value
+    }
+
+    const config = {
+      method: 'put',
+      url: `/api/admin/company/${id}`,
+      headers: { 
+        Accept: 'application/json', 
+        Authorization: `Bearer ${token}`
+      },
+      data: dataJSON
+    };
+    console.log(config)
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log(data)
+          dispatch('setMessage', data)
+          // dispatch("getCategorysDB",  { page: null , parentId: id });
+        })
+    } catch (e) {
+      console.log(e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('editCompany', {id, conpanySend})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  // запрос на удаление компании
+  async deleteCompanyDb({dispatch}, {id}){
+    const token = await dispatch("getAutchUserTokenAction")
+   
+
+    const config = {
+      method: 'delete',
+      url: `/api/admin/company/${id}`,
+      headers: { 
+        Accept: 'application/json', 
+        Authorization: `Bearer ${token}`
+      },
+      
+    };
+    console.log(config)
+    try{
+      await axios(config)
+        .then(({data})=>{
+          console.log(data)
+          dispatch('setMessage', data)
+          dispatch("getCompanyListDB",  { });
+        })
+    } catch (e) {
+      console.log(e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('deleteCompanyDb', {id, conpanySend})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  // сохранение компании в сторе
+  setCompanyStore({dispatch, commit}, {company}){
+    commit(SET_COMPANY, company);
+  }
 }
 
 const getters = {
   getCompanyList(state) {
     return state.companyList
   },
+  getCompany(state) {
+    return state.company
+  },
 }
 const mutations = {
   [SET_COMPANY_LIST] (state, companyList){
     state.companyList = companyList
+  },
+  [SET_COMPANY] (state, company){
+    console.log(company)
+    state.company = company
   },
 }
 export default {

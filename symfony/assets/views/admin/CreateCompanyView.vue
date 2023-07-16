@@ -41,18 +41,23 @@
             v-if="tin !== ''"
           ></i>
         </div>
-        <label class="label"><b>E-mail:</b> </label>
-        <div class="custom-radio img_block">  
-          <input  
-            name="email"
-            v-model= "email"
-            class="input_alias" 
-          >
-          <i class="bi bi-eraser custom-close" title="Очистить поле"
-            @click="email = ''"
-            v-if="email !== ''"
-          ></i>
+        <div
+          v-if="operationCreate"
+        >
+          <label class="label"><b>E-mail:</b> </label>
+          <div class="custom-radio img_block">  
+            <input  
+              name="email"
+              v-model= "email"
+              class="input_alias" 
+            >
+            <i class="bi bi-eraser custom-close" title="Очистить поле"
+              @click="email = ''"
+              v-if="email !== ''"
+            ></i>
+          </div>
         </div>
+        
       
         <br> 
           
@@ -72,30 +77,34 @@
     },
     data() {
       return {
-                    
         title: "",
         tin: "",
         email:'',
         message: null,
-        companyId: null
+        companyId: null,
+        operationCreate: true
       }
     },
     computed:{ 
-      ...mapGetters(["getAutchUserToken", "getMessage", ]),
+      ...mapGetters(["getAutchUserToken", "getMessage", "getCompany"]),
       
     },
    
     methods: { 
-      ...mapActions(["editCompany", "createCompany" ,"setMessage"]),
+      ...mapActions([
+        "editCompanyDb", 
+        "createCompanyDb",
+        "setMessage",
+        "getCompanyIdDB"]),
       ...mapMutations([]),
       
       async onSubmit(e){
         const conpanySend = e.target
         
         if ( this.$route.params.operation === 'edit'){
-          await this.editCompany({conpanySend, id:+this.$route.params.id})
+          await this.editCompanyDb({conpanySend, id: this.companyId})
         } else if ( this.$route.params.operation === 'create'){
-          await this.createCompany({conpanySend})
+          await this.createCompanyDb({conpanySend})
         }
         this.message = !this.getMessage.err
         let timerId = setInterval(() => {
@@ -120,7 +129,11 @@
         }
       }
       if ( this.$route.params.operation === 'edit'){
-        // this.companyId = this.$route.params.id
+        this.operationCreate = false
+        this.companyId = +this.$route.params.id
+        if (!this.getCompany.id  ) {
+          await this.getCompanyIdDB({id: this.companyId})
+        }
         this.title = this.getCompany.title ? this.getCompany.title : ''
         this.tin = this.getCompany.tin ? this.getCompany.tin : ''
         this.email = this.getCompany.email ? this.getCompany.email : ''

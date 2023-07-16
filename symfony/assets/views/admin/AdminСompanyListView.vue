@@ -2,12 +2,16 @@
    <Loader
     v-if="isLoader"
   />
-  <div class="block"
+  <div class="fon"
     v-else
   >
-    <div class="title">
-      <h2>Компании</h2>
-      <div class="button-cont">
+    
+    <div class="container">
+      <div class="wrapper">
+        <div class="row">
+          <div class="title">
+            <h2>Компании</h2>
+            <div class="button-cont">
               <div class="button"
                 title="Добавить новую команию"
                 @click.stop="createCompany"
@@ -18,43 +22,53 @@
                 </svg>
               </div>
             </div>
-    </div>
-   <div class="container">
-      <div class="row">
-        <div class="tablis">
-          <div class="tablis-row">
-            <h5 class="tablis-cell">№</h5>
-            <h5 class="tablis-cell">Название</h5>
-            <h5 class="tablis-cell">ИНН</h5>
-            <h5 class="tablis-cell">Дата регистрации</h5>
-          </div>
-          <div class="tablis-row"
-            v-for="(company) in getCompanyList"
-            :key="company.id"
-          >
-            <p class="tablis-cell">{{company.id }}</p>
-            <p class="tablis-cell">{{ company.title }}</p>
-            <p class="tablis-cell">{{ company.tin}}</p>
-            <p class="tablis-cell">{{ hh}}</p>
-          </div>
           
-          
+          </div>
         </div>
       </div>
     </div>
+    <div class="container">
+      <div class="row">
+        <div class="tests__block"
+          v-if="getCompanyList">
+          <ItemCompany
+            v-for="(item, index) in getCompanyList" 
+            :key="item.id"
+            :item="item"
+            :index="index"
+           @click.stop="companyRoute({id:item.id})"
+          /> 
+          
+        </div>
+        <div class="tests__block"
+          v-else>
+        <h4>Создайте компанию.</h4>
+        </div>
+
+        <Pagination
+          type="getCompanyList"
+          admin= true
+        />
+      </div>
+    </div>
+
   </div>
 
   
 </template>
  
 <script>
+  import ItemCompany from "../../components/Admin/ItemCompany.vue"
   import MessageView from "../../components/ui/MessageView.vue"
   import Loader from '../../components/ui/Loader.vue'
+  import Pagination from "../../components/Pagination.vue"
   import { mapGetters, mapActions, mapMutations} from "vuex"
   export default {
     components: {
       Loader,
-      MessageView
+      MessageView,
+      Pagination,
+      ItemCompany
     },
     data() {
       return {
@@ -71,6 +85,9 @@
       createCompany(){
         this.$router.push({name: 'adminCompanyCreate', params: {operation:"create", id: 0  } })
       },
+      companyRoute({id}){
+        this.$router.push({name: 'adminCompany', params: { id } })
+      }
     },
     async mounted(){
       setTimeout(()=>this.isLoader = false, 1000 )
@@ -99,6 +116,13 @@
       color: var(--color-blue);
     }
   }
+  .create{
+    display: flex;
+    align-items: center;
+    &-plus{
+      transform: scaleY(1.3);
+    }
+  }
   .button{
     margin-right: 20px;
     &-cont{
@@ -110,29 +134,6 @@
     &:hover{
       cursor: pointer;
       transform: scale(1.15);
-    }
-  }
-  .tablis{
-    margin: 10px 10px 10px;
-    &-row{
-      display: flex;
-    justify-content: space-between;
-    }
-    &-cell{
-      flex: 1;
-      text-align: center;
-      border: 2px solid rgb(116 116 183);
-      margin: 0;
-    }
-    &-header{
-      display: flex;
-      &-title{
-        margin-left: 10px;
-        p{
-          font: bold;
-          margin: 0;
-        }
-      }
     }
   }
  @media (min-width: 1024px) {
