@@ -28,7 +28,7 @@ security:
                 check_route: app_api_login_link_check
                 signature_properties: [ 'id' ]
                 # lifetime in seconds
-                lifetime: 7776000
+                lifetime: 300
                 success_handler: App\Security\Authentication\Api\AuthenticationSuccessHandler
                 failure_handler: App\Security\Authentication\Api\AuthenticationFailureHandler
             json_login:
