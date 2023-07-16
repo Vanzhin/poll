@@ -2,10 +2,7 @@
 
 namespace App\Controller\Api\User;
 
-use App\Controller\Api\User\Action\CreateAction;
-use App\Controller\Api\User\Action\DeleteAction;
-use App\Controller\Api\User\Action\ShowAction;
-use App\Controller\Api\User\Action\UpdateAction;
+use App\Controller\Api\User\Action as Actions;
 use App\Entity\User\User;
 use App\Security\Voter\UserVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,15 +10,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/user', name: 'app_api_user_')]
+#[IsGranted('ROLE_ADMIN')]
+
 class UserController extends AbstractController
 {
     public function __construct(
-        private readonly ShowAction   $showAction,
-        private readonly CreateAction $createAction,
-        private readonly UpdateAction $updateAction,
-        private readonly DeleteAction $deleteAction,
+        private readonly Actions\ShowAction   $showAction,
+        private readonly Actions\CreateAction $createAction,
+        private readonly Actions\UpdateAction $updateAction,
+        private readonly Actions\DeleteAction $deleteAction,
+        private readonly Actions\ListAction $listAction,
     )
     {
     }
@@ -68,5 +69,11 @@ class UserController extends AbstractController
         };
 
         return $this->deleteAction->run($user);
+    }
+
+    #[Route('/list', name: 'list', methods: ['GET', 'POST'])]
+    public function list(Request $request): JsonResponse
+    {
+        return $this->listAction->run($request);
     }
 }

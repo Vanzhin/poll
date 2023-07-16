@@ -4,7 +4,7 @@ namespace App\Controller\Api\Admin;
 
 use App\Entity\User\User;
 use App\Factory\User\UserFactory;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\Service\Paginator;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;

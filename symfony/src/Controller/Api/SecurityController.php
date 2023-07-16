@@ -3,12 +3,6 @@
 namespace App\Controller\Api;
 
 use App\Action\Security\LinkLoginAction;
-use App\Factory\User\UserFactory;
-use App\Repository\UserRepository;
-use App\Service\Mailer;
-use App\Service\ValidationService;
-use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

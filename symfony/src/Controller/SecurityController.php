@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User\User;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

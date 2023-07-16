@@ -39,7 +39,7 @@ class Profile
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Length(max: 255, maxMessage: 'profile.first_name.length')]
+    #[Assert\Length(max: 255, maxMessage: 'profile.position.length')]
     #[Groups(['user_editable'])]
     private ?string $position = null;
 

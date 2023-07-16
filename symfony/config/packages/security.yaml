@@ -39,7 +39,7 @@ security:
         api:
             pattern: ^/api
             stateless: true
-            switch_user: { role: ROLE_ALLOWED_TO_SWITCH }
+            switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: X-Switch-User}
             entry_point: jwt
             json_login:
                 check_path: /api/login # or, if you have defined a route for your login path, the route name you used

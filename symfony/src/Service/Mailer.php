@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Company;
 use App\Entity\User\User;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;

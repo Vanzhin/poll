@@ -3,13 +3,10 @@
 namespace App\Action\Security;
 
 use App\Action\BaseAction;
-use App\Factory\MinTrudTest\MinTrudTestBuilder;
 use App\Factory\User\UserFactory;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\Service\Mailer;
 use App\Service\SerializerService;
-use App\Service\ValidationService;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +18,6 @@ class LinkLoginAction extends BaseAction
         private readonly UserFactory            $userFactory,
         private readonly Mailer                 $mailer,
         private readonly UserRepository         $userRepository,
-        private readonly SerializerService      $serializer
 
     )
     {

@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\User;
 
+use App\Entity\Company;
 use App\Entity\User\User;
+use App\Repository\Interfaces\UserRepositoryInterface;
+use App\Repository\User\Filter\UserFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -18,7 +21,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -86,5 +89,38 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findLatestQuery(): QueryBuilder
     {
         return $this->latest();
+    }
+
+    public function findAllWithFilter(UserFilter $filter, ?Company $company): array
+    {
+        $query = $this->buildFilter($filter, $company)
+            ->setFirstResult($filter->getOffset())
+            ->setMaxResults($filter->getLimit());
+
+        return $query->getQuery()->getResult();
+    }
+
+    public function buildFilter(UserFilter $filter, ?Company $company): QueryBuilder
+    {
+        $query = $this->getOrCreateQueryBuilder()->leftJoin('u.profile', 'pr');
+
+        if ($filter->getGeneralSearch()) {
+            $query->andWhere(
+                'pr.firstName LIKE :title OR pr.lastName LIKE :title OR pr.middleName LIKE :title OR u.login LIKE :title')
+                ->setParameter('title', "%{$filter->getGeneralSearch()}%");
+        }
+        if (!is_null($filter->getIsActive())) {
+            $query->andWhere('u.isActive = :isActive')
+                ->setParameter('isActive', $filter->getIsActive());
+        }
+
+        if ($company) {
+            $query->andWhere('u.company = :company')
+                ->setParameter('company', $company);
+        }
+        foreach ($filter->getSort() as $property => $direction) {
+            $query->addOrderBy(UserFilter::$propertiesToSort[$property] . '.' . $property, $direction);
+        }
+        return $query;
     }
 }
