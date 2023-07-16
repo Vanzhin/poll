@@ -10,6 +10,7 @@ use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Serializer;
 
 class LinkLoginAction extends BaseAction
 {
@@ -18,6 +19,7 @@ class LinkLoginAction extends BaseAction
         private readonly UserFactory            $userFactory,
         private readonly Mailer                 $mailer,
         private readonly UserRepository         $userRepository,
+        SerializerService $serializer,
 
     )
     {
