@@ -13,7 +13,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/user', name: 'app_api_user_')]
-#[IsGranted('ROLE_ADMIN')]
 
 class UserController extends AbstractController
 {
@@ -70,7 +69,7 @@ class UserController extends AbstractController
 
         return $this->deleteAction->run($user);
     }
-
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/list', name: 'list', methods: ['GET', 'POST'])]
     public function list(Request $request): JsonResponse
     {
