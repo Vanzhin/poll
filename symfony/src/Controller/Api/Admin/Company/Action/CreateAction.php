@@ -31,13 +31,11 @@ class CreateAction extends NewBaseAction
     {
         $data = json_decode($request->getContent(), true);
 
-        $user = $this->userFactory->createBuilder()->buildUser($data['email'] ?? '');
+        $user = $this->userFactory
+            ->createBuilder()->buildUser($data['email'] ?? '')
+            ->setLogin($data['login'] ?? '');
         $errors = $this->validator->validate($user);
-        if (isset($data['password'])) {
-            foreach ($this->validator->userPasswordValidate($data['password']) as $error) {
-                $errors[] = $error;
-            }
-        }
+
         if ($errors) {
             throw new \Error(implode(', ', $errors));
         }

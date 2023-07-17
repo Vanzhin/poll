@@ -81,7 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Groups(['user_editable'])]
-    private ?bool $isActive = null;
+    private ?bool $isActive = true;
 
     /**
      * @return WorkerCard|null
