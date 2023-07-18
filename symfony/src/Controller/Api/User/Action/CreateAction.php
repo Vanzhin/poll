@@ -39,7 +39,7 @@ class CreateAction extends NewBaseAction
                 throw new \Exception(implode(', ', $this->validator->validate($profile)));
             }
         }
-        if (!$this->roleService->check($data['roles'])) {
+        if (!$this->roleService->check($data['roles'] ?? [])) {
             throw new  AccessDeniedException('Вам не разрешено назначать такую роль для пользователя');
         };
         if (isset($data['roles']) && is_array($data['roles'])) {

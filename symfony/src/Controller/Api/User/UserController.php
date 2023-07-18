@@ -22,6 +22,7 @@ class UserController extends AbstractController
         private readonly Actions\UpdateAction $updateAction,
         private readonly Actions\DeleteAction $deleteAction,
         private readonly Actions\ListAction $listAction,
+        private readonly Actions\MassAdditionAction $massAdditionAction,
     )
     {
     }
@@ -74,5 +75,20 @@ class UserController extends AbstractController
     public function list(Request $request): JsonResponse
     {
         return $this->listAction->run($request);
+    }
+
+    #[Route('/mass-add', name: 'mass-addition', methods: ['POST'])]
+    public function massAdd(Request $request): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$this->isGranted(UserVoter::CREATE, $user)) {
+            throw new AccessDeniedException();
+        };
+// нельзя создать пользователя без компании
+        if (in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            throw new AccessDeniedException('Создание пользователя компании необходимо выполнить ее Администратором');
+        };
+
+        return $this->massAdditionAction->run($request, $user->getCompany());
     }
 }
