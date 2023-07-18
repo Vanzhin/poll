@@ -6,11 +6,13 @@ use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Entity\User\User;
 use App\Factory\Profile\ProfileFactory;
 use App\Factory\User\UserFactory;
+use App\Service\RoleService;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UpdateAction extends NewBaseAction
 {
@@ -19,7 +21,8 @@ class UpdateAction extends NewBaseAction
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidationService      $validator,
         private readonly UserFactory            $userFactory,
-        private readonly ProfileFactory         $profileFactory
+        private readonly ProfileFactory         $profileFactory,
+        private readonly RoleService            $roleService,
     )
     {
         parent::__construct($serializer);
@@ -33,7 +36,13 @@ class UpdateAction extends NewBaseAction
         if (!empty($this->validator->validate($profile))) {
             throw new \Exception(implode(', ', $this->validator->validate($profile)));
         }
+        if (!$this->roleService->check($data['roles'] ?? [])) {
+            throw new  AccessDeniedException('Вам не разрешено назначать такую роль для пользователя');
+        };
+        if (isset($data['roles']) && is_array($data['roles'])) {
 
+            $data['roles'] = $this->roleService->getRoles($data['roles']);
+        }
         $user = $this->userFactory->createBuilder()->buildCompanyUser($data ?? [], $company, $user, $profile);
         if (!empty($this->validator->validate($user))) {
             throw new \Exception(implode(', ', $this->validator->validate($user)));

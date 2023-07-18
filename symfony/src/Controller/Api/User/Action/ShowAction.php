@@ -17,6 +17,5 @@ class ShowAction extends NewBaseAction
     public function run(User $user): JsonResponse
     {
         return $this->successResponse($user, ['user_editable']);
-
     }
 }

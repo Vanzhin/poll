@@ -54,4 +54,16 @@ class RoleService
         }
         return $roles;
     }
+    public function getAliases(array $roles): array
+    {
+        $aliases = [];
+        foreach ($roles as $role) {
+            if (isset(self::$availableRoleAliases[$role])) {
+                $aliases[] = self::$availableRoleAliases[$role];
+            } else {
+                throw new \Exception(sprintf('Роли \'%s\' не существует', $role));
+            }
+        }
+        return $aliases;
+    }
 }

@@ -30,7 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user', 'admin_user'])]
+    #[Groups(['user', 'admin_user', 'user_editable'])]
     private ?int $id = null;
 
 

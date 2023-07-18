@@ -21,7 +21,9 @@ class SerializerService
     private string $content = '';
 
     public function __construct(readonly private NormalizerService $normalizerService,
-                                readonly private AppUpLoadedAsset  $upLoadedAsset)
+                                readonly private AppUpLoadedAsset  $upLoadedAsset,
+                                private readonly RoleService       $roleService,
+    )
     {
     }
 
@@ -75,6 +77,7 @@ class SerializerService
             ->withSkipNullValues(false)
             ->withCallbacks([
                 'image' => $this->normalizerService->imageCallback($this->upLoadedAsset),
+                'roles' => $this->normalizerService->rolesCallback($this->roleService)
             ]);
 
         return $this->serializer->serialize($object, 'json', $contextBuilder->toArray());
