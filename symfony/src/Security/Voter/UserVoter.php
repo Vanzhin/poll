@@ -60,6 +60,10 @@ class UserVoter extends Voter
                 }
                 break;
             case self::DELETE:
+                // не могу, если пользователь супер админ
+                if (in_array('ROLE_SUPER_ADMIN', $subject->getRoles())) {
+                    return false;
+                }
                 // могу, если супер админ
                 if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
                     return true;
