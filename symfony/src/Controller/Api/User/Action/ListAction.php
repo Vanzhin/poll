@@ -3,8 +3,10 @@
 namespace App\Controller\Api\User\Action;
 
 use App\Controller\Api\BaseAction\NewBaseAction;
+use App\Entity\User\vo\Permissions;
 use App\Repository\Interfaces\UserRepositoryInterface;
 use App\Repository\User\Mapper\UserFilterMapper;
+use App\Security\Voter\UserVoter;
 use App\Service\Paginator;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
@@ -42,6 +44,14 @@ class ListAction extends NewBaseAction
         if ($pagination->count() <= 0) {
             throw new NotFoundHttpException();
 
+        }
+        foreach ($pagination as $user){
+            $user->setPermissions(
+                new Permissions(
+                    $this->security->isGranted(UserVoter::EDIT, $user),
+                    $this->security->isGranted(UserVoter::DELETE, $user)
+                )
+            );
         }
         return $this->successResponse(
             [

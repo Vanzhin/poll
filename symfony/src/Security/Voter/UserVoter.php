@@ -42,23 +42,33 @@ class UserVoter extends Voter
             case self::VIEW:
             case self::EDIT:
             case self::CREATE:
+                // могу, если супер админ
+                if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                    return true;
+                }
+                // не могу, если это админ и не я
+                if ($subject->getUserIdentifier() !== $user->getUserIdentifier() && in_array('ROLE_ADMIN', $subject->getRoles())) {
+                    return false;
+                }
+                // могу, если пользователь из моей компании
                 if ($this->security->isGranted('ROLE_ADMIN') && $subject->getCompany()?->getUsers()->contains($user)) {
                     return true;
                 }
+                // могу, если это я
                 if ($subject->getUserIdentifier() === $user->getUserIdentifier()) {
-                    return true;
-                }
-                if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
                     return true;
                 }
                 break;
             case self::DELETE:
+                // могу, если супер админ
                 if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
                     return true;
                 }
-                if(in_array('ROLE_ADMIN', $subject->getRoles())){
+                // не могу, если пользователь админ
+                if (in_array('ROLE_ADMIN', $subject->getRoles())) {
                     return false;
                 }
+                // могу, если я админ и пользователь из моей компании
                 if ($this->security->isGranted('ROLE_ADMIN') && $subject->getCompany()?->getUsers()->contains($user)) {
                     return true;
                 }

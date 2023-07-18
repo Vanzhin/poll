@@ -6,6 +6,7 @@ use App\Entity\Company;
 use App\Entity\Profile;
 use App\Entity\Question;
 use App\Entity\Result;
+use App\Entity\User\vo\Permissions;
 use App\Entity\User\vo\WorkerCard;
 use App\Repository\User\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -82,6 +83,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Groups(['user_editable'])]
     private ?bool $isActive = true;
+
+    #[Groups(['user_editable'])]
+    private ?Permissions $permissions =null;
 
     /**
      * @return WorkerCard|null
@@ -310,6 +314,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isActive = $isActive;
 
         return $this;
+    }
+
+    /**
+     * @return Permissions|null
+     */
+    public function getPermissions(): ?Permissions
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @param Permissions $permissions
+     */
+    public function setPermissions(Permissions $permissions): void
+    {
+        $this->permissions = $permissions;
     }
 
 }

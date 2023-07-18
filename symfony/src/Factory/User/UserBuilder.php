@@ -68,13 +68,13 @@ class UserBuilder
                 $user->setLogin($item);
                 continue;
             };
-//            if ($key === 'roles' && is_array($item)) {
-//                if (($i = array_search('ROLE_USER', $item)) !== false) {
-//                    unset($item[$i]);
-//                }
-//                $user->setRoles($item);
-//                continue;
-//            };
+            if ($key === 'roles' && is_array($item)) {
+                if (($i = array_search('ROLE_USER', $item)) !== false) {
+                    unset($item[$i]);
+                }
+                $user->setRoles($item);
+                continue;
+            };
             if ($key === 'password') {
                 $user->setPassword(
                     $this->userPasswordHasher->hashPassword(
