@@ -1,10 +1,15 @@
 <template>
   <div class="block">
     <div class="title">
-      <h2>Компания: </h2>
-      <p>{{ companyName }}</p>
+      <div>
+        <h2>Компания: </h2>
+        <p>{{ companyName }}</p>
+        <p>админ - {{ getAdminCompany }}</p>
+      </div>
+      
+      <Button/>
     </div>
-    <Button/>
+    
     <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item" role="presentation"
         v-for="(nav, index ) in navsActive" 
@@ -49,7 +54,7 @@ export default {
   computed:{
     ...mapGetters([
       "getCompany",
-      
+      "getAdminCompany"
     ]),
 
     companyName () {
@@ -59,7 +64,7 @@ export default {
     
     navsActive(){
       this.url= this.$route.path
-     return this.navs=[
+      return this.navs=[
         {
           title: `Сотрудники `,
           link: 'staff',
@@ -77,7 +82,8 @@ export default {
     }
   },
    methods: {
-    ...mapActions(["getQuestionsTestIdDb", "getTestIdDb"]),
+    ...mapActions([
+      "getCompanyIdDB"]),
     activeTogge(index) {
       this.navs =[ ...this.navs.map((nav, ind) => {
         index === ind ? nav.active = true: nav.active = false
@@ -91,7 +97,9 @@ export default {
 
   async created(){
     
-    
+    if (getCompany=={}){
+      getCompanyIdDB({id: +this.$route.params.id})
+    }
     
    
     
