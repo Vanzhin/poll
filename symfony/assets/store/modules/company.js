@@ -177,7 +177,8 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log(data)
-          dispatch('setMessage', data)
+          // dispatch('setMessage', {message:'Удаление компании из БД прошло успешно.'})
+          dispatch('setMessage', data.message)
           dispatch("getCompanyListDB",  { });
         })
     } catch (e) {
@@ -203,6 +204,20 @@ const getters = {
   getCompany(state) {
     return state.company
   },
+  getUserListCompany(state) {
+    return state.company.users
+  },
+  getAdminCompany(state) {
+    console.log(state.company.users)
+    const admin = state.company.users.find((element)=>{
+      return element.roles.includes('ROLE_ADMIN')
+    })
+    console.log(admin)
+    return admin.email
+  },
+  getTotalUserCompany(state) {
+    return state.company.users.length
+  }
 }
 const mutations = {
   [SET_COMPANY_LIST] (state, companyList){
