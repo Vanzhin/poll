@@ -40,8 +40,10 @@ class Company
     private ?string $tin = null;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class, orphanRemoval: true)]
-    #[Groups(['admin_user'])]
     private Collection $users;
+
+    #[Groups(['admin_user'])]
+    private User $admin;
 
     public function __construct(User $user)
     {
@@ -115,5 +117,21 @@ class Company
         }
 
         return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAdmin(): User
+    {
+        return $this->getAdmins()->first();
+    }
+
+    /**
+     * @param User $admin
+     */
+    public function setAdmin(User $admin): void
+    {
+        $this->admin = $admin;
     }
 }
