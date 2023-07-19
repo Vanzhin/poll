@@ -32,6 +32,7 @@
           <option disabled value="">Выберите один из вариантов</option>
           <option 
             v-for="(variant, vInd ) in question.variant"
+            :key="variant"
             :value="vInd" 
           >
             {{ variant.title }}

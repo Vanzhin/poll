@@ -7,7 +7,8 @@ import axios from 'axios';
 
 const state = () => ({
   companyList: [],
-  company:{}
+  company: null,
+  companyAdmin: null
 })
 
 const actions = {
@@ -194,7 +195,11 @@ const actions = {
   // сохранение компании в сторе
   setCompanyStore({dispatch, commit}, {company}){
     commit(SET_COMPANY, company);
-  }
+  },
+
+  getAdminCompanyAction({state}) {
+    return state.companyAdmin ?  state.companyAdmin :''
+  },
 }
 
 const getters = {
@@ -205,19 +210,13 @@ const getters = {
     return state.company
   },
   getUserListCompany(state) {
-    return state.company.users
+    return state.company ? state.company.users : ''
   },
   getAdminCompany(state) {
-    console.log(state.company.users)
-    const admin = state.company.users.find((element)=>{
-      return element.roles.includes('ROLE_ADMIN')
-    })
-    console.log(admin)
-    return admin.email
+    
+    return state.companyAdmin ? state.companyAdmin : ''
   },
-  getTotalUserCompany(state) {
-    return state.company.users.length
-  }
+  
 }
 const mutations = {
   [SET_COMPANY_LIST] (state, companyList){
@@ -226,7 +225,14 @@ const mutations = {
   [SET_COMPANY] (state, company){
     console.log(company)
     state.company = company
+    const admin = state.company.users.find((element)=>{
+      return element.roles.includes('Администратор')
+    })
+    console.log(admin)
+    
+    state.companyAdmin = admin.email
   },
+
 }
 export default {
     namespaced: false,

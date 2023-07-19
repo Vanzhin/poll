@@ -24,7 +24,9 @@
       
     </ul>
   </div>
-  <RouterView/>
+  <RouterView
+    v-if="getCompany"
+  />
 </template>
 
 
@@ -59,7 +61,7 @@ export default {
 
     companyName () {
       console.log(this.getCompany)
-      return this.getCompany.title
+      return this.getCompany ? this.getCompany.title : ''
     },
     
     navsActive(){
@@ -83,7 +85,9 @@ export default {
   },
    methods: {
     ...mapActions([
-      "getCompanyIdDB"]),
+      "getCompanyIdDB"
+    ]),
+    
     activeTogge(index) {
       this.navs =[ ...this.navs.map((nav, ind) => {
         index === ind ? nav.active = true: nav.active = false
@@ -91,14 +95,15 @@ export default {
       })]
     },
   },
- mounted(){
-  
- },
+  mounted(){
+    
+  },
 
   async created(){
-    
-    if (getCompany=={}){
-      getCompanyIdDB({id: +this.$route.params.id})
+    console.log(this.getCompany)
+    if (!this.getCompany){
+      console.log("получаю данные компании")
+      await this.getCompanyIdDB({id: +this.$route.params.id})
     }
     
    

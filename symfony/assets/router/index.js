@@ -215,6 +215,13 @@ const router = createRouter({
       component: () => import('../views/admin/CreateCompanyView.vue') 
     },
     {
+      path: '/admin/company/:id/user/:userId/:operation',
+      name: 'adminUserCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateUserInCompanyView.vue'),
+      
+    },
+    {
       path: '/admin/category/:id/:operation',
       name: 'adminCategoryCreate',
       meta: {loyout: 'admin', autch: true, admin: true},

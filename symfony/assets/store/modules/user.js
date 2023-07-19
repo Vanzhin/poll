@@ -7,7 +7,9 @@ import {
   SET_MESSAGE_REQUEST,
   SET_AUTCH_USER_ROLE,
   SET_AUTCH_USER_PROFILE,
-  SET_IS_AUTCH_USER_FIO
+  SET_IS_AUTCH_USER_FIO,
+  SET_USERS_LIST_COMPANY,
+  SET_USER_COMPANY
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -29,6 +31,8 @@ const state = () => ({
   profileFIO: null,
   role: localStorage.getItem('token') ?
     JSON.parse(atob(JSON.parse(localStorage.getItem('token')).token.split('.')[1])).roles[0]: "",
+  usersListCompany: null,
+  userCompany: null,
 })
 
 const actions = {
@@ -205,6 +209,106 @@ const actions = {
       }
     }
   },
+  //получение списка пользователей для компании из БД
+  async getUsersListCompanyDb({commit, dispatch ,state },{limit=10,page=1} ) {
+    let token = state.token
+    const adminCompany = await dispatch("getAdminCompanyAction")
+    let data = JSON.stringify({
+      "filter": {},
+      "sort": {
+        "firstName": "ASC"
+      }
+    });
+    try {
+      const config = {
+        method: 'post',
+        url: `/api/user/list?limit=${limit}`,
+        headers: { 
+          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`,
+          'x-switch-user': `${adminCompany}`
+        },
+        data: data
+      }
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("SET_USERS_LIST_COMPANY", data)
+          commit("SET_USERS_LIST_COMPANY", data.data.list)
+          dispatch("setPagination", data.data.pagination)
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getUsersListCompanyDb', {limit})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  //удаление пользователя компании из БД
+  async deleteUserDb({commit, dispatch ,state },{id,} ) {
+    let token = state.token
+    const adminCompany = await dispatch("getAdminCompanyAction")
+    
+    try {
+      const config = {
+        method: 'delete',
+        url: `/api/user/${id}?_switch_user=${adminCompany}`,
+        headers: { 
+          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`,
+          // 'x-switch-user': `${adminCompany}`
+        },
+        
+      }
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("SET_USERS_LIST_COMPANY", data)
+         
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getUsersListCompanyDb', {limit})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  
+  //создание пользователя для компании в БД
+  async createUserInCompanyDb({commit, dispatch ,state },{user, userId=null} ) {
+    let token = state.token
+    const adminCompany = await dispatch("getAdminCompanyAction")
+    let data = JSON.stringify(user)
+    try {
+      const config = {
+        method: `${userId ? 'put' : 'post'}`,
+        url: `/api/user${userId ? '/'+userId: ''}`,
+        headers: { 
+          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`,
+          'x-switch-user': `${adminCompany}`
+        },
+        data : data
+      }
+      console.log(config)
+      await axios(config)
+        .then(({data})=>{
+          console.log("SET_USERS_LIST_COMPANY", data)
+         
+        })
+    } catch (e) {
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('getUsersListCompanyDb', {limit})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
   setPage ({ commit }, page) {
     commit("SET_PAGE_NAME", page);
   },
@@ -248,8 +352,17 @@ const getters = {
   getAutchUserProfile(state) {
     return state.profile
   },
-  getAutchUserProfileFIO(state) {
+  getAutchUsersProfileFIO(state) {
     return state.profileFIO
+  },
+  getUsersListCompany(state) {
+    return state.usersListCompany
+  },
+  getTotalUsersCompany(state) {
+    return state.usersListCompany ? state.usersListCompany.length :''
+  },
+  getUserCompanyEdit(state) {
+    return state.userCompany ? state.userCompany : ''
   },
 }
 
@@ -285,6 +398,7 @@ const mutations = {
     state.message = message
   },
   [SET_AUTCH_USER_ROLE] (state, role) {
+    console.log("role -", role)
     state.role = role
   },
   [SET_AUTCH_USER_PROFILE](state, profile) {
@@ -292,6 +406,12 @@ const mutations = {
   },
   [SET_IS_AUTCH_USER_FIO](state, profile) {
     state.profileFIO = profile
+  },
+  [SET_USERS_LIST_COMPANY](state, usersList){
+    state.usersListCompany = usersList
+  },
+  [SET_USER_COMPANY](state, {user}){
+    state.userCompany = user
   },
 }
 export default {
