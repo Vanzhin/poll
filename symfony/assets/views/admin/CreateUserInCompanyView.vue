@@ -18,208 +18,82 @@
           
         >
           <div class="grup_label">
-            <div>
-              <label class="label"><b>E-mail:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="email"
-                  v-model= "email"
-                  class="input_alias" 
+            <div class="grup_coll">
+              <div 
+                v-for="(item) in user"
+                :key="item"
                 >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="email = ''"
-                  v-if="email !== ''"
-                ></i>
+                <div
+                  v-if="item.visible"
+                >
+                  <label class="label"><b>{{  item.title}}</b> </label>
+                  <div class="custom-radio img_block">  
+                    <input  
+                      name="email"
+                      v-model= "item.value"
+                      class="input_alias" 
+                    >
+                    <i class="bi bi-eraser custom-close" title="Очистить поле"
+                      @click="item.value = ''"
+                      v-if="item.value !== ''"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+              
+              
+              <div class="toogge_button"
+                v-if="tooggePaswordVisible"
+                @click="tooggePasword"
+              >Изменить пароль - {{  tooggePaswordTitle }}
               </div>
             </div>
-            <div>
-              <label class="label"><b>Логин:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="login"
-                  v-model= "login"
-                  class="input_alias" 
+            <div class="grup_coll">
+              <div 
+                v-for="(prof) in profile"
+                :key="prof"
                 >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="login = ''"
-                  v-if="login !== ''"
-                ></i>
-              </div>
-            </div>
-          </div>
-          <div class="grup_label">
-            <div>
-              <label class="label"><b>Имя:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="login"
-                  v-model= "profile.firstName"
-                  class="input_alias" 
+                <div
+                  v-if="prof.visible"
                 >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="profile.firstName = ''"
-                  v-if="profile.firstName !== ''"
-                ></i>
-              </div>
-            </div>
-            <div>
-              <label class="label"><b>Фамилия:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="login"
-                  v-model= "profile.lastName"
-                  class="input_alias" 
-                >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="profile.lastName = ''"
-                  v-if="profile.lastName !== ''"
-                ></i>
-              </div>
-            </div>
-            <div>
-              <label class="label"><b>Отчество:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="login"
-                  v-model= "profile.middleName"
-                  class="input_alias" 
-                >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="profile.middleName = ''"
-                  v-if="profile.middleName !== ''"
-                ></i>
+                  <label class="label"><b>{{  prof.title}}</b> </label>
+                  <div class="custom-radio img_block">  
+                    <input  
+                      name="email"
+                      v-model= "prof.value"
+                      class="input_alias" 
+                    >
+                    <i class="bi bi-eraser custom-close" title="Очистить поле"
+                      @click="prof.value = ''"
+                      v-if="prof.value !== ''"
+                    ></i>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <label class="label"><b>Гражданство:</b> </label>
-          <div class="custom-radio img_block">  
-            <input  
-              name="login"
-              v-model= "profile.citizenship"
-              class="input_alias" 
-            >
-            <i class="bi bi-eraser custom-close" title="Очистить поле"
-              @click="profile.citizenship = ''"
-              v-if="profile.citizenship !== ''"
-            ></i>
-          </div>
-          <label class="label"><b>Диплом:</b> </label>
-          <div class="custom-radio img_block">  
-            <input  
-              name="login"
-              v-model= "profile.diploma"
-              class="input_alias" 
-            >
-            <i class="bi bi-eraser custom-close" title="Очистить поле"
-              @click="profile.diploma = ''"
-              v-if="profile.diploma !== ''"
-            ></i>
-          </div>
-          <label class="label"><b>Образование:</b> </label>
-          <div class="custom-radio img_block">  
-            <input  
-              name="login"
-              v-model= "profile.educationLevel"
-              class="input_alias" 
-            >
-            <i class="bi bi-eraser custom-close" title="Очистить поле"
-              @click="profile.educationLevel = ''"
-              v-if="profile.educationLevel !== ''"
-            ></i>
-          </div>
-          <label class="label"><b>СНИЛС:</b> </label>
-          <div class="custom-radio img_block">  
-            <input  
-              name="login"
-              type="text" 
-              placeholder="123-235-122 12"
-              v-model= "profile.snils"
-              class="input_alias" 
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}( |-)[0-9]{2}"
-            >
-            <i class="bi bi-eraser custom-close" title="Очистить поле"
-              @click="profile.snils = ''"
-              v-if="profile.snils !== ''"
-            ></i>
-          </div>
-          <div class="grup_label">
-            <div>
-              <label class="label"><b>Отдел:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="login"
-                  v-model= "profile.department"
-                  class="input_alias" 
-                >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="profile.department = ''"
-                  v-if="profile.department !== ''"
-                ></i>
-              </div>
-            </div>
-            <div>
-              <label class="label"><b>Должность:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="login"
-                  v-model= "profile.position"
-                  class="input_alias" 
-                >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="profile.position = ''"
-                  v-if="profile.position !== ''"
-                ></i>
-              </div>
-            </div>
-          </div>
-          <div class="grup_label">
-            <div>
-              <label class="label"><b>Пароль:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="login"
-                  v-model= "password"
-                  class="input_alias" 
-                >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="password = ''"
-                  v-if="password !== ''"
-                ></i>
-              </div>
-            </div>
-            <div>
-              <label class="label"><b>Повторите пароль:</b> </label>
-              <div class="custom-radio img_block">  
-                <input  
-                  name="login"
-                  v-model= "confirmPassword"
-                  class="input_alias" 
-                >
-                <i class="bi bi-eraser custom-close" title="Очистить поле"
-                  @click="confirmPassword = ''"
-                  v-if="confirmPassword !== ''"
-                ></i>
-              </div>
-            </div>
-          </div>
+
+         
+           
+          
           <div>
-              <label class="label"><b>Доступ:</b> </label>
-              <div class="custom-radio img_block">  
-                <select 
-                  v-model="roles"
+            <label class="label"><b>Доступ:</b> </label>
+            <div class="custom-radio img_block">  
+              <select 
+                v-model="roles"
+              >
+                <option disabled value="">Выберите один из вариантов</option>
+                <option 
+                  v-for="(variant ) in rolesTitle"
+                  :key="variant"
+                  :value="variant.value" 
                 >
-                  <option disabled value="">Выберите один из вариантов</option>
-                  <option 
-                    v-for="(variant ) in rolesTitle"
-                    :key="variant"
-                    :value="variant.value" 
-                  >
-                    {{ variant.value }}
-                  </option>
-                </select>
-                {{ roles }}
-              </div>
+                  {{ variant.value }}
+                </option>
+              </select>
+              {{ roles }}
             </div>
+          </div>
         </div>
         
       
@@ -241,24 +115,27 @@
     },
     data() {
       return {
-        userId:'',
-        email:'',
-        login: '',
+        user: {
+          userId:{value: '', title:'',visible: false},
+          email:{value: '', title:'E-mail:',visible: true},
+          login: {value: '', title:'Логин:',visible: true},
+          isActive: {value: true, title:'',visible: false},
+          password:{value: '', title:'Пароль:',visible: true},
+          confirmPassword: {value:'', title:'Повторите пароль:',visible: true},
+        },
+        
         profile: {
-          firstName: "",
-          middleName: "",
-          lastName: "",
-          position: "",
-          department: "",
-          snils: "",
-          diploma: "",
-          citizenship: "",
-          educationLevel: ""
+          firstName: {value: '', title:'Имя:',visible: true},
+          middleName: {value: '', title:'Фамилия:',visible: true},
+          lastName: {value: '', title:'Отчество:',visible: true},
+          position: {value: '', title:'Должность:',visible: true},
+          department: {value: '', title:'Отдел:',visible: true},
+          snils: {value: '', title:'СНИЛС:',visible: true},
+          diploma: {value: '', title:'Диплом:',visible: true},
+          citizenship: {value: '', title:'Гражданство:',visible: true},
+          educationLevel: {value: '', title:'Образование:',visible: true}
         },
         roles: 'Пользователь',
-        isActive: true,
-        password: '',
-        confirmPassword: "",
 
         message: null,
         companyId: null,
@@ -266,7 +143,9 @@
         rolesTitle:[
           {value:'Пользователь'},
           {value:'Наставник'},
-        ]
+        ],
+        tooggePaswordTitle: "да",
+        tooggePaswordVisible: false
       }
     },
     computed:{ 
@@ -274,7 +153,8 @@
         "getAutchUserToken", 
         "getMessage", 
         "getCompany",
-        "getUserCompanyEdit"
+        "getUserCompanyEdit",
+        "getUserListEducationLevel"
       ]),
       
     },
@@ -290,17 +170,30 @@
       
       async onSubmit(e){
         const conpanySend = e.target
-        const user ={
-            email: this.email,
-            login: this.login,
-            profile: this.profile,
+        const user = {
+            email: this.user.email.value,
+            login: this.user.login.value,
+            isActive: this.user.isActive.value,
             roles: [this.roles],
-            isActive: this.isActive,
-            password:  this.password,
-            confirmPassword: this.confirmPassword,
+            profile: {
+              firstName:  this.profile.firstName.value,
+              middleName:  this.profile.middleName.value,
+              lastName:  this.profile.lastName.value,
+              position:  this.profile.position.value,
+              department:  this.profile.department.value,
+              snils:  this.profile.snils.value,
+              diploma: this.profile.diploma.value,
+              citizenship:  this.profile.citizenship.value,
+              educationLevel:  this.profile.educationLevel.value
+            },
+          } 
+          if (this.user.password.visible){
+            user.password = this.user.password.value
+            user.confirmPassword = this.user.confirmPassword.value
           }
+          
         if ( this.$route.params.operation === 'edit'){
-          await this.createUserInCompanyDb({user, userId:this.userId})
+          await this.createUserInCompanyDb({user, userId:this.$route.params.userId})
         } else if ( this.$route.params.operation === 'create'){
           
           await this.createUserInCompanyDb({user})
@@ -315,6 +208,11 @@
         
         // this.$router.push({ path:'/result'})
       },
+      tooggePasword(){
+        this.user.password.visible = !this.user.password.visible
+        this.user.confirmPassword.visible  = !this.user.confirmPassword.visible
+        this.tooggePaswordTitle = this.user.confirmPassword.visible ? "нет" : "да"
+      }
       
       
     },
@@ -322,6 +220,7 @@
       
     },
     async created() {
+      
       if ( this.$route.params.operation === 'create'){
         if (this.$route.params.id > 0) {
           this.companyId = this.$route.params.id 
@@ -329,19 +228,33 @@
       }
       if ( this.$route.params.operation === 'edit'){
         this.operationCreate = false
-        const user = this.getUserCompanyEdit
+        const getuser = this.getUserCompanyEdit
         // this.companyId = +this.$route.params.id
         // if (!this.getCompany.id  ) {
         //   await this.getCompanyIdDB({id: this.companyId})
         // }
-        this.userId=user.id
-        this.email=user.email
-        this.login=user.login
-        this.profile= user.profile
-        this.roles=user.roles[0]
-        this.isActive=user.isActive
-        this.password=user.password
-        this.confirmPassword=user.confirmPassword
+        this.tooggePaswordVisible = true
+        this.user.userId.value = getuser.id
+        this.user.email.value = getuser.email
+        this.user.login.value = getuser.login
+        this.user.isActive.value = getuser.isActive
+        this.user.password.value = getuser.password || ''
+        this.user.confirmPassword.value = getuser.confirmPassword || ''
+        this.user.password.visible = false
+        this.user.confirmPassword.visible = false
+
+        this.profile.firstName.value = getuser.profile.firstName,
+        this.profile.middleName.value = getuser.profile.middleName,
+        this.profile.lastName.value = getuser.profile.lastName,
+        this.profile.position.value = getuser.profile.position,
+        this.profile.department.value = getuser.profile.department,
+        this.profile.snils.value = getuser.profile.snils,
+        this.profile.diploma.value = getuser.profile.diploma,
+        this.profile.citizenship.value = getuser.profile.citizenship,
+        this.profile.educationLevel.value = getuser.profile.educationLevel,
+        this.roles = getuser.roles[0]
+        
+       console.log(this.user)
       }
       
       
@@ -386,9 +299,29 @@
       }
     }
   }
-  .grup_label{
+  .grup{
+    &_label{
     display: flex;
     justify-content: space-between;
+    }
+    &_coll{
+      flex: 1;
+    }
+  }
+  .toogge_button{
+    padding: 5px 10px;
+    transition: all 0.1s ease-out;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonborder;
+    border-image: initial;
+    text-align: center;
+    background-color: buttonface;
+    width: 200px;
+    &:hover{
+      background-color: rgb(156, 156, 154);
+      cursor: pointer;
+    }
   }
  @media (min-width: 1024px) {
   

@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const state = () => ({
   companyList: [],
-  company: null,
+  company: null, 
   companyAdmin: null
 })
 

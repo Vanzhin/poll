@@ -9,7 +9,8 @@ import {
   SET_AUTCH_USER_PROFILE,
   SET_IS_AUTCH_USER_FIO,
   SET_USERS_LIST_COMPANY,
-  SET_USER_COMPANY
+  SET_USER_COMPANY,
+  SET_USER_LIST_EDUCATION_LEVEL
 } from './mutation-types.js'
 
 import axios from 'axios';
@@ -18,10 +19,10 @@ const state = () => ({
   token: localStorage.getItem('token') ?
     JSON.parse(localStorage.getItem('token')).token: "",
   refresh_token: localStorage.getItem('token') ?
-    JSON.parse(localStorage.getItem('token')).refresh_token: "",
+    JSON.parse(localStorage.getItem('token')).refresh_token : "",
   isAutchUser: localStorage.getItem('token') ? true : false,
   page: localStorage.getItem('pageLink') ?
-    localStorage.getItem('pageLink'):"",
+    localStorage.getItem('pageLink') : "",
   email: '',
   password: '',
   result: [],
@@ -30,9 +31,10 @@ const state = () => ({
   profile: {},
   profileFIO: null,
   role: localStorage.getItem('token') ?
-    JSON.parse(atob(JSON.parse(localStorage.getItem('token')).token.split('.')[1])).roles[0]: "",
+    JSON.parse(atob(JSON.parse(localStorage.getItem('token')).token.split('.')[1])).roles[0] : "",
   usersListCompany: null,
   userCompany: null,
+  userListEducationLevel: null,
 })
 
 const actions = {
@@ -278,7 +280,7 @@ const actions = {
     }
   },
   
-  //создание пользователя для компании в БД
+  //создание и редактирование пользователя для компании в БД
   async createUserInCompanyDb({commit, dispatch ,state },{user, userId=null} ) {
     let token = state.token
     const adminCompany = await dispatch("getAdminCompanyAction")
@@ -297,13 +299,45 @@ const actions = {
       console.log(config)
       await axios(config)
         .then(({data})=>{
+          console.log("создание ред пользов", data)
+          dispatch('setMessage', data)
+        })
+    } catch (e) {
+      console.log("SET_USERS_LIST_COMPANY ошибка", e)
+      if (e.response.data.message === "Expired JWT Token") {
+        await dispatch('getAuthRefresh')
+        await dispatch('createUserInCompanyDb', {user, userId})
+      } else {
+        dispatch('setMessageError', e)
+      }
+    }
+  },
+  //запрос из бд списка образований
+  async getUserListEducationLevelDb({commit, dispatch ,state },{} ) {
+    let token = state.token
+    const adminCompany = await dispatch("getAdminCompanyAction")
+    try {
+      const config = {
+        method: `get`,
+        url: `/api/profile/info`,
+        headers: { 
+          'Accept': 'application/json',
+          // Authorization: `Bearer ${token}`,
+          // 'x-switch-user': `${adminCompany}`
+        },
+        
+      }
+      
+      await axios(config)
+        .then(({data})=>{
+
           console.log("SET_USERS_LIST_COMPANY", data)
          
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
-        await dispatch('getUsersListCompanyDb', {limit})
+        await dispatch('createUserInCompanyDb', {user, userId})
       } else {
         dispatch('setMessageError', e)
       }
@@ -352,7 +386,7 @@ const getters = {
   getAutchUserProfile(state) {
     return state.profile
   },
-  getAutchUsersProfileFIO(state) {
+  getAutchUserProfileFIO(state) {
     return state.profileFIO
   },
   getUsersListCompany(state) {
@@ -363,6 +397,9 @@ const getters = {
   },
   getUserCompanyEdit(state) {
     return state.userCompany ? state.userCompany : ''
+  },
+  getUserListEducationLevel(state) {
+    return state.userListEducationLevel
   },
 }
 
@@ -412,6 +449,9 @@ const mutations = {
   },
   [SET_USER_COMPANY](state, {user}){
     state.userCompany = user
+  },
+  [SET_USER_LIST_EDUCATION_LEVEL](state, {list}){
+    state.userListEducationLevel = list
   },
 }
 export default {
