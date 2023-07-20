@@ -12,6 +12,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
 class Profile
 {
+    public static array $choices = [
+        'educationLevel' => self::EDUCATION_LEVEL
+    ];
+
+    private const EDUCATION_LEVEL = [
+        'среднее профессиональное образование',
+        'высшее образование - бакалавриат',
+        'высшее образование - специалитет, магистратура',
+        'высшее образование - подготовка кадров высшей квалификации'
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -66,12 +77,8 @@ class Profile
     private ?string $citizenship = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Choice([
-        'среднее профессиональное образование',
-        'высшее образование - бакалавриат',
-        'высшее образование - специалитет, магистратура',
-        'высшее образование - подготовка кадров высшей квалификации'
-    ],
+    #[Assert\Choice(
+        choices: self::EDUCATION_LEVEL,
         message: 'profile.education.choice')]
     #[Groups(['user_editable'])]
     private ?string $educationLevel = null;
