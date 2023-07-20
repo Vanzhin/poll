@@ -62,7 +62,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id<\d+>}', name: 'delete', methods: ['DELETE'])]
-    public function delete(User $user, Request $request): JsonResponse
+    public function delete(User $user): JsonResponse
     {
         if (!$this->isGranted(UserVoter::DELETE, $user)) {
             throw new AccessDeniedException();
@@ -89,6 +89,6 @@ class UserController extends AbstractController
             throw new AccessDeniedException('Создание пользователя компании необходимо выполнить ее Администратором');
         };
 
-        return $this->massAdditionAction->run($request, $user->getCompany());
+        return $this->massAdditionAction->run($request);
     }
 }

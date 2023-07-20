@@ -27,6 +27,9 @@ profile.last_name.length: Фамилия не может быть длиннее
 profile.department.length: Название подразделения не может быть длиннее {{ limit }} символов
 profile.diploma.length: Название диплома не может быть длиннее {{ limit }} символов
 profile.citizenship.length: Название гражданства не может быть длиннее {{ limit }} символов
+profile.position.length: Название должности не может быть длиннее {{ limit }} символов
+profile.position.not_blank: Должность пользователя не может быть пустой
+profile.position.not_null: Должность пользователя  - обязательный параметр
 
 worker_card.middle_name.not_blank: Отчество пользователя не может быть пустым
 worker_card.last_name.not_blank: Фамилия пользователя не может быть пустой

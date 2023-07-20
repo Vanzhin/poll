@@ -40,6 +40,8 @@ class Profile
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(max: 255, maxMessage: 'profile.position.length')]
+    #[Assert\NotBlank(message: 'profile.position.not_blank')]
+    #[Assert\NotNull(message: 'profile.position.not_null')]
     #[Groups(['user_editable'])]
     private ?string $position = null;
 

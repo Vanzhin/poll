@@ -3,37 +3,55 @@
 namespace App\Controller\Api\User\Action;
 
 use App\Controller\Api\BaseAction\NewBaseAction;
-use App\Entity\Company;
 use App\Factory\Profile\ProfileFactory;
 use App\Factory\User\UserFactory;
-use App\Service\FileHandler;
-use App\Service\RoleService;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class MassAdditionAction extends NewBaseAction
 {
+    private static array $userAliases = [
+        "Логин" => "login",
+        "Пароль" => "password",
+        "E-Mail" => 'email',
+
+    ];
+    private static array $profileAliases = [
+        "Фамилия" => "lastName",
+        "Имя" => "firstName",
+        "Отчество" => "middleName",
+        "Телефон" => 'phone',
+        "Телефон 2" => 'phone2',
+        "E-Mail 2" => 'email2',
+        "Адрес" => 'address',
+        "Подразделение" => 'department',
+        "Должность" => 'position',
+        "Контактная информация" => 'info',
+        "Дополнительная информация" => 'comment'
+    ];
+
+
     public function __construct(
         SerializerService                       $serializer,
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidationService      $validator,
         private readonly UserFactory            $userFactory,
         private readonly ProfileFactory         $profileFactory,
-        private readonly RoleService            $roleService,
-        private readonly FileHandler            $handler,
-        private readonly ValidationService      $validation
+        private readonly ValidationService      $validation,
+        private readonly Security               $security,
 
     )
     {
         parent::__construct($serializer);
     }
 
-    public function run(Request $request, Company $company): JsonResponse
+    public function run(Request $request): JsonResponse
     {
         /**
          * @var UploadedFile $uploadFile
@@ -48,8 +66,7 @@ class MassAdditionAction extends NewBaseAction
                 'error' => $this->validation->excelFileValidate($uploadFile, '1M')
             ]);
         }
-
-//        dd($uploadFile->getRealPath(), $uploadFile->getPath(), $uploadFile->getFilename(), $uploadFile->getPathname(), $uploadFile->getMimeType());
+//        todo убрать все это, пока не знаю куда
         $reader = new Xlsx();
         $reader->setReadDataOnly(true);
         $spreadsheet = $reader->load($uploadFile->getRealPath());
@@ -64,12 +81,55 @@ class MassAdditionAction extends NewBaseAction
             };
             $userItem = [];
             foreach ($headers as $column => $header) {
-                $userItem[$header] = $userData[$column];
+                if (isset(self::$profileAliases[$header])) {
+                    $userItem['profile'][self::$profileAliases[$header]] = $userData[$column];
+                }
+                if (isset(self::$userAliases[$header])) {
+                    if (self::$userAliases[$header] === 'password') {
+                        $userItem['confirmPassword'] = $userData[$column];
+                    }
+//                    todo убрать когда заменим почту на логин
+                    if (self::$userAliases[$header] === 'email' && !isset($userData[$column])) {
+                        $userItem[self::$userAliases[$header]] = rand(1, 1000) . $this->security->getUser()->getEmail();
+                        continue;
+                    }
+                    $userItem[self::$userAliases[$header]] = $userData[$column];
+                }
             }
             $userItems[] = $userItem;
-//
         }
+        $users = [];
+        foreach ($userItems as $item) {
+            $profile = null;
+            if (isset($item['profile'])) {
+                $profile = $this->profileFactory->createBuilder()->buildProfile($item['profile']);
+                if (!empty($this->validator->validate($profile))) {
+                    throw new \Exception(implode(', ', $this->validator->validate($profile)));
+                }
+            }
 
-        return $this->successResponse($userItems);
+            $user = $this->userFactory->createBuilder()->buildCompanyUser($item, $this->security->getUser()->getCompany(), null, $profile);
+            if (!empty($this->validator->validate($user))) {
+                throw new \Exception(implode(', ', $this->validator->validate($user)));
+            }
+            $errors = [];
+            if ($this->validator->userPasswordValidate($item['password'])) {
+                foreach ($this->validator->userPasswordValidate($item['password']) as $error) {
+                    $errors[] = $error;
+                }
+            }
+            if ($item['password'] !== $item['confirmPassword']) {
+                $errors[] = 'Пароли не совпадают.';
+            }
+            if ($errors) {
+                throw new \Exception(implode(', ', $errors));
+            }
+            $this->entityManager->persist($user);
+            $users[] = $user;
+
+        }
+        $this->entityManager->flush();
+
+        return $this->successResponse([], [], sprintf('Создано %d пользователей.', count($users)));
     }
 }
