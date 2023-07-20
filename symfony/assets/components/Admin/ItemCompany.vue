@@ -104,18 +104,14 @@ export default {
       this.$router.push({name: 'adminCompanyCreate', params: {operation:"edit", id: this.item.id  } })
     },
     async deleteCompany(){
-      console.log('Удаляю компанию № - ',this.item.id)
       this.deleteCompanyDb({id: this.item.id })
-      
     },
     deleteVisibleConfirm(){
-
       this.setConfirmMessage("При удалении компании, так же будут удалены все связанные данные. Вы, действительно хотите это сделать?")
       let timerId = setInterval(() => {
         if (this.getGonfimAction) {
           clearInterval(timerId)
           if (this.getGonfimAction === "yes"){this.deleteCompany()}
-          
         }
       }, 200);
      },

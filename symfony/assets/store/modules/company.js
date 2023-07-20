@@ -7,7 +7,8 @@ import axios from 'axios';
 
 const state = () => ({
   companyList: [],
-  company:{}
+  company: null, 
+  companyAdmin: null
 })
 
 const actions = {
@@ -177,7 +178,8 @@ const actions = {
       await axios(config)
         .then(({data})=>{
           console.log(data)
-          dispatch('setMessage', data)
+          // dispatch('setMessage', {message:'Удаление компании из БД прошло успешно.'})
+          dispatch('setMessage', data.message)
           dispatch("getCompanyListDB",  { });
         })
     } catch (e) {
@@ -193,7 +195,11 @@ const actions = {
   // сохранение компании в сторе
   setCompanyStore({dispatch, commit}, {company}){
     commit(SET_COMPANY, company);
-  }
+  },
+
+  getAdminCompanyAction({state}) {
+    return state.companyAdmin ?  state.companyAdmin :''
+  },
 }
 
 const getters = {
@@ -203,6 +209,14 @@ const getters = {
   getCompany(state) {
     return state.company
   },
+  getUserListCompany(state) {
+    return state.company ? state.company.users : ''
+  },
+  getAdminCompany(state) {
+    
+    return state.companyAdmin ? state.companyAdmin : ''
+  },
+  
 }
 const mutations = {
   [SET_COMPANY_LIST] (state, companyList){
@@ -211,7 +225,14 @@ const mutations = {
   [SET_COMPANY] (state, company){
     console.log(company)
     state.company = company
+    const admin = state.company.users.find((element)=>{
+      return element.roles.includes('Администратор')
+    })
+    console.log(admin)
+    
+    state.companyAdmin = admin.email
   },
+
 }
 export default {
     namespaced: false,
