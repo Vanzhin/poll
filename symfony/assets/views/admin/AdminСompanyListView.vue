@@ -36,7 +36,7 @@
             :key="item.id"
             :item="item"
             :index="index"
-           @click.stop="companyRoute({id:item.id})"
+           @click.stop="companyRoute({item})"
           /> 
           
         </div>
@@ -81,12 +81,13 @@
    
     methods: { 
       ...mapActions(["saveQuestionDb", "setMessage", "getCompanyListDB"]),
-      ...mapMutations([]),
+      ...mapMutations(['SET_COMPANY']),
       createCompany(){
         this.$router.push({name: 'adminCompanyCreate', params: {operation:"create", id: 0  } })
       },
-      companyRoute({id}){
-        this.$router.push({name: 'adminCompany', params: { id } })
+      companyRoute({item}){
+        this.SET_COMPANY(item)
+        this.$router.push({name: 'adminCompanyStaff', params: { id:item.id } })
       }
     },
     async mounted(){

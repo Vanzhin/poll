@@ -13,7 +13,7 @@
             v-if="areas.length > 0"
           >
             <div
-              v-for="(area, index) in areas" 
+              v-for="(area) in areas" 
               :key="area.id"
               
             >

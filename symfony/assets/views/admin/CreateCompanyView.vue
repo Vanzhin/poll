@@ -56,6 +56,18 @@
               v-if="email !== ''"
             ></i>
           </div>
+          <label class="label"><b>Логин:</b> </label>
+          <div class="custom-radio img_block">  
+            <input  
+              name="login"
+              v-model= "login"
+              class="input_alias" 
+            >
+            <i class="bi bi-eraser custom-close" title="Очистить поле"
+              @click="login = ''"
+              v-if="login !== ''"
+            ></i>
+          </div>
         </div>
         
       
@@ -80,9 +92,11 @@
         title: "",
         tin: "",
         email:'',
+        login: '',
         message: null,
         companyId: null,
-        operationCreate: true
+        operationCreate: true,
+
       }
     },
     computed:{ 

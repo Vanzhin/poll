@@ -193,12 +193,33 @@ const router = createRouter({
       name: 'adminCompany',
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/AdminCompanyView.vue'),
+      children: [
+        {
+          path: 'staff',
+          name: 'adminCompanyStaff',
+          meta: {autch: true, admin: true},
+          component: () => import('../views/admin/AdminCompanyStaff.vue'),
+        },
+        {
+          path: 'groups',
+          name: 'adminCompanyGroups',
+          meta: {autch: true, admin: true},
+          component: () => import('../views/admin/AdminCompanyGroups.vue'),
+        },
+      ]
     },
     {
       path: '/admin/company/:id/:operation', 
       name: 'adminCompanyCreate', 
       meta: {loyout: 'admin', autch: true, admin: true},
       component: () => import('../views/admin/CreateCompanyView.vue') 
+    },
+    {
+      path: '/admin/company/:id/user/:userId/:operation',
+      name: 'adminUserCreate',
+      meta: {loyout: 'admin', autch: true, admin: true},
+      component: () => import('../views/admin/CreateUserInCompanyView.vue'),
+      
     },
     {
       path: '/admin/category/:id/:operation',
