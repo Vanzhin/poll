@@ -70,11 +70,29 @@
                   </div>
                 </div>
               </div>
+              
             </div>
           </div>
 
          
-           
+          <div>
+                <label class="label"><b>Образование:</b> </label>
+                <div class="custom-radio img_block">  
+                  <select 
+                    v-model="educationLevel"
+                  >
+                    <option disabled value="">Выберите один из вариантов</option>
+                    <option 
+                      v-for="(variant ) in getUserListEducationLevel"
+                      :key="variant"
+                      :value="variant" 
+                    >
+                      {{ variant }}
+                    </option>
+                  </select>
+                  
+                </div>
+              </div>
           
           <div>
             <label class="label"><b>Доступ:</b> </label>
@@ -84,14 +102,14 @@
               >
                 <option disabled value="">Выберите один из вариантов</option>
                 <option 
-                  v-for="(variant ) in rolesTitle"
-                  :key="variant"
-                  :value="variant.value" 
+                  v-for="(role ) in rolesTitle"
+                  :key="role.value"
+                  :value="role.value" 
                 >
-                  {{ variant.value }}
+                {{ role.value }}
                 </option>
               </select>
-              {{ roles }}
+              
             </div>
           </div>
         </div>
@@ -133,10 +151,10 @@
           snils: {value: '', title:'СНИЛС:',visible: true},
           diploma: {value: '', title:'Диплом:',visible: true},
           citizenship: {value: '', title:'Гражданство:',visible: true},
-          educationLevel: {value: '', title:'Образование:',visible: true}
+         
         },
         roles: 'Пользователь',
-
+        educationLevel:"",
         message: null,
         companyId: null,
         operationCreate: true,
@@ -164,7 +182,7 @@
         "createUserInCompanyDb",
         "setMessage",
         "getCompanyIdDB",
-
+        "getUserListEducationLevelDb"
       ]),
       ...mapMutations([]),
       
@@ -184,7 +202,7 @@
               snils:  this.profile.snils.value,
               diploma: this.profile.diploma.value,
               citizenship:  this.profile.citizenship.value,
-              educationLevel:  this.profile.educationLevel.value
+              educationLevel:  this.educationLevel
             },
           } 
           if (this.user.password.visible){
@@ -220,7 +238,12 @@
       
     },
     async created() {
-      
+      if (this.getUserListEducationLevel) {
+
+      } else {
+        console.log("cgbcjr")
+        await this.getUserListEducationLevelDb({})
+      }
       if ( this.$route.params.operation === 'create'){
         if (this.$route.params.id > 0) {
           this.companyId = this.$route.params.id 
@@ -251,7 +274,7 @@
         this.profile.snils.value = getuser.profile.snils,
         this.profile.diploma.value = getuser.profile.diploma,
         this.profile.citizenship.value = getuser.profile.citizenship,
-        this.profile.educationLevel.value = getuser.profile.educationLevel,
+        this.educationLevel = getuser.profile.educationLevel,
         this.roles = getuser.roles[0]
         
        console.log(this.user)

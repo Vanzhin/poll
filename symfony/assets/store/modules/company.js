@@ -213,7 +213,6 @@ const getters = {
     return state.company ? state.company.users : ''
   },
   getAdminCompany(state) {
-    
     return state.companyAdmin ? state.companyAdmin : ''
   },
   
@@ -224,13 +223,13 @@ const mutations = {
   },
   [SET_COMPANY] (state, company){
     console.log(company)
-    state.company = company
-    const admin = state.company.users.find((element)=>{
-      return element.roles.includes('Администратор')
-    })
-    console.log(admin)
+     state.company = company
+    // const admin = state.company.users.find((element)=>{
+    //   return element.roles.includes('Администратор')
+    // })
+    // console.log(admin)
     
-    state.companyAdmin = admin.email
+    state.companyAdmin = company.admin.email
   },
 
 }

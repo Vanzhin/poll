@@ -314,30 +314,30 @@ const actions = {
   },
   //запрос из бд списка образований
   async getUserListEducationLevelDb({commit, dispatch ,state },{} ) {
-    let token = state.token
-    const adminCompany = await dispatch("getAdminCompanyAction")
+     let token = state.token
+    // const adminCompany = await dispatch("getAdminCompanyAction")
     try {
       const config = {
         method: `get`,
         url: `/api/profile/info`,
         headers: { 
           'Accept': 'application/json',
-          // Authorization: `Bearer ${token}`,
+           Authorization: `Bearer ${token}`,
           // 'x-switch-user': `${adminCompany}`
         },
         
       }
-      
+      console.log(config)
       await axios(config)
         .then(({data})=>{
 
-          console.log("SET_USERS_LIST_COMPANY", data)
-         
+          console.log("SET_USER_LIST_EDUCATION_LEVEL", data.data.educationLevel)
+          commit("SET_USER_LIST_EDUCATION_LEVEL", data.data.educationLevel)
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
         await dispatch('getAuthRefresh')
-        await dispatch('createUserInCompanyDb', {user, userId})
+        await dispatch('getUserListEducationLevelDb', {})
       } else {
         dispatch('setMessageError', e)
       }
@@ -450,7 +450,7 @@ const mutations = {
   [SET_USER_COMPANY](state, {user}){
     state.userCompany = user
   },
-  [SET_USER_LIST_EDUCATION_LEVEL](state, {list}){
+  [SET_USER_LIST_EDUCATION_LEVEL](state, list){
     state.userListEducationLevel = list
   },
 }
