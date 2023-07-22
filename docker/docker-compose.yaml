@@ -33,7 +33,7 @@ services:
       - mysql
 
   node_builder:
-    container_name: node
+    container_name: node_builder
     tty: true # Enables debugging capabilities when attached to this container.
     image: docker.io/bitnami/node:16
     command: sh -c 'npm install reactstrap --legacy-peer-deps && npm run dev; exit 0'
