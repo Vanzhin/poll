@@ -5,6 +5,7 @@ namespace App\Controller\Api\User\Action;
 use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Factory\Profile\ProfileFactory;
 use App\Factory\User\UserFactory;
+use App\Response\AppException;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,12 +54,13 @@ class MassAdditionAction extends NewBaseAction
 
     public function run(Request $request): JsonResponse
     {
+
         /**
          * @var UploadedFile $uploadFile
          */
         $uploadFile = $request->files->get('file');
         if (!$uploadFile) {
-            throw new \Exception('Файл не загружен');
+            throw new AppException('Файл не загружен');
         }
         if ($this->validation->excelFileValidate($uploadFile, '1M')) {
             return $this->errorResponse([
@@ -73,6 +75,13 @@ class MassAdditionAction extends NewBaseAction
         $sheet = $spreadsheet->getSheet($spreadsheet->getFirstSheetIndex());
         $data = $sheet->toArray();
         $headers = array_filter(current($data), fn($value) => !is_null($value));
+
+        $missingHeaders = array_diff(array_flip(array_merge(self::$userAliases, self::$profileAliases)), $headers);
+
+        if (count($missingHeaders) > 0) {
+            throw new AppException(sprintf('Не верный формат таблицы. Не хватает следующих полей: %s', implode(', ', $missingHeaders)));
+
+        }
         unset($data[0]);
         $userItems = [];
         foreach ($data as $userData) {
@@ -104,13 +113,13 @@ class MassAdditionAction extends NewBaseAction
             if (isset($item['profile'])) {
                 $profile = $this->profileFactory->createBuilder()->buildProfile($item['profile']);
                 if (!empty($this->validator->validate($profile))) {
-                    throw new \Exception(implode(', ', $this->validator->validate($profile)));
+                    throw new AppException(implode(', ', $this->validator->validate($profile)));
                 }
             }
 
             $user = $this->userFactory->createBuilder()->buildCompanyUser($item, $this->security->getUser()->getCompany(), null, $profile);
             if (!empty($this->validator->validate($user))) {
-                throw new \Exception(implode(', ', $this->validator->validate($user)));
+                throw new AppException(implode(', ', $this->validator->validate($user)));
             }
             $errors = [];
             if ($this->validator->userPasswordValidate($item['password'])) {
@@ -122,7 +131,7 @@ class MassAdditionAction extends NewBaseAction
                 $errors[] = 'Пароли не совпадают.';
             }
             if ($errors) {
-                throw new \Exception(implode(', ', $errors));
+                throw new AppException(implode(', ', $errors));
             }
             $this->entityManager->persist($user);
             $users[] = $user;
