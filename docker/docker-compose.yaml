@@ -42,8 +42,8 @@ services:
     depends_on:
       - symfony
 
-  nodesrv:
-    container_name: nodesrv
+  node:
+    container_name: node
     tty: true # Enables debugging capabilities when attached to this container.
     image: docker.io/bitnami/node:16
     command: sh -c 'yarn install --non-interactive; npm run build; node /app/.output/server/index.mjs'
@@ -51,6 +51,8 @@ services:
       - NUXT_TELEMETRY_DISABLED=1
     ports:
       - 3000:3000
+    networks:
+      - symfony
     volumes:
       - '../test_nuxt:/app:rw'
     depends_on:
