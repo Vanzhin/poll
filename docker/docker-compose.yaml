@@ -49,6 +49,7 @@ services:
     command: sh -c 'yarn install --non-interactive; npm run build; node /app/.output/server/index.mjs'
     environment:
       - NUXT_TELEMETRY_DISABLED=1
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
     ports:
       - 3000:3000
     networks:
@@ -62,7 +63,7 @@ services:
     container_name: nginx
     image: docker.io/bitnami/nginx:latest
     ports:
-      - "81:80"
+      - "8080:8080"
       - "443:8443"
     networks:
       - symfony
