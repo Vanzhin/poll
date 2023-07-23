@@ -23,6 +23,7 @@ class UserController extends AbstractController
         private readonly Actions\DeleteAction $deleteAction,
         private readonly Actions\ListAction $listAction,
         private readonly Actions\MassAdditionAction $massAdditionAction,
+        private readonly Actions\GetAvailableRolesAction $availableRolesAction,
     )
     {
     }
@@ -90,5 +91,12 @@ class UserController extends AbstractController
         };
 
         return $this->massAdditionAction->run($request);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/available-roles', name: 'getAvailableRoles', methods: ['GET'])]
+    public function getAvailableRoles(): JsonResponse
+    {
+        return $this->availableRolesAction->run($this->getUser());
     }
 }

@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class RoleService
 {
@@ -21,9 +22,12 @@ class RoleService
     {
     }
 
-    public function getAllowedAliasesToAssign(): array
+    public function getAllowedAliasesToAssign(?UserInterface $user): array
     {
-        $roles = array_diff($this->roleHierarchy->getReachableRoleNames($this->security->getUser()->getRoles()), $this->security->getUser()->getRoles());
+        if (!$user) {
+            $user = $this->security->getUser();
+        }
+        $roles = array_diff($this->roleHierarchy->getReachableRoleNames($this->security->getUser()->getRoles()), $user->getRoles());
         $aliases = [self::$availableRoleAliases['ROLE_USER']];
         foreach ($roles as $role) {
             if (isset(self::$availableRoleAliases[$role])) {
@@ -54,6 +58,7 @@ class RoleService
         }
         return $roles;
     }
+
     public function getAliases(array $roles): array
     {
         $aliases = [];
