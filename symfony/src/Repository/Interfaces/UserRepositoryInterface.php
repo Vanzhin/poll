@@ -14,4 +14,6 @@ interface UserRepositoryInterface
      */
     public function findAllWithFilter(UserFilter $filter, ?Company $company): array;
 
+    public function findOneByLogin(string $login): ?User;
+
 }

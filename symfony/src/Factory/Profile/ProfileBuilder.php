@@ -2,7 +2,7 @@
 
 namespace App\Factory\Profile;
 
-use App\Entity\Profile;
+use App\Entity\Profile\Profile;
 
 class ProfileBuilder
 {

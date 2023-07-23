@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Profile;
 
 use App\Entity\User\User;
 use App\Repository\ProfileRepository;
@@ -85,6 +85,16 @@ class Profile
 
     #[ORM\OneToOne(mappedBy: 'profile', cascade: ['persist', 'remove'])]
     private ?User $user = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 11, nullable: true)]
+    private ?string $phone = null;
+
+    private array $notification = [];
+
+    private array $notificationType = [];
 
     public function getId(): ?int
     {
@@ -219,5 +229,49 @@ class Profile
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getNotification(): array
+    {
+        return [
+            "email" => $this->email,
+            "phone" => $this->phone
+        ];
+    }
+
+    public function getNotificationType(): array
+    {
+        $types = [];
+        if ($this->email) {
+            $types[] = 'email';
+        }
+        if ($this->phone) {
+            $types[] = 'phone';
+        }
+        return $types;
     }
 }

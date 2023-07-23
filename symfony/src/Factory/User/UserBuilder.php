@@ -3,7 +3,7 @@
 namespace App\Factory\User;
 
 use App\Entity\Company;
-use App\Entity\Profile;
+use App\Entity\Profile\Profile;
 use App\Entity\User\User;
 use App\Entity\User\vo\WorkerCard;
 use App\Enum\Role;

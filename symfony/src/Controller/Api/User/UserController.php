@@ -13,17 +13,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/user', name: 'app_api_user_')]
-
 class UserController extends AbstractController
 {
     public function __construct(
-        private readonly Actions\ShowAction   $showAction,
-        private readonly Actions\CreateAction $createAction,
-        private readonly Actions\UpdateAction $updateAction,
-        private readonly Actions\DeleteAction $deleteAction,
-        private readonly Actions\ListAction $listAction,
-        private readonly Actions\MassAdditionAction $massAdditionAction,
+        private readonly Actions\ShowAction              $showAction,
+        private readonly Actions\CreateAction            $createAction,
+        private readonly Actions\UpdateAction            $updateAction,
+        private readonly Actions\DeleteAction            $deleteAction,
+        private readonly Actions\ListAction              $listAction,
+        private readonly Actions\MassAdditionAction      $massAdditionAction,
         private readonly Actions\GetAvailableRolesAction $availableRolesAction,
+        private readonly Action\SendLoginLinkAction      $sendLoginLinkToUser,
+
     )
     {
     }
@@ -71,6 +72,7 @@ class UserController extends AbstractController
 
         return $this->deleteAction->run($user);
     }
+
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/list', name: 'list', methods: ['GET', 'POST'])]
     public function list(Request $request): JsonResponse
@@ -98,5 +100,12 @@ class UserController extends AbstractController
     public function getAvailableRoles(): JsonResponse
     {
         return $this->availableRolesAction->run($this->getUser());
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/send-login-link', name: 'sendLoginLink', methods: ['GET', 'POST'])]
+    public function sendLoginLink(Request $request): JsonResponse
+    {
+        return $this->sendLoginLinkToUser->run(json_decode($request->getContent(), true));
     }
 }

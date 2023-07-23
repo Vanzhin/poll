@@ -3,7 +3,7 @@
 namespace App\Entity\User;
 
 use App\Entity\Company;
-use App\Entity\Profile;
+use App\Entity\Profile\Profile;
 use App\Entity\Question;
 use App\Entity\Result;
 use App\Entity\User\vo\Permissions;

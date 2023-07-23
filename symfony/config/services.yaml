@@ -98,6 +98,8 @@ services:
             $appName: '%app.name%'
             $defaultFromEmail: '%app.default_from_email%'
             $defaultFromName: '%app.default_from_name%'
+#            $loginLinkHandler: 'security.authenticator.login_link_handler.login'
+
 
     App\Service\FileHandler:
         arguments:

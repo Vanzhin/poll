@@ -4,7 +4,7 @@ namespace App\EventListener;
 
 use App\Entity\Company;
 use App\Service\Mailer;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class CompanyCreatedListener
