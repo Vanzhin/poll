@@ -66,6 +66,7 @@ services:
       - symfony
     depends_on:
       - symfony
+      - node
     volumes:
       - ./../symfony/public:/app/public
       - ./nginx/server_blocks:/opt/bitnami/nginx/conf/server_blocks:ro
