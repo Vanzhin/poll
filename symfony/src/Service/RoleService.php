@@ -22,7 +22,7 @@ class RoleService
     {
     }
 
-    public function getAllowedAliasesToAssign(?UserInterface $user): array
+    public function getAllowedAliasesToAssign(UserInterface $user = null): array
     {
         if (!$user) {
             $user = $this->security->getUser();
