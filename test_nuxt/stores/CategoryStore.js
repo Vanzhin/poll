@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
 import { useLoaderStore } from './Loader'
 
-export const useCategoryStore = defineStore('gategory', {
+export const useCategoryStore = defineStore('category', {
   state: () => ({
     // categorys: localStorage.getItem('categorys') ?
     //   JSON.parse(localStorage.getItem('categorys')):[],
@@ -39,7 +39,7 @@ export const useCategoryStore = defineStore('gategory', {
       if (page) { query.page = page }
       
       console.log(query)
-      loader.setIsLoaderStutus(true)
+      loader.setIsLoaderStatus(true)
       try {
         // this.userData = await api.post({ login, password })
         const { data: sections, pending, error } = await useFetch(() =>  url,
@@ -56,7 +56,7 @@ export const useCategoryStore = defineStore('gategory', {
             console.log('error - ',sections.value.pagination.hasOwnProperty(error))
             const pagination = usePaginationStore()
             pagination.paginationsAll(sections.value.pagination)
-            loader.setIsLoaderStutus(false)
+            loader.setIsLoaderStatus(false)
             if (sections.value.parent) {
               this.parent = sections.value.parent
             }

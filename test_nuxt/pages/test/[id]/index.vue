@@ -1,18 +1,16 @@
 <template>
- <UiLoaderView
-      v-if="loader.isLoader"
-    />
+  <UiLoaderView
+    v-if="loader.isLoader"
+  />
   
   <div class="section fon "
     v-else
   >
      <TheHeaderVsPage
         title=""
-        :subTitle="tickets.testTitle"
+        :subTitle="tests.testTitle"
       />
-    <div class="container"
-     
-    >
+    <div class="container">
    
       <div class="wrapper">
         <div class="tickets-block">

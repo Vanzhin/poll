@@ -8,8 +8,8 @@ export const useLoaderStore = defineStore('loader', {
     getIterations: (state) => state.isLoader,
   },
   actions: {
-    setIsLoaderStutus(status) {
-      console.log('setIsLoaderStutus - ', status)
+    setIsLoaderStatus(status) {
+      console.log('setIsLoaderStatus - ', status)
       this.isLoader = status
     },
    

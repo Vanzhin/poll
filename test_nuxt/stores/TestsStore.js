@@ -2,29 +2,35 @@ import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
 import { useLoaderStore } from './Loader'
 import { useCategoryStore } from './CategoryStore'
-import { stat } from 'fs'
+
 export const useTestsStore = defineStore('tests', {
   state: () => ({
     parent: '',
     tests:[],
-    testActive: null
+    testActive: null,
+    testTitle:'',
   }),
   getters: {
     getTests: (state) => state.tests,
     getTestActive: (state) => state.testActive,
+    getTestTitle: (state) => state.testTitle,
   },
   actions: {
     testsToChange(tests) {
-      console.log('categorysToChange-',tests)
+      console.log('testsToChange-',tests)
       this.tests = tests
     },
-    testsActiveSave(test) {
-      console.log('categorysToChange-',test)
+    testActiveSave(test) {
+      console.log('testActiveSave-',test)
       this.testActive = test
+    },
+    testTitleSave(title) {
+      console.log('testTitleSave-',title)
+      this.testTitle = title
     },
     async getApiTests({ page = null, parentId = null, admin = null, limit = 6 }){
       const loader = useLoaderStore()
-      loader.setIsLoaderStutus(true)
+      loader.setIsLoaderStatus(true)
       // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
       let url = `${urlApi}/api/category`
       // if (admin) { 
@@ -59,7 +65,7 @@ export const useTestsStore = defineStore('tests', {
                 categorys.setParentCategory(sections.value.parent)
               }
               pagination.paginationsAll(sections.value.pagination)
-              loader.setIsLoaderStutus(false)
+              loader.setIsLoaderStatus(false)
             }
           }, 200);
 

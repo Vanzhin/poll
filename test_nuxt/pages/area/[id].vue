@@ -104,7 +104,7 @@
   })
 
   function testLink({ test }){
-    tests.testsActiveSave(test)
+    tests.testActiveSave(test)
     console.log(test)
     navigateTo(`/test/${test.id}`)
   }
