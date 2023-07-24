@@ -18,7 +18,7 @@ class RefreshTokenRemover
 
     public function preFlush(RefreshToken $token)
     {
-        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $token->getUsername()]);
+        $user = $this->em->getRepository(User::class)->findOneBy(['login' => $token->getUsername()]);
         $allUserTokens = $this->em->getRepository(RefreshToken::class)->findBy(['username' => $token->getUsername()]);
         foreach ($allUserTokens as $userToken) {
             if ($userToken->isValid()) {
