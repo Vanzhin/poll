@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'user.unique')]
+#[UniqueEntity(fields: ['login'], message: 'user.unique')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 180)]
     #[Assert\NotBlank(message: 'user.email.not_blank')]
     #[Assert\Email(message: 'user.email.format')]
     #[Groups(['user', 'admin_user', 'user_editable'])]
@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'user')]
     private ?Company $company = null;
 
-    #[ORM\Column(length: 255, unique: true, nullable: true)]
+    #[ORM\Column(length: 255, unique: true, nullable: false)]
     #[Groups(['user_editable'])]
     #[Assert\NotBlank(message: 'user.login.not_blank')]
     #[Assert\NotNull(message: 'user.login.not_null')]
