@@ -86,7 +86,7 @@ class Mailer
     {
         return (new TemplatedEmail())
             ->from(new Address($fromEmail, $fromName))
-            ->to(new Address($user->getEmail(), $user->getFirstName()))
+            ->to(new Address($user->getProfile()?->getEmail(), $user->getProfile()?->getFirstName()))
             ->subject($subject)
             ->htmlTemplate($template);
     }
@@ -96,7 +96,7 @@ class Mailer
         try {
             $email = (new TemplatedEmail())
                 ->from(new Address($this->defaultFromEmail, $this->defaultFromName))
-                ->to(new Address($user->getEmail(), $user->getFirstName() ?? 'Пользователь'))
+                ->to(new Address($user->getProfile()?->getEmail(), $user->getProfile()?->getFirstName() ?? 'Пользователь'))
                 ->subject('login link')
                 ->htmlTemplate('emails/login_link.html.twig')
                 ->context(['user' => $user,
@@ -104,7 +104,7 @@ class Mailer
                     'loginLinkDetails' => $this->loginLinkHandler->createLoginLink($user)]);
             $this->mailer->send($email);
         } catch (\Exception $e) {
-            throw new \Error(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
+            throw new \Error(sprintf("Не удалось отправить письмо на %s", $user->getProfile()?->getEmail()));
         }
 
     }
@@ -114,7 +114,7 @@ class Mailer
         try {
             $email = (new TemplatedEmail())
                 ->from(new Address($this->defaultFromEmail, $this->defaultFromName))
-                ->to(new Address($user->getEmail(), $user->getFirstName() ?? 'Пользователь'))
+                ->to(new Address($user->getProfile()?->getEmail(), $user->getProfile()?->getFirstName() ?? 'Пользователь'))
                 ->subject(sprintf('Регистрация компании %s на портале %s', $user->getCompany()?->getTitle(), $this->appName))
                 ->htmlTemplate('emails/company_created.html.twig')
                 ->context(
@@ -124,7 +124,7 @@ class Mailer
                     ]);
             $this->mailer->send($email);
         } catch (\Exception|\Error $e) {
-            throw new \Exception(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
+            throw new \Exception(sprintf("Не удалось отправить письмо на %s", $user->getProfile()?->getEmail()));
         }
 
     }
@@ -132,11 +132,11 @@ class Mailer
     public function sendCompanyCreatedEmailToCompanyCreator(UserInterface $getUser, Company $company): void
     {
         try {
-            $user = $this->repository->findOneBy(['email' => $getUser->getUserIdentifier()]);
+            $user = $this->repository->findOneByLogin($getUser->getUserIdentifier());
             if ($user->getEmail()) {
                 $email = (new TemplatedEmail())
                     ->from(new Address($this->defaultFromEmail, $this->defaultFromName))
-                    ->to(new Address($user->getEmail(), $user->getFirstName() ?? 'Пользователь'))
+                    ->to(new Address($user->getProfile()?->getEmail(), $user->getProfile()?->getFirstName() ?? 'Пользователь'))
                     ->subject('Регистрация новой компании')
                     ->htmlTemplate('emails/new_company_created.html.twig')
                     ->context(

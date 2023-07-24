@@ -85,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isActive = true;
 
     #[Groups(['user_editable'])]
-    private ?Permissions $permissions =null;
+    private ?Permissions $permissions = null;
 
     /**
      * @return WorkerCard|null
@@ -133,7 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return $this->login;
     }
 
     /**
