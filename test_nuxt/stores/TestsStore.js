@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
 import { useLoaderStore } from './Loader'
 import { useCategoryStore } from './CategoryStore'
+import { stat } from 'fs'
 export const useTestsStore = defineStore('tests', {
   state: () => ({
     parent: '',
@@ -10,6 +11,7 @@ export const useTestsStore = defineStore('tests', {
   }),
   getters: {
     getTests: (state) => state.tests,
+    getTestActive: (state) => state.testActive,
   },
   actions: {
     testsToChange(tests) {
@@ -64,7 +66,19 @@ export const useTestsStore = defineStore('tests', {
       } catch (error) {
         console.log(error)
       }
+    },
+    //получение информации теста по его id
+    async getTestIdDb( {id}){
+      
+      const config = {
+        method: 'get',
+        url: `/api/admin/test/${id}`,
+        headers: { 
+          Accept: 'application/json', 
+          Authorization: `Bearer ${token}`
+        }
+      }
+    
     }
-   
   }
 })

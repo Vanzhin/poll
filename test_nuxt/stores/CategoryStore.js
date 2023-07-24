@@ -44,16 +44,13 @@ export const useCategoryStore = defineStore('gategory', {
         // this.userData = await api.post({ login, password })
         const { data: sections, pending, error } = await useFetch(() =>  url,
         {
-          
           lazy: true,
           query:query,
-          
         })
         let timerId = setInterval(() => {
           console.log('pending.value-',pending.value)
           if ( !pending.value) {
             clearInterval(timerId)
-            
             console.log("sections", sections.value)
             this.categorys = sections.value.children
             console.log('error - ',sections.value.pagination.hasOwnProperty(error))
