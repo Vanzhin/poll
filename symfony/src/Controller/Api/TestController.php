@@ -182,6 +182,7 @@ class TestController extends AbstractController
             $questions = $testService->getQuestionForResponse($ticket->getQuestion()->toArray());
 
             $response = [
+                'ticket'=>$ticket,
                 'test' => $ticket->getTest()->getTitle(),
                 'questions' => $questions
             ];
