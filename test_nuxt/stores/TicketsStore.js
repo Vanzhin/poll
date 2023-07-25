@@ -6,9 +6,9 @@ import { useTestsStore } from './TestsStore'
 export const useTicketsStore = defineStore('tickets', {
   state: () => ({
     parent: '',
-    tickets:[],
-    ticketSelect: null 
-    
+    tickets: null,
+    ticketSelect: null, 
+    pending: false
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -26,17 +26,20 @@ export const useTicketsStore = defineStore('tickets', {
       this.ticketSelect = ticket
     },
     async getApiTicketsTestIdNoAuthDb({ page = null, parentId = null, admin = null, limit = 6 }){
+      console.log('getApiTicketsTestIdNoAuthDb получаю-',parentId)
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
       let url = `${urlApi}/api/test/${parentId}`
       try {
         // this.userData = await api.post({ login, password })
+        console.log('получаю билеты url-',url)
         const { data: sections, pending, error } = await useFetch(() =>  url,
         {
-          lazy: true,
+          // lazy: true,
         })
+        this.pending = pending.value
         let timerId = setInterval(() => {
-          console.log('pending.value-',pending.value)
+          console.log('получаю билеты pending.value-',pending.value)
           if ( !pending.value) {
             clearInterval(timerId)
             console.log("sections", sections.value)
@@ -51,9 +54,13 @@ export const useTicketsStore = defineStore('tickets', {
               slug:sections.value.slug,
               minTrudTest:sections.value.minTrudTest,
             })
+            this.pending = pending.value
+            console.log('getApiTicketsTestIdNoAuthDb получил -', this.tickets)
             loader.setIsLoaderStatus(false)
           }
         }, 200);
+        
+        return pending
 
       } catch (error) {
         console.log(error)

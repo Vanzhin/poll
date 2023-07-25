@@ -194,6 +194,7 @@
   }
 </script>
 <style lang="scss" scoped>
+
   .fon{
     background-color: var(--color-fon);
     min-height: 90vh;

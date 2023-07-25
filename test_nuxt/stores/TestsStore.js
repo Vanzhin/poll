@@ -73,6 +73,7 @@ export const useTestsStore = defineStore('tests', {
         console.log(error)
       }
     },
+    
     //получение информации теста по его id
     async getTestIdDb( {id}){
       

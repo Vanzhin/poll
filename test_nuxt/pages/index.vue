@@ -6,7 +6,9 @@
 <script setup>
 const route = useRoute()
 const page = ref(route.params.page ? +route.params.page: 1)
-
+onMounted(() => {
+  body.scrollY = 0
+})
 
 
 useSeoMeta({

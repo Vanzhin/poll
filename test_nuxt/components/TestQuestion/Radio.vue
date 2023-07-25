@@ -75,6 +75,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+hr {
+    border: 0;
+    border-top: 1px solid;
+    color: inherit;
+    margin: 1rem 0;
+    opacity: .25
+}
   .img{
     height: 130px;
     margin: 3px 10px;

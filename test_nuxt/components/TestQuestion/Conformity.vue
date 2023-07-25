@@ -65,7 +65,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+hr {
+    border: 0;
+    border-top: 1px solid;
+    color: inherit;
+    margin: 1rem 0;
+    opacity: .25
+}
 .shad{
     margin-top: 30px;
     padding: 20px 43px 18px 43px;
