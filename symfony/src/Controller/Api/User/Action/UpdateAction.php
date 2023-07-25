@@ -6,6 +6,7 @@ use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Entity\User\User;
 use App\Factory\Profile\ProfileFactory;
 use App\Factory\User\UserFactory;
+use App\Response\AppException;
 use App\Service\RoleService;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
@@ -33,9 +34,10 @@ class UpdateAction extends NewBaseAction
         $data = json_decode($request->getContent(), true);
         $company = $user->getCompany();
         $profile = $this->profileFactory->createBuilder()->buildProfile($data['profile'] ?? [], $user->getProfile());
-        if (!empty($this->validator->validate($profile))) {
-            throw new \Exception(implode(', ', $this->validator->validate($profile)));
+        if (!empty($errors = $this->validator->validate($profile))) {
+            throw new AppException(implode(', ', $errors));
         }
+
         if (!$this->roleService->check($data['roles'] ?? [])) {
             throw new  AccessDeniedException('Вам не разрешено назначать такую роль для пользователя');
         };
@@ -44,8 +46,8 @@ class UpdateAction extends NewBaseAction
             $data['roles'] = $this->roleService->getRoles($data['roles']);
         }
         $user = $this->userFactory->createBuilder()->buildCompanyUser($data ?? [], $company, $user, $profile);
-        if (!empty($this->validator->validate($user))) {
-            throw new \Exception(implode(', ', $this->validator->validate($user)));
+        if (!empty($errors = $this->validator->validate($user))) {
+            throw new AppException(implode(', ', $errors));
         }
         $errors = [];
         if (isset($data['password'])) {
@@ -60,7 +62,7 @@ class UpdateAction extends NewBaseAction
         }
 
         if ($errors) {
-            throw new \Exception(implode(', ', $errors));
+            throw new AppException(implode(', ', $errors));
         }
 
         $this->entityManager->persist($user);

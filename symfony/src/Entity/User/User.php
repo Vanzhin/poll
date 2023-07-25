@@ -35,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[ORM\Column(length: 180)]
-    #[Assert\NotBlank(message: 'user.email.not_blank')]
+    #[Assert\NotNull(message: 'user.email.not_blank')]
     #[Assert\Email(message: 'user.email.format')]
     #[Groups(['user', 'admin_user', 'user_editable'])]
     private ?string $email = null;

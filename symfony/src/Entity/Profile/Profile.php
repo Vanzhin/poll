@@ -16,7 +16,7 @@ class Profile
         'educationLevel' => self::EDUCATION_LEVEL
     ];
 
-    private const EDUCATION_LEVEL = [
+    public const EDUCATION_LEVEL = [
         'среднее профессиональное образование',
         'высшее образование - бакалавриат',
         'высшее образование - специалитет, магистратура',
@@ -86,7 +86,8 @@ class Profile
     #[ORM\OneToOne(mappedBy: 'profile', cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Email(message: 'user.email.format')]
     private ?string $email = null;
 
     #[ORM\Column(length: 11, nullable: true)]

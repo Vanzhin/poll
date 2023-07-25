@@ -48,6 +48,14 @@ class ProfileBuilder
                 $profile->setEducationLevel($item);
                 continue;
             };
+            if ($key === 'phone' && isset($item)) {
+                $profile->setPhone($item);
+                continue;
+            };
+            if ($key === 'email' && isset($item)) {
+                $profile->setEmail($item);
+                continue;
+            };
         }
 
         return $profile;

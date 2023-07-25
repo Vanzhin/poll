@@ -6,6 +6,7 @@ use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Entity\Company;
 use App\Factory\Profile\ProfileFactory;
 use App\Factory\User\UserFactory;
+use App\Response\AppException;
 use App\Service\RoleService;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
@@ -35,8 +36,8 @@ class CreateAction extends NewBaseAction
         $profile = null;
         if (isset($data['profile'])) {
             $profile = $this->profileFactory->createBuilder()->buildProfile($data['profile']);
-            if (!empty($this->validator->validate($profile))) {
-                throw new \Exception(implode(', ', $this->validator->validate($profile)));
+            if (!empty($errors = $this->validator->validate($profile))) {
+                throw new AppException(implode(', ', $errors));
             }
         }
         if (!$this->roleService->check($data['roles'] ?? [])) {
@@ -47,12 +48,12 @@ class CreateAction extends NewBaseAction
             $data['roles'] = $this->roleService->getRoles($data['roles']);
         }
         $user = $this->userFactory->createBuilder()->buildCompanyUser($data, $company, null, $profile);
-        if (!empty($this->validator->validate($user))) {
-            throw new \Exception(implode(', ', $this->validator->validate($user)));
+        if (!empty($errors = $this->validator->validate($user))) {
+            throw new AppException(implode(', ', $errors));
         }
         $errors = [];
-        if ($this->validator->userPasswordValidate($data['password'])) {
-            foreach ($this->validator->userPasswordValidate($data['password']) as $error) {
+        if ($errors = $this->validator->userPasswordValidate($data['password'])) {
+            foreach ($errors as $error) {
                 $errors[] = $error;
             }
         }
@@ -60,7 +61,7 @@ class CreateAction extends NewBaseAction
             $errors[] = 'Пароли не совпадают.';
         }
         if ($errors) {
-            throw new \Exception(implode(', ', $errors));
+            throw new AppException(implode(', ', $errors));
         }
 
         $this->entityManager->persist($user);

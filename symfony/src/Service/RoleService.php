@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Response\AppException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -53,7 +54,7 @@ class RoleService
             if (isset($availableRoles[$role])) {
                 $roles[] = $availableRoles[$role];
             } else {
-                throw new \Exception(sprintf('Роли \'%s\' не существует', $role));
+                throw new AppException(sprintf('Роли \'%s\' не существует', $role));
             }
         }
         return $roles;
@@ -66,7 +67,7 @@ class RoleService
             if (isset(self::$availableRoleAliases[$role])) {
                 $aliases[] = self::$availableRoleAliases[$role];
             } else {
-                throw new \Exception(sprintf('Роли \'%s\' не существует', $role));
+                throw new AppException(sprintf('Роли \'%s\' не существует', $role));
             }
         }
         return $aliases;

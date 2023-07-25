@@ -94,9 +94,7 @@ class MassAdditionAction extends NewBaseAction
                     $userItem['profile'][self::$profileAliases[$header]] = $userData[$column];
                 }
                 if (isset(self::$userAliases[$header])) {
-                    if (self::$userAliases[$header] === 'password') {
-                        $userItem['confirmPassword'] = $userData[$column];
-                    }
+
 //                    todo убрать когда заменим почту на логин
                     if (self::$userAliases[$header] === 'email' && !isset($userData[$column])) {
                         $userItem[self::$userAliases[$header]] = rand(1, 1000) . $this->security->getUser()->getEmail();
@@ -112,24 +110,21 @@ class MassAdditionAction extends NewBaseAction
             $profile = null;
             if (isset($item['profile'])) {
                 $profile = $this->profileFactory->createBuilder()->buildProfile($item['profile']);
-                if (!empty($this->validator->validate($profile))) {
-                    throw new AppException(implode(', ', $this->validator->validate($profile)));
+                if (!empty($errors = $this->validator->validate($profile))) {
+                    throw new AppException(implode(', ', $errors));
                 }
             }
 
             $user = $this->userFactory->createBuilder()->buildCompanyUser($item, $this->security->getUser()->getCompany(), null, $profile);
-            if (!empty($this->validator->validate($user))) {
-                throw new AppException(implode(', ', $this->validator->validate($user)));
+            if (!empty($errors = $this->validator->validate($user))) {
+                throw new AppException(implode(', ', $errors));
             }
-            $errors = [];
-            if ($this->validator->userPasswordValidate($item['password'])) {
-                foreach ($this->validator->userPasswordValidate($item['password']) as $error) {
+            if ($errors = $this->validator->userPasswordValidate($item['password'])) {
+                foreach ($errors as $error) {
                     $errors[] = $error;
                 }
             }
-            if ($item['password'] !== $item['confirmPassword']) {
-                $errors[] = 'Пароли не совпадают.';
-            }
+
             if ($errors) {
                 throw new AppException(implode(', ', $errors));
             }
