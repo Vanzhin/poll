@@ -38,10 +38,10 @@ class UserBuilder
         return $user;
     }
 
-    public function buildUser(string $email, string $password = null, string $firstName = null): ?User
+    public function buildUser(string $email, ?string $login = null, string $password = null): ?User
     {
         $user = new User();
-        $user->setEmail($email)->setFirstName($firstName);
+        $user->setEmail($email)->setLogin($login ?? $email);
         if ($password) {
             $user->setPassword(
                 $this->userPasswordHasher->hashPassword(
@@ -129,8 +129,5 @@ class UserBuilder
             )
         );
         return $user;
-
     }
-
-
 }

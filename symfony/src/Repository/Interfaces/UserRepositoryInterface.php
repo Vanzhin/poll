@@ -16,4 +16,6 @@ interface UserRepositoryInterface
 
     public function findOneByLogin(string $login): ?User;
 
+    public function findAllByEmail(string $email): array;
+
 }

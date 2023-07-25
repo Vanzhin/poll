@@ -32,8 +32,7 @@ class CreateAction extends NewBaseAction
         $data = json_decode($request->getContent(), true);
 
         $user = $this->userFactory
-            ->createBuilder()->buildUser($data['email'] ?? '')
-            ->setLogin($data['login'] ?? '');
+            ->createBuilder()->buildUser($data['email'] ?? '', $data['login']);
         $errors = $this->validator->validate($user);
 
         if ($errors) {
