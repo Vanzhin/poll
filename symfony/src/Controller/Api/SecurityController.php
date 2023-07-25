@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SecurityController extends AbstractController
 {
-    #[Route('/api/login_link/{username}', name: 'app_api_login_link')]
+    #[Route('/api/login_link/{username}', name: 'app_api_login_link', methods: ['GET', 'POST'])]
     public function index(Request $request, LinkLoginAction $action): JsonResponse
     {
         return $action->sendLink($request);
