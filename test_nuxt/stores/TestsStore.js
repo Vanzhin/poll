@@ -44,30 +44,26 @@ export const useTestsStore = defineStore('tests', {
       console.log(query)
       try {
         // this.userData = await api.post({ login, password })
-        const { data: sections, pending, error } = await useFetch(() =>  url,
-        {
-          lazy: true,
-          query:query,
-        })
-        let timerId = setInterval(() => {
-          console.log('pending.value-',pending.value)
-          if ( !pending.value) {
-            clearInterval(timerId)
-
-
-              console.log("sections", sections.value.value)
-              console.log("sections", sections.value)
-              console.log("sections", sections)
-              this.tests = sections.value.test
-              const pagination = usePaginationStore()
-              if (sections.value.parent){
-                const categorys = useCategoryStore()
-                categorys.setParentCategory(sections.value.parent)
-              }
-              pagination.paginationsAll(sections.value.pagination)
-              loader.setIsLoaderStatus(false)
-            }
-          }, 200);
+        const { data: sections, pending, error } = await useAsyncData(
+          () => $fetch (url,
+            {
+              
+              query:query,
+            })
+        )
+          console.log("sections", sections.value)
+          console.log("sections", sections)
+          this.tests = sections.value.test
+          const pagination = usePaginationStore()
+          pagination.paginationsAll(sections.value.pagination)
+          if (sections.value.parent){
+            const categorys = useCategoryStore()
+            categorys.setParentCategory(sections.value.parent)
+          }
+          
+          loader.setIsLoaderStatus(false)
+            
+        
 
       } catch (error) {
         console.log(error)

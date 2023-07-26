@@ -149,6 +149,12 @@
       
     }
   }
+  onMounted(() => {
+    // console.log('я на клиенте')
+    // // console.dir( window)
+    // window.scrollTo(pageXOffset,0)
+    // window.scrollY = 0
+  })
 </script>
 <style lang="scss" scoped>
   .fon{

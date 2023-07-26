@@ -42,28 +42,41 @@ export const useCategoryStore = defineStore('category', {
       loader.setIsLoaderStatus(true)
       try {
         // this.userData = await api.post({ login, password })
-        const { data: sections, pending, error } = await useFetch(() =>  url,
-        {
-          lazy: true,
-          query:query,
-        })
-        let timerId = setInterval(() => {
-          console.log('pending.value-',pending.value)
-          if ( !pending.value) {
-            clearInterval(timerId)
-            console.log("sections", sections.value)
-            this.categorys = sections.value.children
-            console.log('error - ',sections.value.pagination.hasOwnProperty(error))
-            const pagination = usePaginationStore()
+        // const { data: sections, pending, error } = await useFetch(() =>  url,
+        // {
+        //   lazy: true,
+        //   query:query,
+        // })
+        // let timerId = setInterval(() => {
+        //   console.log('pending.value-',pending.value)
+        //   if ( !pending.value) {
+        //     clearInterval(timerId)
+        //     console.log("sections", sections.value)
+        //     this.categorys = sections.value.children
+        //     console.log('error - ',sections.value.pagination.hasOwnProperty(error))
+        //     const pagination = usePaginationStore()
+        //     pagination.paginationsAll(sections.value.pagination)
+        //     loader.setIsLoaderStatus(false)
+        //     if (sections.value.parent) {
+        //       this.parent = sections.value.parent
+        //     }
+        //   }
+        // }, 200);
+        const { data: sections, pending, error, refresh } = await useAsyncData(
+         
+          () => $fetch(url,{
+            // lazy : true,
+            query: query,
+          })
+        )
+        console.log("sections", sections.value)
+        this.categorys = sections.value.children
+        const pagination = usePaginationStore()
             pagination.paginationsAll(sections.value.pagination)
             loader.setIsLoaderStatus(false)
             if (sections.value.parent) {
               this.parent = sections.value.parent
             }
-          }
-        }, 200);
-
-        
       } catch (error) {
         console.log(error)
        

@@ -163,10 +163,6 @@
   const page = ref(route.params.page ? +route.params.page: 1)
   const isVisible = ref(false)
   
-  console.log(tests)
-  console.log(route.params)
-  console.log(parentId)
-  
   useSeoMeta({
     title: 'Амулет Тест | Категория | Тест',
     ogTitle: 'Амулет Тест | ',
@@ -176,11 +172,6 @@
     twitterCard: 'summary_large_image',
   })
   
-  
-  
-  
-  
-    
   tickets.getApiTicketsTestIdNoAuthDb({
     page: page.value > 1 ? page.value: '',
     parentId: parentId.value,

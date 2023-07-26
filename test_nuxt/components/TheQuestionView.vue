@@ -85,30 +85,27 @@
   import { useLoaderStore } from '../stores/Loader'
   import { useQuestionsStore } from '../stores/QuestionStore'
   import { useTicketsStore  } from '../stores/TicketsStore'
+  import { useResultStore  } from '../stores/ResultStore'
   import rndOptions from '../utils/rndOptions.js'
   const route = useRoute()
   const ticketRnd = ref(route.params.rnd)
   const parentId = ref(+route.params.id)
   const ticketNum = ref(+route.params.num)
-  console.log(route)
+ 
   const tests = useTestsStore()
   const loader = useLoaderStore()
   const questions = useQuestionsStore()
   const ticketsStore = useTicketsStore()
-  const {getQuestions} = storeToRefs(questions)
-  
+    
   const ticketModeTitle = ref('')
   
-  console.log ("ticketRnd - ", ticketRnd)
   const regexp = new RegExp("rnd", 'i');
    
   if ( regexp.test(ticketRnd.value)){
-  console.log(ticketRnd.value)
-  ticketModeTitle.value = rndOptions[ticketRnd.value]
-  
+    ticketModeTitle.value = rndOptions[ticketRnd.value]
+    ticketsStore.saveTicketModeTitle(ticketModeTitle.value)
   } 
 
-  console.log("ticketsStore.getTickets = ", ticketsStore.getTickets)
   if (ticketRnd.value) {
     questions.getQuestionsTestIdDb({id: parentId.value, rnd: ticketRnd.value })
   } else {
@@ -116,29 +113,39 @@
   }
   
   useSeoMeta({
-    title: `Амулет Тест | Тест - ${parentId.value} ${ticketModeTitle.value !=='' ? ' | '+ticketModeTitle.value: ''} ${ticketNum.value  ? ' | Билет № ' + ticketsStore.ticketSelect.title: ''}`,
+    title: `Амулет Тест | Тест - ${parentId.value} ${ticketModeTitle.value !=='' ? ' | '+ ticketModeTitle.value: ''} ${ticketsStore.ticketSelect ? ' | Билет № ' + ticketsStore.ticketSelect.title: ''}`,
     ogTitle: 'Амулет Тест | ',
     description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
     ogDescription: 'This is my amazing site, let me tell you all about it.',
     ogImage: 'https://example.com/image.png',
     twitterCard: 'summary_large_image',
   })
+
   function type(item) {
     return item.type.title ? item.type.title : item.type
   }
+
   async function onSubmit(e){
-    console.log(e)
-      const question = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
-        .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-        
-      const ticket = {
-        question,
-        info: ticketModeTitle.value
-      } 
-      await this.saveResultTicketUser(ticket)
+   
+    const question = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
+      .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
+      
+    const ticket = {
+      question,
+      info: {
+        ticket: ticketsStore.ticketSelect.id || '',
+        mode: ticketRnd.value,
+        test: parentId.value,
+        ticketTitle: `Билет № ${ ticketsStore.ticketSelect.title }`,
+        ticketModeTitle: ticketModeTitle.value,
+      }
+    } 
     
-      // this.$router.push({ path:'/result'})
-    }
+    const result = useResultStore() 
+    await result.saveResultTicketUser(ticket)
+    navigateTo(`/result`)
+    
+  }
 
 
 </script>
