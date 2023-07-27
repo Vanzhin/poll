@@ -1,6 +1,8 @@
 <template>
   <div class="d-dropdown">
-    <button class="btn btn-secondary "  data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-secondary "  tooggle="false" 
+      @click.stop="toggleMeny"
+    >
       <div class="dropdown-button">
         <div class="title"> Личный кабинет</div> 
         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,16 +18,18 @@
     </button>
     <ul 
       class="dropdown-menu menu" 
-      aria-labelledby="dropdownMenuButton1"
+      :class="classObject"
     >
-      <div v-if="true">
-        <li><NuxtLink class="dropdown-item menu_li" to="statistics">Статистика</NuxtLink></li>
-        <li><NuxtLink class="dropdown-item menu_li" to="userAutchProfile">Профиль</NuxtLink></li>
+      <div v-if="user.getIsAutchUser">
+        <li class="dropdown-item menu_li">Статистика</li>
+        <li class="dropdown-item menu_li">Профиль</li>
+        <!-- <li><NuxtLink class="dropdown-item menu_li" to="statistics">Статистика</NuxtLink></li>
+        <li><NuxtLink class="dropdown-item menu_li" to="userAutchProfile">Профиль</NuxtLink></li> -->
        
-        <!-- <li
-          v-if="getUserAdmin"
+        <li
+          v-if="user.getUserAdmin"
         ><NuxtLink class="dropdown-item menu_li" to='admin'>Админка</NuxtLink>
-        </li> -->
+        </li>
         <li><hr class="menu-hr"></li>
         <li class="dropdown-item menu-item menu_li" @click="logOut" >
           <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,19 +39,35 @@
           Выйти</li>
       </div> 
       <div v-else>
-        <li><NuxtLink class="dropdown-item menu_li" :to="{ name: 'logout'}">Авторизоваться</NuxtLink></li>
-        <li><NuxtLink class="dropdown-item menu_li" :to="{ name: 'logoutlink'}">По ссылке</NuxtLink></li>
-        <li><NuxtLink class="dropdown-item menu_li" :to="{ name: 'signup'}">Зарегистрироваться</NuxtLink></li>
+        <li><NuxtLink class="dropdown-item menu_li" to="/user/autch">Авторизоваться</NuxtLink></li>
+        <li><NuxtLink class="dropdown-item menu_li" to="/user/autch/link">По ссылке</NuxtLink></li>
+        <li><NuxtLink class="dropdown-item menu_li" to="/user/signup">Зарегистрироваться</NuxtLink></li>
       </div>
     </ul>
   </div>
 </template>
-<script>
-
-
-export default {
- 
-}
+<script setup>
+  import { useUserStore  } from '../../stores/UserStore'
+  const user = useUserStore()
+  const toggle = ref(false)
+  
+  function toggleMeny(){
+    console.log('toggle')
+    toggle.value = !toggle.value
+    if (toggle.value){
+      window.addEventListener('click', function(e) {
+        if (toggle.value){
+          toggle.value = false}
+      })
+    }
+  }
+  onMounted(() => {
+    const user = useUserStore()
+  })
+  const classObject = computed(() => ({
+    active: toggle.value,
+  
+  }))
 </script>   
 
 <style lang="scss" scoped>
@@ -110,11 +130,15 @@ export default {
     line-height: 24px;
   }
   .menu{
+    top: 30px;
     transform: translate(-40px, 40px);
     width: 172px;
     background: var(--color-blue);
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
+    &-item{
+      display: flex;
+    }
    &-hr{
     margin:10px 15px ;
     border-top: 1px solid var(--color-white);
@@ -135,5 +159,8 @@ export default {
       cursor: pointer;
       color: var(--color-blue);
     }}
+  }
+  .active{
+    display: block;
   }
 </style>
