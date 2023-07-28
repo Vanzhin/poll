@@ -32,21 +32,21 @@ class Profile
     #[Assert\NotBlank(message: 'profile.first_name.not_blank')]
     #[Assert\NotNull(message: 'profile.first_name.not_null')]
     #[Assert\Length(max: 100, maxMessage: 'profile.first_name.length')]
-    #[Groups(['user_editable'])]
+    #[Groups(['user_editable', 'admin_commission'])]
     private ?string $firstName = null;
 
     #[Assert\NotBlank(message: 'profile.middle_name.not_blank')]
     #[Assert\NotNull(message: 'profile.middle_name.not_null')]
     #[Assert\Length(max: 100, maxMessage: 'profile.middle_name.length')]
     #[ORM\Column(length: 100)]
-    #[Groups(['user_editable'])]
+    #[Groups(['user_editable', 'admin_commission'])]
     private ?string $middleName = null;
 
     #[Assert\NotBlank(message: 'profile.last_name.not_blank')]
     #[Assert\NotNull(message: 'profile.last_name.not_null')]
     #[Assert\Length(max: 150, maxMessage: 'profile.last_name.length')]
     #[ORM\Column(length: 150)]
-    #[Groups(['user_editable'])]
+    #[Groups(['user_editable', 'admin_commission'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]

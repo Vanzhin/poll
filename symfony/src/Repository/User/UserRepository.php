@@ -131,10 +131,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->addSelect('pr')
             ->andWhere('u.login = :login')
             ->setParameter('login', $login)
-            ->getQuery()->getOneOrNullResult()
-            ;
+            ->getQuery()->getOneOrNullResult();
     }
 
+    /**
+     * @param string $email
+     * @return User[]
+     */
     public function findAllByEmail(string $email): array
     {
         return $this->getOrCreateQueryBuilder()
@@ -142,7 +145,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->addSelect('pr')
             ->andWhere('u.email = :email')
             ->setParameter('email', $email)
-            ->getQuery()->getResult()
-            ;
+            ->getQuery()->getResult();
+    }
+
+    /**
+     * @param int ...$userIds
+     * @return User[]
+     */
+    public function findAllById(int ...$userIds): array
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->leftJoin('u.profile', 'pr')
+            ->addSelect('pr')
+            ->andWhere('u.id IN (:userIds)')
+            ->setParameter('userIds', $userIds)
+            ->getQuery()->getResult();
     }
 }

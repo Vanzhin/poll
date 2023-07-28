@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Commission\Commission;
 use App\Entity\User\User;
 use App\Repository\Company\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,9 +46,13 @@ class Company
     #[Groups(['admin_user'])]
     private User $admin;
 
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Commission::class, orphanRemoval: true)]
+    private Collection $commissions;
+
     public function __construct(User $user)
     {
         $this->users = new ArrayCollection([$user]);
+        $this->commissions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -133,5 +138,35 @@ class Company
     public function setAdmin(User $admin): void
     {
         $this->admin = $admin;
+    }
+
+    /**
+     * @return Collection<int, Commission>
+     */
+    public function getCommissions(): Collection
+    {
+        return $this->commissions;
+    }
+
+    public function addCommission(Commission $commission): self
+    {
+        if (!$this->commissions->contains($commission)) {
+            $this->commissions->add($commission);
+            $commission->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommission(Commission $commission): self
+    {
+        if ($this->commissions->removeElement($commission)) {
+            // set the owning side to null (unless already changed)
+            if ($commission->getCompany() === $this) {
+                $commission->setCompany(null);
+            }
+        }
+
+        return $this;
     }
 }

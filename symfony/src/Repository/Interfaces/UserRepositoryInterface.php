@@ -18,4 +18,6 @@ interface UserRepositoryInterface
 
     public function findAllByEmail(string $email): array;
 
+    public function findAllById(int ...$user_id): array;
+
 }

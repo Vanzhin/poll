@@ -2,6 +2,7 @@
 
 namespace App\Entity\User;
 
+use App\Entity\Commission\Commission;
 use App\Entity\Company;
 use App\Entity\Profile\Profile;
 use App\Entity\Question;
@@ -30,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user', 'admin_user', 'user_editable'])]
+    #[Groups(['user', 'admin_user', 'user_editable', 'admin_commission'])]
     private ?int $id = null;
 
 
@@ -77,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $login = null;
 
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    #[Groups(['user_editable'])]
+    #[Groups(['user_editable', 'admin_commission'])]
     private ?Profile $profile = null;
 
     #[ORM\Column]
@@ -86,6 +87,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['user_editable'])]
     private ?Permissions $permissions = null;
+
+    #[ORM\ManyToMany(targetEntity: Commission::class, mappedBy: 'participant')]
+    private Collection $commissions;
 
     /**
      * @return WorkerCard|null
@@ -107,6 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->results = new ArrayCollection();
         $this->questions = new ArrayCollection();
+        $this->commissions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,6 +335,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPermissions(Permissions $permissions): void
     {
         $this->permissions = $permissions;
+    }
+
+    /**
+     * @return Collection<int, Commission>
+     */
+    public function getCommissions(): Collection
+    {
+        return $this->commissions;
+    }
+
+    public function addCommission(Commission $commission): self
+    {
+        if (!$this->commissions->contains($commission)) {
+            $this->commissions->add($commission);
+            $commission->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommission(Commission $commission): self
+    {
+        if ($this->commissions->removeElement($commission)) {
+            $commission->removeParticipant($this);
+        }
+
+        return $this;
     }
 
 }
