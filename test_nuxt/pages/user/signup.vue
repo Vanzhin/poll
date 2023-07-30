@@ -76,63 +76,57 @@
  </section>
 </template>
 
-<script>
-// import MessageView from "../components/ui/MessageView.vue"
-// import CloseView from "../components/ui/CloseView.vue"
-definePageMeta({
+<script setup>
+  import { useUserStore  } from '../../stores/UserStore'
+  definePageMeta({
     layout: "logout",
   });
-export default {
- components: {
-   
- },
- data() {
-   return {
-     count: 0,
-     confirmPassword:'',
-     password:'',
-     email:'',
-     firstName:'',
-     authorize: false,
-     authorizeTitle:'Удачная регистрация'
-   }
- },
-   computed:{
+
+  const count = ref(0)
+  const confirmPassword = ref('')
+  const password = ref('')
+  const email = ref('')
+  const firstName = ref('')
+  const authorize = ref(false)
+  const authorizeTitle = ref('Удачная регистрация')
+  const user = useUserStore()
+
+  async function submit(){
+
+    const userLog = {
+      confirmPassword: confirmPassword.value,
+      email: email.value,
+      firstName: firstName.value,
+      password: password.value, 
+    }
+  
+    const res = await user.setRegistrationUser(userLog)
     
-   },
-   methods: {
-     
-     async submit(){
-       const user = {
-         confirmPassword: this.confirmPassword,
-         email: this.email,
-         firstName: this.firstName,
-         password: this.password, 
-       }
+    if (res) {
+      return
+    } 
       
-       const res = await this.setRegistrationUser(user)
-       
-       if (res) {
-         return
-       } else {
-         this.clearForm()
-       }
-       this.authorize = true
-       await  this.setLogInUser({username:user.email,password: user.password})
-     
-       this.$router.push({ path: this.getPageName})
-     },
-     clearForm() {
-       this.confirmPassword = '',
-       this.password='',
-       this.email='',
-       this.firstName=''
-     }
-   }
-   // mounted(){
-   // }
+    
+    authorize.value = true
+    await  user.setLogInUser({username:email.value,password: password.value})
+    clearForm()
+    setTimeout(() => 
+        {
+          navigateTo(`${user.getPageName ? user.getPageName: '/' }`)
+        }, 3000);
+    
+  }
+
+  function clearForm() {
+    confirmPassword.value = '',
+    password.value = '',
+    email.value = '',
+    firstName.value = ''
+  }
  
-} 
+   
+ 
+ 
 
 </script>
 <style lang="scss" scoped>

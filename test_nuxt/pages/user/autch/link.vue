@@ -39,7 +39,7 @@
                 </NuxtLink>
               </div>
             <div class="text-login">
-                <NuxtLink to="/user/autch/signup" class="routerLink"> 
+                <NuxtLink to="/user/signup" class="routerLink"> 
                     Пройти регистрацию
                 </NuxtLink>
               </div>
@@ -56,39 +56,25 @@
   </section>
 </template>
  
-<script>
+<script setup>
   definePageMeta({
     layout: "logout",
   });
-  // import CloseView from "../components/ui/CloseView.vue"
- 
-  export default {
-    components: {
-      
-    },
-    data() {
-      return {
-        count: 0,
-        email:'',
-        emailSend: false,
-        resMessage: '',
-        link: ''
-      }
-    },
-    computed:{
-      
-    },
-    methods: {
-      
-      async onSubmit(e){
-        await this.getLoginByLinkUser(this.email)
-        this.emailSend = this.getLogoutLinkDate.send,
-        this.resMessage = this.getLogoutLinkDate.message,
-        this.link = this.getLogoutLinkDate.url
-       
-      }
-    }
+  import { useUserStore  } from '../../../stores/UserStore'
+  const user = useUserStore()
      
+  const count = ref(0)
+  const email= ref('')
+  const resMessage= ref('')
+  const emailSend = ref(false)
+  const link= ref('') 
+  async  function onSubmit(e){
+    await user.getLoginByLinkUser(email.value)
+    emailSend.value = user.getLogoutLinkDate.send,
+    resMessage.value = user.getLogoutLinkDate.message,
+    link.value = user.getLogoutLinkDate.url
+    
+
   } 
 </script>
 

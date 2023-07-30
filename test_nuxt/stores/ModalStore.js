@@ -26,15 +26,20 @@ export const useModalStore = defineStore('modal', {
 
     setMessageError( e ) {
       console.log("error", e)
-      let messag = e.message ? `${e.message} <hr>` : ''
+      let messag = e.message ? `<b>${e.message}</b> <hr>` : ''
       
-      // if (e.response.data.message) {
+      // if (e.data.message) {
       //   messag += `${e.response.data.message}!<hr>`
       // }
       
-      // if (e.response.data.error) {
-      //   messag += `${e.response.data.error}`
-      // }
+      if (e.error) {
+        if (Array.isArray(e.error)){
+          e.error.forEach(element => messag += `${element} <hr>`)
+        } else {
+           messag += `${e.error}`
+        }
+       
+      }
 
       console.log("messag", messag)
       this.message = {err: true, mes: messag};

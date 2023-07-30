@@ -125,7 +125,7 @@
   const page = ref(route.params.page ? +route.params.page: 1)
   const loader = useLoaderStore()
   console.log(page.value)
-  
+  console.log(route)
   categorys.getApiCategorys({
     page: page.value > 1 ? page.value: '',
   })

@@ -22,13 +22,15 @@
     >
       <div v-if="user.getIsAutchUser">
         <li class="dropdown-item menu_li">Статистика</li>
-        <li class="dropdown-item menu_li">Профиль</li>
+        <li>
+          <NuxtLink class="dropdown-item menu_li" to='/user/profile'>Профиль</NuxtLink>
+        </li>
         <!-- <li><NuxtLink class="dropdown-item menu_li" to="statistics">Статистика</NuxtLink></li>
         <li><NuxtLink class="dropdown-item menu_li" to="userAutchProfile">Профиль</NuxtLink></li> -->
-       
+       <!-- admin -->
         <li
           v-if="user.getUserAdmin"
-        ><NuxtLink class="dropdown-item menu_li" to='admin'>Админка</NuxtLink>
+        ><NuxtLink class="dropdown-item menu_li" to='/'>Админка</NuxtLink>
         </li>
         <li><hr class="menu-hr"></li>
         <li class="dropdown-item menu-item menu_li" @click="logOut" >
@@ -39,15 +41,17 @@
           Выйти</li>
       </div> 
       <div v-else>
-        <li><NuxtLink class="dropdown-item menu_li" to="/user/autch">Авторизоваться</NuxtLink></li>
-        <li><NuxtLink class="dropdown-item menu_li" to="/user/autch/link">По ссылке</NuxtLink></li>
-        <li><NuxtLink class="dropdown-item menu_li" to="/user/signup">Зарегистрироваться</NuxtLink></li>
+        <li><div class="dropdown-item menu_li" @click="clickNavigate('/user/autch')">Авторизоваться</div></li>
+        <li><div class="dropdown-item menu_li" @click="clickNavigate('/user/autch/link')">По ссылке</div></li>
+        <li><div class="dropdown-item menu_li" @click="clickNavigate('/user/signup')">Зарегистрироваться</div></li>
       </div>
     </ul>
   </div>
 </template>
 <script setup>
+  const route = useRoute()
   import { useUserStore  } from '../../stores/UserStore'
+  
   const user = useUserStore()
   const toggle = ref(false)
   
@@ -55,10 +59,7 @@
     console.log('toggle')
     toggle.value = !toggle.value
     if (toggle.value){
-      window.addEventListener('click', function(e) {
-        if (toggle.value){
-          toggle.value = false}
-      })
+      window.addEventListener('click', dropDownClickVisible)
     }
   }
   onMounted(() => {
@@ -68,6 +69,21 @@
     active: toggle.value,
   
   }))
+  function dropDownClickVisible(){
+    if (toggle.value){
+      toggle.value = false
+      window.removeEventListener("click", dropDownClickVisible);
+    }
+  }
+  async function logOut(){
+    await  user.getLogOutUser()
+    navigateTo('/')
+  }
+  async function clickNavigate(link){
+    console.log(route.path)
+    user.savePage(route.path)
+    navigateTo(link)
+  }
 </script>   
 
 <style lang="scss" scoped>
