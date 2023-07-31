@@ -15,9 +15,9 @@
   onMounted(() => {
     const user = useUserStore()
     user.setTokenIsLocalStorage()
-      setTimeout(()=>{
-        window.scrollTo(pageXOffset, 0)
-      },2000)
+    setTimeout(()=>{
+      window.scrollTo(pageXOffset, 0)
+    },2000)
       
     
   })

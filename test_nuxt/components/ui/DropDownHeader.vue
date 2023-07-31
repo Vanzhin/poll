@@ -1,6 +1,8 @@
 <template>
   <div class="btn-group dropup">
-    <button class="btn  dropdown-toggle"  data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn  dropdown-toggle"  data-bs-toggle="dropdown" aria-expanded="false"
+    @click.stop="toggleMeny"
+    >
       <div class="">
           <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3.92536 6.8489H21.5414C23.1307 6.88486 23.1307 4.81387 21.5414 4.84983H3.92536C2.33608 4.8138 2.33608 6.88486 3.92536 6.8489Z" fill="#269EB7"/>
@@ -11,6 +13,7 @@
     </button>
     <ul 
       class="dropdown-menu menu" 
+      :class="classObject"
       aria-labelledby="dropdownMenuButton1"
     >
       <li 
@@ -21,9 +24,25 @@
     </ul>
   </div>
 </template>
-<script>
+<script setup>
+  const toggle = ref(false)
+  const classObject = computed(() => ({
+    active: toggle.value,
+  }))
+  function toggleMeny(){
+    console.log('toggle')
+    toggle.value = !toggle.value
+    if (toggle.value){
+      window.addEventListener('click', dropDownHeadClickVisible)
+    }
+  }
 
-
+  function dropDownHeadClickVisible(){
+    if (toggle.value){
+      toggle.value = false
+      window.removeEventListener("click", dropDownHeadClickVisible);
+    }
+  }
 </script>   
 
 <style lang="scss" scoped>
@@ -60,7 +79,7 @@
     }
   }
   .menu{
-    transform: translate(-40px, 40px);
+    transform: translate(0px, 40px);
     width: 240px;
     background: var(--color-blue);
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
@@ -90,5 +109,8 @@
       cursor: pointer;
       color: var(--color-blue);
     }}
+  }
+  .active{
+    display: block;
   }
 </style>

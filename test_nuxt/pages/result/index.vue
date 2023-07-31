@@ -7,8 +7,8 @@
       v-else
     >
       <TheHeaderVsPage
-          title=""
-          :subTitle="tests.getTestTitle"
+          :title="tests.getTestTitle"
+          subTitle=""
       />
       <div class="fon">
         <div class="container">
@@ -73,9 +73,9 @@
     twitterCard: 'summary_large_image',
   })
   onMounted(() => {
-    console.log('я на клиенте')
+    console.log('я на клиенте результат')
     const user = useUserStore()
-    autch.value = user.isAutchUser
+    autch.value = user.getIsAutchUser
 
   })
   if (result.resultTicketUser) {

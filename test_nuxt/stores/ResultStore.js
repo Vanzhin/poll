@@ -20,28 +20,27 @@ export const useResultStore = defineStore('result', {
     async setResultDb(){
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      // const user = useUserStore()
+      const user = useUserStore()
       // const token = user.token
 
       let url = `${urlApi}/api/test/handle`
-        // if (userAuth) {
-        //   config.url = '/api/auth/test/handle'
-        //   config.headers.Authorization = `Bearer ${token}`
-        // }
+        
+      let params = {
+        method: 'POST',
+        body: JSON.stringify(this.resultTicketUser),
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json'
+        },
+      }
+      if (user.getIsAutchUser) {
+        url = `${urlApi}/api/auth/test/handle`
+        params.headers.Authorization = `Bearer ${user.token}`
+      }
       try{
         console.log('отправляю на проверку url-', url)
         const { data: result, pending, error } = await useAsyncData(
-          () =>  $fetch(url,
-            {
-              method: 'POST',
-              body: JSON.stringify(this.resultTicketUser),
-              headers: { 
-                Accept: 'application/json', 
-                'Content-Type': 'application/json'
-                
-              },
-              // lazy: true,
-            })
+          () =>  $fetch( url, params )
         )
         this.pending = pending.value
         let timerId = setInterval(() => {

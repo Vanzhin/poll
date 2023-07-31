@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
 import { useLoaderStore } from './Loader'
-
+import { useModalStore  } from './ModalStore'
 export const useCategoryStore = defineStore('category', {
   state: () => ({
     // categorys: localStorage.getItem('categorys') ?
@@ -12,7 +12,8 @@ export const useCategoryStore = defineStore('category', {
     // categorysFooter: localStorage.getItem('categorysFooter') ?
     //   JSON.parse(localStorage.getItem('categorysFooter')): null,
     categorys:[],
-    parent: ''
+    parent: '',
+    categorysFooter: null
   }),
   getters: {
     getCategogys: (state) => state.categorys,
@@ -81,7 +82,31 @@ export const useCategoryStore = defineStore('category', {
         console.log(error)
        
       }
+    },
+     //запрос категорий для футера
+    async getCategorysDBFooter({ dispatch, commit }, ) {
+      const modal = useModalStore()
+      let url = `${urlApi}/api/category?limit=1000`
+      
+      const config = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      };
+      
+      try{
+        const { data: sections, pending, error, refresh } = await useAsyncData(
+          () => $fetch(url, config)
+        )
+        if (sections.value) {
+          console.log('sections.value footer-', sections.value)
+          this.categorysFooter = sections.value
+        }
+      } catch (e) { 
+        console.log('footer e-', e)
+      }
+      
     }
-   
   }
 })

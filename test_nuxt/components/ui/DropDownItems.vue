@@ -147,7 +147,7 @@
   }
   .menu{
     top: 30px;
-    transform: translate(-40px, 40px);
+    transform: translate(0px, 40px);
     width: 172px;
     background: var(--color-blue);
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);

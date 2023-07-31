@@ -10,8 +10,8 @@
       
       <div>
         <TheHeaderVsPage
-          title=""
-          :subTitle="tests.getTestTitle"
+          :title="tests.getTestTitle"
+          subTitle=""
         />
         
         

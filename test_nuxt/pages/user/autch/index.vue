@@ -60,6 +60,9 @@
 </template>
  
 <script setup>
+  definePageMeta({
+    middleware: 'savepage'
+  })
   import { useUserStore  } from '../../../stores/UserStore'
   const user = useUserStore()
  

@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
     page: null,
     role: null,
     logoutLinkDate: {},
+    
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -22,7 +23,7 @@ export const useUserStore = defineStore('user', {
       console.log('savePage-', page)
       this.page = page
     },
-    setTokenIsLocalStorage(){
+    async setTokenIsLocalStorage(){
       console.log('проверяю стор')
       this.token = localStorage.getItem('token') ?
         JSON.parse(localStorage.getItem('token')).token: ""
@@ -181,6 +182,7 @@ export const useUserStore = defineStore('user', {
     },
     //получение данных пользователя из БД
     async getAutсhUserProfileDb() {
+      console.log("получаю данные пользователя")
       const modal = useModalStore()
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
@@ -188,21 +190,22 @@ export const useUserStore = defineStore('user', {
       
       try {
         const { data: result, pending, error } = await useAsyncData(
-          () => $fetch(url,{
-            method: 'post',
+          () => $fetch( url, {
+            method: 'POST',
             headers: { 
               'Accept': 'application/json',
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${this.token}`
             },
-          }
-        ))
+          })
+        )
 
         if (error.value) {
           console.log(error.value.data)
           if (error.value.data){
             if (error.value.data.message === "Expired JWT Token"||
-            error.value.data.message === "Invalid JWT Token"
-            ) {
+              error.value.data.message === "Invalid JWT Token") 
+            {
               this.getAuthRefresh() //обновление токена
               this.getAutсhUserProfileDb()
             }
@@ -210,10 +213,10 @@ export const useUserStore = defineStore('user', {
             modal.setMessageError(error.value)
           }
         } else{
-          console.log(result.value)
+          console.log('result.value -',result.value)
           this.profile = result.value
         }
-        
+        loader.setIsLoaderStatus(false)
       } catch (e) {
         
         console.log(e)

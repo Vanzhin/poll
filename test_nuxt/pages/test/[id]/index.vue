@@ -7,8 +7,8 @@
     v-else
   >
      <TheHeaderVsPage
-        title=""
-        :subTitle="tests.testTitle"
+        :title="tests.testTitle"
+        subTitle=""
       />
     <div class="container">
    

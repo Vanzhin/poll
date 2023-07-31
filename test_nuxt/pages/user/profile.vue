@@ -13,9 +13,9 @@
         
             
         <div class="tablis-header-title">
-          <!-- <div>Ник: <span>{{ user.profile.firstName}}</span></div>
-          <div>Email: <span>{{ user.profile.email }}</span></div>
-          <div>Права: <span>{{ user.profile.roles[0]  }}</span></div> -->
+          <div>Ник: <span>{{ user.profile ? user.profile.firstName: ''}}</span></div>
+          <div>Email: <span>{{ user.profile ? user.profile.email: ''}}</span></div>
+          <div>Права: <span>{{ user.profile ? user.profile.roles[0] : ''  }}</span></div>
         </div>
            
         <div class="button-cont">
@@ -34,32 +34,29 @@
 </template>
  
 <script setup>
+  definePageMeta({
+    middleware: 'auth'
+  });
   import { useLoaderStore } from '../../stores/Loader'
   const loader = useLoaderStore()
   import { useUserStore  } from '../../stores/UserStore'
   const user = useUserStore()
 
-    
-      
-   
-   
   function statistikDate({date}){
     let dateToday = date.split('T')
     return  dateToday[0]
   }
+  
   async function logOut(){
     await  user.getLogOutUser()
     navigateTo('/')
   }
-    
-   
+  onMounted(async () => {
+    if (!user.token) {
+      await user.setTokenIsLocalStorage()
+    }
     await user.getAutсhUserProfileDb()
-     
-      
-    
-     
-  
- 
+  }) 
 </script>
 <style lang="scss" scoped>
    .fon{

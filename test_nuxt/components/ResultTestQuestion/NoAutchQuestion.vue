@@ -68,6 +68,7 @@ export default {
     color: var(--color-Black_blue);
     margin-left: 15px;
     word-wrap: break-word;
+    margin-top: 0;
     @media (max-width: 480px){
       margin: 10px 0 0 0 ;
       width: 270px;
