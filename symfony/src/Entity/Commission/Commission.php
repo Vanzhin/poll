@@ -107,9 +107,7 @@ class Commission
 
     public function removeAllParticipants(): self
     {
-        foreach ($this->participant as $participant) {
-            $this->participant->removeElement($participant);
-        }
+        $this->participant->clear();
 
         return $this;
     }

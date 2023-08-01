@@ -77,7 +77,11 @@ class SerializerService
             ->withSkipNullValues(false)
             ->withCallbacks([
                 'image' => $this->normalizerService->imageCallback($this->upLoadedAsset),
-                'roles' => $this->normalizerService->rolesCallback($this->roleService)
+                'roles' => $this->normalizerService->rolesCallback($this->roleService),
+                'started_at' => $this->normalizerService->dateTimeCallback(),
+                'finished_at' => $this->normalizerService->dateTimeCallback(),
+                'createdAt' => $this->normalizerService->dateTimeCallback(),
+                'updatedAt' => $this->normalizerService->dateTimeCallback(),
             ]);
 
         return $this->serializer->serialize($object, 'json', $contextBuilder->toArray());

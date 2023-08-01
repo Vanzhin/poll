@@ -4,6 +4,7 @@ namespace App\Entity\User;
 
 use App\Entity\Commission\Commission;
 use App\Entity\Company;
+use App\Entity\Group;
 use App\Entity\Profile\Profile;
 use App\Entity\Question;
 use App\Entity\Result;
@@ -31,7 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user', 'admin_user', 'user_editable', 'admin_commission'])]
+    #[Groups(['user', 'admin_user', 'user_editable', 'admin_commission', 'admin_group'])]
     private ?int $id = null;
 
 
@@ -91,6 +92,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Commission::class, mappedBy: 'participant')]
     private Collection $commissions;
 
+    #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'participants')]
+    private Collection $groups;
+
     /**
      * @return WorkerCard|null
      */
@@ -112,6 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->results = new ArrayCollection();
         $this->questions = new ArrayCollection();
         $this->commissions = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -359,6 +364,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->commissions->removeElement($commission)) {
             $commission->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Group>
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(Group $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups->add($group);
+            $group->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): self
+    {
+        if ($this->groups->removeElement($group)) {
+            $group->removeParticipant($this);
         }
 
         return $this;

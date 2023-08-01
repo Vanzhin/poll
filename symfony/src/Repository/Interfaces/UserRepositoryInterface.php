@@ -3,6 +3,7 @@
 namespace App\Repository\Interfaces;
 
 use App\Entity\Company;
+use App\Entity\Group;
 use App\Entity\User\User;
 use App\Repository\User\Filter\UserFilter;
 
@@ -19,5 +20,9 @@ interface UserRepositoryInterface
     public function findAllByEmail(string $email): array;
 
     public function findAllById(int ...$user_id): array;
+
+    public function findCompanyUsersById(Company $company, int ...$userIds): array;
+
+    public function findGroupOwnerToChange(Group $group, array $roles): array;
 
 }

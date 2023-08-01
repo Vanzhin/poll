@@ -23,7 +23,7 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search', 'admin_group'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(
@@ -111,6 +111,9 @@ class Test
     #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search'])]
     private ?string $alias = null;
 
+    #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'availableTests')]
+    private Collection $groups;
+
     /**
      * @return bool
      */
@@ -190,6 +193,7 @@ class Test
         $this->section = new ArrayCollection();
         $this->ticket = new ArrayCollection();
         $this->results = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -420,6 +424,33 @@ class Test
     public function setAlias(string $alias): self
     {
         $this->alias = $alias;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Group>
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(Group $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups->add($group);
+            $group->addAvailableTest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): self
+    {
+        if ($this->groups->removeElement($group)) {
+            $group->removeAvailableTest($this);
+        }
 
         return $this;
     }

@@ -39,4 +39,14 @@ class NormalizerService
             };
         };
     }
+
+    public function dateTimeCallback(): \Closure
+    {
+        return function (object $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): string {
+                if ($innerObject instanceof \DateTimeImmutable) {
+                    return $innerObject->format('Y-m-d H:i:s');
+                }
+            return '';
+        };
+    }
 }

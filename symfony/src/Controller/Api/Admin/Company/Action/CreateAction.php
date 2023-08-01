@@ -6,6 +6,7 @@ use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Event\CompanyCreatedEvent;
 use App\Factory\Company\CompanyFactory;
 use App\Factory\User\UserFactory;
+use App\Response\AppException;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,7 +37,7 @@ class CreateAction extends NewBaseAction
         $errors = $this->validator->validate($user);
 
         if ($errors) {
-            throw new \Error(implode(', ', $errors));
+            throw new AppException(implode(', ', $errors));
         }
         $user->setRoles(['ROLE_ADMIN']);
         $data['user'] = $user;
@@ -45,7 +46,7 @@ class CreateAction extends NewBaseAction
         $user->setCompany($company);
 
         if ($errors) {
-            throw new \Error(implode(', ', $errors));
+            throw new AppException(implode(', ', $errors));
         }
 
         $this->entityManager->persist($user);

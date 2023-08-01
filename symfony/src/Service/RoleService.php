@@ -38,6 +38,21 @@ class RoleService
         return $aliases;
     }
 
+    public function getAllowedRolesToAssign(UserInterface $user = null): array
+    {
+        if (!$user) {
+            $user = $this->security->getUser();
+        }
+        $roles = array_diff($this->roleHierarchy->getReachableRoleNames($this->security->getUser()->getRoles()), $user->getRoles());
+        $availableRoles = [];
+        foreach ($roles as $role) {
+            if (isset(self::$availableRoleAliases[$role])) {
+                $availableRoles[] = $role;
+            }
+        }
+        return $availableRoles;
+    }
+
     public function check(array $roles): bool
     {
         if (count(array_intersect($this->getAllowedAliasesToAssign(), $roles)) !== count($roles)) {

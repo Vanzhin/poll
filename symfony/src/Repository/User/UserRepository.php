@@ -3,6 +3,7 @@
 namespace App\Repository\User;
 
 use App\Entity\Company;
+use App\Entity\Group;
 use App\Entity\User\User;
 use App\Repository\Interfaces\UserRepositoryInterface;
 use App\Repository\User\Filter\UserFilter;
@@ -160,5 +161,36 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('u.id IN (:userIds)')
             ->setParameter('userIds', $userIds)
             ->getQuery()->getResult();
+    }
+
+    /**
+     * @param int ...$userIds
+     * @return User[]
+     */
+    public function findCompanyUsersById(Company $company, int ...$userIds): array
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('u.id IN (:userIds)')
+            ->setParameter('userIds', $userIds)
+            ->andWhere('u.company = :company')
+            ->setParameter('company', $company)
+            ->getQuery()->getResult();
+    }
+
+    public function findGroupOwnerToChange(Group $group, array $roles): array
+    {
+        $query = $this->getOrCreateQueryBuilder();
+        $i = 0;
+        foreach ($roles as $role) {
+            $query->orWhere('u.roles LIKE :role' . "$i")
+                ->setParameter('role' . $i++, "%$role%");
+        }
+
+        $query->andWhere('u.company = :company')
+            ->setParameter('company', $group->getCompany())
+            ->andWhere('u.id != :id')
+            ->setParameter('id', $group->getOwner()->getId());
+
+        return $query->getQuery()->getResult();
     }
 }

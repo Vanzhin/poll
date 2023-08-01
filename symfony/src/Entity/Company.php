@@ -49,10 +49,14 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Commission::class, orphanRemoval: true)]
     private Collection $commissions;
 
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Group::class, orphanRemoval: true)]
+    private Collection $groups;
+
     public function __construct(User $user)
     {
         $this->users = new ArrayCollection([$user]);
         $this->commissions = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +168,36 @@ class Company
             // set the owning side to null (unless already changed)
             if ($commission->getCompany() === $this) {
                 $commission->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Group>
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(Group $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups->add($group);
+            $group->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): self
+    {
+        if ($this->groups->removeElement($group)) {
+            // set the owning side to null (unless already changed)
+            if ($group->getCompany() === $this) {
+                $group->setCompany(null);
             }
         }
 
