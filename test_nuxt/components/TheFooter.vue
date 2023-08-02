@@ -53,17 +53,13 @@
                 class="col-title"
               >Общие разделы</div>
               <div class="col-title-section"
-               
+                v-for="category in categorys.getFooterСategories"
+                :key="category.id"
+                @click="categoryUpdate({section:category})"
               >
-                <div
-                 
-                 
-                >
-                 
-                </div>
-                
+                {{category.title  }}
               </div>
-              <!-- <DropDownFooter/> -->
+              <uiDropDownFooter/>
             </div>
             <div
               class="col-item"
@@ -109,7 +105,11 @@
     </div> 
   </div> 
 </template>
+<script setup>
+  import { useCategoryStore } from '../stores/CategoryStore'
+  const categorys = useCategoryStore()
 
+</script>  
 <style lang="scss" scoped>
 .cont{
   padding-top: 40px;

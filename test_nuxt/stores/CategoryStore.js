@@ -13,11 +13,13 @@ export const useCategoryStore = defineStore('category', {
     //   JSON.parse(localStorage.getItem('categorysFooter')): null,
     categorys:[],
     parent: '',
-    categorysFooter: null
+    allСategories: null
   }),
   getters: {
     getCategogys: (state) => state.categorys,
-    getCategoryTitle: (state) => state.parent.title
+    getCategoryTitle: (state) => state.parent.title,
+    getFooterСategories : (state) => state.allСategories ? state.allСategories.slice(0, 6): null,
+    getCategoriesForDropDown: (state) => state.allСategories,
   },
   actions: {
     categorysToChange(categorys) {
@@ -84,7 +86,7 @@ export const useCategoryStore = defineStore('category', {
       }
     },
      //запрос категорий для футера
-    async getCategorysDBFooter({ dispatch, commit }, ) {
+    async getCategorysDBFooter() {
       const modal = useModalStore()
       let url = `${urlApi}/api/category?limit=1000`
       
@@ -101,7 +103,11 @@ export const useCategoryStore = defineStore('category', {
         )
         if (sections.value) {
           console.log('sections.value footer-', sections.value)
-          this.categorysFooter = sections.value
+          this.allСategories = sections.value.children
+        } else if (error.value) {
+          modal.setMessageError(error.value)
+        } else {
+          
         }
       } catch (e) { 
         console.log('footer e-', e)

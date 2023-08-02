@@ -1,7 +1,7 @@
 <template>
   <div class="d-dropdown">
     <button class="btn btn-secondary "  tooggle="false" 
-      @click.stop="toggleMeny"
+      @click="toggleMeny"
     >
       <div class="dropdown-button">
         <div class="title"> Личный кабинет</div> 
@@ -53,12 +53,13 @@
   import { useUserStore  } from '../../stores/UserStore'
   
   const user = useUserStore()
-  const toggle = ref(false)
+  const toggle = ref({toggle: false, click: 0})
   
   function toggleMeny(){
     console.log('toggle')
-    toggle.value = !toggle.value
-    if (toggle.value){
+    toggle.value.toggle = !toggle.value.toggle
+    toggle.value.click =  0
+    if (toggle.value.toggle){
       window.addEventListener('click', dropDownClickVisible)
     }
   }
@@ -66,13 +67,17 @@
     const user = useUserStore()
   })
   const classObject = computed(() => ({
-    active: toggle.value,
+    active: toggle.value.toggle,
   
   }))
   function dropDownClickVisible(){
-    if (toggle.value){
-      toggle.value = false
+    if (toggle.value.toggle && toggle.value.click > 0){
+      toggle.value.toggle = false
+      toggle.value.click =  0
       window.removeEventListener("click", dropDownClickVisible);
+    } else {
+      toggle.value.click += 1
+      
     }
   }
   async function logOut(){
