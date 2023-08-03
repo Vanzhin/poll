@@ -38,9 +38,6 @@
 
 
 <style lang="scss" scoped>
-  
-  
-  
   .button{
     width: 190px;
     height: 36px;
@@ -52,11 +49,11 @@
     color:var( --color-blue) ;
     @media (max-width: 480px) {
       margin: 20px auto 0 auto;
-
     }
     &:hover{
       background-color: var(--color-blue);
       color:var( --color-white) ;
+      cursor: pointer;
     }
   }
   .info{
@@ -79,10 +76,7 @@
         line-height: 19px;
       }
     }
-    
   }
-  
-
 @media (min-width: 1024px) {
  
 }

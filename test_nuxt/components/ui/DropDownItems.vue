@@ -21,7 +21,9 @@
       :class="classObject"
     >
       <div v-if="user.getIsAutchUser">
-        <li class="dropdown-item menu_li">Статистика</li>
+        <li>
+          <NuxtLink class="dropdown-item menu_li" to='/user/statistics'>Статистика</NuxtLink>
+        </li>
         <li>
           <NuxtLink class="dropdown-item menu_li" to='/user/profile'>Профиль</NuxtLink>
         </li>

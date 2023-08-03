@@ -9,14 +9,16 @@ export const useUserStore = defineStore('user', {
     page: null,
     role: null,
     logoutLinkDate: {},
-    
+    profile: null
   }),
   getters: {
     getTickets: (state) => state.tickets,
     getCountTickets: (state) => state.tickets.length,
     getIsAutchUser: (state) => state.token ? true : false,
     getPageName: (state) => state.page,
-    getUserAdmin: (state) => state.role === "ROLE_ADMIN"
+    getUserAdmin: (state) => state.role === "ROLE_ADMIN",
+    getToken: (state) => state.token,
+    getProfile: (state) => state.profile
   },
   actions: {
     savePage(page) {
@@ -26,11 +28,11 @@ export const useUserStore = defineStore('user', {
     async setTokenIsLocalStorage(){
       console.log('проверяю стор')
       this.token = localStorage.getItem('token') ?
-        JSON.parse(localStorage.getItem('token')).token: ""
+        JSON.parse(localStorage.getItem('token')).token: null
       this.refresh_token = localStorage.getItem('token') ?
-        JSON.parse(localStorage.getItem('token')).refresh_token: ""
+        JSON.parse(localStorage.getItem('token')).refresh_token: null
       this.role = localStorage.getItem('token') ?
-        JSON.parse(atob(JSON.parse(localStorage.getItem('token')).token.split('.')[1])).roles[0]: ""
+        JSON.parse(atob(JSON.parse(localStorage.getItem('token')).token.split('.')[1])).roles[0]: null
     },
     //вход на сайт с помощью учетной записи
     async setLogInUser(user){
@@ -139,9 +141,11 @@ export const useUserStore = defineStore('user', {
         }
       }
     },
+    //обнулене токена
     setDeleteUserToken(){
       this.token = ''
       this.refresh_token = ''
+      this.role = ''
       localStorage.removeItem('token');
     },
     // вход по ссылке
@@ -182,55 +186,27 @@ export const useUserStore = defineStore('user', {
     },
     //получение данных пользователя из БД
     async getAutсhUserProfileDb() {
-      console.log("получаю данные пользователя")
-      const modal = useModalStore()
-      const loader = useLoaderStore()
-      loader.setIsLoaderStatus(true)
       let url = `${urlApi}/api/auth/user`
-      
-      try {
-        const { data: result, pending, error } = await useAsyncData(
-          () => $fetch( url, {
-            method: 'POST',
-            headers: { 
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${this.token}`
-            },
-          })
-        )
-
-        if (error.value) {
-          console.log(error.value.data)
-          if (error.value.data){
-            if (error.value.data.message === "Expired JWT Token"||
-              error.value.data.message === "Invalid JWT Token") 
-            {
-              this.getAuthRefresh() //обновление токена
-              this.getAutсhUserProfileDb()
-            }
-          } else {
-            modal.setMessageError(error.value)
-          }
-        } else{
-          console.log('result.value -',result.value)
-          this.profile = result.value
-        }
-        loader.setIsLoaderStatus(false)
-      } catch (e) {
-        
-        console.log(e)
-        // modal.setMessageError(e.value)
-        loader.setIsLoaderStatus(false)
+      const params = {
+        method: 'POST',
+        headers: { 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.token}`
+        },
       }
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      console.log('result.value -',result)
+      this.profile = result 
     },
     // повторное получение токена
-    async getAuthRefresh({commit, state }, refresh_token) {
+    async getAuthRefresh( refresh_token) {
+      console.log('обновляю токен')
       const modal = useModalStore()
       let body = ''
       if (refresh_token) {
         body = JSON.stringify({"refresh_token": refresh_token})
-      } else { data = JSON.stringify({"refresh_token": this.refresh_token})}
+      } else { body = JSON.stringify({"refresh_token": this.refresh_token})}
       let url = `${urlApi}/api/token/refresh`
       try {
         const { data: result, pending, error } = await useAsyncData(
@@ -244,17 +220,26 @@ export const useUserStore = defineStore('user', {
           }
         ))
         if (error.value) {
-          console.log(e)
+          console.log(error.value.data)
           if (error.value.data.message === "No refresh_token found." ||
             error.value.data.message === "JWT Refresh Token Not Found" ||
             error.value.data.message === "Invalid JWT Refresh Token"
           ) {
-            this.token = null
+            this.setDeleteUserToken()
           }
           modal.setMessageError(error.value.data)
         } else {
           console.log('обновление токена - ', result.value)
-          this.token = result.value
+          this.token = result.value.token
+          this.refresh_token = result.value.refresh_token
+          const base64Url = result.value.token.split('.')[1]
+          const base64 = JSON.parse(atob(base64Url))
+          this.role = base64.roles[0]
+          const parsed = JSON.stringify({
+            token: result.value.token,
+            refresh_token: result.value.refresh_token
+          });
+          localStorage.setItem('token', parsed);
         }
       } catch (e) {
         console.log(e)
