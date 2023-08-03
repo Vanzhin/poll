@@ -9,7 +9,7 @@
     <div class="wrapper">
       <div class="container">
         <div class="title"
-        v-html="result.getStatistiks ? 'Результаты прохождения тестов' 
+        v-html="resultStore.getStatistiks ? 'Результаты прохождения тестов' 
           : `Данных с результатами не найдено. <br> Пройдите тестирование.`"
       >
       </div>
@@ -84,35 +84,41 @@
                   </div>
                 </div>
                 
+               
                 <div 
                   v-if="result.answerVisible"
                 >
-                  <div v-for="(question, index ) in result.getResultQuestions" 
-                    :key="question.id"
+                  <UiLoaderViewMin
+                    v-if="loadingQuestion"
+                  />
+                  <div
+                    v-else
                   >
-                    <ResultViewStatistick
-                      :question="question"
-                      :index="index"
-                    />
-                  </div>
-                </div>
+                    <div v-for="(question, index ) in resultStore.getResultQuestions" 
+                      :key="question.id"
+                    >
+                      <ResultViewStatistick
+                        :question="question"
+                        :index="index"
+                      />
+                    </div>
               
-                  <div class="result-button-block"
-                    v-if="result.answerVisible"
-                  >
-                    <button class="tablis-header-button"
-                      @click="selectReport(result, index)"
-                    >{{ result.answerVisible ? 'Скрыть':'Подробнее' }}</button>
-                    <button class="tablis-header-button"
-                      @click="startReportPrint(result, index)"
-                      v-if="result.answerVisible"
-                    >Протокол</button>
-                    <button class="tablis-header-button"
-                      v-if="result.test.minTrudTest"
-                      @click="getReport(result.id)"
-                      
-                    >Скачать XML-файл</button>
+                    <div class="result-button-block">
+                      <button class="tablis-header-button"
+                        @click="selectReport(result, index)"
+                      >{{ result.answerVisible ? 'Скрыть':'Подробнее' }}</button>
+                      <button class="tablis-header-button"
+                        @click="startReportPrint(result, index)"
+                        v-if="result.answerVisible"
+                      >Протокол</button>
+                      <button class="tablis-header-button"
+                        v-if="result.test.minTrudTest"
+                        @click="getReport(result.id)"
+                        
+                      >Скачать XML-файл</button>
+                    </div>
                   </div>
+              </div>
               </div>       
             </div>
           </div>
@@ -124,15 +130,25 @@
 </template>
 
 <script setup>
+  useSeoMeta({
+    title: `Амулет Тест | Статистика`,
+    ogTitle: 'Амулет Тест | Статистика',
+    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
+    ogDescription: 'This is my amazing site, let me tell you all about it.',
+    ogImage: 'https://example.com/image.png',
+    twitterCard: 'summary_large_image',
+  })
+
   import { useLoaderStore } from '../../stores/Loader'
   import { useResultStore } from '../../stores/ResultStore'
+  import { useUserStore } from '../../stores/UserStore'
   const loader = useLoaderStore()
-  const result = useResultStore()
+  const resultStore = useResultStore()
+  const user = useUserStore()
   const results = ref([])
+  const loadingQuestion = ref(false)
   const resultIndexVisible = ref(0)
   
-  await result.getAuthAccountResultsDb()
-  results.value = result.getStatistiks
   function statistikDate({date}){
     let dateToday = date.split('T')
     return  dateToday[0]
@@ -143,14 +159,91 @@
       res.answerVisible = false
       return
     }
-    //this.isLoading = true
+    loadingQuestion.value = true
     results.value[resultIndexVisible.value].answerVisible = false
-    await result.getResultIdAnswersDb({id: res.id})
     resultIndexVisible.value = index
     results.value[resultIndexVisible.value].answerVisible = true
-    //this.isLoading = false
+    await resultStore.getResultIdAnswersDb({id: res.id})
+    loadingQuestion.value = false
   }
-  
+
+  async function startReportPrint(result){
+    await resultStore.saveFormInfo({visible:true, param:'print' })
+    let timerId = setInterval(() => {
+      if ( !resultStore.getFormInfoVisible) {
+        clearInterval(timerId)
+        if (resultStore.getFormInfoParam) { reportPrint(result) }
+      }
+    }, 200);
+  }
+
+  async function getReport(id){
+    await resultStore.saveFormInfo({visible:true, param:'xml'})
+    resultStore.saveResultId({id})
+  }
+
+  function reportPrint(result){
+      let block = `
+        <div style="text-align: center">
+          <b>Протокол тестирования</b><br>
+          ${statistikDate({date:result.updatedAt})}
+        </div>
+        Тестируемый: <b>
+          ${!user.getAutchUserProfileFIO ? 'Инкогнито' : user.getAutchUserProfileFIO.firstName + ' ' + user.getAutchUserProfileFIO.lastName+' '+
+            user.getAutchUserProfileFIO.middleName
+          }
+        
+        </b><br>
+        <h4>Тест: ${result.test.title}</h4>
+        <h4>${result.ticket ? `Билет № ${result.ticket.title}`: 
+          result.mode ? result.mode : '' }</h4>
+        <table style=" width: 100%;"  border= "1" cellpadding="3" cellspacing="0">
+          <tr>
+            <td>Вопросы</td>
+            <td>Ответы</td>
+          </tr>
+        `
+        const question = resultStore.getResultQuestions
+          console.log(question)
+        question.forEach(element => {
+          block += `<tr><td>${element.title}</td><td>`
+          if (element.type === "input_one") {
+            if (element.result.user_answer[0] !== "") {
+              block +=`(${element.result.user_answer[0] === element.result.true_answer ? '+':'-' }) 
+              ${element.result.user_answer[0]}`
+            }
+          } else if (element.type === "checkbox") {
+            if (element.result.user_answer.length > 0) {
+              element.result.user_answer.forEach((uAnswer, index) => {
+                block +=`(${element.result.true_answer.includes(uAnswer)? '+':'-' }) 
+                ${uAnswer >=0 ? element.variant[uAnswer].title: ''} <br>`})
+            }
+          }else if (element.result.user_answer.length > 0) {
+            element.result.user_answer.forEach((uAnswer, index) => {
+              block +=`(${uAnswer === element.result.true_answer[index]? '+':'-' }) 
+              ${uAnswer >=0 ? element.variant[uAnswer].title: ''} <br>`})
+          }
+          block +=`</td></tr>`
+         
+        })
+        block +=`</table>`
+
+        let w = window.open('', '', 'scrollbars=1');
+        w.document.write(`<!DOCTYPE html>\n\
+          <title>Протокол</title>\n\
+          ${block}
+        `);
+          // let link = document.createElement("a");
+          // link.setAttribute("href", block);
+          // link.setAttribute('target',"_blank");
+          // link.click();
+    }
+  onMounted(async() => {
+    console.log('я на клиенте')
+    await resultStore .getAuthAccountResultsDb()
+    results.value = resultStore .getStatistiks
+     
+  })
 </script>
 <style lang="scss" scoped>
  .cont{

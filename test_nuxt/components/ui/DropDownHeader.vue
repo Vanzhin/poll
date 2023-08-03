@@ -15,6 +15,7 @@
       class="dropdown-menu menu" 
       :class="classObject"
       aria-labelledby="dropdownMenuButton1"
+      v-if="categorys.getCategoriesForDropDown"
     >
       <li 
         class="dropdown-item menu_li"

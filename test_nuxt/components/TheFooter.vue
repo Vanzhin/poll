@@ -52,14 +52,18 @@
               <div
                 class="col-title"
               >Общие разделы</div>
-              <div class="col-title-section"
-                v-for="category in categorys.getFooterСategories"
-                :key="category.id"
-                @click="categoryUpdate({section:category})"
+              <div
+                v-if="categorys.getFooterСategories"
               >
-                {{category.title  }}
+                <div class="col-title-section"
+                  v-for="category in categorys.getFooterСategories"
+                  :key="category.id"
+                  @click="categoryUpdate({section:category})"
+                >
+                  {{category.title  }}
+                </div>
+                <uiDropDownFooter/>
               </div>
-              <uiDropDownFooter/>
             </div>
             <div
               class="col-item"

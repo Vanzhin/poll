@@ -1,5 +1,6 @@
 <template>
   <div>
+    <UiFormInfoXML />
     <TheHeader />
     
     <slot />

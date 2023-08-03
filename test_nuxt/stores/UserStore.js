@@ -9,7 +9,8 @@ export const useUserStore = defineStore('user', {
     page: null,
     role: null,
     logoutLinkDate: {},
-    profile: null
+    profile: null,
+    profileFIO: null,
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -18,7 +19,8 @@ export const useUserStore = defineStore('user', {
     getPageName: (state) => state.page,
     getUserAdmin: (state) => state.role === "ROLE_ADMIN",
     getToken: (state) => state.token,
-    getProfile: (state) => state.profile
+    getProfile: (state) => state.profile,
+    getAutchUserProfileFIO: (state) => state.profileFIO
   },
   actions: {
     savePage(page) {
@@ -246,5 +248,9 @@ export const useUserStore = defineStore('user', {
         modal.setMessageError(e.value)
       }
     },
+    //сохранение данных о пользователе для протоколов
+    saveAutchUserProfileFIO(fio){
+      this.profileFIO = fio
+    }
   }
 })

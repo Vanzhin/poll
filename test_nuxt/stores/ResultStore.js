@@ -10,13 +10,18 @@ export const useResultStore = defineStore('result', {
     results:[], // результат проверки
     resultTicketUser: null, //результат для отправки на проверку
     info: "" ,
-    statistiks: null,
-    resultQuestions: null
+    statistiks: null, //для вывода статистики
+    resultQuestions: null,
+    formInfoVisible: false,
+    formInfoParam: null,
+    resultId: null
   }),
   getters: {
     getResultTicketUser: (state) => state.resultTicketUser,
     getStatistiks: (state) => state.statistiks,
-    getResultQuestions: (state) => state.resultQuestions
+    getResultQuestions: (state) => state.resultQuestions,
+    getFormInfoVisible: (state) => state.formInfoVisible,
+    getFormInfoParam: (state) => state.formInfoParam
   },
   actions: {
     saveResultTicketUser( ticket ){
@@ -69,17 +74,15 @@ export const useResultStore = defineStore('result', {
     },
     //получение вопросов результата по его id
     async getResultIdAnswersDb( {id} ){
-      const user = useUserStore()
       const url= `${urlApi}/api/auth/result/${id}/answer`
       const params = {
         method: 'get',
         headers: { 
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
         },
       }
-      const result = await setUseAsyncFetch({ url, params, token: true })
+      const result = await setUseAsyncFetch({ url, params, token: true, loading: false })
       console.log("result", )
       
       if (result){
@@ -109,6 +112,31 @@ export const useResultStore = defineStore('result', {
         })
       }
     },
+    saveFormInfo({param, visible}){
+      this.formInfoVisible = visible
+      this.formInfoParam = param
+    },
+    saveResultId({id}){
+      this.resultId = id
+    },
+    async getResultsXmlDb({info}){
+
+      const url= `${urlApi}/api/auth/result/${this.resultId}/report`
+      const params = {
+        method: 'post',
+        headers: { 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: info
+      }
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      let xml = `data:application/xml,${result}`;
+      let link = document.createElement("a");
+      link.setAttribute("href", xml);
+      link.setAttribute("download", Date.now()+"");
+      link.click();
+    }
   }
 
 

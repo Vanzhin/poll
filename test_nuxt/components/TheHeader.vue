@@ -1,9 +1,6 @@
 <template>
   <div>
-    
-    <div class="cont fixeds"
-      
-    >
+    <div class="cont fixeds">
       <!-- <MyConfirm/>
       <MessageView/> -->
       <div class="container">
@@ -60,14 +57,15 @@
               </button>
             </div>
             <div class="logo-block">
-             <!-- <UiDropDownTail /> -->
               <UiDropDownItems/>
             </div>
           </div> 
         </div>
       </div> 
     </div>
-    <div class="header-padding"></div>
+    <div class="header-padding">
+
+    </div>
   </div>
 </template>
 

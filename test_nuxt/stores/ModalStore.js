@@ -7,12 +7,10 @@ export const useModalStore = defineStore('modal', {
     message: false,
   }),
   getters: {
-    
+    getMessage: (state) => state.message,
     
   },
   actions: {
-    
-
     setMessage( data) {
       let message = ''
       if (data.error) {

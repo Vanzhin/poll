@@ -22,35 +22,16 @@
 </template>
 
 <script>
-
-
-export default {
-  props:['question','index'],
-
- 
-  data() {
-    return {
-       
-    }
-  },
-  computed:{
-    
-    
-  },
-  methods: {
-    questionType(question){
-      return question.type.title ? question.type.title : question.type
+  export default {
+    props:['question','index'],
+    methods: {
+      questionType(question){
+        return question.type.title ? question.type.title : question.type
+      },
     },
-    
-  },
-  mounted(){
-    
-  }
-} 
-
+  } 
 </script>
 <style lang="scss" scoped>
-
   [class*="col-"] {
   padding-top: 7px;
   padding-right: 7px;
@@ -66,6 +47,5 @@ export default {
     }
   }
 @media (min-width: 1024px) {
- 
 }
 </style>
