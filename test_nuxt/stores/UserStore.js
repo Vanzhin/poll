@@ -11,6 +11,7 @@ export const useUserStore = defineStore('user', {
     logoutLinkDate: {},
     profile: null,
     profileFIO: null,
+    globalDescription: "Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности",
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -20,12 +21,23 @@ export const useUserStore = defineStore('user', {
     getUserAdmin: (state) => state.role === "ROLE_ADMIN",
     getToken: (state) => state.token,
     getProfile: (state) => state.profile,
-    getAutchUserProfileFIO: (state) => state.profileFIO
+    getAutchUserProfileFIO: (state) => state.profileFIO,
+    getGlobalDescription: (state) => state.globalDescription
   },
   actions: {
     savePage(page) {
       console.log('savePage-', page)
       this.page = page
+      const parsed = JSON.stringify({
+        token: result.value.token,
+        refresh_token: result.value.refresh_token
+      });
+      localStorage.setItem('pageLink', page);
+    },
+    savePageIsLocalStorage() {
+      console.log('savePageIsLocalStorage-', page)
+      this.page = localStorage.getItem('pageLink') ?
+      JSON.parse(localStorage.getItem('pageLink')): null
     },
     async setTokenIsLocalStorage(){
       console.log('проверяю стор')
