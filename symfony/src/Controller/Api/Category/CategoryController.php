@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Controller\Api;
+namespace App\Controller\Api\Category;
 
+use App\Controller\Api\Action;
+use App\Controller\Api\Category\Action\ParentAction;
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Service\NormalizerService;
@@ -14,9 +16,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
+#[Route('/api/category', name: 'app_api_category_')]
+
 class CategoryController extends AbstractController
 {
-    #[Route('/api/category', name: 'app_api_category_index')]
+    public function __construct(
+        private readonly ParentAction $parentAction,
+    )
+    {
+    }
+
+    #[Route('', name: 'index')]
     public function index(Request $request, AppUpLoadedAsset $upLoadedAsset, Paginator $paginator, CategoryRepository $repository, NormalizerService $normalizerService): JsonResponse
     {
         $parentId = $request->query->get('parent');
@@ -52,7 +62,7 @@ class CategoryController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    #[Route('/api/category/{id}/children', name: 'app_api_category_children')]
+    #[Route('/{id}/children', name: 'children')]
     public function getChildren(Category $category, AppUpLoadedAsset $upLoadedAsset, NormalizerService $normalizerService): JsonResponse
     {
         return $this->json(
@@ -68,5 +78,11 @@ class CategoryController extends AbstractController
                 ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
+
+    #[Route('/{id}/parent', name: 'parent', methods: ['GET'])]
+    public function getParent(Category $category): JsonResponse
+    {
+        return $this->parentAction->run($category);
     }
 }
