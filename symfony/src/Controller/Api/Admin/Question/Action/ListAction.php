@@ -5,6 +5,7 @@ namespace App\Controller\Api\Admin\Question\Action;
 use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Repository\Interfaces\QuestionRepositoryInterface;
 use App\Repository\Question\Mapper\QuestionFilterMapper;
+use App\Response\AppException;
 use App\Service\Paginator;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
@@ -30,7 +31,7 @@ class ListAction extends NewBaseAction
         $errors = $this->validation->dataValidate($data, $mapper->getValidationCollection());
 
         if ($errors) {
-            throw new \Exception(implode(', ', $errors));
+            throw new AppException(implode(', ', $errors));
         }
         $filter = $mapper->buildFilter($data);
 ////        todo исправить $pagination, чтобы задавать $page $limit параметрами с наружи
