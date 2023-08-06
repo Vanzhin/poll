@@ -2,7 +2,7 @@
 
 namespace App\Repository\Group\Filter;
 
-use App\Repository\Group\Filter\vo\DateTimeInterval;
+use App\Repository\Shared\Filter\vo\DateTimeInterval;
 
 class GroupFilter implements \JsonSerializable
 {

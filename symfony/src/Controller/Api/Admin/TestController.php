@@ -6,7 +6,7 @@ use App\Action\Test\GetMinTrudTest;
 use App\Action\Test\UploadQuestionAction;
 use App\Entity\Test;
 use App\Factory\Test\TestFactory;
-use App\Repository\QuestionRepository;
+use App\Repository\Question\QuestionRepository;
 use App\Repository\SectionRepository;
 use App\Repository\Test\TestRepository;
 use App\Repository\TicketRepository;

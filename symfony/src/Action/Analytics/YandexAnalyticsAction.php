@@ -3,14 +3,9 @@
 namespace App\Action\Analytics;
 
 use App\Action\BaseAction;
-use App\Entity\Analytics\Analytics;
 use App\Entity\Analytics\YandexMetrika;
-use App\Entity\Question;
 use App\Repository\AnalyticsRepository;
-use App\Repository\QuestionRepository;
-use App\Service\Paginator;
 use App\Service\SerializerService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -53,6 +48,5 @@ class YandexAnalyticsAction extends BaseAction
         } catch (\Exception $e) {
             return $this->errorResponse(['error' => $e->getMessage()]);
         }
-
     }
 }

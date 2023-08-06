@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Question;
 
 use App\Entity\Question;
 use App\Entity\Section;
 use App\Entity\Test;
+use App\Repository\Interfaces\QuestionRepositoryInterface;
+use App\Repository\Question\Filter\QuestionFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,7 +19,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Question[]    findAll()
  * @method Question[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class QuestionRepository extends ServiceEntityRepository
+class QuestionRepository extends ServiceEntityRepository implements QuestionRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -198,4 +200,47 @@ class QuestionRepository extends ServiceEntityRepository
             ->setParameters(['sectionId' => $section]);
     }
 
+    public function buildFilter(QuestionFilter $filter): QueryBuilder
+    {
+        $query = $this->getOrCreateQueryBuilder();
+
+        if ($filter->getTitle()) {
+            $query->andWhere('qu.title LIKE :title')
+                ->setParameter('title', "%{$filter->getTitle()}%");
+        }
+        if ($filter->getSection()) {
+            $query->andWhere('qu.section = :section')
+                ->setParameter('section', (int)$filter->getSection());
+        }
+        if ($filter->getTest()) {
+            $query->andWhere('qu.test = :test')
+                ->setParameter('test', (int)$filter->getTest());
+        }
+        if ($filter->getAuthor()) {
+            $query->andWhere('qu.author = :author')
+                ->setParameter('author', (int)$filter->getAuthor());
+        }
+        if (!is_null($filter->getIsPublished())) {
+            if ($filter->getIsPublished()) {
+                $query->andWhere('qu.publishedAt IS NOT NULL');
+            } else {
+                $query->andWhere('qu.publishedAt IS NULL');
+            }
+        }
+        if ($filter->getDateInterval()) {
+            if ($filter->hasDateIntervalFrom()) {
+                $query->andWhere('qu.updatedAt >= :from')
+                    ->setParameter('from', $filter->getDateInterval()->getFrom());
+            }
+            if ($filter->hasDateIntervalTo()) {
+                $query->andWhere('qu.updatedAt <= :to')
+                    ->setParameter('to', $filter->getDateInterval()->getTo());
+            }
+        }
+
+        foreach ($filter->getSort() as $property => $direction) {
+            $query->addOrderBy('qu.' . $property, $direction);
+        }
+        return $query;
+    }
 }

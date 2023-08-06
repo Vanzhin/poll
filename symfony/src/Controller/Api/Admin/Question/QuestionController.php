@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Controller\Api\Admin;
+namespace App\Controller\Api\Admin\Question;
 
 use App\Action\Question\GetQuestion;
+use App\Controller\Api\Admin\Question\Action\ListAction;
 use App\Entity\Question;
 use App\Entity\Section;
 use App\Entity\Test;
 use App\Factory\Question\QuestionFactory;
-use App\Repository\QuestionRepository;
+use App\Repository\Question\QuestionRepository;
 use App\Service\NormalizerService;
 use App\Service\Paginator;
 use App\Service\QuestionService;
@@ -24,6 +25,12 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class QuestionController extends AbstractController
 {
+    public function __construct(
+        private readonly ListAction $listAction
+    )
+    {
+    }
+
     #[Route('/api/admin/question', name: 'app_api_admin_question_index', methods: ['GET'])]
     public function index(GetQuestion $getQuestion): JsonResponse
     {
@@ -65,8 +72,6 @@ class QuestionController extends AbstractController
     {
         $data = $request->request->all();
         $image = $request->files->get('questionImage', false);
-//        todo сделать опцией
-//        $data['question']['published'] = true;
 
         $question = $factory->createBuilder()->buildQuestion($data['question'], $this->getUser(), $question);
         $errors = $validation->entityWithImageValidate($question, $image instanceof UploadedFile ? $image : null);
@@ -220,5 +225,12 @@ class QuestionController extends AbstractController
                 ]
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
+
+    #[Route('/api/admin/question/list', name: 'app_api_admin_question_list', methods: ['POST'])]
+    public function list(Request $request): JsonResponse
+    {
+        $data = array_merge($request->query->all() ?? [], json_decode($request->getContent(), true) ?? []);
+        return $this->listAction->run($data);
     }
 }

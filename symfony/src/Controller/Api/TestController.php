@@ -6,7 +6,7 @@ use App\Action\Test\GetTestListAction;
 use App\Entity\Question;
 use App\Entity\Test;
 use App\Entity\Ticket;
-use App\Repository\QuestionRepository;
+use App\Repository\Question\QuestionRepository;
 use App\Repository\Test\TestRepository;
 use App\Service\NormalizerService;
 use App\Service\QuestionHandler;
@@ -182,7 +182,7 @@ class TestController extends AbstractController
             $questions = $testService->getQuestionForResponse($ticket->getQuestion()->toArray());
 
             $response = [
-                'ticket'=>$ticket,
+                'ticket' => $ticket,
                 'test' => $ticket->getTest()->getTitle(),
                 'questions' => $questions
             ];
@@ -209,10 +209,9 @@ class TestController extends AbstractController
         }
     }
 
-    #[Route('/api/search/test', name: 'app_api_test_search', methods: ['GET','POST'])]
+    #[Route('/api/search/test', name: 'app_api_test_search', methods: ['GET', 'POST'])]
     public function search(Request $request, GetTestListAction $action): JsonResponse
     {
         return $action($request);
     }
-
 }
