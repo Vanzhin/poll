@@ -1,6 +1,12 @@
 <template>
   <section class="wrapper">
-    
+    <Head>
+      <Title>Авторизация | Амулет Тест</Title>
+      <Meta name="description" :content="user.getGlobalDescription" />
+           
+      <Meta name="robots" content="noindex"/>
+      <link rel="canonical" href=""/>
+    </Head>
     <div 
       class="login-page"
       v-if="emailSend"

@@ -1,5 +1,12 @@
 <template>
   <div class="bagraund">
+    <Head>
+      <Title>Авторизация | Амулет Тест</Title>
+      <Meta name="description" :content="title" />
+           
+      <Meta name="robots" content="noindex"/>
+      
+    </Head>
    <section class="wrapper">
     <div 
       class="login-page"

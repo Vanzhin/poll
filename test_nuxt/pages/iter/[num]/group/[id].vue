@@ -1,5 +1,12 @@
 <template>
   <div>
+    <Head>
+      <Title>{{ categorys.getCategoryTitle }} | Амулет Тест</Title>
+      <Meta name="description" :content="title" />
+           
+      <Meta name="robots" content="max-image-preview:large"/>
+      <link rel="canonical" href=""/>
+    </Head>
     <div class="sections" >
       <TheHeaderVsPage
         :title="categorys.getCategoryTitle"
@@ -7,20 +14,14 @@
       <div class="fon">
         <div class="container">
           <UiLoaderView
-              v-if="loader.isLoader"
-            />
+            v-if="loader.isLoader"
+          />
           <div  class="wrapper"
             v-else
           >
-            <!-- <div
-              v-if="pending"
-              >Загрузка...
-            </div> -->
-            
             <div class="tests__block"
               v-if="categorys.categorys"
-              >
-               
+            >
               <div
                 v-for="(area) in getCategogys" 
                 :key="area.id"
@@ -53,9 +54,8 @@
               </div>
             </div> 
             <div class="tests__block min-heig"
-               v-else
+              v-else
             > 
-           
               Данная категория в разработке.
             </div> 
             <ThePagination />
@@ -78,14 +78,14 @@
   console.log(categorys)
   console.log(route.params)
   console.log(parentId)
-  useSeoMeta({
-    title: 'Амулет Тест | Категория',
-    ogTitle: 'Амулет Тест | ',
-    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: 'https://example.com/image.png',
-    twitterCard: 'summary_large_image',
-  })
+  // useSeoMeta({
+  //   title: 'Амулет Тест | Категория',
+  //   ogTitle: 'Амулет Тест | ',
+  //   description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
+  //   ogDescription: 'This is my amazing site, let me tell you all about it.',
+  //   ogImage: 'https://example.com/image.png',
+  //   twitterCard: 'summary_large_image',
+  // })
   
   const page = ref(route.params.page ? +route.params.page: 1)
   console.log(page.value)

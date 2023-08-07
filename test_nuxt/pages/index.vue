@@ -1,5 +1,9 @@
 <template>
   <div >
+    <Head>
+      <Title> Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности </Title>
+      <Meta name="description" content="Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности" />
+    </Head>
     <TheHomePage />
   </div>
 </template>
@@ -22,12 +26,16 @@
   })
 
 
-  useSeoMeta({
-    title: `Амулет Тест | `,
-    ogTitle: 'Амулет Тест | ',
-    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: 'https://example.com/image.png',
-    twitterCard: 'summary_large_image',
-  })
+  // useSeoMeta({
+  //   title: `Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности `,
+  //   ogTitle: 'Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности ',
+  //   description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
+  //   ogDescription: 'This is my amazing site, let me tell you all about it.',
+  //   ogImage: 'https://example.com/image.png',
+  //   twitterCard: 'summary_large_image',
+  // })
 </script>
+<!-- <Head>
+  <Title>{{ title }}</Title>
+  <Meta name="description" :content="title" />
+</Head> -->
