@@ -56,7 +56,6 @@ const actions = {
     commit("SET_TEST_TITLE", title );
   },
   setTest({dispatch ,commit}, test) {
-    console.log(test)
     if (test.ticket) dispatch("setTickets", test.ticket)
     commit("SET_TEST", test)
   },
