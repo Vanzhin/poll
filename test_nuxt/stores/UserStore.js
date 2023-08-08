@@ -22,16 +22,13 @@ export const useUserStore = defineStore('user', {
     getToken: (state) => state.token,
     getProfile: (state) => state.profile,
     getAutchUserProfileFIO: (state) => state.profileFIO,
-    getGlobalDescription: (state) => state.globalDescription
+    getGlobalDescription: (state) => state.globalDescription,
+    getLogoutLinkDate: (state) => state.logoutLinkDate
   },
   actions: {
     savePage(page) {
       console.log('savePage-', page)
       this.page = page
-      const parsed = JSON.stringify({
-        token: result.value.token,
-        refresh_token: result.value.refresh_token
-      });
       localStorage.setItem('pageLink', page);
     },
     savePageIsLocalStorage() {
@@ -181,18 +178,18 @@ export const useUserStore = defineStore('user', {
         ))
         
         if (error.value){
-          console.log("getLoginByLinkUser error-", error.value)
+          // console.log("getLoginByLinkUser error-", error.value)
           modal.setMessageError(error.value.data)
           this.logoutLinkDate = {data:error.value, send: false }
-
         } else {
-          console.log("getLoginByLinkUser result -", result)
-        this.logoutLinkDate = {
-          message: data.data.message,
-          url: data.data.link ? data.data.link.url : '',
-          send: true 
-        }}
-        loader.setIsLoaderStatus(false)
+          // console.log("getLoginByLinkUser result -", result)
+          // console.log("getLoginByLinkUser value -", result.value)
+          this.logoutLinkDate = {
+            message: result.value.message,
+            url: result.value.link ? result.value.link.url : '',
+            send: true 
+          }}
+          loader.setIsLoaderStatus(false)
       } catch (e) {
         
         

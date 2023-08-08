@@ -79,8 +79,6 @@
     emailSend.value = user.getLogoutLinkDate.send,
     resMessage.value = user.getLogoutLinkDate.message,
     link.value = user.getLogoutLinkDate.url
-    
-
   } 
 </script>
 
