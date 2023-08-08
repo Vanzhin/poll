@@ -24,6 +24,7 @@
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li
                 v-for="typeQuestion in typeQuestions"
+                :key="typeQuestion.id"
               >
                 <p class="dropdown-item" 
                   @click="selectTypeQuestion=typeQuestion"

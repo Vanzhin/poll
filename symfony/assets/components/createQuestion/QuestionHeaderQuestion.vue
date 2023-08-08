@@ -101,8 +101,9 @@ export default {
   },
   created(){
     // console.log(this.getQuestion)
-    this.typeQuestion = this.getQuestion.type.title
+    
     if (this.operationEdit){
+      this.typeQuestion = this.getQuestion.type.title
       this.questionTitle = this.getQuestion.title ? this.getQuestion.title : ''
       this.questionImgUrl = this.getQuestion.image ? this.getQuestion.image : ''
       this.questionShuffleVariants = this.getQuestion.shuffleVariants
