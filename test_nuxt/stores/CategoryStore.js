@@ -19,6 +19,7 @@ export const useCategoryStore = defineStore('category', {
     getCategogys: (state) => state.categorys,
     getCategoryTitle: (state) => state.parent.title,
     getCategoryDescription: (state) => state.parent.description || '',
+    getCategorySeoDescription: (state) => state.parent.seoDescription || '',
     getFooterСategories : (state) => state.allСategories ? state.allСategories.slice(0, 6): null,
     getCategoriesForDropDown: (state) => state.allСategories,
   },

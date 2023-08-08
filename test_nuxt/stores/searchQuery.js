@@ -15,7 +15,7 @@ export const useSearchQueryStore = defineStore('searchQuery', {
   actions: {
     async getSearchDb({filter = '', limit = 6, page = 1, data = state.searchValue}) {
             
-      this.searchValue = data 
+      
       
       const url= `${urlApi}/api/search/test?limit=${limit}&page=${page}`
       const params = {
@@ -37,11 +37,11 @@ export const useSearchQueryStore = defineStore('searchQuery', {
       const result = await setUseAsyncFetch({ url, params })
       
       const pagination = usePaginationStore()
-      pagination.paginationsAll(result.pagination)
+      if(result.pagination) {pagination.paginationsAll(result.pagination)}
       const test = useTestsStore()
-      test.tests = result.test
+      if (result.test) {test.testsToChange(result.test)}
       this.searchSign = true
-     
+      this.searchValue = data 
     },
  
    

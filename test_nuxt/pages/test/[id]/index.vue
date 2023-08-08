@@ -1,4 +1,11 @@
 <template>
+  <Head>
+    <Title>{{ tests.testTitle }} | Амулет Тест</Title>
+    <Meta name="description" :content="description" />
+          
+    <Meta name="robots" content="max-image-preview:large"/>
+    <link rel="canonical" href=""/>
+  </Head>
   <UiLoaderView
     v-if="loader.isLoader"
   />
@@ -153,25 +160,21 @@
   import { useTestsStore } from '../../../stores/TestsStore'
   import { useTicketsStore } from '../../../stores/TicketsStore'
   import { useLoaderStore } from '../../../stores/Loader'
+  import { useUserStore  } from '../../../stores/UserStore'
   const tests = useTestsStore()
   const {getTests} = storeToRefs(tests)
   const loader = useLoaderStore()
   const tickets = useTicketsStore()
+  const user = useUserStore()
   const route = useRoute()
   const parentId = ref(+route.params.id)
   const iterNum = ref(+route.params.num)
   const page = ref(route.params.page ? +route.params.page: 1)
   const isVisible = ref(false)
   
-  useSeoMeta({
-    title: 'Амулет Тест | Категория | Тест',
-    ogTitle: 'Амулет Тест | ',
-    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: 'https://example.com/image.png',
-    twitterCard: 'summary_large_image',
-  })
-  
+  const description = computed(() => {
+    return `${tests.testTitle}. ${user.getGlobalDescription}`
+  })  
   tickets.getApiTicketsTestIdNoAuthDb({
     page: page.value > 1 ? page.value: '',
     parentId: parentId.value,

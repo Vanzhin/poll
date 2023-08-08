@@ -59,28 +59,7 @@ export const useTicketsStore = defineStore('tickets', {
         // this.pending = pending.value
         console.log('getApiTicketsTestIdNoAuthDb получил -', this.tickets)
         loader.setIsLoaderStatus(false)
-        // this.pending = pending.value
-        // let timerId = setInterval(() => {
-        //   console.log('получаю билеты pending.value-',pending.value)
-        //   if ( !pending.value) {
-        //     clearInterval(timerId)
-        //     console.log("sections", sections.value)
-        //     this.tickets = sections.value.ticket
-        //     const test = useTestsStore()
-        //     test.testTitleSave(sections.value.title)
-        //     test.testActiveSave({
-        //       alias:sections.value.alias,
-        //       title:sections.value.title,
-        //       time:sections.value.time,
-        //       id:sections.value.id,
-        //       slug:sections.value.slug,
-        //       minTrudTest:sections.value.minTrudTest,
-        //     })
-        //     this.pending = pending.value
-        //     console.log('getApiTicketsTestIdNoAuthDb получил -', this.tickets)
-        //     loader.setIsLoaderStatus(false)
-        //   }
-        // }, 200);
+        
         
         return pending
 

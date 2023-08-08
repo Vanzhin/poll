@@ -1,4 +1,11 @@
 <template>
+  <Head>
+    <Title>Регистрация | Амулет Тест</Title>
+    <Meta name="description" :content="user.getGlobalDescription" />
+          
+    <Meta name="robots" content="noindex"/>
+    <link rel="canonical" href=""/>
+  </Head>
   <section class="wrapper">
    <div class="login-page">
      <uiCloseView/>
@@ -19,11 +26,11 @@
          v-else
        >
          <div class="text-field">
-           <label class="text-field__label" >Ник</label>
+           <label class="text-field__label" >Логин</label>
            <input class="text-field__input" 
              id="nik" 
              type="text" 
-             placeholder="Придумайте ник"
+             placeholder="Придумайте логин"
              v-model="firstName"
              required
            />

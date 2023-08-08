@@ -1,4 +1,8 @@
 <template>
+  <Head>
+    <link rel="canonical" href=""/>
+  </Head>
+
   <div class="sections fon">
     <UiLoaderView
           v-if="loader.isLoader"

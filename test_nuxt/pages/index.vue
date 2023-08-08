@@ -26,16 +26,5 @@
   })
 
 
-  // useSeoMeta({
-  //   title: `Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности `,
-  //   ogTitle: 'Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности ',
-  //   description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-  //   ogDescription: 'This is my amazing site, let me tell you all about it.',
-  //   ogImage: 'https://example.com/image.png',
-  //   twitterCard: 'summary_large_image',
-  // })
+  
 </script>
-<!-- <Head>
-  <Title>{{ title }}</Title>
-  <Meta name="description" :content="title" />
-</Head> -->

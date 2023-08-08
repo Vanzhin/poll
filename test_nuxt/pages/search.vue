@@ -1,9 +1,16 @@
 <template>
-  <Loader
-    v-if="isLoader"
+  <Head>
+    <Title>Результаты поиска | Амулет Тест</Title>
+    <Meta name="description" :content="description" />
+          
+    <Meta name="robots" content="max-image-preview:large"/>
+    <link rel="canonical" href=""/>
+  </Head>
+  <UiLoaderView
+    v-if="loader.isLoader"
   />
   <div class=""  v-else>
-    <HeadesPage
+    <TheHeaderVsPage
       title="Результаты поиска"
       subTitle="Тесты"
     />
@@ -11,7 +18,7 @@
       <div class="container">
         <div class="wrapper">
           <div
-            v-for="(test, index) in tests" 
+            v-for="(test) in tests.getTests" 
             :key="test.id"
             class="test__block"
           >
@@ -66,25 +73,24 @@
   </div>
 </template>
 <script setup>
+  
   import { useTestsStore } from '../stores/TestsStore'
   import { useLoaderStore } from '../stores/Loader'
   import { useSearchQueryStore } from '../stores/searchQuery'
+  import { useUserStore  } from '../stores/UserStore'
+  const user = useUserStore()
   const tests = useTestsStore()
   const loader = useLoaderStore()
   const search = useSearchQueryStore()
+  
+  const description = computed(() => {
+    return `${user.getGlobalDescription}`
+  })
 
   function testLink(test){
-      this.$router.push({name: 'test', params: { id: test.id } })
-      this.setCrumbs({crumbs:[{
-        name:'test',
-        params: {id: test.id}, 
-        title: `/${crumbsTitle(test)}`,
-        iter: this.getCrumbsLength + 1 
-        }]
-      })
-    }
+    navigateTo(`/test/${test.id}`)
+  }
 </script>
-
 <style lang="scss">
   
   .tests{

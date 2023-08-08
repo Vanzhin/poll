@@ -2,7 +2,7 @@
   <div>
     <Head>
       <Title>{{ categorys.getCategoryTitle }} | Амулет Тест</Title>
-      <Meta name="description" :content="title" />
+      <Meta name="description" :content="description" />
            
       <Meta name="robots" content="max-image-preview:large"/>
       <link rel="canonical" href=""/>
@@ -52,6 +52,13 @@
                   <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
                 </svg>
               </div>
+              <div class="b-container">
+                <div class="wrapper">
+                  <div class="description">
+                    {{ categorys.getCategorySeoDescription }}
+                  </div>
+                </div>
+              </div>
             </div> 
             <div class="tests__block min-heig"
               v-else
@@ -69,8 +76,10 @@
   import { storeToRefs } from 'pinia'
   import { useCategoryStore } from '../../../../stores/CategoryStore'
   import { useLoaderStore } from '../../../../stores/Loader'
+  import { useUserStore  } from '../../../../stores/UserStore'
   const loader = useLoaderStore()
   const categorys = useCategoryStore()
+  const user = useUserStore()
   const {getCategogys} = storeToRefs(categorys)
   const route = useRoute()
   const parentId = ref(+route.params.id)
@@ -78,14 +87,6 @@
   console.log(categorys)
   console.log(route.params)
   console.log(parentId)
-  // useSeoMeta({
-  //   title: 'Амулет Тест | Категория',
-  //   ogTitle: 'Амулет Тест | ',
-  //   description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-  //   ogDescription: 'This is my amazing site, let me tell you all about it.',
-  //   ogImage: 'https://example.com/image.png',
-  //   twitterCard: 'summary_large_image',
-  // })
   
   const page = ref(route.params.page ? +route.params.page: 1)
   console.log(page.value)
@@ -93,7 +94,10 @@
   categorys.getApiCategorys({
     page: page.value > 1 ? page.value: '',
     parentId: parentId.value,
+  })
 
+  const description = computed(() => {
+    return `${categorys.getCategoryTitle}. ${categorys.getCategoryDescription}. ${user.getGlobalDescription}`
   })
   
   async function categoryUpdate({section}){

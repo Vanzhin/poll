@@ -48,7 +48,7 @@
               </NuxtLink>
             </div>
             <div class="search">
-              <input type="text" name="s" placeholder="Поиск..." class="search-input"/>
+              <input type="text" v-model="searchValue" name="s" placeholder="Поиск..." class="search-input"/>
               <button class="search-button"
                 @click="searchQuery()"
               >
@@ -71,13 +71,16 @@
   </div>
 </template>
 <script setup>
+  const route = useRoute()
   import { useSearchQueryStore } from '../stores/searchQuery'
   const search = useSearchQueryStore()
+  const searchValue = ref('')
   async function searchQuery(){
-      await search.getSearchDb({limit:1, page:1, data:search.searchValue})
-      search.searchValue = ''
-      if (this.$route.meta.loyout === "admin"){
-        this.$router.push({name: 'adminTestsList' })
+      await search.getSearchDb({limit:6, page:1, data:searchValue.value})
+      searchValue.value = ''
+      console.log(route.name)
+      if (route.meta.loyout === "admin"){
+        // this.$router.push({name: 'adminTestsList' })
       } else {
         navigateTo('/search' )
       }

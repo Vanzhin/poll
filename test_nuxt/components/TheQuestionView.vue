@@ -1,21 +1,16 @@
 <template>
   <div >
-   
     <UiLoaderView
       v-if="loader.isLoader"
     />
     <div class="cont"
       v-else
     >
-      
       <div>
         <TheHeaderVsPage
           :title="tests.getTestTitle"
           subTitle=""
         />
-        
-        
-        
         <div class="fon">
           <div class="container">
             <div class="wrapper">
@@ -39,7 +34,6 @@
                   <div v-for="(question, index ) in questions.questions" 
                     :key="question.id"
                   >
-                 
                     <TestQuestionRadio
                       v-if="type(question) === 'radio'"
                       :question="question"
@@ -75,7 +69,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -112,46 +105,31 @@
     questions.getQuestionsIsTicketIdDb({id: ticketNum.value})
   }
   
-  useSeoMeta({
-    title: `Амулет Тест | Тест - ${parentId.value} ${ticketModeTitle.value !=='' ? ' | '+ ticketModeTitle.value: ''} ${ticketsStore.ticketSelect ? ' | Билет № ' + ticketsStore.ticketSelect.title: ''}`,
-    ogTitle: 'Амулет Тест | ',
-    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: 'https://example.com/image.png',
-    twitterCard: 'summary_large_image',
-  })
-
   function type(item) {
     return item.type.title ? item.type.title : item.type
   }
 
   async function onSubmit(e){
-   
     const question = Array.from(e.target).filter(inp => inp.id.slice(0, 1) === "a")
       .map(inp => { return {id:inp.name, answer: inp.value.split(',')}})
-      
     const ticket = {
       question,
       info: {
-        ticket: ticketsStore.ticketSelect.id || '',
+        // ticket: ticketsStore.ticketSelect.id || '',
         mode: ticketRnd.value,
         test: parentId.value,
         ticketTitle: `Билет № ${ ticketsStore.ticketSelect.title }`,
         ticketModeTitle: ticketModeTitle.value,
       }
     } 
-    
     const result = useResultStore() 
     await result.saveResultTicketUser(ticket)
     navigateTo(`/result`)
     
   }
-
-
 </script>
 
 <style lang="scss" scoped>
-
 .cont{
   min-height: 90vh;
 }

@@ -1,4 +1,11 @@
 <template>
+  <Head>
+    <Title>Авторизация | Амулет Тест</Title>
+    <Meta name="description" :content="user.getGlobalDescription" />
+          
+    <Meta name="robots" content="noindex"/>
+    <link rel="canonical" href=""/>
+  </Head>
   <section class="wrapper">
      
     <div class="login-page" >

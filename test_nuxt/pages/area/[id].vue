@@ -1,4 +1,11 @@
 <template>
+  <Head>
+    <Title>{{ categorys.getCategoryTitle }} | Амулет Тест</Title>
+    <Meta name="description" :content="description" />
+          
+    <Meta name="robots" content="max-image-preview:large"/>
+    <link rel="canonical" href=""/>
+  </Head>
   <div class="sections" >
     <UiLoaderView
       v-if="loader.isLoader"
@@ -74,8 +81,10 @@
   import { useTestsStore } from '../../stores/TestsStore'
   import { useLoaderStore } from '../../stores/Loader'
   import { useCategoryStore } from '../../stores/CategoryStore'
+  import { useUserStore  } from '../../stores/UserStore'
   const categorys = useCategoryStore()
   const tests = useTestsStore()
+  const user = useUserStore()
   const {getTests} = storeToRefs(tests)
   const loader = useLoaderStore()
   const route = useRoute()
@@ -84,19 +93,14 @@
   console.log(tests)
   console.log(route.params)
   console.log(parentId)
-  useSeoMeta({
-    title: 'Амулет Тест | Категория | Тесты',
-    ogTitle: 'Амулет Тест | ',
-    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: 'https://example.com/image.png',
-    twitterCard: 'summary_large_image',
-  })
-  
+   
   const page = ref(route.params.page ? +route.params.page: 1)
   
   console.log(page.value)
   
+  const description = computed(() => {
+    return `${categorys.getCategoryTitle}. ${categorys.getCategoryDescription}. ${user.getGlobalDescription}`
+  })
     
   tests.getApiTests({
     page: page.value > 1 ? page.value: '',
