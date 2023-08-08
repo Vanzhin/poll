@@ -95,7 +95,9 @@ export const useQuestionsStore = defineStore('questions', {
             console.log("вопросы билета", questions.value)
             const test = useTestsStore()
             const ticketsStore = useTicketsStore()
-            ticketsStore.ticketSelectToChange(questions.value.ticket)
+            if (questions.value.ticket) {
+              ticketsStore.ticketSelectToChange(questions.value.ticket)
+            }
             test.testTitleSave(questions.value.test)
             this.questions = questions.value.questions
            

@@ -1,4 +1,10 @@
 <template>
+  <Head>
+    
+  
+    <NoScript><div><img src="https://mc.yandex.ru/watch/93328607" style="position:absolute; left:-9999px;" alt="" /></div></NoScript>
+  </Head>
+  
   <div>
     <UiFormInfoXML />
     <TheHeader />

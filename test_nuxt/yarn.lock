@@ -20,6 +20,15 @@
   "resolved" "https://registry.npmjs.org/@antfu/utils/-/utils-0.7.4.tgz"
   "version" "0.7.4"
 
+"@artmizu/yandex-metrika-nuxt@^1.0.2":
+  "integrity" "sha512-RY7Ye+1it39NCyXRd8dck7PV4KlWJ46jlW6yCcwNKJdd/b1YchFpDQGBS0ONz5y72xadPZ3bLTF7Sqk8mt3+8A=="
+  "resolved" "https://registry.npmjs.org/@artmizu/yandex-metrika-nuxt/-/yandex-metrika-nuxt-1.0.2.tgz"
+  "version" "1.0.2"
+  dependencies:
+    "@nuxt/kit" "^3.3.1"
+    "consola" "^2.15.3"
+    "defu" "^6.1.2"
+
 "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.22.5":
   "integrity" "sha512-Xmwn266vad+6DAqEB2A6V/CcZVp62BbwVmcOJc2RPuwih1kw02TjQvWVWlcKGbBPd+8/0V5DEkOcizRGYsspYQ=="
   "resolved" "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.22.5.tgz"
@@ -577,7 +586,7 @@
     "which" "^3.0.1"
     "ws" "^8.13.0"
 
-"@nuxt/kit@^3.3.3", "@nuxt/kit@^3.5.0", "@nuxt/kit@^3.5.3", "@nuxt/kit@3.6.1":
+"@nuxt/kit@^3.3.1", "@nuxt/kit@^3.3.3", "@nuxt/kit@^3.5.0", "@nuxt/kit@^3.5.3", "@nuxt/kit@3.6.1":
   "integrity" "sha512-7AoiKV0zAtyT3ZvjMfGislMcB+JMbBZxYw68/oWtkEPXCfGQMYuiMI9Ue246/0JT2Yp2KZclEgrJEJ6NLkqFcw=="
   "resolved" "https://registry.npmjs.org/@nuxt/kit/-/kit-3.6.1.tgz"
   "version" "3.6.1"
@@ -2029,6 +2038,11 @@
   "version" "0.0.1"
 
 "consola@^2.15.0":
+  "integrity" "sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw=="
+  "resolved" "https://registry.npmjs.org/consola/-/consola-2.15.3.tgz"
+  "version" "2.15.3"
+
+"consola@^2.15.3":
   "integrity" "sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw=="
   "resolved" "https://registry.npmjs.org/consola/-/consola-2.15.3.tgz"
   "version" "2.15.3"

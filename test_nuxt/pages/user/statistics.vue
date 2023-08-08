@@ -1,4 +1,11 @@
 <template>
+  <Head>
+    <Title>Статистика | Амулет Тест</Title>
+    <Meta name="description" :content="user.getGlobalDescription" />
+          
+    <Meta name="robots" content="noindex"/>
+    <link rel="canonical" href=""/>
+  </Head>
   <div class="cont"> 
     <UiLoaderView
       v-if="loader.isLoader"
@@ -130,15 +137,7 @@
 </template>
 
 <script setup>
-  useSeoMeta({
-    title: `Амулет Тест | Статистика`,
-    ogTitle: 'Амулет Тест | Статистика',
-    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: 'https://example.com/image.png',
-    twitterCard: 'summary_large_image',
-  })
-
+ 
   import { useLoaderStore } from '../../stores/Loader'
   import { useResultStore } from '../../stores/ResultStore'
   import { useUserStore } from '../../stores/UserStore'

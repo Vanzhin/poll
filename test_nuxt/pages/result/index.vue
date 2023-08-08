@@ -1,4 +1,11 @@
 <template>
+  <Head>
+    <Title>Результат тестирования | Амулет Тест</Title>
+    <Meta name="description" :content="getGlobalDescription" />
+          
+    <Meta name="robots" content="noindex"/>
+    <link rel="canonical" href=""/>
+  </Head>
   <div class="cont">
     <UiLoaderView
       v-if="loader.isLoader"
@@ -61,22 +68,16 @@
   const loader = useLoaderStore()
   const tests = useTestsStore()
   const ticketsStore = useTicketsStore()
+  
   // const user = useUserStore()
   const autch = ref(false)
   const result = useResultStore()
-  useSeoMeta({
-    title: `Амулет Тест | Результат тестирования`,
-    ogTitle: 'Амулет Тест | ',
-    description: 'Сервис онлайн тестирования по вопросам охраны труда, промышленной безопасности (тесты Ростехнадзора), электробезопасности, тепловые установки. Онлайн подготовка и проверка знаний.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: 'https://example.com/image.png',
-    twitterCard: 'summary_large_image',
-  })
+  const getGlobalDescription = ref('')
   onMounted(() => {
     console.log('я на клиенте результат')
     const user = useUserStore()
     autch.value = user.getIsAutchUser
-
+    getGlobalDescription.value = `Результаты прохождения тестирования. ${user.getGlobalDescription}`
   })
   if (result.resultTicketUser) {
     result.setResultDb()

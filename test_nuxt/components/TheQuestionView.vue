@@ -115,10 +115,10 @@
     const ticket = {
       question,
       info: {
-        // ticket: ticketsStore.ticketSelect.id || '',
+        ticket: ticketsStore.ticketSelect ? ticketsStore.ticketSelect.id : ticketNum.value,
         mode: ticketRnd.value,
         test: parentId.value,
-        ticketTitle: `Билет № ${ ticketsStore.ticketSelect.title }`,
+        ticketTitle: `Билет № ${ ticketsStore.ticketSelect ? ticketsStore.ticketSelect.title : '' }`,
         ticketModeTitle: ticketModeTitle.value,
       }
     } 
