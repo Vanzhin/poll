@@ -34,10 +34,14 @@ class LinkLoginAction extends NewBaseAction
 
         $username = $request->attributes->get('_route_params', [])['username'];
         $user = null;
-        if ($this->validation->IsValid($username, 'email')) {
+//        сначала ищу по логину
+        if (!$user) {
+            $user = $this->userRepository->findOneByLogin($username);
+        }
+//        затем ищу по почте
+        if ($this->validation->IsValid($username, 'email') && !$user) {
             $userList = $this->userRepository->findAllByEmail($username);
             //        если почта есть, не уникальна - сообщать об этом пользователю
-
             if (count($userList) > 1) {
                 throw new AppException('Указанная почта не уникальна.');
             };
@@ -47,6 +51,7 @@ class LinkLoginAction extends NewBaseAction
                 $user = current($userList);
             };
             //        если почты нет - создавать пользователя по почте
+
             if (!$user) {
                 $user = $this->userFactory->createBuilder()->buildUser($username);
                 $errors = $this->validation->validate($user);
@@ -56,11 +61,6 @@ class LinkLoginAction extends NewBaseAction
                 $this->em->persist($user);
                 $this->em->flush();
             }
-        }
-
-        if (!$user) {
-            $user = $this->userRepository->findOneByLogin($username);
-
         }
 //        если есть логин, то отправлять на почту письмо, если логина нет, сообщать об этом
         if (!$user) {

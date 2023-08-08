@@ -31,10 +31,10 @@ security:
                 lifetime: 300
                 success_handler: App\Security\Authentication\Api\AuthenticationSuccessHandler
                 failure_handler: App\Security\Authentication\Api\AuthenticationFailureHandler
-            json_login:
-                check_path: /api/login_check
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+#            json_login:
+#                check_path: /api/login_check
+#                success_handler: lexik_jwt_authentication.handler.authentication_success
+#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         api:
             pattern: ^/api
@@ -54,7 +54,7 @@ security:
                 check_route: app_api_login_link_check
                 signature_properties: [ 'id' ]
                 # lifetime in seconds
-                lifetime: 7776000
+                lifetime: 300
                 success_handler: App\Security\Authentication\Api\AuthenticationSuccessHandler
                 failure_handler: App\Security\Authentication\Api\AuthenticationFailureHandler
 
