@@ -72,7 +72,7 @@ export const usePaginationStore = defineStore('pagination', {
       this.paginations = pagin
     },
     urlToChange(url) {
-      this.url = url
+      this.url = url.trim()=== '/'? '' : url.trim()
     }
   }
 })

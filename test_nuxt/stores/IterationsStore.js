@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-export const useIterationsStore = defineStore('gategory', {
+export const useIterationsStore = defineStore('iterations', {
   state: () => ({
     
     iterations: 1

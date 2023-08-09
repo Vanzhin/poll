@@ -69,8 +69,9 @@
         break;
         }
         default:{
-          console.log("activePage -- ", pagination.activePage)
+          console.log("activePage --", pagination.activePage)
           pagination.activePageToChange(pag)
+          console.log("pagination.url --",pagination.url)
           navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :'/'}`)
 
           console.log("activePage -- ", pagination.activePage)

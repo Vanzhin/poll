@@ -40,8 +40,6 @@
               </div>
             </div>
           </div>
-         
-         
           <ThePagination />
         </div> 
         
@@ -117,11 +115,10 @@
 </template>
 <script setup>
   import { storeToRefs } from 'pinia'
-  // import { usePaginationStore } from '../stores/PaginationStore'
   import { useCategoryStore } from '../stores/CategoryStore'
   import { useTestsStore } from '../stores/TestsStore'
   import { useLoaderStore } from '../stores/Loader'
-  // const store = usePaginationStore()
+  
   const categorys = useCategoryStore()
   const tests = useTestsStore()
   const {getCategogys} = storeToRefs(categorys)
@@ -129,7 +126,9 @@
   const page = ref(route.params.page ? +route.params.page: 1)
   const loader = useLoaderStore()
   console.log(page.value)
-  console.log(route)
+  console.log('rout - ', route.path )
+  
+  
   categorys.getApiCategorys({
     page: page.value > 1 ? page.value: '',
   })

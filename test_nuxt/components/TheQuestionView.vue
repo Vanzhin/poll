@@ -14,11 +14,11 @@
         <div class="fon">
           <div class="container">
             <div class="wrapper">
-              <!-- <Timer
+              <UiTimer
                 v-if="timeTicket"
                 :time="20" 
                 @time-end="timerEnd"
-              /> -->
+              />
               <div class="ticket-title">
                 {{ ticketModeTitle}}
               </div>
@@ -79,6 +79,7 @@
   import { useQuestionsStore } from '../stores/QuestionStore'
   import { useTicketsStore  } from '../stores/TicketsStore'
   import { useResultStore  } from '../stores/ResultStore'
+  import { useModalStore } from '../stores/ModalStore'
   import rndOptions from '../utils/rndOptions.js'
   const route = useRoute()
   const ticketRnd = ref(route.params.rnd)
@@ -89,7 +90,7 @@
   const loader = useLoaderStore()
   const questions = useQuestionsStore()
   const ticketsStore = useTicketsStore()
-    
+  const modal = useModalStore()
   const ticketModeTitle = ref('')
   
   const regexp = new RegExp("rnd", 'i');
@@ -107,6 +108,16 @@
   
   function type(item) {
     return item.type.title ? item.type.title : item.type
+  }
+
+  function timerEnd(){
+    console.dir(formTest)
+    // this.timeEnd = true
+    modal.setMessageUser({
+      err: true,
+      mes:'Время отведенное на прохождение теста - закончилось!'
+    })
+    onSubmit({target:formTest})
   }
 
   async function onSubmit(e){

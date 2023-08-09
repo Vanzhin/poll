@@ -46,6 +46,7 @@
                   {{ area.title }}
                 </div>
               </div>
+              <ThePagination />
               <div class="test__block-info">
                 Дополнительная информация
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,7 +66,7 @@
             > 
               Данная категория в разработке.
             </div> 
-            <ThePagination />
+            
           </div>
         </div>
       </div>
@@ -74,14 +75,16 @@
 </template>
 <script setup>
   import { storeToRefs } from 'pinia'
-  import { useCategoryStore } from '../../../../stores/CategoryStore'
-  import { useLoaderStore } from '../../../../stores/Loader'
-  import { useUserStore  } from '../../../../stores/UserStore'
+  import { useCategoryStore } from '../stores/CategoryStore'
+  import { useLoaderStore } from '../stores/Loader'
+  import { useUserStore  } from '../stores/UserStore'
+  
   const loader = useLoaderStore()
   const categorys = useCategoryStore()
   const user = useUserStore()
   const {getCategogys} = storeToRefs(categorys)
   const route = useRoute()
+  
   const parentId = ref(+route.params.id)
   const iterNum = ref(+route.params.num)
   console.log(categorys)

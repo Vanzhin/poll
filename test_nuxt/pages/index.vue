@@ -8,7 +8,10 @@
   </div>
 </template>
 <script setup>
+  import { usePaginationStore } from '../stores/PaginationStore'
+  const pagination = usePaginationStore()
   const route = useRoute()
+  pagination.urlToChange(route.path)
   const page = ref(route.params.page ? +route.params.page: 1)
   onMounted(() => {
     console.log('я на клиенте')

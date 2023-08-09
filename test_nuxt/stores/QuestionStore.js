@@ -58,7 +58,8 @@ export const useQuestionsStore = defineStore('questions', {
         console.log ("получил вопросы  - " )
         return
       } 
-      console.log('url-',url=urlApi + url )
+      url = urlApi + url
+      console.log('url-',url )
       try {
         // this.userData = await api.post({ login, password })
         const { data: questions, pending, error } = await useAsyncData(

@@ -58,6 +58,7 @@
                 </div>
               </div>
             </div>
+            <ThePagination />
             <div class="test__block-info">
               Дополнительная информация
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,20 +69,18 @@
           </div>
         </div>
       </div> 
-      <!-- <Pagination
-        type="getTestsDB"
-      /> -->
+      
     </div>
   </div>
 </template>
 
 <script setup>
   import { storeToRefs } from 'pinia'
-  import { usePaginationStore } from '../../stores/PaginationStore'
-  import { useTestsStore } from '../../stores/TestsStore'
-  import { useLoaderStore } from '../../stores/Loader'
-  import { useCategoryStore } from '../../stores/CategoryStore'
-  import { useUserStore  } from '../../stores/UserStore'
+  import { usePaginationStore } from '../stores/PaginationStore'
+  import { useTestsStore } from '../stores/TestsStore'
+  import { useLoaderStore } from '../stores/Loader'
+  import { useCategoryStore } from '../stores/CategoryStore'
+  import { useUserStore  } from '../stores/UserStore'
   const categorys = useCategoryStore()
   const tests = useTestsStore()
   const user = useUserStore()
