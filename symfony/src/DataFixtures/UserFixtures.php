@@ -19,6 +19,7 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
         $this->hasher = $hasher;
         $this->params = $params;
     }
+
     public function loadData(ObjectManager $manager): void
     {
         $this->create(User::class, function (User $user) use ($manager) {
@@ -26,6 +27,7 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
                 ->setFirstName($this->params->get('app.admin_user'))
                 ->setEmail($this->params->get('app.admin_email'))
                 ->setPassword($this->hasher->hashPassword($user, $this->params->get('app.admin_pass')))
+                ->setLogin('admin')
                 ->setRoles(['ROLE_ADMIN']);
         });
 
@@ -33,7 +35,8 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
             $user
                 ->setFirstName($this->faker->firstName())
                 ->setEmail($this->faker->email())
-                ->setPassword($this->hasher->hashPassword($user, $this->params->get('app.user_pass')));
+                ->setPassword($this->hasher->hashPassword($user, $this->params->get('app.user_pass')))
+                ->setLogin($this->faker->randomDigitNotNull . $this->faker->email());
 
         });
     }
