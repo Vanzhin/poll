@@ -2,5 +2,4 @@
   <div>
     <TheQuestionView />
   </div>
-  
 </template>

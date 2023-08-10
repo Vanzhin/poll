@@ -6,6 +6,7 @@
   </Head>
   
   <div>
+    <uiMessageView />
     <UiFormInfoXML />
     <TheHeader />
     

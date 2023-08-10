@@ -16,7 +16,7 @@
             <div class="wrapper">
               <UiTimer
                 v-if="timeTicket"
-                :time="20" 
+                :time="1" 
                 @time-end="timerEnd"
               />
               <div class="ticket-title">
@@ -85,19 +85,21 @@
   const ticketRnd = ref(route.params.rnd)
   const parentId = ref(+route.params.id)
   const ticketNum = ref(+route.params.num)
- 
+  
   const tests = useTestsStore()
   const loader = useLoaderStore()
   const questions = useQuestionsStore()
   const ticketsStore = useTicketsStore()
   const modal = useModalStore()
   const ticketModeTitle = ref('')
+  const timeTicket = ref(false)
   
   const regexp = new RegExp("rnd", 'i');
-   
   if ( regexp.test(ticketRnd.value)){
     ticketModeTitle.value = rndOptions[ticketRnd.value]
     ticketsStore.saveTicketModeTitle(ticketModeTitle.value)
+    if(ticketRnd.value = "rnd20t"){timeTicket.value = true}
+
   } 
 
   if (ticketRnd.value) {
@@ -136,7 +138,6 @@
     const result = useResultStore() 
     await result.saveResultTicketUser(ticket)
     navigateTo(`/result`)
-    
   }
 </script>
 

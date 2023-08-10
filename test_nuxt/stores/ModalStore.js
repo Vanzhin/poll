@@ -11,7 +11,7 @@ export const useModalStore = defineStore('modal', {
     
   },
   actions: {
-    setMessage( data) {
+    setMessage( data ) {
       let message = ''
       if (data.error) {
         message = {err: true, mes: `${data.message}!<hr>  ${data.error[0] ? data.error[0]:''}`}
@@ -45,7 +45,7 @@ export const useModalStore = defineStore('modal', {
     },
     setMessageUser( message ) {
       this.message = message;
-      setIntevalTime({ state })
+      setIntevalTime()
     },
     setMessageVisibleFalse() {
       this.message = false
