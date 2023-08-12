@@ -16,9 +16,10 @@
             <div class="wrapper">
               <UiTimer
                 v-if="timeTicket"
-                :time="1" 
+                :time="tests.getTestActiveTime" 
                 @time-end="timerEnd"
               />
+              
               <div class="ticket-title">
                 {{ ticketModeTitle}}
               </div>
