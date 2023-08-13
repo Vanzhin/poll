@@ -20,11 +20,13 @@ export const usePaginationStore = defineStore('pagination', {
     },
     paginationsAll(pagination) {
       console.log(pagination)
-      if (pagination) {}
-      else {
+      if (!pagination || pagination.error) {
         this.paginations =[]
         this.activePage = 1
         return
+      }
+      else {
+        
       }
       let  pagin = []
       
@@ -70,7 +72,7 @@ export const usePaginationStore = defineStore('pagination', {
       this.paginations = pagin
     },
     urlToChange(url) {
-      this.url = url
+      this.url = url.trim()=== '/'? '' : url.trim()
     }
   }
 })

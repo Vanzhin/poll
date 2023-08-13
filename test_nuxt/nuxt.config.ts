@@ -10,8 +10,9 @@ export default defineNuxtConfig({
     // "@/node_modules/bootstrap/dist/js/bootstrap.min.js"
     // 'bootstrap-vue/nuxt'
     '@pinia/nuxt',
-    
+    '@artmizu/yandex-metrika-nuxt',
   ],
+  yandexMetrika: {id:"93328607"},
   // pinia: {
   //   autoImports: [
   //     // automatically imports `defineStore`
@@ -25,7 +26,7 @@ export default defineNuxtConfig({
     '~/assets/styles/app.scss'
     
   ],
- 
+  
   postcss: {
     plugins: {
       tailwindcss: {},

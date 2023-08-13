@@ -1,6 +1,8 @@
 <template>
   <div class="d-dropdown">
-    <button class="btn btn-secondary "  data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-secondary "  tooggle="false" 
+      @click="toggleMeny"
+    >
       <div class="dropdown-button">
         <div class="title"> Личный кабинет</div> 
         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,16 +18,22 @@
     </button>
     <ul 
       class="dropdown-menu menu" 
-      aria-labelledby="dropdownMenuButton1"
+      :class="classObject"
     >
-      <div v-if="true">
-        <li><NuxtLink class="dropdown-item menu_li" to="statistics">Статистика</NuxtLink></li>
-        <li><NuxtLink class="dropdown-item menu_li" to="userAutchProfile">Профиль</NuxtLink></li>
-       
-        <!-- <li
-          v-if="getUserAdmin"
-        ><NuxtLink class="dropdown-item menu_li" to='admin'>Админка</NuxtLink>
-        </li> -->
+      <div v-if="user.getIsAutchUser">
+        <li>
+          <NuxtLink class="dropdown-item menu_li" to='/user/statistics'>Статистика</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink class="dropdown-item menu_li" to='/user/profile'>Профиль</NuxtLink>
+        </li>
+        <!-- <li><NuxtLink class="dropdown-item menu_li" to="statistics">Статистика</NuxtLink></li>
+        <li><NuxtLink class="dropdown-item menu_li" to="userAutchProfile">Профиль</NuxtLink></li> -->
+       <!-- admin -->
+        <li
+          v-if="user.getUserAdmin"
+        ><NuxtLink class="dropdown-item menu_li" to='/'>Админка</NuxtLink>
+        </li>
         <li><hr class="menu-hr"></li>
         <li class="dropdown-item menu-item menu_li" @click="logOut" >
           <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,19 +43,54 @@
           Выйти</li>
       </div> 
       <div v-else>
-        <li><NuxtLink class="dropdown-item menu_li" :to="{ name: 'logout'}">Авторизоваться</NuxtLink></li>
-        <li><NuxtLink class="dropdown-item menu_li" :to="{ name: 'logoutlink'}">По ссылке</NuxtLink></li>
-        <li><NuxtLink class="dropdown-item menu_li" :to="{ name: 'signup'}">Зарегистрироваться</NuxtLink></li>
+        <li><div class="dropdown-item menu_li" @click="clickNavigate('/user/autch')">Авторизоваться</div></li>
+        <li><div class="dropdown-item menu_li" @click="clickNavigate('/user/autch/link')">По ссылке</div></li>
+        <li><div class="dropdown-item menu_li" @click="clickNavigate('/user/signup')">Зарегистрироваться</div></li>
       </div>
     </ul>
   </div>
 </template>
-<script>
-
-
-export default {
- 
-}
+<script setup>
+  const route = useRoute()
+  import { useUserStore  } from '../../stores/UserStore'
+  
+  const user = useUserStore()
+  const toggle = ref({toggle: false, click: 0})
+  
+  function toggleMeny(){
+    console.log('toggle')
+    toggle.value.toggle = !toggle.value.toggle
+    toggle.value.click =  0
+    if (toggle.value.toggle){
+      window.addEventListener('click', dropDownClickVisible)
+    }
+  }
+  onMounted(() => {
+    const user = useUserStore()
+  })
+  const classObject = computed(() => ({
+    active: toggle.value.toggle,
+  
+  }))
+  function dropDownClickVisible(){
+    if (toggle.value.toggle && toggle.value.click > 0){
+      toggle.value.toggle = false
+      toggle.value.click =  0
+      window.removeEventListener("click", dropDownClickVisible);
+    } else {
+      toggle.value.click += 1
+      
+    }
+  }
+  async function logOut(){
+    await  user.getLogOutUser()
+    navigateTo('/')
+  }
+  async function clickNavigate(link){
+    console.log(route.path)
+    user.savePage(route.path)
+    navigateTo(link)
+  }
 </script>   
 
 <style lang="scss" scoped>
@@ -110,11 +153,15 @@ export default {
     line-height: 24px;
   }
   .menu{
-    transform: translate(-40px, 40px);
+    top: 30px;
+    transform: translate(0px, 40px);
     width: 172px;
     background: var(--color-blue);
     box-shadow: 0px 1px 4px #E3EBFC, 0px 24px 48px rgba(230, 235, 245, 0.4);
     border-radius: 6px;
+    &-item{
+      display: flex;
+    }
    &-hr{
     margin:10px 15px ;
     border-top: 1px solid var(--color-white);
@@ -135,5 +182,8 @@ export default {
       cursor: pointer;
       color: var(--color-blue);
     }}
+  }
+  .active{
+    display: block;
   }
 </style>

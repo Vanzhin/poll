@@ -1,6 +1,15 @@
 <template>
+  <Head>
+    <link rel="canonical" href=""/>
+  </Head>
+
   <div class="sections fon">
-    <div class="wrapper">
+    <UiLoaderView
+          v-if="loader.isLoader"
+          />
+    <div class="wrapper"
+    
+    v-else>
       <div class="" >
         <div class="b-container">
           <h1 class="sections__title">
@@ -11,12 +20,11 @@
             Выберите область проверки знаний
           </h2>
         </div>
-        <!-- <div
-          v-if="pending"
-          >Загрузка...
-        </div> -->
+        
+        
         <div class="b-container" 
-         >
+        
+        >
           <div class="sections__block row" v-if="categorys.getCategogys !==''">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
              
@@ -32,8 +40,6 @@
               </div>
             </div>
           </div>
-         
-         
           <ThePagination />
         </div> 
         
@@ -109,17 +115,19 @@
 </template>
 <script setup>
   import { storeToRefs } from 'pinia'
-  // import { usePaginationStore } from '../stores/PaginationStore'
   import { useCategoryStore } from '../stores/CategoryStore'
   import { useTestsStore } from '../stores/TestsStore'
-  // const store = usePaginationStore()
+  import { useLoaderStore } from '../stores/Loader'
+  
   const categorys = useCategoryStore()
   const tests = useTestsStore()
   const {getCategogys} = storeToRefs(categorys)
   const route = useRoute()
   const page = ref(route.params.page ? +route.params.page: 1)
-  
+  const loader = useLoaderStore()
   console.log(page.value)
+  console.log('rout - ', route.path )
+  
   
   categorys.getApiCategorys({
     page: page.value > 1 ? page.value: '',
@@ -128,15 +136,15 @@
   async function categoryUpdate({section}){
     console.log(section)
     if (section.test.length > 0 ){
-      await tests.getApiTests({
-        parentId: section.id
-      })
+      // tests.getApiTests({
+      //   parentId: section.id
+      // })
       navigateTo(`/area/${section.id}`)
     } else if (section.children.length > 0) {
-      await categorys.getApiCategorys({
+      // categorys.getApiCategorys({
        
-        parentId: section.id
-      })
+      //   parentId: section.id
+      // })
       navigateTo(`/iter/1/group/${section.id}`)
       
     }  else {
@@ -144,6 +152,12 @@
       
     }
   }
+  onMounted(() => {
+    // console.log('я на клиенте')
+    // // console.dir( window)
+    // window.scrollTo(pageXOffset,0)
+    // window.scrollY = 0
+  })
 </script>
 <style lang="scss" scoped>
   .fon{

@@ -163,6 +163,7 @@ export default {
         })
       this.$router.push({ path:'/result'})
     },
+    
     timerEnd(){ //написать действия при окончании времени таймера
       console.dir(formTest)
       this.timeEnd = true

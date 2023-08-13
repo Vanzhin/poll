@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
-
-export const useCategoryStore = defineStore('gategory', {
+import { useLoaderStore } from './Loader'
+import { useModalStore  } from './ModalStore'
+export const useCategoryStore = defineStore('category', {
   state: () => ({
     // categorys: localStorage.getItem('categorys') ?
     //   JSON.parse(localStorage.getItem('categorys')):[],
@@ -10,18 +11,28 @@ export const useCategoryStore = defineStore('gategory', {
     //   JSON.parse(localStorage.getItem('categoryParent')): null,
     // categorysFooter: localStorage.getItem('categorysFooter') ?
     //   JSON.parse(localStorage.getItem('categorysFooter')): null,
-    categorys:[]
+    categorys:[],
+    parent: '',
+    allСategories: null
   }),
   getters: {
     getCategogys: (state) => state.categorys,
+    getCategoryTitle: (state) => state.parent.title,
+    getCategoryDescription: (state) => state.parent.description || '',
+    getCategorySeoDescription: (state) => state.parent.seoDescription || '',
+    getFooterСategories : (state) => state.allСategories ? state.allСategories.slice(0, 6): null,
+    getCategoriesForDropDown: (state) => state.allСategories,
   },
   actions: {
     categorysToChange(categorys) {
       console.log('categorysToChange-',categorys)
       this.categorys = categorys
     },
+    setParentCategory(parent){
+      this.parent = parent
+    },
     async getApiCategorys({ page = null, parentId = null, admin = null, limit = 6 }){
-   
+      const loader = useLoaderStore()
       // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
       let url = `${urlApi}/api/category`
       // if (admin) { 
@@ -33,26 +44,77 @@ export const useCategoryStore = defineStore('gategory', {
       if (page) { query.page = page }
       
       console.log(query)
+      loader.setIsLoaderStatus(true)
       try {
         // this.userData = await api.post({ login, password })
-        const { data: sections, pending, error } = await useFetch(() =>  url,
-        {
-          
-          lazy: true,
-          query:query,
-          
-        })
-        console.log("sections", sections.value.value)
+        // const { data: sections, pending, error } = await useFetch(() =>  url,
+        // {
+        //   lazy: true,
+        //   query:query,
+        // })
+        // let timerId = setInterval(() => {
+        //   console.log('pending.value-',pending.value)
+        //   if ( !pending.value) {
+        //     clearInterval(timerId)
+        //     console.log("sections", sections.value)
+        //     this.categorys = sections.value.children
+        //     console.log('error - ',sections.value.pagination.hasOwnProperty(error))
+        //     const pagination = usePaginationStore()
+        //     pagination.paginationsAll(sections.value.pagination)
+        //     loader.setIsLoaderStatus(false)
+        //     if (sections.value.parent) {
+        //       this.parent = sections.value.parent
+        //     }
+        //   }
+        // }, 200);
+        const { data: sections, pending, error, refresh } = await useAsyncData(
+         
+          () => $fetch(url,{
+            // lazy : true,
+            query: query,
+          })
+        )
         console.log("sections", sections.value)
-        console.log("sections", sections)
         this.categorys = sections.value.children
         const pagination = usePaginationStore()
-        pagination.paginationsAll(sections.value.pagination)
+            pagination.paginationsAll(sections.value.pagination)
+            loader.setIsLoaderStatus(false)
+            if (sections.value.parent) {
+              this.parent = sections.value.parent
+            }
       } catch (error) {
         console.log(error)
        
       }
+    },
+     //запрос категорий для футера
+    async getCategorysDBFooter() {
+      const modal = useModalStore()
+      let url = `${urlApi}/api/category?limit=1000`
+      
+      const config = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      };
+      
+      try{
+        const { data: sections, pending, error, refresh } = await useAsyncData(
+          () => $fetch(url, config)
+        )
+        if (sections.value) {
+          console.log('sections.value footer-', sections.value)
+          this.allСategories = sections.value.children
+        } else if (error.value) {
+          modal.setMessageError(error.value)
+        } else {
+          
+        }
+      } catch (e) { 
+        console.log('footer e-', e)
+      }
+      
     }
-   
   }
 })
