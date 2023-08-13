@@ -21,6 +21,11 @@ export default async function setUseAsyncFetch ({url, params, token, loading = t
         error.value.data.message === "Invalid JWT Token") 
       {
         await user.getAuthRefresh() //обновление токена
+        if (!user.getIsAutchUser) {
+          navigateTo(`/user/autch`)
+          loader.setIsLoaderStatus(false)
+          return
+        }
         setUseAsyncFetch({ url, params, token })
       }
     } else {

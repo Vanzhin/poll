@@ -154,9 +154,9 @@ export const useUserStore = defineStore('user', {
     },
     //обнулене токена
     setDeleteUserToken(){
-      this.token = ''
-      this.refresh_token = ''
-      this.role = ''
+      this.token = null
+      this.refresh_token = null
+      this.role = null
       localStorage.removeItem('token');
     },
     // вход по ссылке
@@ -234,7 +234,9 @@ export const useUserStore = defineStore('user', {
           console.log(error.value.data)
           if (error.value.data.message === "No refresh_token found." ||
             error.value.data.message === "JWT Refresh Token Not Found" ||
-            error.value.data.message === "Invalid JWT Refresh Token"
+            error.value.data.message === "Invalid JWT Refresh Token" ||
+            error.value.data.message === 'Invalid credentials.' ||
+            error.value.data.message === 'Missing JWT Refresh Token'
           ) {
             this.setDeleteUserToken()
           }
