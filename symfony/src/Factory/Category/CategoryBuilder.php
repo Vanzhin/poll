@@ -24,18 +24,28 @@ class CategoryBuilder
             if ($key === 'description') {
                 $category->setDescription($item);
                 continue;
-
             };
             if ($key === 'parentId') {
                 $category->setParent($this->em->find(Category::class, $item));
-
+                continue;
             };
 
             if ($key === 'alias') {
                 $category->setAlias($item);
-
+                continue;
             };
-
+            if ($key === 'robots') {
+                $category->setRobots($item);
+                continue;
+            };
+            if ($key === 'canonical') {
+                $category->setCanonical($item);
+                continue;
+            };
+            if ($key === 'descriptionSeo') {
+                $category->setDescriptionSeo($item);
+                continue;
+            };
         }
 
         if (!$category->getAlias()) {
@@ -44,5 +54,4 @@ class CategoryBuilder
         }
         return $category;
     }
-
 }

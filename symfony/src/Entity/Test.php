@@ -114,6 +114,20 @@ class Test
     #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'availableTests')]
     private Collection $groups;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['admin_test_general'])]
+    #[Assert\Length(max: 100, maxMessage: 'test.robots.max_length')]
+    private ?string $robots = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['admin_test_general'])]
+    #[Assert\Length(max: 100, maxMessage: 'test.canonical.max_length')]
+    private ?string $canonical = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['admin_test_general'])]
+    private ?string $descriptionSeo = null;
+
     /**
      * @return bool
      */
@@ -451,6 +465,42 @@ class Test
         if ($this->groups->removeElement($group)) {
             $group->removeAvailableTest($this);
         }
+
+        return $this;
+    }
+
+    public function getRobots(): ?string
+    {
+        return $this->robots;
+    }
+
+    public function setRobots(?string $robots): self
+    {
+        $this->robots = $robots;
+
+        return $this;
+    }
+
+    public function getCanonical(): ?string
+    {
+        return $this->canonical;
+    }
+
+    public function setCanonical(?string $canonical): self
+    {
+        $this->canonical = $canonical;
+
+        return $this;
+    }
+
+    public function getDescriptionSeo(): ?string
+    {
+        return $this->descriptionSeo;
+    }
+
+    public function setDescriptionSeo(?string $descriptionSeo): self
+    {
+        $this->descriptionSeo = $descriptionSeo;
 
         return $this;
     }

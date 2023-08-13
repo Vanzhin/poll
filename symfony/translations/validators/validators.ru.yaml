@@ -65,6 +65,8 @@ category.parent.exist: Такого раздела нет
 category.title.unique: Раздел с таким названием уже существует
 category.alias.not_blank: Псевдоним раздела не может быть пустым
 category.alias.max_length: Псевдоним раздела не может быть длиннее {{ limit }} символов
+category.robots.max_length: robots раздела не может быть длиннее {{ limit }} символов
+category.canonical.max_length: canonical раздела не может быть длиннее {{ limit }} символов
 
 company.tin.regex: Не корректно введен ИНН
 company.title.not_blank: Название компании не может быть пустым
@@ -99,6 +101,8 @@ test.alias.max_length: Псевдоним теста не может быть д
 test.title.format: Не верный формат названия
 test.description.format: Не верный формат описания
 test.category.format: Не верный формат категории
+test.canonical.max_length: canonical теста не может быть длиннее {{ limit }} символов
+test.robots.max_length: robots теста не может быть длиннее {{ limit }} символов
 
 
 min_trud_test.title.not_blank: Название теста не может быть пустым

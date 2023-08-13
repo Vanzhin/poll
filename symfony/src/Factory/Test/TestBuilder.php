@@ -38,21 +38,29 @@ class TestBuilder
             if ($key === 'time') {
                 $test->setTime(intval($item));
                 continue;
-
             };
             if ($key === 'sectionCountToPass') {
                 $test->setSectionCountToPass(intval($item));
                 continue;
-
+            };
+            if ($key === 'robots') {
+                $test->setRobots($item);
+                continue;
+            };
+            if ($key === 'canonical') {
+                $test->setCanonical($item);
+                continue;
+            };
+            if ($key === 'descriptionSeo') {
+                $test->setDescriptionSeo($item);
+                continue;
             };
             if ($key === 'minTrud') {
                 $minTrud = $this->em->find(MinTrudTest::class, $item);
                 if ($minTrud) {
                     $test->setMinTrudTest($minTrud);
-
                 }
                 continue;
-
             };
             if ($key === 'category' && $this->em->find(Category::class, $item)) {
                 $test->setCategory($this->em->find(Category::class, $item));
