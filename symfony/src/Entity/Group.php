@@ -60,6 +60,9 @@ class Group
     #[Groups(['admin_group'])]
     private ?User $owner = null;
 
+    #[ORM\OneToOne(inversedBy: 'groups', cascade: ['persist', 'remove'])]
+    private ?Protocol $protocol = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -187,6 +190,18 @@ class Group
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getProtocol(): ?Protocol
+    {
+        return $this->protocol;
+    }
+
+    public function setProtocol(?Protocol $protocol): self
+    {
+        $this->protocol = $protocol;
 
         return $this;
     }

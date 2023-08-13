@@ -3,6 +3,7 @@
 namespace App\Entity\Commission;
 
 use App\Entity\Company;
+use App\Entity\Protocol;
 use App\Entity\User\User;
 use App\Repository\Commission\CommissionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -47,9 +48,13 @@ class Commission
     #[Groups(['admin_commission'])]
     private ?User $head = null;
 
+    #[ORM\OneToMany(mappedBy: 'commission', targetEntity: Protocol::class)]
+    private Collection $protocols;
+
     public function __construct()
     {
         $this->participant = new ArrayCollection();
+        $this->protocols = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -120,6 +125,36 @@ class Commission
     public function setHead(?User $head): self
     {
         $this->head = $head;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Protocol>
+     */
+    public function getProtocols(): Collection
+    {
+        return $this->protocols;
+    }
+
+    public function addProtocol(Protocol $protocol): self
+    {
+        if (!$this->protocols->contains($protocol)) {
+            $this->protocols->add($protocol);
+            $protocol->setCommission($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProtocol(Protocol $protocol): self
+    {
+        if ($this->protocols->removeElement($protocol)) {
+            // set the owning side to null (unless already changed)
+            if ($protocol->getCommission() === $this) {
+                $protocol->setCommission(null);
+            }
+        }
 
         return $this;
     }
