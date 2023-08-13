@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
-use App\Entity\Section;
 use App\Entity\Test;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -30,7 +29,9 @@ class TestFixtures extends BaseFixtures implements DependentFixtureInterface
                 ->setCategory($category)
                 ->setDescription($this->faker->sentence())
                 ->setTime(1200)
-                ->setSectionCountToPass(1);
+                ->setSectionCountToPass(1)
+                ->setAlias($this->faker->word)
+            ;
 
         });
     }

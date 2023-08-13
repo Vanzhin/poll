@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controller\Api;
+namespace App\Controller\Api\Test;
 
 use App\Action\Test\GetTestListAction;
+use App\Controller\Api\Test\Action\BreadcrumbsAction;
 use App\Entity\Question;
 use App\Entity\Test;
 use App\Entity\Ticket;
@@ -22,6 +23,12 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class TestController extends AbstractController
 {
+    public function __construct(
+        private readonly BreadcrumbsAction $breadcrumbsAction,
+    )
+    {
+    }
+
     #[Route('/api/test', name: 'app_api_test', methods: ['GET'])]
     public function index(TestRepository $repository): JsonResponse
     {
@@ -213,5 +220,11 @@ class TestController extends AbstractController
     public function search(Request $request, GetTestListAction $action): JsonResponse
     {
         return $action($request);
+    }
+
+    #[Route('/api/test/{id}/breadcrumbs', name: 'app_api_test_breadcrumbs', methods: ['GET'])]
+    public function getBreadcrumbs(Test $test): JsonResponse
+    {
+        return $this->breadcrumbsAction->run($test);
     }
 }

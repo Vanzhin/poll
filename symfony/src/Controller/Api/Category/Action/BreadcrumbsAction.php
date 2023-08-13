@@ -7,7 +7,7 @@ use App\Entity\Category;
 use App\Service\SerializerService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ParentAction extends NewBaseAction
+class BreadcrumbsAction extends NewBaseAction
 {
     public function __construct(SerializerService $serializer)
     {
@@ -16,6 +16,6 @@ class ParentAction extends NewBaseAction
 
     public function run(Category $category): JsonResponse
     {
-        return $this->successResponse($category, ['parent']);
+        return $this->successResponse($category, ['breadcrumbs']);
     }
 }

@@ -23,7 +23,7 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search', 'admin_group'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search', 'admin_group', 'breadcrumbs'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(
@@ -61,7 +61,7 @@ class Test
         message: 'test.category.exist'
     )]
     #[ORM\ManyToOne(inversedBy: 'test')]
-    #[Groups(['result', 'search'])]
+    #[Groups(['result', 'search', 'breadcrumbs'])]
     private ?Category $category = null;
 
     #[Groups(['admin_test_general', 'category', 'search'])]
@@ -108,7 +108,7 @@ class Test
         max: 30,
         maxMessage: 'test.alias.max_length',
     )]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search', 'breadcrumbs'])]
     private ?string $alias = null;
 
     #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'availableTests')]

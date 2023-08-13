@@ -32,11 +32,11 @@ class Category implements EntityWithImageInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'category', 'parent'])]
+    #[Groups(['main', 'admin', 'category', 'breadcrumbs'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 500)]
-    #[Groups(['main', 'admin', 'category', 'result','search', 'parent'])]
+    #[Groups(['main', 'admin', 'category', 'result', 'search'])]
     #[Assert\NotBlank(
         message: 'category.title.not_blank'
     )]
@@ -68,7 +68,7 @@ class Category implements EntityWithImageInterface
 
 
     #[Gedmo\TreeParent]
-    #[Groups(['result', 'search', 'parent'])]
+    #[Groups(['result', 'search', 'breadcrumbs'])]
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private ?self $parent = null;
@@ -101,7 +101,7 @@ class Category implements EntityWithImageInterface
         max: 30,
         maxMessage: 'category.alias.max_length',
     )]
-    #[Groups(['main', 'admin', 'category', 'result', 'search'])]
+    #[Groups(['main', 'admin', 'category', 'result', 'search', 'breadcrumbs'])]
     private ?string $alias = null;
 
     public function __construct()

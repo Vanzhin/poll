@@ -2,8 +2,7 @@
 
 namespace App\Controller\Api\Category;
 
-use App\Controller\Api\Action;
-use App\Controller\Api\Category\Action\ParentAction;
+use App\Controller\Api\Category\Action\BreadcrumbsAction;
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Service\NormalizerService;
@@ -17,11 +16,10 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 #[Route('/api/category', name: 'app_api_category_')]
-
 class CategoryController extends AbstractController
 {
     public function __construct(
-        private readonly ParentAction $parentAction,
+        private readonly BreadcrumbsAction $breadcrumbsAction,
     )
     {
     }
@@ -80,9 +78,9 @@ class CategoryController extends AbstractController
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    #[Route('/{id}/parent', name: 'parent', methods: ['GET'])]
-    public function getParent(Category $category): JsonResponse
+    #[Route('/{id}/breadcrumbs', name: 'breadcrumbs', methods: ['GET'])]
+    public function getBreadCrumbs(Category $category): JsonResponse
     {
-        return $this->parentAction->run($category);
+        return $this->breadcrumbsAction->run($category);
     }
 }
