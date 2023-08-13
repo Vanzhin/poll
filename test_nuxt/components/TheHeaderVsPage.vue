@@ -38,22 +38,11 @@
   </div>
   
 </template>
-<script >
-  export default {
-    props: ['title', 'subTitle'],
-    data() {
-      return {
-        isActive: false,
-        
-      }
-    },
-    
-    computed:{
-      
-     
+<script setup>
+  const props = defineProps(['title', 'subTitle']);
 
-    },
-  }
+
+ 
 </script>
 <style lang="scss" scoped>
   .page{
