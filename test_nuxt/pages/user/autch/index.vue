@@ -27,12 +27,12 @@
             v-else
           >
             <div class="text-field">
-              <label class="text-field__label" >E-mail</label>
+              <label class="text-field__label" >Логин</label>
               <input class="text-field__input"
-                type="email" 
-                placeholder="Введите email"
-                name="email"
-                v-model="email"
+                type="login" 
+                placeholder="Введите логин"
+                name="login"
+                v-model="login"
                 required
               />
             </div>
@@ -74,7 +74,7 @@
   const user = useUserStore()
  
   const count = ref(0)
-  const email= ref('')
+  const login= ref('')
   const password= ref('')
   const checkbox= ref(false)
   const authorize= ref(false)
@@ -87,7 +87,7 @@
   async function onSubmit(e){
     
     const userAutch = {
-      username: email.value, 
+      username: login.value, 
       password: password.value, 
     }
     

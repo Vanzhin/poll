@@ -21,12 +21,12 @@
             v-else
           >
             <div class="text-field">
-              <label class="text-field__label" >E-mail</label>
+              <label class="text-field__label" >Логин</label>
               <input class="text-field__input"
-                type="email" 
-                placeholder="Введите email"
-                name="email"
-                v-model="email"
+                type="login" 
+                placeholder="Введите login"
+                name="login"
+                v-model="login"
                 required
               />
             </div>
@@ -72,7 +72,7 @@
     data() {
       return {
         count: 0,
-        email:'',
+        login:'',
         password:'',
         checkbox:'false',
         authorize: false
@@ -87,7 +87,7 @@
       async onSubmit(e){
        
         const user = {
-          username: this.email, 
+          username: this.login, 
           password: this.password, 
         }
        

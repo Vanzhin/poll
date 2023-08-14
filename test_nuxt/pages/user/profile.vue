@@ -10,10 +10,9 @@
         <div class="title">
           <h3>Профиль</h3>  
         </div>
-        
             
         <div class="tablis-header-title">
-          <div>Ник: <span>{{ user.profile ? user.profile.firstName: ''}}</span></div>
+          <div>Логин: <span>{{ user.profile ? user.profile.firstName: ''}}</span></div>
           <div>Email: <span>{{ user.profile ? user.profile.email: ''}}</span></div>
           <div>Права: <span>{{ user.profile ? user.profile.roles[0] : ''  }}</span></div>
         </div>

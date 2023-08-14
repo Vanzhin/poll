@@ -31,7 +31,7 @@
              id="nik" 
              type="text" 
              placeholder="Придумайте логин"
-             v-model="firstName"
+             v-model="login"
              required
            />
          </div>
@@ -93,7 +93,7 @@
   const confirmPassword = ref('')
   const password = ref('')
   const email = ref('')
-  const firstName = ref('')
+  const login = ref('')
   const authorize = ref(false)
   const authorizeTitle = ref('Удачная регистрация')
   const user = useUserStore()
@@ -103,7 +103,7 @@
     const userLog = {
       confirmPassword: confirmPassword.value,
       email: email.value,
-      firstName: firstName.value,
+      login: login.value,
       password: password.value, 
     }
   
@@ -128,7 +128,7 @@
     confirmPassword.value = '',
     password.value = '',
     email.value = '',
-    firstName.value = ''
+    login.value = ''
   }
  
    
