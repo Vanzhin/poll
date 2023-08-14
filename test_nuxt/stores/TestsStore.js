@@ -14,7 +14,8 @@ export const useTestsStore = defineStore('tests', {
     getTests: (state) => state.tests,
     getTestActive: (state) => state.testActive,
     getTestTitle: (state) => state.testTitle,
-    getTestActiveTime: (state) => state.testActive ? state.testActive.time / 60 : 20
+    getTestActiveTime: (state) => state.testActive ? state.testActive.time / 60 : 20,
+    getTestDescription: (state) => state.testActive ? state.testActive.description :''
   },
   actions: {
     testsToChange(tests) {
