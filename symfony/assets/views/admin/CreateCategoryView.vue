@@ -164,6 +164,7 @@
         this.title = this.getCategory.title
         this.description = this.getCategory.description ? this.getCategory.description : ''
         this.imageUrl = this.getCategory.image ? this.getCategory.image : ''
+        this.alias = this.getCategory.alias ? this.getCategory.alias : ''
       }
       
       

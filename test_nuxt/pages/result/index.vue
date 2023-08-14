@@ -63,12 +63,13 @@
   import { useTicketsStore  } from '../../stores/TicketsStore'
   import { useResultStore  } from '../../stores/ResultStore'
   import { useUserStore  } from '../../stores/UserStore'
-
+  import { useCrumbsStore } from '../../stores/CrumbsStore'
 
   const loader = useLoaderStore()
   const tests = useTestsStore()
   const ticketsStore = useTicketsStore()
-  
+  const crumbs = useCrumbsStore()
+
   // const user = useUserStore()
   const autch = ref(false)
   const result = useResultStore()
@@ -81,6 +82,11 @@
   })
   if (result.resultTicketUser) {
     result.setResultDb()
+    crumbs.addIteration({
+        title:`/результат тестирования`,
+        link: `/`,
+        active: false
+      }) 
   }
   
 </script> 

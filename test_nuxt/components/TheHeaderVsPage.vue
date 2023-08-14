@@ -9,29 +9,30 @@
           {{ subTitle }}
         </h2>
         <div class="page-header-navigation">
-          <!--<div class="page-header-navigation-crumbs">
+          <div class="page-header-navigation-crumbs">
              <div
-              v-for="(crumb, ind) in crumbs" 
+              v-for="(crumb, ind) in crumbs.getCrumbs" 
+              :key="crumb.title"
             >
               <div class="page-header-navigation-crumbs-link"
-                v-if="ind < crumbs.length-1"
+                v-if="ind < crumbs.getCrumbsLendch"
                 @click="crumbsLinkClick(crumb)"
+                :title="crumb.link"
               >
                 {{ crumb.title }}
               </div>
               <div class=""
                 v-else
+                :title="crumb.link"
               >
                 {{ crumb.title }}
               </div>
              </div>
-          </div> -->
+          </div>
           <UiButton
-            
             title="Назад"
-           
+            @click="backLink"
           /> 
-          <!-- @click="backLink" -->
         </div>
       </div>
     </div>
@@ -39,10 +40,23 @@
   
 </template>
 <script setup>
+  import { useCrumbsStore } from '../stores/CrumbsStore'
+  
   const props = defineProps(['title', 'subTitle']);
-
-
- 
+  
+  const router = useRouter();
+  const  crumbs = useCrumbsStore()
+  function crumbsLinkClick(crumb){
+    navigateTo(`${crumb.link}`)
+  }
+  function backLink(){
+    if (crumbs.getCrumbsLendch > 0){
+      navigateTo(`${crumbs.getCrumbs.at(-2).link}`)
+    } else {
+      router.back()
+    }
+    
+  }
 </script>
 <style lang="scss" scoped>
   .page{

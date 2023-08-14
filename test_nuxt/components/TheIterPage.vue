@@ -7,70 +7,70 @@
       <Meta name="robots" content="max-image-preview:large"/>
       <link rel="canonical" href=""/>
     </Head>
-    <div class="sections" >
-      <TheHeaderVsPage
-        :title="categorys.getCategoryTitle"
-      />
-      <div class="fon">
-        <div class="container">
-          <UiLoaderView
-            v-if="loader.isLoader"
-          />
-          <div  class="wrapper"
-            v-else
-          >
-            <div class="tests__block"
-              v-if="categorys.categorys"
-            >
-              <div
-                v-for="(area) in getCategogys" 
-                :key="area.id"
+    <UiLoaderView
+      v-if="loader.isLoader"
+    />
+      <div class="sections" 
+        v-else
+      >
+        <TheHeaderVsPage
+          :title="categorys.getCategoryTitle"
+        />
+        <div class="fon">
+          <div class="container">
+            <div  class="wrapper">
+              <div class="tests__block"
+                v-if="categorys.categorys"
               >
-                <div class="test__card"
-                  v-if="true"
-                  @click="categoryUpdate({section: area })"
+                <div
+                  v-for="(area) in getCategogys" 
+                  :key="area.id"
                 >
-                  <div>
+                  <div class="test__card"
+                    v-if="true"
+                    @click="categoryUpdate({section: area })"
+                  >
+                    <div>
+                      {{ area.title }}
+                    </div>
+                    <div>
+                      <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.50356 9.39524C9.22523 9.11625 9.22515 8.66465 9.50337 8.38556C9.78263 8.10544 10.2363 8.1053 10.5157 8.38525L14.2949 12.1715C14.6845 12.5619 14.6845 13.1941 14.2949 13.5844L10.5157 17.3707C10.2363 17.6507 9.78263 17.6505 9.50337 17.3704C9.22515 17.0913 9.22523 16.6397 9.50356 16.3607L12.9781 12.878L9.50356 9.39524Z" fill="#269EB7"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="test__card-limitation"
+                    v-else
+                    title="У Вас ограниченный доступ. Подпишитесь на группу."
+                  >
                     {{ area.title }}
                   </div>
-                  <div>
-                    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9.50356 9.39524C9.22523 9.11625 9.22515 8.66465 9.50337 8.38556C9.78263 8.10544 10.2363 8.1053 10.5157 8.38525L14.2949 12.1715C14.6845 12.5619 14.6845 13.1941 14.2949 13.5844L10.5157 17.3707C10.2363 17.6507 9.78263 17.6505 9.50337 17.3704C9.22515 17.0913 9.22523 16.6397 9.50356 16.3607L12.9781 12.878L9.50356 9.39524Z" fill="#269EB7"/>
-                    </svg>
+                </div>
+                <ThePagination />
+                <div class="test__block-info">
+                  Дополнительная информация
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
+                  </svg>
+                </div>
+                <div class="b-container">
+                  <div class="wrapper">
+                    <div class="description">
+                      {{ categorys.getCategorySeoDescription }}
+                    </div>
                   </div>
                 </div>
-                <div class="test__card-limitation"
-                  v-else
-                  title="У Вас ограниченный доступ. Подпишитесь на группу."
-                >
-                  {{ area.title }}
-                </div>
-              </div>
-              <ThePagination />
-              <div class="test__block-info">
-                Дополнительная информация
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9.50356 8.51725C9.22523 8.23826 9.22515 7.78666 9.50337 7.50757C9.78263 7.22745 10.2363 7.22731 10.5157 7.50726L14.2949 11.2936C14.6845 11.6839 14.6845 12.3161 14.2949 12.7064L10.5157 16.4927C10.2363 16.7727 9.78263 16.7725 9.50337 16.4924C9.22515 16.2133 9.22523 15.7617 9.50356 15.4828L12.9781 12L9.50356 8.51725Z" fill="#269EB7"/>
-                </svg>
-              </div>
-              <div class="b-container">
-                <div class="wrapper">
-                  <div class="description">
-                    {{ categorys.getCategorySeoDescription }}
-                  </div>
-                </div>
-              </div>
-            </div> 
-            <div class="tests__block min-heig"
-              v-else
-            > 
-              Данная категория в разработке.
-            </div> 
-            
+              </div> 
+              <div class="tests__block min-heig"
+                v-else
+              > 
+                Данная категория в разработке.
+              </div> 
+              
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 <script setup>
@@ -78,7 +78,9 @@
   import { useCategoryStore } from '../stores/CategoryStore'
   import { useLoaderStore } from '../stores/Loader'
   import { useUserStore  } from '../stores/UserStore'
+  import { useCrumbsStore } from '../stores/CrumbsStore'
   
+  const crumbs = useCrumbsStore()
   const loader = useLoaderStore()
   const categorys = useCategoryStore()
   const user = useUserStore()
@@ -94,15 +96,12 @@
   const page = ref(route.params.page ? +route.params.page: 1)
   console.log(page.value)
     
-  categorys.getApiCategorys({
-    page: page.value > 1 ? page.value: '',
-    parentId: parentId.value,
-  })
-
+  
   const description = computed(() => {
     return `${categorys.getCategoryTitle}. ${categorys.getCategoryDescription}. ${user.getGlobalDescription}`
   })
-  
+
+  //переход при выборе категории
   async function categoryUpdate({section}){
     iterNum.value++
     console.log(section)
@@ -123,6 +122,27 @@
       
     }
   }
+
+  async function getCondition() {
+    await categorys.getApiCategorys({
+    page: page.value > 1 ? page.value: '',
+    parentId: parentId.value,
+  })
+    crumbs.getCategoryCrumbsDB(parentId.value)
+    // if (crumbs.getCrumbsLendch >= 0){
+    //   crumbs.addIteration({
+    //     title:`/${categorys.getCategoryAlias}`,
+    //     link: `/iter/${iterNum.value}/group/${parentId.value}`,
+    //     active: false
+    //   })
+    //   crumbs.getCategoryCrumbsDB(parentId.value)
+    // } else {
+    //   crumbs.getCategoryCrumbsDB(parentId.value)
+    // }
+
+  }
+
+  getCondition()
 </script>
 <style lang="scss" scoped>
 .sections{

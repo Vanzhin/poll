@@ -15,7 +15,8 @@ export const useTicketsStore = defineStore('tickets', {
     getTickets: (state) => state.tickets,
     getCountTickets: (state) => state.tickets.length,
     getTicketsIs: (state) => state.tickets.length > 0,
-    getTicketSelect: (state) => state.ticketSelect
+    getTicketSelect: (state) => state.ticketSelect,
+    getTicketSelectTitle: (state) => state.ticketSelect ? state.ticketSelect.title : ''
   },
   actions: {
     saveTicketModeTitle(title) {

@@ -1,4 +1,11 @@
 <template>
+  <Head>
+    <Title> {{ tests.getTestTitle }} | {{ ticketTitle }} | Амулет Тест</Title>
+    <Meta name="description" :content="description" />
+          
+    <Meta name="robots" content="max-image-preview:large"/>
+    <link rel="canonical" href=""/>
+  </Head>
   <div >
     <UiLoaderView
       v-if="loader.isLoader"
@@ -81,12 +88,17 @@
   import { useTicketsStore  } from '../stores/TicketsStore'
   import { useResultStore  } from '../stores/ResultStore'
   import { useModalStore } from '../stores/ModalStore'
+  import { useCrumbsStore } from '../stores/CrumbsStore'
+  import { useUserStore  } from '../stores/UserStore'
   import rndOptions from '../utils/rndOptions.js'
+
   const route = useRoute()
   const ticketRnd = ref(route.params.rnd)
   const parentId = ref(+route.params.id)
   const ticketNum = ref(+route.params.num)
   
+  const user = useUserStore()
+  const crumbs = useCrumbsStore()
   const tests = useTestsStore()
   const loader = useLoaderStore()
   const questions = useQuestionsStore()
@@ -94,20 +106,25 @@
   const modal = useModalStore()
   const ticketModeTitle = ref('')
   const timeTicket = ref(false)
+  const ticketLink = ref('')
   
   const regexp = new RegExp("rnd", 'i');
   if ( regexp.test(ticketRnd.value)){
     ticketModeTitle.value = rndOptions[ticketRnd.value]
     ticketsStore.saveTicketModeTitle(ticketModeTitle.value)
-    if(ticketRnd.value = "rnd20t"){timeTicket.value = true}
-
-  } 
-
-  if (ticketRnd.value) {
-    questions.getQuestionsTestIdDb({id: parentId.value, rnd: ticketRnd.value })
+    ticketsStore.ticketSelectToChange(null)
+    // ticketLink.value = `/test/${parentId.value}/${ticketRnd.value}`
+    if(ticketRnd.value === "rnd20t"){timeTicket.value = true}
   } else {
-    questions.getQuestionsIsTicketIdDb({id: ticketNum.value})
+    // ticketLink.value = `/test/${parentId.value}/ticket/${ticketRnd.value}`
   }
+  const description = computed(() => {
+    return `${tests.getTestTitle}. ${tests.getTestDescription}. ${user.getGlobalDescription}`
+  })
+  //title для head
+  const ticketTitle = computed(() => {
+    return `${ticketModeTitle.value !=='' ? ticketModeTitle.value: 'Билет № ' + ticketsStore.getTicketSelectTitle}`
+  })
   
   function type(item) {
     return item.type.title ? item.type.title : item.type
@@ -140,6 +157,24 @@
     await result.saveResultTicketUser(ticket)
     navigateTo(`/result`)
   }
+
+  async function getCondition() {
+    if (ticketRnd.value) {
+      await questions.getQuestionsTestIdDb({id: parentId.value, rnd: ticketRnd.value })
+    } else {
+      await questions.getQuestionsIsTicketIdDb({id: ticketNum.value})
+    }
+    await crumbs.getTestCrumbsDB(parentId.value)
+    
+    crumbs.addIteration({
+      title:`/${ticketModeTitle.value !=='' ? ticketModeTitle.value: 'Билет № ' + ticketsStore.getTicketSelectTitle}`,
+      link: route.path,
+      active: false,
+
+    })
+  }
+
+  getCondition()
 </script>
 
 <style lang="scss" scoped>

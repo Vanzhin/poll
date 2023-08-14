@@ -161,6 +161,9 @@
   import { useTicketsStore } from '../../../stores/TicketsStore'
   import { useLoaderStore } from '../../../stores/Loader'
   import { useUserStore  } from '../../../stores/UserStore'
+  import { useCrumbsStore } from '../../../stores/CrumbsStore'
+  
+  const crumbs = useCrumbsStore()
   const tests = useTestsStore()
   const {getTests} = storeToRefs(tests)
   const loader = useLoaderStore()
@@ -175,10 +178,7 @@
   const description = computed(() => {
     return `${tests.testTitle}. ${user.getGlobalDescription}`
   })  
-  tickets.getApiTicketsTestIdNoAuthDb({
-    page: page.value > 1 ? page.value: '',
-    parentId: parentId.value,
-  })
+  
 
   function clickToLink(link){
     navigateTo(`/test/${parentId.value}/${link}`)
@@ -186,6 +186,21 @@
   function clickToLinkTicket({ticket}){
     navigateTo(`/test/${parentId.value}/ticket/${ticket.id}`)
   }
+
+  async function getCondition() {
+    await tickets.getApiTicketsTestIdNoAuthDb({
+    page: page.value > 1 ? page.value: '',
+    parentId: parentId.value,
+  })
+    await crumbs.getTestCrumbsDB(parentId.value)
+    
+  }
+
+  getCondition()
+
+
+
+
 </script>
 <style lang="scss" scoped>
 

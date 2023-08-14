@@ -81,6 +81,9 @@
   import { useLoaderStore } from '../stores/Loader'
   import { useCategoryStore } from '../stores/CategoryStore'
   import { useUserStore  } from '../stores/UserStore'
+  import { useCrumbsStore } from '../stores/CrumbsStore'
+  
+  const crumbs = useCrumbsStore()
   const categorys = useCategoryStore()
   const tests = useTestsStore()
   const user = useUserStore()
@@ -89,6 +92,7 @@
   const route = useRoute()
   const parentId = ref(+route.params.id)
   const iterNum = ref(+route.params.num)
+  
   console.log(tests)
   console.log(route.params)
   console.log(parentId)
@@ -100,12 +104,20 @@
   const description = computed(() => {
     return `${categorys.getCategoryTitle}. ${categorys.getCategoryDescription}. ${user.getGlobalDescription}`
   })
-    
-  tests.getApiTests({
-    page: page.value > 1 ? page.value: '',
-    parentId: parentId.value,
-  })
+  
+  
+  async function getCondition() {
+    await tests.getApiTests({
+      page: page.value > 1 ? page.value: '',
+      parentId: parentId.value,
+    })
+    await crumbs.getCategoryCrumbsDB(parentId.value)
+    crumbs.setCrumbsAddTests(parentId.value)
+  }
 
+  getCondition()
+  
+  //переход при выборе теста
   function testLink({ test }){
     tests.testActiveSave(test)
     console.log(test)

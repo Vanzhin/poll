@@ -9,7 +9,10 @@
 </template>
 <script setup>
   import { usePaginationStore } from '../stores/PaginationStore'
+  import { useCrumbsStore } from '../stores/CrumbsStore'
   const pagination = usePaginationStore()
+  const  crumbs = useCrumbsStore()
+  crumbs.nullIteration()
   const route = useRoute()
   pagination.urlToChange(route.path)
   const page = ref(route.params.page ? +route.params.page: 1)
