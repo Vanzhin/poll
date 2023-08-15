@@ -18,7 +18,7 @@ export const useUserStore = defineStore('user', {
     getCountTickets: (state) => state.tickets.length,
     getIsAutchUser: (state) => state.token ? true : false,
     getPageName: (state) => state.page,
-    getUserAdmin: (state) => state.role === "ROLE_ADMIN",
+    getUserAdmin: (state) => state.role === "ROLE_ADMIN" || state.role === "ROLE_SUPER_ADMIN",
     getToken: (state) => state.token,
     getProfile: (state) => state.profile,
     getAutchUserProfileFIO: (state) => state.profileFIO,
