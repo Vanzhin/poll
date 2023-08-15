@@ -28,7 +28,7 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
                 ->setEmail($this->params->get('app.admin_email'))
                 ->setPassword($this->hasher->hashPassword($user, $this->params->get('app.admin_pass')))
                 ->setLogin('admin')
-                ->setRoles(['ROLE_ADMIN']);
+                ->setRoles(['ROLE_SUPER_ADMIN']);
         });
 
         $this->createMany(User::class, 10, function (User $user) use ($manager) {

@@ -6,10 +6,13 @@ use App\Entity\Commission\Commission;
 use App\Repository\ProtocolRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: ProtocolRepository::class)]
 class Protocol
 {
+    use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,6 +33,9 @@ class Protocol
 
     #[ORM\OneToOne(mappedBy: 'protocol', cascade: ['persist', 'remove'])]
     private ?Group $groups = null;
+
+    #[ORM\Column(length: 25)]
+    private ?string $number = null;
 
     public function getId(): ?int
     {
@@ -102,6 +108,18 @@ class Protocol
         }
 
         $this->groups = $groups;
+
+        return $this;
+    }
+
+    public function getNumber(): ?string
+    {
+        return $this->number;
+    }
+
+    public function setNumber(string $number): self
+    {
+        $this->number = $number;
 
         return $this;
     }

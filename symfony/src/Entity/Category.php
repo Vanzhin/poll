@@ -104,6 +104,20 @@ class Category implements EntityWithImageInterface
     #[Groups(['main', 'admin', 'category', 'result', 'search', 'breadcrumbs'])]
     private ?string $alias = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['admin'])]
+    #[Assert\Length(max: 100, maxMessage: 'category.robots.max_length')]
+    private ?string $robots = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['admin'])]
+    #[Assert\Length(max: 100, maxMessage: 'category.canonical.max_length')]
+    private ?string $canonical = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['admin'])]
+    private ?string $descriptionSeo = null;
+
     public function __construct()
     {
         $this->test = new ArrayCollection();
@@ -222,6 +236,42 @@ class Category implements EntityWithImageInterface
     public function setAlias(string $alias): self
     {
         $this->alias = $alias;
+
+        return $this;
+    }
+
+    public function getRobots(): ?string
+    {
+        return $this->robots;
+    }
+
+    public function setRobots(?string $robots): self
+    {
+        $this->robots = $robots;
+
+        return $this;
+    }
+
+    public function getCanonical(): ?string
+    {
+        return $this->canonical;
+    }
+
+    public function setCanonical(?string $canonical): self
+    {
+        $this->canonical = $canonical;
+
+        return $this;
+    }
+
+    public function getDescriptionSeo(): ?string
+    {
+        return $this->descriptionSeo;
+    }
+
+    public function setDescriptionSeo(?string $descriptionSeo): self
+    {
+        $this->descriptionSeo = $descriptionSeo;
 
         return $this;
     }

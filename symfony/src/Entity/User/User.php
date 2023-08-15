@@ -72,7 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Company $company = null;
 
     #[ORM\Column(length: 255, unique: true, nullable: false)]
-    #[Groups(['user_editable'])]
+    #[Groups(['user_editable', 'admin_user'])]
     #[Assert\NotBlank(message: 'user.login.not_blank')]
     #[Assert\NotNull(message: 'user.login.not_null')]
     #[Assert\Length(max: 255, maxMessage: 'user.login.length')]
