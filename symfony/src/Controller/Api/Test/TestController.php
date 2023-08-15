@@ -46,7 +46,7 @@ class TestController extends AbstractController
     public function show(Test $test): JsonResponse
     {
         return $this->json(
-            $test,
+            compact('test'),
             200,
             ['charset=utf-8'],
             ['groups' => 'main_test'],
@@ -99,7 +99,7 @@ class TestController extends AbstractController
             }
             $questions = $testService->getQuestionForResponse($questionRepository->getByIdsSortBySection($questionsId));
             $response = [
-                'test' => $test->getTitle(),
+                'test' => $test,
                 'questions' => $questions
             ];
 
@@ -115,7 +115,7 @@ class TestController extends AbstractController
                 ['charset=utf-8'],
                 [
                     'groups' => 'test',
-                    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                    AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
                     AbstractNormalizer::CALLBACKS => [
                         'image' => $normalizerService->imageCallback($upLoadedAsset),
                     ]
@@ -141,7 +141,7 @@ class TestController extends AbstractController
             ['charset=utf-8'],
             [
                 'groups' => 'handle',
-                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
                 AbstractNormalizer::CALLBACKS => [
                     'image' => $normalizerService->imageCallback($upLoadedAsset),
                 ]
@@ -165,7 +165,7 @@ class TestController extends AbstractController
             ['charset=utf-8'],
             [
                 'groups' => 'handle',
-                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
                 AbstractNormalizer::CALLBACKS => [
                     'image' => $normalizerService->imageCallback($upLoadedAsset),
                 ]
@@ -206,7 +206,7 @@ class TestController extends AbstractController
                 ['charset=utf-8'],
                 [
                     'groups' => 'test',
-                    AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                    AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
                     AbstractNormalizer::CALLBACKS => [
                         'image' => $normalizerService->imageCallback($upLoadedAsset),
                     ]
