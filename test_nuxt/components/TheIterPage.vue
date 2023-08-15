@@ -3,9 +3,8 @@
     <Head>
       <Title>{{ categorys.getCategoryTitle }} | Амулет Тест</Title>
       <Meta name="description" :content="description" />
-           
-      <Meta name="robots" content="max-image-preview:large"/>
-      <link rel="canonical" href=""/>
+      <Meta name="robots" :content="categorys.getCategoryRobots"/>
+      <link rel="canonical" :href="categorys.getCategoryCanonical"/>
     </Head>
     <UiLoaderView
       v-if="loader.isLoader"

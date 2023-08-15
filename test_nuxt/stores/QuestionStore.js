@@ -70,7 +70,8 @@ export const useQuestionsStore = defineStore('questions', {
         )
         console.log("questions", questions.value)
         const test = useTestsStore()
-        test.testTitleSave(questions.value.test)
+        test.testTitleSave(questions.value.test.title)
+        test.testActiveSave(questions.value.test)
         this.questions = questions.value.questions
         loader.setIsLoaderStatus(false)
       } catch (error) {
@@ -99,7 +100,8 @@ export const useQuestionsStore = defineStore('questions', {
             if (questions.value.ticket) {
               ticketsStore.ticketSelectToChange(questions.value.ticket)
             }
-            test.testTitleSave(questions.value.test)
+            test.testTitleSave(questions.value.test.title || questions.value.test)
+            test.testActiveSave(questions.value.test)
             this.questions = questions.value.questions
            
             loader.setIsLoaderStatus(false)

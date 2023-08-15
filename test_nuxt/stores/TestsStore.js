@@ -15,7 +15,10 @@ export const useTestsStore = defineStore('tests', {
     getTestActive: (state) => state.testActive,
     getTestTitle: (state) => state.testTitle,
     getTestActiveTime: (state) => state.testActive ? state.testActive.time / 60 : 20,
-    getTestDescription: (state) => state.testActive ? state.testActive.description :''
+    getTestDescription: (state) => state.testActive ? state.testActive.description :'',
+    getTestSeoDescription: (state) => state.testActive ? state.testActive.descriptionSeo :'',
+    getTestCanonical: (state) => state.testActive ? state.testActive.canonical :'',
+    getTestRobots: (state) => state.testActive ? state.testActive.robots :'max-image-preview:large',
   },
   actions: {
     testsToChange(tests) {

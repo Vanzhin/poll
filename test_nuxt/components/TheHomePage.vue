@@ -1,5 +1,7 @@
 <template>
   <Head>
+    <Title>Тесты Ростехнадзора по промышленной безопасности и электробезопасности | Амулет Тест </Title>
+    <Meta name="description" :content="user.getGlobalDescription" />
     <link rel="canonical" href=""/>
   </Head>
 
@@ -118,7 +120,9 @@
   import { useCategoryStore } from '../stores/CategoryStore'
   import { useTestsStore } from '../stores/TestsStore'
   import { useLoaderStore } from '../stores/Loader'
-  
+  import { useUserStore  } from '../stores/UserStore'
+
+  const user = useUserStore()
   const categorys = useCategoryStore()
   const tests = useTestsStore()
   const {getCategogys} = storeToRefs(categorys)

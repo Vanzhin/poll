@@ -3,8 +3,8 @@
     <Title> {{ tests.getTestTitle }} | {{ ticketTitle }} | Амулет Тест</Title>
     <Meta name="description" :content="description" />
           
-    <Meta name="robots" content="max-image-preview:large"/>
-    <link rel="canonical" href=""/>
+    <Meta name="robots" :content="tests.getTestRobots"/>
+    <link rel="canonical" :href="tests.getTestCanonical"/>
   </Head>
   <div >
     <UiLoaderView
@@ -33,7 +33,7 @@
               <div class="ticket-number"
                 v-if="ticketsStore.ticketSelect"
               >
-                Билет № {{ ticketsStore.ticketSelect.title }}
+                Билет № {{ ticketsStore.getTicketSelectTitle }}
               </div>
               <form @submit.prevent="onSubmit"
                 id="formTest"
@@ -106,7 +106,7 @@
   const modal = useModalStore()
   const ticketModeTitle = ref('')
   const timeTicket = ref(false)
-  const ticketLink = ref('')
+ 
   
   const regexp = new RegExp("rnd", 'i');
   if ( regexp.test(ticketRnd.value)){
@@ -165,9 +165,9 @@
       await questions.getQuestionsIsTicketIdDb({id: ticketNum.value})
     }
     await crumbs.getTestCrumbsDB(parentId.value)
-    
+    console.log(ticketsStore.getTicketSelectTitle)
     crumbs.addIteration({
-      title:`/${ticketModeTitle.value !=='' ? ticketModeTitle.value: 'Билет № ' + ticketsStore.getTicketSelectTitle}`,
+      title: `/${ticketModeTitle.value !=='' ? ticketModeTitle.value: 'Билет № ' + ticketsStore.getTicketSelectTitle}`,
       link: route.path,
       active: false,
 
@@ -175,6 +175,7 @@
   }
 
   getCondition()
+  
 </script>
 
 <style lang="scss" scoped>

@@ -45,18 +45,21 @@ export const useTicketsStore = defineStore('tickets', {
               // lazy: true,
             })
         )
-        console.log("sections", sections.value)
-        this.tickets = sections.value.ticket
+        const testRespons =  sections.value.test
+        console.log("sections", testRespons)
+        this.tickets = testRespons.ticket
         const test = useTestsStore()
-        test.testTitleSave(sections.value.title)
-        test.testActiveSave({
-          alias:sections.value.alias,
-          title:sections.value.title,
-          time:sections.value.time,
-          id:sections.value.id,
-          slug:sections.value.slug,
-          minTrudTest:sections.value.minTrudTest,
-        })
+        test.testTitleSave(testRespons.title)
+        test.testActiveSave(testRespons
+        //   {
+        //   alias:sections.value.alias,
+        //   title:sections.value.title,
+        //   time:sections.value.time,
+        //   id:sections.value.id,
+        //   slug:sections.value.slug,
+        //   minTrudTest:sections.value.minTrudTest,
+        // }
+        )
         // this.pending = pending.value
         console.log('getApiTicketsTestIdNoAuthDb получил -', this.tickets)
         loader.setIsLoaderStatus(false)

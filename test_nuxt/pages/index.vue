@@ -1,23 +1,16 @@
 <template>
   <div >
-    <Head>
-      <Title>Амулет Тест | Тесты Ростехнадзора по промышленной безопасности и электробезопасности</Title>
-      <Meta name="description" content="Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности" />
-    </Head>
     <TheHomePage />
   </div>
 </template>
 <script setup>
   import { usePaginationStore } from '../stores/PaginationStore'
-  import { useCrumbsStore } from '../stores/CrumbsStore'
+  
   const pagination = usePaginationStore()
-  const  crumbs = useCrumbsStore()
-  crumbs.nullIteration()
   const route = useRoute()
   pagination.urlToChange(route.path)
-  const page = ref(route.params.page ? +route.params.page: 1)
+  
   onMounted(() => {
-    console.log('я на клиенте')
     // console.dir( window)
     // window.scrollTo(pageXOffset,0)
     // window.scrollY = 0

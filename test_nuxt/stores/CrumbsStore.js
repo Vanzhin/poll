@@ -25,6 +25,7 @@ export const useCrumbsStore = defineStore('crumbs', {
       this.crumbs.at(-1).title += ' Тесты'
       this.crumbs.at(-1).link = `/area/${id}`
     },
+
     async setIterationsCrumbs(result){
       this.nullIteration()
       const provisional = []
@@ -39,9 +40,7 @@ export const useCrumbsStore = defineStore('crumbs', {
         return provisional
       }
       const cbumbsIter = generationOfCrumbs(result)
-      console.log('cbumbsIter -',cbumbsIter.length)
       for (let i = cbumbsIter.length - 1; i >= 0; i-- ){
-        console.log('i -',i)
         this.addIteration({
           title:`/${cbumbsIter[i].alias}`,
           link: `/iter/${cbumbsIter.length - i}/group/${cbumbsIter[i].id}`,
@@ -49,6 +48,7 @@ export const useCrumbsStore = defineStore('crumbs', {
         })
       }
     },
+
     async getCategoryCrumbsDB(id){
       let url = `${urlApi}/api/category/${id}/breadcrumbs`
       const params = {
@@ -59,7 +59,6 @@ export const useCrumbsStore = defineStore('crumbs', {
         },
       }
       const result = await setUseAsyncFetch({ url, params, token: false })
-      console.log('result.value -',result.data)
       this.setIterationsCrumbs(result.data)
     },
 
@@ -73,8 +72,6 @@ export const useCrumbsStore = defineStore('crumbs', {
         },
       }
       const result = await setUseAsyncFetch({ url, params, token: false })
-      console.log('result.value -',result.data)
-    
       await this.setIterationsCrumbs(result.data.category)
       this.setCrumbsAddTests(result.data.category.id)
       this.addIteration({
@@ -82,9 +79,8 @@ export const useCrumbsStore = defineStore('crumbs', {
         link: `/test/${result.data.id}`,
         active: false
       }) 
-
-
     },
+
     async getTicketCrumbsDB(id){
       let url = `${urlApi}/api/ticket/${id}/breadcrumbs`
       const params = {
@@ -95,11 +91,7 @@ export const useCrumbsStore = defineStore('crumbs', {
         },
       }
       const result = await setUseAsyncFetch({ url, params, token: false })
-      console.log('result.value -',result.data)
-
-      
       this.setIterationsCrumbs(result.data)
     }
-
   }
 })
