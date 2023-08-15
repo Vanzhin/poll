@@ -13,7 +13,7 @@
           :value="parentId"
           v-if="parentId"
         >
-        <p class="label"><b>Категория: </b></p>
+        <p class="label"><b>Категория (title, h1): </b></p>
         <div class="custom-radio img_block">
           <textarea rows="2" required
             name="title"
@@ -25,7 +25,7 @@
             v-if="title !== ''"
           ></i>
         </div>
-        <label class="label"><b>Описание действий:</b> </label>
+        <label class="label"><b>Описание (description):</b> </label>
         <div class="custom-radio img_block">  
           <textarea rows="1" 
             name="description"
@@ -47,6 +47,31 @@
           <i class="bi bi-eraser custom-close" title="Очистить поле"
             @click="alias = ''"
             v-if="alias !== ''"
+          ></i>
+        </div>
+        <label class="label"><b>Дополнительное описание для SEO:</b> </label>
+        <div class="custom-radio img_block">  
+          <textarea rows="1" 
+            name="description_seo"
+            v-model= "description_seo"
+            class="textarea_input" 
+          ></textarea> 
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="description_seo = ''"
+            v-if="description_seo !== ''"
+          ></i>
+        </div>
+        <label class="label"><b>Canonical:</b> </label>
+        <div class="custom-radio img_block">  
+          <input type="checkbox" 
+          :value= "answer.id"
+          v-model="answerSelect"
+          v-if="answer!==''"
+          disabled
+          class="custom-control-input"  > 
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="description_seo = ''"
+            v-if="description_seo !== ''"
           ></i>
         </div>
         <div class="mb-3 w-100">
@@ -100,6 +125,7 @@
         parentId: undefined,
         title: "",
         description: "",
+        description_seo: "",
         imageFile: "",
         imageUrl: "",
         imageValue: "",
