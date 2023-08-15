@@ -19,7 +19,7 @@ class Group
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['admin_group'])]
+    #[Groups(['admin_group', 'admin_protocol'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -60,7 +60,7 @@ class Group
     #[Groups(['admin_group'])]
     private ?User $owner = null;
 
-    #[ORM\OneToOne(inversedBy: 'groups', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'groups', cascade: ['persist', 'remove'])]
     private ?Protocol $protocol = null;
 
     public function __construct()
@@ -199,8 +199,13 @@ class Group
         return $this->protocol;
     }
 
-    public function setProtocol(?Protocol $protocol): self
+    public function setProtocol(Protocol $protocol): self
     {
+        // set the owning side of the relation if necessary
+        if ($protocol->getGroups() !== $this) {
+            $protocol->setGroups($this);
+        }
+
         $this->protocol = $protocol;
 
         return $this;

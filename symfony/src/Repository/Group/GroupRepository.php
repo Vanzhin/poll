@@ -82,4 +82,20 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
 
         return $query;
     }
+
+    public function getById(int $group_id): ?Group
+    {
+        $queryBuilder = $this->getOrCreateQueryBuilder();
+        return
+            $queryBuilder
+                ->leftJoin('gr.protocol', 'pr')
+                ->addSelect('pr')
+                ->join('gr.company', 'co')
+                ->addSelect('co')
+                ->join('gr.owner', 'ow')
+                ->addSelect('ow')
+                ->andWhere('gr.id = :id')
+                ->setParameter('id', $group_id)
+                ->getQuery()->getOneOrNullResult();
+    }
 }

@@ -34,11 +34,11 @@ class Test
         maxMessage: 'test.title.max_length',
     )]
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search', 'test'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['main', 'main_test', 'admin', 'category', 'admin_test_general'])]
+    #[Groups(['main', 'main_test', 'admin', 'category', 'admin_test_general', 'test'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, unique: true)]
@@ -115,17 +115,17 @@ class Test
     private Collection $groups;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['admin_test_general'])]
+    #[Groups(['admin_test_general', 'main', 'test', 'main_test'])]
     #[Assert\Length(max: 100, maxMessage: 'test.robots.max_length')]
     private ?string $robots = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['admin_test_general'])]
+    #[Groups(['admin_test_general', 'main', 'test', 'main_test'])]
     #[Assert\Length(max: 100, maxMessage: 'test.canonical.max_length')]
     private ?string $canonical = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['admin_test_general'])]
+    #[Groups(['admin_test_general', 'main', 'test', 'main_test'])]
     private ?string $descriptionSeo = null;
 
     /**

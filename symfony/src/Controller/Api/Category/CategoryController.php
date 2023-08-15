@@ -51,7 +51,7 @@ class CategoryController extends AbstractController
             ['charset=utf-8'],
             [
                 'groups' => ['category'],
-                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
                 AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,
                 AbstractNormalizer::CALLBACKS => [
                     'image' => $normalizerService->imageCallback($upLoadedAsset),

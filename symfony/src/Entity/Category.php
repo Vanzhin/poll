@@ -105,17 +105,17 @@ class Category implements EntityWithImageInterface
     private ?string $alias = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['admin'])]
+    #[Groups(['admin', 'category'])]
     #[Assert\Length(max: 100, maxMessage: 'category.robots.max_length')]
     private ?string $robots = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['admin'])]
+    #[Groups(['admin', 'category'])]
     #[Assert\Length(max: 100, maxMessage: 'category.canonical.max_length')]
     private ?string $canonical = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['admin'])]
+    #[Groups(['admin', 'category'])]
     private ?string $descriptionSeo = null;
 
     public function __construct()

@@ -43,9 +43,26 @@ class NormalizerService
     public function dateTimeCallback(): \Closure
     {
         return function (object $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): string {
-                if ($innerObject instanceof \DateTimeImmutable) {
-                    return $innerObject->format('Y-m-d H:i:s');
-                }
+            if ($format == 'Y-m-d' && $innerObject instanceof \DateTimeImmutable) {
+                return $innerObject->format('Y-m-d');
+            }
+
+            if ($innerObject instanceof \DateTimeImmutable) {
+                return $innerObject->format('Y-m-d H:i:s');
+            }
+
+            return '';
+        };
+    }
+
+    public function dateCallback(): \Closure
+    {
+        return function (object $innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): string {
+
+            if ($innerObject instanceof \DateTimeImmutable) {
+                return $innerObject->format('Y-m-d');
+            }
+
             return '';
         };
     }
