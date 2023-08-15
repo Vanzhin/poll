@@ -82,6 +82,8 @@ class SerializerService
                 'finished_at' => $this->normalizerService->dateTimeCallback(),
                 'createdAt' => $this->normalizerService->dateTimeCallback(),
                 'updatedAt' => $this->normalizerService->dateTimeCallback(),
+                'orderDate' => $this->normalizerService->dateCallback(),
+
             ]);
 
         return $this->serializer->serialize($object, 'json', $contextBuilder->toArray());

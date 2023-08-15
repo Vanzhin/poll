@@ -22,7 +22,7 @@ class Commission
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['admin', 'admin_commission'])]
+    #[Groups(['admin', 'admin_commission', 'admin_protocol'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
