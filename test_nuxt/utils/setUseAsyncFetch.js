@@ -2,15 +2,18 @@ import { useUserStore } from '../stores/UserStore'
 import { useLoaderStore } from '../stores/Loader'
 import { useModalStore  } from '../stores/ModalStore'
 
+
+
 export default async function setUseAsyncFetch ({url, params, token, loading = true}){
   const user = useUserStore() 
   const loader = useLoaderStore() 
   const modal = useModalStore()
   loader.setIsLoaderStatus(loading)
+  
   if (user.getIsAutchUser && token) {
     params.headers.Authorization = `Bearer ${user.getToken}`
   }
-
+  console.log(url, params)
   const { data: result, pending, error } = await useAsyncData(
     () => $fetch(url, params))
     

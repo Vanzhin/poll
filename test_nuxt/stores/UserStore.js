@@ -81,6 +81,7 @@ export const useUserStore = defineStore('user', {
             refresh_token: result.value.refresh_token
           });
           localStorage.setItem('token', parsed);
+          
           loader.setIsLoaderStatus(false)
           return true
         }

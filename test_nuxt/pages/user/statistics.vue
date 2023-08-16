@@ -137,7 +137,9 @@
 </template>
 
 <script setup>
- 
+  definePageMeta({
+    middleware: 'auth'
+  });
   import { useLoaderStore } from '../../stores/Loader'
   import { useResultStore } from '../../stores/ResultStore'
   import { useUserStore } from '../../stores/UserStore'
@@ -203,7 +205,7 @@
           </tr>
         `
         const question = resultStore.getResultQuestions
-          console.log(question)
+         
         question.forEach(element => {
           block += `<tr><td>${element.title}</td><td>`
           if (element.type === "input_one") {
@@ -238,7 +240,6 @@
           // link.click();
     }
   onMounted(async() => {
-    console.log('я на клиенте')
     await resultStore .getAuthAccountResultsDb()
     results.value = resultStore .getStatistiks
      

@@ -30,9 +30,9 @@
     <div class="container">
       <div class="row">
         <div class="tests__block"
-          v-if="getCategorys">
-          <ItemChapter
-            v-for="(item, index) in getCategorys" 
+          v-if="categorys.getCategogysIs">
+          <AdminItemChapter
+            v-for="(item, index) in categorys.getCategorys" 
             :key="item.id"
             :item="item"
             :index="index"
@@ -51,13 +51,18 @@
 </template>
  
 <script setup>
- 
+  import { useCategoryStore } from '../../../stores/CategoryStore'
+  import { useLoaderStore } from '../../../stores/Loader'
+  const categorys = useCategoryStore()
+  const loader = useLoaderStore() 
+  
   function createCategory(){
     this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: 0  } })
   }
+
   async function categoryRoute({id}){
-    this.isLoader = true
-    await this.getCategorysDB({parentId: id, admin: true, token: this.getAutchUserToken})
+    
+    await categorys.getApiCategorys({parentId: id, admin: true})
     if (this.getTests) {
       this.$router.push({name: 'adminTests', params: {id } })
       setTimeout(() => this.isLoader = false, 200)
@@ -69,9 +74,10 @@
   }
 
   onMounted(async() => {
-  await this.getCategorysDB({admin: true, token: this.getAutchUserToken})
-  this.isLoader = false
-})
+    console.log('запрос категорий')
+    await categorys.getApiCategorys({admin: true})
+    
+  })
     
    
   

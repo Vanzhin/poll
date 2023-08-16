@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
 import { useLoaderStore } from './Loader'
 import { useModalStore  } from './ModalStore'
+import { useUserStore  } from './UserStore'
 export const useCategoryStore = defineStore('category', {
   state: () => ({
     // categorys: localStorage.getItem('categorys') ?
@@ -17,6 +18,7 @@ export const useCategoryStore = defineStore('category', {
   }),
   getters: {
     getCategogys: (state) => state.categorys,
+    getCategogysIs: (state) => state.categorys.length > 0,
     getCategoryTitle: (state) => state.parent.title,
     getCategoryAlias: (state) => state.parent.alias,
     getCategoryDescription: (state) => state.parent.description || '',
@@ -34,61 +36,32 @@ export const useCategoryStore = defineStore('category', {
     setParentCategory(parent){
       this.parent = parent
     },
-    async getApiCategorys({ page = null, parentId = null, admin = null, limit = 6 }){
-      const loader = useLoaderStore()
-      // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
+    async getApiCategorys({ page = null, parentId = null, admin = false, limit = 6 }){
       let url = `${urlApi}/api/category`
-      // if (admin) { 
-      //   config.headers.Authorization = `Bearer ${token}`
-      // }
-      let query = { limit }
-      if (parentId) { query.parent = parentId }
-      
-      if (page) { query.page = page }
-      
-      console.log(query)
-      loader.setIsLoaderStatus(true)
-      try {
-        // this.userData = await api.post({ login, password })
-        // const { data: sections, pending, error } = await useFetch(() =>  url,
-        // {
-        //   lazy: true,
-        //   query:query,
-        // })
-        // let timerId = setInterval(() => {
-        //   console.log('pending.value-',pending.value)
-        //   if ( !pending.value) {
-        //     clearInterval(timerId)
-        //     console.log("sections", sections.value)
-        //     this.categorys = sections.value.children
-        //     console.log('error - ',sections.value.pagination.hasOwnProperty(error))
-        //     const pagination = usePaginationStore()
-        //     pagination.paginationsAll(sections.value.pagination)
-        //     loader.setIsLoaderStatus(false)
-        //     if (sections.value.parent) {
-        //       this.parent = sections.value.parent
-        //     }
-        //   }
-        // }, 200);
-        const { data: sections, pending, error, refresh } = await useAsyncData(
-         
-          () => $fetch(url,{
-            // lazy : true,
-            query: query,
-          })
-        )
-        console.log("sections", sections.value)
-        this.categorys = sections.value.children
-        const pagination = usePaginationStore()
-            pagination.paginationsAll(sections.value.pagination)
-            loader.setIsLoaderStatus(false)
-            if (sections.value.parent) {
-              this.parent = sections.value.parent
-            }
-      } catch (error) {
-        console.log(error)
-       
+      let  params = {
+        method: 'GET',
+        headers: { 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        params: { limit }
       }
+      
+      if (parentId) {params.params.parent = parentId }
+      if (page) { params.params.page = page }
+
+      const sections = await setUseAsyncFetch({ url, params, token: admin })
+      if (sections.children) {
+        this.categorys = sections.children
+      }
+      
+      const pagination = usePaginationStore()
+      pagination.paginationsAll(sections.pagination)
+      
+      if (sections.parent) {
+        this.parent = sections.parent
+      }
+      
     },
      //запрос категорий для футера
     async getCategorysDBFooter() {

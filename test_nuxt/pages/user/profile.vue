@@ -1,4 +1,10 @@
 <template>
+  <Head>
+    <Title>Профиль | Амулет Тест</Title>
+    <Meta name="description" :content="user.getGlobalDescription" />
+    <Meta name="robots" content="noindex"/>
+    <link rel="canonical" href=""/>
+  </Head>
   <div class="sections fon">
     <div class="wrapper">
       <UiLoaderView
@@ -23,10 +29,6 @@
             @click="logOut"
           />
         </div>      
-                
-           
-        
-
       </div>
   </div>
 </div>
@@ -59,7 +61,6 @@
 </script>
 <style lang="scss" scoped>
    .fon{
-
     background-color: var(--color-fon);
   }
   .sections{
@@ -78,13 +79,9 @@
     line-height: 40px;
     color: var(--color-Black_blue);
   }
-   
   .tablis{
-    
     margin: 10px 10px 10px;
-    
     &-header{
-      
       &-title{
         font-weight: 700;
         font-size: 20px;
@@ -101,6 +98,5 @@
     justify-content: end;
   }
  @media (min-width: 1024px) {
-  
  }
 </style>

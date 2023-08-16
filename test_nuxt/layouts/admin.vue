@@ -10,15 +10,20 @@
   </main>
 </div>
 </template>
-<script>
-
-export default {
-  data: () => ({
-    isOpen: true,
+<script setup>
+  import { useUserStore  } from '../stores/UserStore'
+  const isOpen = ref(true)
+  onMounted(() => {
+    const user = useUserStore()
+    user.setTokenIsLocalStorage()
+    setTimeout(()=>{
+      window.scrollTo(pageXOffset, 0)
+    },2000)
     
-  }),
+  }) 
+  
  
-} 
+ 
 </script>
 <style lang="scss">
 .app{
