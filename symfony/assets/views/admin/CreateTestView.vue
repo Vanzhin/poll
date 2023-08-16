@@ -50,7 +50,8 @@
             </button> {{ selectTestMinTrud }} 
             <ul class="dropdown-menu trud_grup_option" aria-labelledby="dropdownMenuButton1">
               <li class="trud_option"
-                v-for="(item, index) in getTestsMinTrud"
+                v-for="(item) in getTestsMinTrud"
+                :key="item.id"
                 :value="item.id"
                 @click="selectedTestMinTrud(item)"
               >{{ item.title }}</li>
@@ -95,6 +96,56 @@
             @click="alias = ''"
             v-if="alias !== ''"
           ></i>
+        </div>
+        <label class="label"><b>Дополнительное описание для SEO:</b> </label>
+        <div class="custom-radio img_block">  
+          <textarea rows="1" 
+            name="descriptionSeo"
+            v-model= "descriptionSeo"
+            class="textarea_input" 
+          ></textarea> 
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="descriptionSeo = ''"
+            v-if="descriptionSeo !== ''"
+          ></i>
+        </div>
+        <label class="label"><b>Canonical:</b> </label>
+        <div class="custom-radio img_block">  
+          <input rows="1" 
+            name="canonical"
+            v-model= "canonical"
+            class="input_alias" 
+          >
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="canonical = ''"
+            v-if="canonical !== ''"
+          ></i>
+        </div>
+        <div  class="checkbox_label">
+          <input type="hidden" 
+          name="robots" 
+          :value="robotsText"
+        >
+          <label class="label"><b>Robots:</b>{{ robots }} </label>
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="robots = []"
+            v-if="robots.length > 0"
+          ></i>
+        </div>
+        <div class="">  
+          <div class="checkbox_label"
+            v-for="item in robotsEven"
+            :key="item.name"
+            :title="item.title"
+          >
+            <input type="checkbox" 
+              :value= "item.name"
+              v-model="robots"
+              class="custom-control-input"  
+            > 
+            <label>{{ item.name }}</label>
+          </div>
+          
         </div>
         <label class="label"><b>Укажите время на прохождение теста:</b> </label>
         <div class="custom-radio img_block">  
@@ -145,6 +196,14 @@
     },
     data() {
       return {
+        robotsEven:[
+          {name:'noindex', title: 'Не индексировать текст страницы. Страница не будет участвовать в результатах поиска.'}, 
+          {name:'nofollow', title: 'Не переходить по ссылкам на странице. Робот не перейдет по ссылкам при обходе сайта, но может узнать о них из других источников. Например, на других страницах или сайтах.'}, 
+          {name:'none', title: 'Соответствует директивам noindex, nofollow.'}, 
+          {name:'noarchive', title: 'Не показывать ссылку на сохраненную копию в результатах поиска.'}, 
+          {name:'noyaca', title: 'Не использовать сформированное автоматически описание.'}, 
+          {name:'all', title: 'Соответствует директивам index и follow — разрешено индексировать текст и ссылки на странице.'}
+        ],
         typeQuestions:[
           {id: 1, 
             type: "radio",
@@ -163,6 +222,9 @@
         operation: this.$route.params.operation,
         checkedMinTrud: false,
         selectTestMinTrud: null,
+        canonical: "",
+        robots: [],
+        descriptionSeo: "",
       }
     },
     computed:{ 
@@ -179,6 +241,10 @@
         console.log(test)
         return test
       },
+      robotsText(){
+        console.log(this.robots.toString())
+        return this.robots.toString()
+      }
     },
    
     methods: { 
@@ -216,7 +282,7 @@
       selectedTestMinTrud(item) {
         this.selectTestMinTrud = item.id
         this.title = item.title
-      }
+      },
     },
 
     async mounted(){
@@ -231,8 +297,14 @@
       if ( this.$route.params.operation === 'edit'){
         // await this.selectTestId({id: +this.$route.params.id})
         await this.getTestIdDb({id: +this.$route.params.id})
-        this.title = this.getTest.title
-        this.description = this.getTest.description
+        this.title = this.getTest.title || ''
+        this.description = this.getTest.description || ''
+        this.descriptionSeo = this.getTest.descriptionSeo || ''
+        this.canonical = this.getTest.canonical || ''
+        this.robots = this.getTest.robots ? this.getTest.robots.split(',') : []
+        this.sectionCountToPass = this.getTest.sectionCount || ''
+        this.alias = this.getTest.alias || ''
+        this.time = this.getTest.time || ''
       }
       console.log(this.getTestsMinTrud)
       if (!this.getTestsMinTrud) {
@@ -257,6 +329,13 @@
   .label{
     display:block;
     margin: 0 10px;
+  }
+  .checkbox_label{
+    display: flex;
+    align-items: center;
+    & label {
+      margin-left: 10px;
+    }
   }
   .textarea_input{
     max-width: 50%;
