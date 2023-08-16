@@ -32,7 +32,7 @@
        <!-- admin -->
         <li
           v-if="user.getUserAdmin"
-        ><NuxtLink class="dropdown-item menu_li" to='/'>Админка</NuxtLink>
+        ><NuxtLink class="dropdown-item menu_li" to='/admin'>Админка</NuxtLink>
         </li>
         <li><hr class="menu-hr"></li>
         <li class="dropdown-item menu-item menu_li" @click="logOut" >

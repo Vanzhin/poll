@@ -1,0 +1,51 @@
+<template>
+  <!-- <Loader/> -->
+<div class="app-main-layout" >
+  <TheHeader/>
+  <TheSidebar v-model="isOpen" />
+  <main class="app-content" :class="{full: !isOpen}">
+    <div class="app-page">
+      <slot />
+    </div>
+  </main>
+</div>
+</template>
+<script>
+
+export default {
+  data: () => ({
+    isOpen: true,
+    
+  }),
+ 
+} 
+</script>
+<style lang="scss">
+.app{
+&-page{
+  overflow: auto ;
+  padding: 0 ;
+  background-color: var(--color-fon);
+  height: 91vh;
+  z-index: 15;
+};
+&-content{
+  overflow: hidden ;
+  
+  padding-left:250px;
+  transition:padding-left .3s;
+  position:relative;
+  z-index: 15;
+  @media (max-width: 768px) {
+    padding-left:60px;
+  }
+};
+&-main-layout{
+  position:relative;
+  height:100vh;
+  overflow:hidden;
+};
+
+}
+
+</style>
