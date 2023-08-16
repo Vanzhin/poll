@@ -18,7 +18,6 @@
       :class="classObject"
       v-if="categorys.getCategoriesForDropDown"
     >
-      
       <li v-for="category in categorys.getCategoriesForDropDown"
         class="dropdown-item menu_li"
         @click="categoryUpdate({section:category})" 
@@ -37,7 +36,6 @@
     active: toggle.value.toggle,
   }))
   function toggleMeny(){
-    console.log('toggle')
     toggle.value.toggle = !toggle.value.toggle
     toggle.value.click =  0
     if (toggle.value.toggle){
@@ -52,7 +50,6 @@
       window.removeEventListener("click", dropDownFooterClickVisible);
     } else {
       toggle.value.click += 1
-      
     }
   }
 </script>   

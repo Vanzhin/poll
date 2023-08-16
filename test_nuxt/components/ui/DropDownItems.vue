@@ -58,7 +58,6 @@
   const toggle = ref({toggle: false, click: 0})
   
   function toggleMeny(){
-    console.log('toggle')
     toggle.value.toggle = !toggle.value.toggle
     toggle.value.click =  0
     if (toggle.value.toggle){
@@ -87,14 +86,12 @@
     navigateTo('/')
   }
   async function clickNavigate(link){
-    console.log(route.path)
     user.savePage(route.path)
     navigateTo(link)
   }
 </script>   
 
 <style lang="scss" scoped>
-
 .dropdown-button {
   display: flex;
   @media (max-width: 480px) {
@@ -103,10 +100,9 @@
   &-mobale{
     display: none;
     @media (max-width: 480px) {
-    display: flex;
+      display: flex;
+    }
   }
-  }
-
 }
   .btn{
     display: flex;

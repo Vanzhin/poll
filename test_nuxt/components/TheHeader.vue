@@ -78,14 +78,11 @@
   async function searchQuery(){
       await search.getSearchDb({limit:6, page:1, data:searchValue.value})
       searchValue.value = ''
-      console.log(route.name)
       if (route.meta.loyout === "admin"){
         // this.$router.push({name: 'adminTestsList' })
       } else {
         navigateTo('/search' )
       }
-      
-      
     }
 
 </script>

@@ -36,7 +36,6 @@
     active: toggle.value.toggle,
   }))
   function toggleMeny(){
-    console.log('toggle')
     toggle.value.toggle = !toggle.value.toggle
     toggle.value.click =  0
     if (toggle.value.toggle){
@@ -50,10 +49,8 @@
       window.removeEventListener("click", dropDownHeadClickVisible);
     } else {
       toggle.value.click += 1
-      
     }
   }
-  console.log('categorys.categorysFooter -',categorys.allСategories)
   if (!categorys.allСategories) {
     categorys.getCategorysDBFooter()
   }

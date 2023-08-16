@@ -96,15 +96,8 @@
   const route = useRoute()
   const parentId = ref(+route.params.id)
   const iterNum = ref(+route.params.num)
-  
-  console.log(tests)
-  console.log(route.params)
-  console.log(parentId)
-   
   const page = ref(route.params.page ? +route.params.page: 1)
-  
-  console.log(page.value)
-  
+ 
   const description = computed(() => {
     return `${categorys.getCategoryTitle}. ${categorys.getCategoryDescription}. ${user.getGlobalDescription}`
   })
@@ -124,10 +117,8 @@
   //переход при выборе теста
   function testLink({ test }){
     tests.testActiveSave(test)
-    console.log(test)
     navigateTo(`/test/${test.id}`)
   }
-
 </script>
 
 <style lang="scss">

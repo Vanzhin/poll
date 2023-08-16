@@ -41,16 +41,12 @@
   const pagination = usePaginationStore()
   const categorys = useCategoryStore()
   
-  console.log('store ',pagination)
-
   const paginations = pagination.paginations
-  console.log('pagination ',paginations)
 
   const nextTotalPriznak = (pagination.totalPages > 10) ? 
           (parseInt( pagination.paginations[9].label) < pagination.totalPages) ? true : false
         : false
-  console.log(nextTotalPriznak)
-
+  
  function paginate (pag) {
     console.log("pag -- ", pag)
     

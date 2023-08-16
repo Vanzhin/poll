@@ -92,7 +92,7 @@
     }
     
     const res = await user.setLogInUser(userAutch)
-    console.log("res", res)
+   
     if (res) {
       authorize.value = true
       setTimeout(() => 

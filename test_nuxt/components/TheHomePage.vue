@@ -129,31 +129,18 @@
   const route = useRoute()
   const page = ref(route.params.page ? +route.params.page: 1)
   const loader = useLoaderStore()
-  console.log(page.value)
-  console.log('rout - ', route.path )
-  
-  
+ 
   categorys.getApiCategorys({
     page: page.value > 1 ? page.value: '',
   })
 
   async function categoryUpdate({section}){
-    console.log(section)
     if (section.test.length > 0 ){
-      // tests.getApiTests({
-      //   parentId: section.id
-      // })
       navigateTo(`/area/${section.id}`)
     } else if (section.children.length > 0) {
-      // categorys.getApiCategorys({
-       
-      //   parentId: section.id
-      // })
       navigateTo(`/iter/1/group/${section.id}`)
-      
     }  else {
       navigateTo(`/iter/1/group/${section.id}`)
-      
     }
   }
   onMounted(() => {

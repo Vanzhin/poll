@@ -88,13 +88,7 @@
   
   const parentId = ref(+route.params.id)
   const iterNum = ref(+route.params.num)
-  console.log(categorys)
-  console.log(route.params)
-  console.log(parentId)
-  
   const page = ref(route.params.page ? +route.params.page: 1)
-  console.log(page.value)
-    
   
   const description = computed(() => {
     return `${categorys.getCategoryTitle}. ${categorys.getCategoryDescription}. ${user.getGlobalDescription}`
@@ -103,22 +97,12 @@
   //переход при выборе категории
   async function categoryUpdate({section}){
     iterNum.value++
-    console.log(section)
     if (section.test.length > 0 ){
-      // tests.getApiTests({
-      //   parentId: section.id
-      // })
       navigateTo(`/area/${section.id}`)
     } else if (section.children.length > 0) {
-      // categorys.getApiCategorys({
-       
-      //   parentId: section.id
-      // })
       navigateTo(`/iter/${iterNum.value}/group/${section.id}`)
-      
     }  else {
       navigateTo(`/iter/${iterNum.value}/group/${section.id}`)
-      
     }
   }
 
@@ -128,17 +112,6 @@
     parentId: parentId.value,
   })
     crumbs.getCategoryCrumbsDB(parentId.value)
-    // if (crumbs.getCrumbsLendch >= 0){
-    //   crumbs.addIteration({
-    //     title:`/${categorys.getCategoryAlias}`,
-    //     link: `/iter/${iterNum.value}/group/${parentId.value}`,
-    //     active: false
-    //   })
-    //   crumbs.getCategoryCrumbsDB(parentId.value)
-    // } else {
-    //   crumbs.getCategoryCrumbsDB(parentId.value)
-    // }
-
   }
 
   getCondition()

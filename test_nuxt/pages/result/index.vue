@@ -75,7 +75,6 @@
   const result = useResultStore()
   const getGlobalDescription = ref('')
   onMounted(() => {
-    console.log('я на клиенте результат')
     const user = useUserStore()
     autch.value = user.getIsAutchUser
     getGlobalDescription.value = `Результаты прохождения тестирования. ${user.getGlobalDescription}`
