@@ -46,9 +46,11 @@
   
   const router = useRouter();
   const  crumbs = useCrumbsStore()
+  
   function crumbsLinkClick(crumb){
     navigateTo(`${crumb.link}`)
   }
+  
   function backLink(){
     if (crumbs.getCrumbsLendch > 0){
       navigateTo(`${crumbs.getCrumbs.at(-2).link}`)

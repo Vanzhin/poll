@@ -27,7 +27,7 @@ export const useTicketsStore = defineStore('tickets', {
       console.log('ticketsToChange-',tickets)
       this.tickets = tickets
     },
-    ticketSelectToChange(ticket) {
+    async ticketSelectToChange(ticket) {
       console.log('ticketSelectToChange-',ticket)
       this.ticketSelect = ticket
     },

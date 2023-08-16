@@ -9,7 +9,7 @@ export const useCrumbsStore = defineStore('crumbs', {
     getCrumbsLendch: (state) => state.crumbs.length-1
   },
   actions: {
-    addIteration(iter) {
+    async addIteration(iter) {
       this.crumbs.push(iter)
     },
     nullIteration() {
@@ -21,7 +21,7 @@ export const useCrumbsStore = defineStore('crumbs', {
         }
       ]
     },
-    setCrumbsAddTests(id){
+    async setCrumbsAddTests(id){
       this.crumbs.at(-1).title += ' Тесты'
       this.crumbs.at(-1).link = `/area/${id}`
     },
@@ -79,6 +79,7 @@ export const useCrumbsStore = defineStore('crumbs', {
         link: `/test/${result.data.id}`,
         active: false
       }) 
+      
     },
 
     async getTicketCrumbsDB(id){
@@ -91,7 +92,18 @@ export const useCrumbsStore = defineStore('crumbs', {
         },
       }
       const result = await setUseAsyncFetch({ url, params, token: false })
-      this.setIterationsCrumbs(result.data)
+      await this.setIterationsCrumbs(result.data.test.category)
+      await this.setCrumbsAddTests(result.data.test.category.id)
+      await this.addIteration({
+        title:`/${result.data.test.alias}`,
+        link: `/test/${result.data.test.id}`,
+        active: false
+      }) 
+      this.addIteration({
+        title:`/Билет №${result.data.title}`,
+        link: `/test/${result.data.test.id}/ticket/${result.data.id}`,
+        active: false
+      }) 
     }
   }
 })

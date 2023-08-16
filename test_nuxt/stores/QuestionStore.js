@@ -97,14 +97,14 @@ export const useQuestionsStore = defineStore('questions', {
             console.log("вопросы билета", questions.value)
             const test = useTestsStore()
             const ticketsStore = useTicketsStore()
-            if (questions.value.ticket) {
-              ticketsStore.ticketSelectToChange(questions.value.ticket)
-            }
             test.testTitleSave(questions.value.test.title || questions.value.test)
             test.testActiveSave(questions.value.test)
             this.questions = questions.value.questions
-           
-            loader.setIsLoaderStatus(false)
+            if (questions.value.ticket) {
+              ticketsStore.ticketSelectToChange(questions.value.ticket)
+              console.log("билет -", questions.value.ticket.title)
+            }
+             loader.setIsLoaderStatus(false)
           }
         }, 200);
       } catch (error) {

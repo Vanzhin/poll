@@ -95,8 +95,9 @@
   const route = useRoute()
   const ticketRnd = ref(route.params.rnd)
   const parentId = ref(+route.params.id)
-  const ticketNum = ref(+route.params.num)
+  const ticketId = ref(+route.params.num)
   
+
   const user = useUserStore()
   const crumbs = useCrumbsStore()
   const tests = useTestsStore()
@@ -105,6 +106,7 @@
   const ticketsStore = useTicketsStore()
   const modal = useModalStore()
   const ticketModeTitle = ref('')
+  
   const timeTicket = ref(false)
  
   
@@ -146,7 +148,7 @@
     const ticket = {
       question,
       info: {
-        ticket: ticketsStore.ticketSelect ? ticketsStore.ticketSelect.id : ticketNum.value,
+        ticket: ticketsStore.ticketSelect ? ticketsStore.ticketSelect.id : ticketId.value,
         mode: ticketRnd.value,
         test: parentId.value,
         ticketTitle: `Билет № ${ ticketsStore.ticketSelect ? ticketsStore.ticketSelect.title : '' }`,
@@ -161,17 +163,17 @@
   async function getCondition() {
     if (ticketRnd.value) {
       await questions.getQuestionsTestIdDb({id: parentId.value, rnd: ticketRnd.value })
-    } else {
-      await questions.getQuestionsIsTicketIdDb({id: ticketNum.value})
-    }
-    await crumbs.getTestCrumbsDB(parentId.value)
-    console.log(ticketsStore.getTicketSelectTitle)
-    crumbs.addIteration({
-      title: `/${ticketModeTitle.value !=='' ? ticketModeTitle.value: 'Билет № ' + ticketsStore.getTicketSelectTitle}`,
-      link: route.path,
-      active: false,
+      await crumbs.getTestCrumbsDB(parentId.value)
+      crumbs.addIteration({
+        title: `/${ticketModeTitle.value}`,
+        link: route.path,
+        active: false,
 
-    })
+      })
+    } else {
+      await questions.getQuestionsIsTicketIdDb({id: ticketId.value})
+      await crumbs.getTicketCrumbsDB(ticketId.value)
+    }    
   }
 
   getCondition()
