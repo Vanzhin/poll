@@ -190,7 +190,7 @@ class TestController extends AbstractController
 
             $response = [
                 'ticket' => $ticket,
-                'test' => $ticket->getTest()->getTitle(),
+                'test' => $ticket->getTest(),
                 'questions' => $questions
             ];
 
