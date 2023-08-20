@@ -54,26 +54,21 @@
           </div>
         </div>
       </div>
-      <div class="item__card__child"
-        v-if="childVisible"
-        @click.stop="childToggle"
-      >
-        Включает:
-      </div>
-      
+            
     </div>
     
   </div>
 </template>
 <script setup>
-
-
-const props = defineProps(['item', 'index'])
-  
-  
-    const id = ref( null)
-    const childVisibleid = ref( false)
-      
+  import { useCategoryStore } from '../../stores/CategoryStore'
+  import { useConfirmStore } from '../../stores/ConfirmStore'
+  const categorys = useCategoryStore()
+  const confirm = useConfirmStore()
+  const props = defineProps(['item', 'index'])
+  const route = useRoute()
+  const page = ref(route.params.page ? +route.params.page: 1)
+  const id = ref( null)
+    
    
  
   
@@ -81,28 +76,34 @@ const props = defineProps(['item', 'index'])
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
       return img
     }
-    function childToggle(){
-      this.childVisible = !this.childVisible
-    }
+    
     function editCategory(){
-      this.$router.push({name: 'adminCategoryCreate', params: {operation:"edit" , id: this.item.id } })
+      this.$router.push({
+        name: 'adminCategoryCreate', 
+        params: {operation:"edit" , id: item.id } 
+      })
     }
     async function  deleteCategoty(){
-      console.log('Удаляю категорию № - ',this.item.id)
-      this.deleteCategoryDb({id: this.item.id, parentId: this.getCategoryParendId, })
+      console.log('Удаляю категорию № - ',props.item)
+      categorys.deleteCategoryDb({
+        id: props.item.id, 
+        parentId: categorys.getCategoryParendId, 
+        page:  page.value,
+      })
       
     }
     function deleteVisibleConfirm(){
 
-      this.setConfirmMessage("При удалении раздела, так же будут удалены все его внутренние области. Вы, действительно хотите это сделать?")
+      confirm.setConfirmMessage("При удалении раздела, так же будут удалены все его внутренние области. Вы, действительно хотите это сделать?")
       let timerId = setInterval(() => {
-        if (this.getGonfimAction) {
+        if (confirm.getConfirmAction) {
           clearInterval(timerId)
-          if (this.getGonfimAction === "yes"){this.deleteCategoty()}
+          if (confirm.getConfirmAction === "yes"){deleteCategoty()}
           
         }
       }, 200);
      }
+     
     function createChildrenCategory(){
       this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: this.item.id  } })
     }

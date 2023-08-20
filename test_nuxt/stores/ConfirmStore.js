@@ -8,9 +8,9 @@ export const useConfirmStore = defineStore('confirm', {
   }),
   getters: {
     
-    getСonfimMessage:(state) =>  state.message,
-    getConfimAction:(state) => state.action,
-    getConfimVisible:(state) =>state.visible,
+    getСonfirmMessage:(state) =>  state.message,
+    getConfirmAction:(state) => state.action,
+    getConfirmVisible:(state) =>state.visible,
   },
   actions: {
     setConfirmMessage(message) {

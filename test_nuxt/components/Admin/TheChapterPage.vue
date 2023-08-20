@@ -36,7 +36,7 @@
             :key="item.id"
             :item="item"
             :index="index"
-            @click.stop="categoryRoute({id:item.id})"
+            @click.stop="categoryRoute(item)"
           />
         </div>
         <div class="tests__block"
@@ -52,25 +52,18 @@
  
 <script setup>
   
-  definePageMeta({
-    layout: "admin",
-    // middleware: 'authadmin'
-  });
-  
- 
-
-  import { useCategoryStore } from '../../../stores/CategoryStore'
-  import { useLoaderStore } from '../../../stores/Loader'
+  import { useCategoryStore } from '../../stores/CategoryStore'
+  import { useLoaderStore } from '../../stores/Loader'
   const categorys = useCategoryStore()
   const loader = useLoaderStore() 
+  const route = useRoute()
+  const page = ref(route.params.page ? +route.params.page: 1)
   
   function createCategory(){
     this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: 0  } })
   }
 
-  async function categoryRoute({id}){
-    
-    await categorys.getApiCategorys({parentId: id, admin: true})
+  async function categoryRoute(item){
     if (this.getTests) {
       this.$router.push({name: 'adminTests', params: {id } })
       setTimeout(() => this.isLoader = false, 200)
@@ -83,7 +76,10 @@
 
   onMounted(async() => {
     console.log('запрос категорий')
-    await categorys.getApiCategorys({admin: true})
+    await categorys.getApiCategorys({
+      admin: true, 
+      page: page.value > 1 ? page.value: '',
+    })
     
   })
     

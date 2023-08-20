@@ -37,15 +37,14 @@
 </template>
 <script setup>
   import { usePaginationStore } from '../stores/PaginationStore'
-  import { useCategoryStore } from '../stores/CategoryStore'
-  const pagination = usePaginationStore()
-  const categorys = useCategoryStore()
   
-  const paginations = pagination.paginations
-
+  const pagination = usePaginationStore()
+    
   const nextTotalPriznak = (pagination.totalPages > 10) ? 
-          (parseInt( pagination.paginations[9].label) < pagination.totalPages) ? true : false
-        : false
+    (parseInt( pagination.paginations[9].label) < pagination.totalPages) ? 
+      true 
+      : false
+    : false
   
  function paginate (pag) {
     console.log("pag -- ", pag)
@@ -68,7 +67,7 @@
           console.log("activePage --", pagination.activePage)
           pagination.activePageToChange(pag)
           console.log("pagination.url --",pagination.url)
-          navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :'/'}`)
+          navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :''}`)
 
           console.log("activePage -- ", pagination.activePage)
           // router.push({ path: `/page/${pag}` })

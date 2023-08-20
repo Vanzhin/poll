@@ -1,4 +1,11 @@
 <template>
+  <Head>
+    <Title>Админка | Амулет Тест </Title>
+    <Meta name="description" :content="user.getGlobalDescription" />
+    <Meta name="robots" content="none"/>
+    <link rel="canonical" href=""/>
+
+  </Head>
   <!-- <Loader/> -->
 <div class="app-main-layout" >
   <TheHeader/>
@@ -16,6 +23,7 @@
     middleware: 'authadmin'
   });
   import { useUserStore  } from '../stores/UserStore'
+  const user = useUserStore()
   const isOpen = ref(true)
   onMounted(() => {
     console.log('А')

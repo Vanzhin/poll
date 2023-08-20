@@ -27,6 +27,7 @@ export const useCategoryStore = defineStore('category', {
     getCategorySeoDescription: (state) => state.parent.descriptionSeo || '',
     getFooterСategories : (state) => state.allСategories ? state.allСategories.slice(0, 6): null,
     getCategoriesForDropDown: (state) => state.allСategories,
+    getCategoryParendId: (state) => state.parent.id || null
   },
   actions: {
     categorysToChange(categorys) {
@@ -91,6 +92,31 @@ export const useCategoryStore = defineStore('category', {
         console.log('footer e-', e)
       }
       
-    }
+    },
+    //удаление категории из БД
+    async deleteCategoryDb({id, parentId, page}){
+      let url = `${urlApi}/api/admin/category/${id}/delete`
+      let  params = {
+        method: 'GET',
+        headers: { 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        
+      }
+      
+      if (parentId) {params.params.parent = parentId }
+      
+      const modal = useModalStore()
+      const sections = await setUseAsyncFetch({ url, params, token: true })
+      
+
+      await this.getApiCategorys({
+        admin: true, 
+        page,
+        parentId,
+      })
+      modal.setMessage( sections )
+    },
   }
 })

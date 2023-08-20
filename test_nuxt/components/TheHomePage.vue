@@ -27,10 +27,10 @@
         <div class="b-container" 
         
         >
-          <div class="sections__block row" v-if="categorys.getCategogys !==''">
+          <div class="sections__block row" v-if="categorys.getCategorys !==''">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
              
-              v-for="section in  getCategogys" 
+              v-for="section in  getCategorys" 
               :key="section.id"
               :style="`background-image: url(${section.image ? section.image 
                 :'http://test2-open/img/item_fon.png'});`"
@@ -125,7 +125,7 @@
   const user = useUserStore()
   const categorys = useCategoryStore()
   const tests = useTestsStore()
-  const {getCategogys} = storeToRefs(categorys)
+  const {getCategorys} = storeToRefs(categorys)
   const route = useRoute()
   const page = ref(route.params.page ? +route.params.page: 1)
   const loader = useLoaderStore()

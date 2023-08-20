@@ -1,11 +1,11 @@
 <template>
    <div class="cont-message"
-   v-if="confirm.getСonfimMessage !=='' "
+   v-if="confirm.getСonfirmMessage !=='' "
    >
     <div class="cont-message-cont">
       <div class="confirm__window" >
         <div  class="confirm__children"
-          v-html="confirm.getСonfimMessage"
+          v-html="confirm.getСonfirmMessage"
         >
         </div>
         
