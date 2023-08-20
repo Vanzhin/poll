@@ -15,10 +15,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ProtocolController extends AbstractController
 {
     public function __construct(
-        private readonly Actions\CreateAction $createAction,
-        private readonly Actions\UpdateAction $updateAction,
-        private readonly Actions\ShowAction   $showAction,
-        private readonly Actions\DeleteAction $deleteAction,
+        private readonly Actions\CreateAction   $createAction,
+        private readonly Actions\UpdateAction   $updateAction,
+        private readonly Actions\ShowAction     $showAction,
+        private readonly Actions\DeleteAction   $deleteAction,
+        private readonly Actions\GenerateAction $generateAction
     )
     {
     }
@@ -54,5 +55,14 @@ class ProtocolController extends AbstractController
             throw new AccessDeniedException();
         };
         return $this->deleteAction->run($protocol);
+    }
+
+    #[Route('/generate/{id<\d+>}', name: 'generate', methods: ['GET'])]
+    public function download(Protocol $protocol, Request $request): JsonResponse
+    {
+        if (!$this->isGranted(ProtocolVoter::VIEW, $protocol)) {
+            throw new AccessDeniedException();
+        };
+        return $this->generateAction->run($protocol, $request);
     }
 }

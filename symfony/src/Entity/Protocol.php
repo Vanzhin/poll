@@ -50,11 +50,16 @@ class Protocol
     #[Assert\NotNull(message: 'protocol.number.not_null')]
     #[Assert\NotBlank(message: 'protocol.number.not_blank')]
     #[Assert\Length(max: 25, maxMessage: 'protocol.number.max')]
+    #[Groups(['admin_protocol'])]
     private ?string $number = null;
 
     #[ORM\OneToOne(inversedBy: 'protocol', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['admin_protocol'])]
     private ?Group $groups = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $file = null;
 
     public function getId(): ?int
     {
@@ -129,6 +134,18 @@ class Protocol
     public function setGroups(Group $groups): self
     {
         $this->groups = $groups;
+
+        return $this;
+    }
+
+    public function getFile(): ?string
+    {
+        return $this->file;
+    }
+
+    public function setFile(?string $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }
