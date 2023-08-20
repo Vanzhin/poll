@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="cont fixeds">
-      <!-- <MyConfirm/>
-      <MessageView/> -->
+      <uiMyConfirm/>
+      <uiMessageView/>
       <div class="container">
         <div class="wrapper">
           <div class="block">

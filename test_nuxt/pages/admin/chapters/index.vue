@@ -30,7 +30,7 @@
     <div class="container">
       <div class="row">
         <div class="tests__block"
-          v-if="categorys.getCategogysIs">
+          v-if="categorys.getCategorysIs">
           <AdminItemChapter
             v-for="(item, index) in categorys.getCategorys" 
             :key="item.id"
@@ -41,7 +41,7 @@
         </div>
         <div class="tests__block"
           v-else>
-        <h4>Создайте раздел.</h4>
+          <h4>Создайте раздел.</h4>
         </div>
 
         <ThePagination />
@@ -51,6 +51,14 @@
 </template>
  
 <script setup>
+  
+  definePageMeta({
+    layout: "admin",
+    // middleware: 'authadmin'
+  });
+  
+ 
+
   import { useCategoryStore } from '../../../stores/CategoryStore'
   import { useLoaderStore } from '../../../stores/Loader'
   const categorys = useCategoryStore()

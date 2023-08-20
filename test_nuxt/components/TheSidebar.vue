@@ -43,8 +43,6 @@ export default {
                                 <polyline points="13 2 13 9 20 9"></polyline>
                             </svg>`
       },
-      {title: 'Области аттестации', url: '/admin/sections',
-        icon:`<i class="bi bi-box"></i>`},
       {title: 'Тесты', url: '/admin/tests',
         icon:`<i class="bi bi-archive"></i>`},
       {title: 'Вопросы', url: '/admin/questions',

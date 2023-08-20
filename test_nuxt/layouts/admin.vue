@@ -11,9 +11,14 @@
 </div>
 </template>
 <script setup>
+  definePageMeta({
+    
+    middleware: 'authadmin'
+  });
   import { useUserStore  } from '../stores/UserStore'
   const isOpen = ref(true)
   onMounted(() => {
+    console.log('А')
     const user = useUserStore()
     user.setTokenIsLocalStorage()
     setTimeout(()=>{
