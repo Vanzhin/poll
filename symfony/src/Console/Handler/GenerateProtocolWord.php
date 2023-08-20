@@ -24,14 +24,16 @@ class GenerateProtocolWord implements GenerateProtocolInterface
     }
 
 
-    public function generate(Protocol $protocol, string $template = null): bool
+    public function generate(Protocol $protocol, string $template = null): string
     {
         if (is_null($template)) {
             $template = $this->defaultTemplate;
         }
         $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($template));
 
-        return $this->save('protocol_' . $protocol->getNumber() . '_' . $protocol->getCreatedAt()->format('Ymd'));
+        $fileName = 'protocol_' . $protocol->getNumber() . '_' . $protocol->getCreatedAt()->format('Ymd');
+        $this->save($fileName);
+        return $fileName;
     }
 
     private function fillProtocolTemplate(Protocol $protocol, TemplateProcessor $templateProcessor): TemplateProcessor
