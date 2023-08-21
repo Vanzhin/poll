@@ -19,10 +19,10 @@
           <div class="container">
             <div  class="wrapper">
               <div class="tests__block"
-                v-if="categorys.categorys"
+                v-if="categorys.getCategorysIs"
               >
                 <div
-                  v-for="(area) in getCategogys" 
+                  v-for="(area) in categorys.getCategorys" 
                   :key="area.id"
                 >
                   <div class="test__card"
@@ -83,7 +83,7 @@
   const loader = useLoaderStore()
   const categorys = useCategoryStore()
   const user = useUserStore()
-  const {getCategogys} = storeToRefs(categorys)
+  const {getCategorys} = storeToRefs(categorys)
   const route = useRoute()
   
   const parentId = ref(+route.params.id)
@@ -108,10 +108,10 @@
 
   async function getCondition() {
     await categorys.getApiCategorys({
-    page: page.value > 1 ? page.value: '',
-    parentId: parentId.value,
-  })
-    crumbs.getCategoryCrumbsDB(parentId.value)
+      page: page.value > 1 ? page.value: '',
+      parentId: parentId.value,
+    })
+    await crumbs.getCategoryCrumbsDB(parentId.value)
   }
 
   getCondition()

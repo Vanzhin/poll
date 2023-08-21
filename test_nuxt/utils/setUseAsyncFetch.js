@@ -30,6 +30,8 @@ export default async function setUseAsyncFetch ({url, params, token, loading = t
           return
         }
         setUseAsyncFetch({ url, params, token })
+      } else {
+        modal.setMessageError(error.value.data)
       }
     } else {
       modal.setMessageError(error.value)

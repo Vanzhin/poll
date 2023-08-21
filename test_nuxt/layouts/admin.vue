@@ -6,20 +6,20 @@
     <link rel="canonical" href=""/>
 
   </Head>
-  <!-- <Loader/> -->
-<div class="app-main-layout" >
-  <TheHeader/>
-  <TheSidebar v-model="isOpen" />
-  <main class="app-content" :class="{full: !isOpen}">
-    <div class="app-page">
-      <slot />
-    </div>
-  </main>
-</div>
+  
+  <div class="app-main-layout" >
+    <uiLoaderViewMax />
+    <TheHeader/>
+    <TheSidebar v-model="isOpen" />
+    <main class="app-content" :class="{full: !isOpen}">
+      <div class="app-page">
+        <slot />
+      </div>
+    </main>
+  </div>
 </template>
 <script setup>
   definePageMeta({
-    
     middleware: 'authadmin'
   });
   import { useUserStore  } from '../stores/UserStore'

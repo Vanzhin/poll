@@ -78,10 +78,9 @@
     }
     
     function editCategory(){
-      this.$router.push({
-        name: 'adminCategoryCreate', 
-        params: {operation:"edit" , id: item.id } 
-      })
+      categorys.setCategory(props.item)
+      navigateTo(`/admin/categorys/${props.item.id}/edit`)
+      
     }
     async function  deleteCategoty(){
       console.log('Удаляю категорию № - ',props.item)
@@ -103,9 +102,10 @@
         }
       }, 200);
      }
-     
+
     function createChildrenCategory(){
-      this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: this.item.id  } })
+      navigateTo(`/admin/categorys/${props.item.id}/create`)
+      
     }
     function createChildrenTest(){
       this.$router.push({name: 'adminTestCreate', params: {operation:"create", id: this.item.id  } })

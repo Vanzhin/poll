@@ -1,9 +1,7 @@
 <template>
-  <UiLoaderView
-    v-if="loader.isLoader"
-  />
+  
   <div class="fon"
-    v-else
+    v-if="!loader.isLoader"
   >
 
     <div class="container">
@@ -54,28 +52,31 @@
   
   import { useCategoryStore } from '../../stores/CategoryStore'
   import { useLoaderStore } from '../../stores/Loader'
+  import { useUserStore  } from '../../stores/UserStore'
   const categorys = useCategoryStore()
   const loader = useLoaderStore() 
   const route = useRoute()
   const page = ref(route.params.page ? +route.params.page: 1)
   
   function createCategory(){
-    this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: 0  } })
+    navigateTo(`/admin/categorys/0/create`)
+    // this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: 0  } })
   }
 
   async function categoryRoute(item){
     if (this.getTests) {
       this.$router.push({name: 'adminTests', params: {id } })
-      setTimeout(() => this.isLoader = false, 200)
+      
       return
     } 
     this.$router.push({name: 'adminIter', params: { num: 1, id: id } })
-    setTimeout(() => this.isLoader = false, 200)
-    // this.$router.push({name: 'chapter', query: { iter: 1, group:id } })
+    
   }
 
   onMounted(async() => {
     console.log('запрос категорий')
+    const user = useUserStore()
+    await user.setTokenIsLocalStorage()
     await categorys.getApiCategorys({
       admin: true, 
       page: page.value > 1 ? page.value: '',

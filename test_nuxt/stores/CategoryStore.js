@@ -14,13 +14,15 @@ export const useCategoryStore = defineStore('category', {
     //   JSON.parse(localStorage.getItem('categorysFooter')): null,
     categorys:[],
     parent: '',
-    allСategories: null
+    allСategories: null,
+    category: null,
   }),
   getters: {
+    getCategory: (state) => state.category,
     getCategorys: (state) => state.categorys,
     getCategorysIs: (state) => state.categorys.length > 0,
-    getCategoryTitle: (state) => state.parent.title,
-    getCategoryAlias: (state) => state.parent.alias,
+    getCategoryTitle: (state) => state.parent.title || '',
+    getCategoryAlias: (state) => state.parent.alias || '',
     getCategoryDescription: (state) => state.parent.description || '',
     getCategoryRobots: (state) => state.parent.robots || 'max-image-preview:large',
     getCategoryCanonical: (state) => state.parent.canonical || '',
@@ -30,6 +32,9 @@ export const useCategoryStore = defineStore('category', {
     getCategoryParendId: (state) => state.parent.id || null
   },
   actions: {
+    setCategory(category){
+      this.category = category
+    },
     categorysToChange(categorys) {
       console.log('categorysToChange-',categorys)
       this.categorys = categorys
@@ -37,6 +42,7 @@ export const useCategoryStore = defineStore('category', {
     setParentCategory(parent){
       this.parent = parent
     },
+    //запрос категорий или подкатегорий
     async getApiCategorys({ page = null, parentId = null, admin = false, limit = 6 }){
       let url = `${urlApi}/api/category`
       let  params = {
@@ -82,7 +88,9 @@ export const useCategoryStore = defineStore('category', {
         )
         if (sections.value) {
           console.log('sections.value footer-', sections.value)
-          this.allСategories = sections.value.children
+          if (sections.value.children){
+            this.allСategories = sections.value.children
+          }
         } else if (error.value) {
           modal.setMessageError(error.value)
         } else {
@@ -102,21 +110,66 @@ export const useCategoryStore = defineStore('category', {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        
       }
-      
       if (parentId) {params.params.parent = parentId }
-      
       const modal = useModalStore()
       const sections = await setUseAsyncFetch({ url, params, token: true })
-      
-
       await this.getApiCategorys({
         admin: true, 
         page,
         parentId,
       })
       modal.setMessage( sections )
+    },
+    //создание новой категории
+    async createCategory ({id, questionSend}){
+      const data = new FormData(questionSend);
+      // for(let [name, value] of data) {
+      //   console.dir(`${name} = ${value}`); 
+      // }
+      const url = `${urlApi}/api/admin/category/create`
+      const params = {
+        method: 'post',
+        headers: { 
+          'Accept': 'application/json',
+        },
+        body: data
+      }
+      const sections = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      modal.setMessage( sections )
+    },
+    //получение информации категории по id
+    async getCategoryIdDB({id}){
+      const url = `${urlApi}/api/admin/category/${id}`
+      const params = {
+        method: 'get',
+        headers: { 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json', 
+        },
+      }
+      const sections = await setUseAsyncFetch({ url, params, token: true })
+      this.category = sections
+    },
+    //изменение данных категории в БД
+    async editCategory ( {id, questionSend}){
+      const data = new FormData(questionSend)
+      // for(let [name, value] of data) {
+      //   console.dir(`${name} = ${value}`)
+      // }
+      const url = `${urlApi}/api/admin/category/${id}/edit`
+      const params = {
+        method: 'post',
+        headers: { 
+          Accept: 'application/json', 
+        },
+        body: data
+      };
+      const sections = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      modal.setMessage( sections )
+      
     },
   }
 })
