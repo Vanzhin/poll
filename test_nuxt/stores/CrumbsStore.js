@@ -59,7 +59,9 @@ export const useCrumbsStore = defineStore('crumbs', {
         },
       }
       const result = await setUseAsyncFetch({ url, params, token: false })
-      this.setIterationsCrumbs(result.data)
+      if (result.data) {
+        this.setIterationsCrumbs(result.data)
+      }
     },
 
     async getTestCrumbsDB(id){

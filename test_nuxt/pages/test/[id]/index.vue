@@ -195,9 +195,9 @@
 
   async function getCondition() {
     await tickets.getApiTicketsTestIdNoAuthDb({
-    page: page.value > 1 ? page.value: '',
-    parentId: parentId.value,
-  })
+      page: page.value > 1 ? page.value: '',
+      parentId: parentId.value,
+    })
     await crumbs.getTestCrumbsDB(parentId.value)
     
   }
