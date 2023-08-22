@@ -148,10 +148,10 @@
     const ticket = {
       question,
       info: {
-        ticket: ticketsStore.ticketSelect ? ticketsStore.ticketSelect.id : ticketId.value,
+        ticket: ticketsStore.ticketSelect ? ticketsStore.ticketSelect.id : '',
         mode: ticketRnd.value,
         test: parentId.value,
-        ticketTitle: `Билет № ${ ticketsStore.ticketSelect ? ticketsStore.ticketSelect.title : '' }`,
+        ticketTitle:  ticketsStore.ticketSelect ? 'Билет №' + ticketsStore.ticketSelect.title : '' ,
         ticketModeTitle: ticketModeTitle.value,
       }
     } 

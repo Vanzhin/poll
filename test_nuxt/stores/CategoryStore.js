@@ -65,9 +65,9 @@ export const useCategoryStore = defineStore('category', {
       }
       
       const pagination = usePaginationStore()
-      if (sections.pagination && !("error" in sections.pagination)){
+      if ( sections.pagination ){ 
         pagination.paginationsAll(sections.pagination)
-      }
+      } 
       
       if (sections.parent) {
         this.parent = sections.parent
