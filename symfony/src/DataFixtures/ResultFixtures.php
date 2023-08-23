@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Result;
 use App\Entity\Test;
-use App\Entity\User;
+use App\Entity\User\User;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 

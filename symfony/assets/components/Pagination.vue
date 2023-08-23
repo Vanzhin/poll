@@ -13,8 +13,8 @@
       </div>
 
       <div 
-        v-for="(item, key) in getPagination"
-        :key = "item.label" 
+        v-for="(item) in getPagination"
+        :key = "item.label"
         class="block-pagination-element" 
         :class="{active:item.active}"
         @click =" paginate(parseInt(item.label))"
@@ -60,22 +60,20 @@ export default {
       "getQuestionsTestIdDb",
       "setIsLoaderStatus",
       "getTicketsTestIdDb",
-      "getSearchDb"
+      "getSearchDb",
+      "getCompanyList"
     ]),
     async paginate (page){
       switch (page) {
         case '-1' : {
           if (this.currentPage > 1) {
-           
             this.currentPage = parseInt(this.getPagination[0].label) - 1
-           
           } else { return }
         break;
         }
         case '+1' : {
-         
           if  (this.currentPage = parseInt(this.getPagination[9].label) < this.getTotalPage) {
-            this.currentPage = this.currentPage = parseInt(this.getPagination[9].label) + 1
+            this.currentPage = parseInt(this.getPagination[9].label) + 1
           } else { return }
         break;
         }

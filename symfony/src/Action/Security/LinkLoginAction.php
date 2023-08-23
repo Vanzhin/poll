@@ -2,26 +2,27 @@
 
 namespace App\Action\Security;
 
-use App\Action\BaseAction;
-use App\Factory\MinTrudTest\MinTrudTestBuilder;
+use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Factory\User\UserFactory;
-use App\Repository\UserRepository;
+use App\Repository\Interfaces\UserRepositoryInterface;
+use App\Response\AppException;
 use App\Service\Mailer;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Serializer;
 
-class LinkLoginAction extends BaseAction
+class LinkLoginAction extends NewBaseAction
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly UserFactory            $userFactory,
-        private readonly Mailer                 $mailer,
-        private readonly UserRepository         $userRepository,
-        private readonly SerializerService      $serializer
+        private readonly EntityManagerInterface  $em,
+        private readonly UserFactory             $userFactory,
+        private readonly Mailer                  $mailer,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly ValidationService       $validation,
+        SerializerService                        $serializer,
 
     )
     {
@@ -30,32 +31,43 @@ class LinkLoginAction extends BaseAction
 
     public function sendLink(Request $request): JsonResponse
     {
-        try {
-            $email = $request->attributes->get('_route_params', [])['email'];
-            if (!$this->IsValid($email)) {
-                throw new \Exception('Не верный формат почты');
-            }
-            $user = $this->userRepository->findOneBy(['email' => $email]);
+
+        $username = $request->attributes->get('_route_params', [])['username'];
+        $user = null;
+//        сначала ищу по логину
+        if (!$user) {
+            $user = $this->userRepository->findOneByLogin($username);
+        }
+//        затем ищу по почте
+        if ($this->validation->IsValid($username, 'email') && !$user) {
+            $userList = $this->userRepository->findAllByEmail($username);
+            //        если почта есть, не уникальна - сообщать об этом пользователю
+            if (count($userList) > 1) {
+                throw new AppException('Указанная почта не уникальна.');
+            };
+            //        если почта есть и уникальна, отправлять ссылку
+
+            if (count($userList) === 1) {
+                $user = current($userList);
+            };
+            //        если почты нет - создавать пользователя по почте
+
             if (!$user) {
-                $user = $this->userFactory->createBuilder()->buildUser($email);
+                $user = $this->userFactory->createBuilder()->buildUser($username);
+                $errors = $this->validation->validate($user);
+                if ($errors) {
+                    throw new AppException(implode(', ', $errors));
+                }
                 $this->em->persist($user);
                 $this->em->flush();
             }
-            $this->mailer->sendLoginLinkEmail($user);
-            return $this->successResponse(['message' => 'Ссылка для входа в личный кабинет отправлена на ' . $user->getEmail()]);
-
-        } catch (\Exception|\Error $e) {
-
-            return $this->errorResponse(["error" => $e->getMessage()]);
+        }
+//        если есть логин, то отправлять на почту письмо, если логина нет, сообщать об этом
+        if (!$user) {
+            throw new AppException('Не верные почта или логин.');
 
         }
-    }
-
-    private function IsValid(string $email): bool
-    {
-        if (!preg_match('/^[\w+\.]+@([\w-]+\.)+[\w-]{2,4}$/', $email)) {
-            return false;
-        }
-        return true;
+        $this->mailer->sendLoginLinkEmail($user);
+        return $this->successResponse([], [], 'Ссылка для входа в личный кабинет отправлена на ' . $user->getEmail());
     }
 }

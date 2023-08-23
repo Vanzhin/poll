@@ -21,7 +21,9 @@ class SerializerService
     private string $content = '';
 
     public function __construct(readonly private NormalizerService $normalizerService,
-                                readonly private AppUpLoadedAsset  $upLoadedAsset)
+                                readonly private AppUpLoadedAsset  $upLoadedAsset,
+                                private readonly RoleService       $roleService,
+    )
     {
     }
 
@@ -72,9 +74,16 @@ class SerializerService
         $contextBuilder = (new ObjectNormalizerContextBuilder())
             ->withContext($defaultContext)
             ->withGroups($groups)
-            ->withSkipNullValues(true)
+            ->withSkipNullValues(false)
             ->withCallbacks([
                 'image' => $this->normalizerService->imageCallback($this->upLoadedAsset),
+                'roles' => $this->normalizerService->rolesCallback($this->roleService),
+                'started_at' => $this->normalizerService->dateTimeCallback(),
+                'finished_at' => $this->normalizerService->dateTimeCallback(),
+                'createdAt' => $this->normalizerService->dateTimeCallback(),
+                'updatedAt' => $this->normalizerService->dateTimeCallback(),
+                'orderDate' => $this->normalizerService->dateCallback(),
+
             ]);
 
         return $this->serializer->serialize($object, 'json', $contextBuilder->toArray());

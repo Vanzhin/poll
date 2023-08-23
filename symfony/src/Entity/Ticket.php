@@ -23,7 +23,7 @@ class Ticket
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'main_test', 'category', 'admin_section', 'admin_ticket', 'admin_question'])]
+    #[Groups(['main', 'main_test', 'category', 'admin_section', 'admin_ticket', 'admin_question', 'test', 'breadcrumbs'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Question::class, inversedBy: 'tickets', orphanRemoval: true)]
@@ -41,7 +41,7 @@ class Ticket
     #[Assert\Positive(
         message: 'ticket.title.not_int'
     )]
-    #[Groups(['main', 'main_test', 'account', 'admin', 'category', 'admin_section', 'admin_ticket', 'admin_question', 'result'])]
+    #[Groups(['main', 'main_test', 'account', 'admin', 'category', 'admin_section', 'admin_ticket', 'admin_question', 'result', 'test', 'breadcrumbs'])]
     private ?int $title = null;
 
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Result::class, cascade: ['persist', 'remove'])]
@@ -51,6 +51,7 @@ class Ticket
     #[Assert\NotNull(
         message: 'ticket.test.not_null'
     )]
+    #[Groups(['breadcrumbs'])]
     private ?Test $test = null;
 
     #[ORM\Column(length: 500, nullable: true)]

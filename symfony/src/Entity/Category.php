@@ -32,11 +32,11 @@ class Category implements EntityWithImageInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'category'])]
+    #[Groups(['main', 'admin', 'category', 'breadcrumbs'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 500)]
-    #[Groups(['main', 'admin', 'category', 'result','search'])]
+    #[Groups(['main', 'admin', 'category', 'result', 'search'])]
     #[Assert\NotBlank(
         message: 'category.title.not_blank'
     )]
@@ -68,7 +68,7 @@ class Category implements EntityWithImageInterface
 
 
     #[Gedmo\TreeParent]
-    #[Groups(['result', 'search'])]
+    #[Groups(['result', 'search', 'breadcrumbs'])]
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private ?self $parent = null;
@@ -101,8 +101,22 @@ class Category implements EntityWithImageInterface
         max: 30,
         maxMessage: 'category.alias.max_length',
     )]
-    #[Groups(['main', 'admin', 'category', 'result', 'search'])]
+    #[Groups(['main', 'admin', 'category', 'result', 'search', 'breadcrumbs'])]
     private ?string $alias = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['admin', 'category'])]
+    #[Assert\Length(max: 100, maxMessage: 'category.robots.max_length')]
+    private ?string $robots = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['admin', 'category'])]
+    #[Assert\Length(max: 100, maxMessage: 'category.canonical.max_length')]
+    private ?string $canonical = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['admin', 'category'])]
+    private ?string $descriptionSeo = null;
 
     public function __construct()
     {
@@ -222,6 +236,42 @@ class Category implements EntityWithImageInterface
     public function setAlias(string $alias): self
     {
         $this->alias = $alias;
+
+        return $this;
+    }
+
+    public function getRobots(): ?string
+    {
+        return $this->robots;
+    }
+
+    public function setRobots(?string $robots): self
+    {
+        $this->robots = $robots;
+
+        return $this;
+    }
+
+    public function getCanonical(): ?string
+    {
+        return $this->canonical;
+    }
+
+    public function setCanonical(?string $canonical): self
+    {
+        $this->canonical = $canonical;
+
+        return $this;
+    }
+
+    public function getDescriptionSeo(): ?string
+    {
+        return $this->descriptionSeo;
+    }
+
+    public function setDescriptionSeo(?string $descriptionSeo): self
+    {
+        $this->descriptionSeo = $descriptionSeo;
 
         return $this;
     }

@@ -2,11 +2,10 @@
 
 namespace App\Factory\Result;
 
-use App\Entity\Question;
 use App\Entity\Result;
 use App\Entity\Test;
 use App\Entity\Ticket;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Enum\Mode;
 use Doctrine\ORM\EntityManagerInterface;
 

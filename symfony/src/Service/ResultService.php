@@ -2,10 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Answer;
-use App\Entity\Question;
-use App\Entity\Result;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ResultService

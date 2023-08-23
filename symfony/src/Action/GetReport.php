@@ -3,7 +3,7 @@
 namespace App\Action;
 
 use App\Entity\Result;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Enum\Format;
 use App\Factory\Organization\OrganizationFactory;
 use App\Factory\WorkerCard\WorkerCardFactory;

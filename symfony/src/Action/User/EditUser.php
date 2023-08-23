@@ -3,7 +3,7 @@
 namespace App\Action\User;
 
 use App\Action\BaseAction;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Handler\UserHandler;
 use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User\User;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 

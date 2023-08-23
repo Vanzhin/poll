@@ -2,17 +2,15 @@
 
 namespace App\Service;
 
-use App\Entity\User;
-use App\Message\SendEmailMessage;
-
-//use App\Security\EmailVerifier;
+use App\Entity\Company;
+use App\Entity\User\User;
+use App\Repository\User\UserRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-
-//use Symfony\Component\Mailer\Messenger\SendEmailMessage;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 class Mailer
@@ -23,11 +21,15 @@ class Mailer
     private string $defaultFromName;
 
 
-    public function __construct(private readonly MailerInterface           $mailer,
-                                private readonly LoginLinkHandlerInterface $loginLinkHandler,
-                                string                                     $appName,
-                                string                                     $defaultFromEmail,
-                                string                                     $defaultFromName)
+    public function __construct(
+        private readonly MailerInterface           $mailer,
+        private readonly LoginLinkHandlerInterface $loginLinkHandler,
+        private readonly UrlGeneratorInterface     $urlGenerator,
+        private readonly UserRepository            $repository,
+        string                                     $appName,
+        string                                     $defaultFromEmail,
+        string                                     $defaultFromName,
+    )
     {
         $this->appName = $appName;
         $this->defaultFromEmail = $defaultFromEmail;
@@ -105,5 +107,51 @@ class Mailer
             throw new \Error(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
         }
 
+    }
+
+    public function sendCompanyCreatedEmail(User $user): void
+    {
+        try {
+            $email = (new TemplatedEmail())
+                ->from(new Address($this->defaultFromEmail, $this->defaultFromName))
+                ->to(new Address($user->getEmail(), $user->getProfile()?->getFirstName() ?? 'Пользователь'))
+                ->subject(sprintf('Регистрация компании %s на портале %s', $user->getCompany()?->getTitle(), $this->appName))
+                ->htmlTemplate('emails/company_created.html.twig')
+                ->context(
+                    ['user' => $user,
+                        'appName' => $this->appName,
+                        'loginLinkDetails' => $this->loginLinkHandler->createLoginLink($user)
+                    ]);
+            $this->mailer->send($email);
+        } catch (\Exception|\Error $e) {
+            throw new \Exception(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
+        }
+
+    }
+
+    public function sendCompanyCreatedEmailToCompanyCreator(UserInterface $getUser, Company $company): void
+    {
+        try {
+            $user = $this->repository->findOneByLogin($getUser->getUserIdentifier());
+            if ($user->getEmail()) {
+                $email = (new TemplatedEmail())
+                    ->from(new Address($this->defaultFromEmail, $this->defaultFromName))
+                    ->to(new Address($user->getEmail(), $user->getProfile()?->getFirstName() ?? 'Пользователь'))
+                    ->subject('Регистрация новой компании')
+                    ->htmlTemplate('emails/new_company_created.html.twig')
+                    ->context(
+                        ['user' => $user,
+                            'appName' => $this->appName,
+                            'company' => $company,
+                            'companyViewPath' => $this->urlGenerator->generate('app_home', [], UrlGeneratorInterface::ABSOLUTE_URL)
+
+//                            'companyViewPath' => $this->urlGenerator->generate('app_api_admin_company_show', ['id' => $company->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
+                        ]);
+                $this->mailer->send($email);
+            }
+
+        } catch (\Exception|\Error $e) {
+            throw new \Exception(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
+        }
     }
 }

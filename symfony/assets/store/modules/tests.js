@@ -56,7 +56,7 @@ const actions = {
     commit("SET_TEST_TITLE", title );
   },
   setTest({dispatch ,commit}, test) {
-    if (test) dispatch("setTickets", test.ticket)
+    if (test.ticket) dispatch("setTickets", test.ticket)
     commit("SET_TEST", test)
   },
   setTestItem({dispatch ,commit}, test) {

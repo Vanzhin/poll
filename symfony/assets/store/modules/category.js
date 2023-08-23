@@ -46,6 +46,7 @@ const actions = {
   try{
     await axios(config)
       .then(({data})=>{
+        console.log(data)
         if (data.test) {dispatch("setTests", data.test)}
         else dispatch("setTests", null)
         commit("SET_CATEGORYS", data.children);

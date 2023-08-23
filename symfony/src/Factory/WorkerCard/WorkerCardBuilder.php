@@ -2,7 +2,7 @@
 
 namespace App\Factory\WorkerCard;
 
-use App\Entity\WorkerCard;
+use App\Entity\User\vo\WorkerCard;
 
 
 class WorkerCardBuilder

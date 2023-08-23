@@ -6,7 +6,7 @@ use App\Entity\Question;
 use App\Entity\Section;
 use App\Entity\Test;
 use App\Factory\Section\SectionFactory;
-use App\Repository\QuestionRepository;
+use App\Repository\Question\QuestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SectionService
@@ -108,6 +108,5 @@ class SectionService
 
             $this->em->flush();
         }
-
     }
 }

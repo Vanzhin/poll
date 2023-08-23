@@ -7,7 +7,7 @@ use App\Entity\Section;
 use App\Entity\Test;
 use App\Entity\Ticket;
 use App\Entity\Type;
-use App\Entity\User;
+use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class QuestionBuilder

@@ -2,12 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends BaseFixtures implements FixtureGroupInterface
 {
@@ -20,6 +19,7 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
         $this->hasher = $hasher;
         $this->params = $params;
     }
+
     public function loadData(ObjectManager $manager): void
     {
         $this->create(User::class, function (User $user) use ($manager) {
@@ -27,14 +27,16 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
                 ->setFirstName($this->params->get('app.admin_user'))
                 ->setEmail($this->params->get('app.admin_email'))
                 ->setPassword($this->hasher->hashPassword($user, $this->params->get('app.admin_pass')))
-                ->setRoles(['ROLE_ADMIN']);
+                ->setLogin('admin')
+                ->setRoles(['ROLE_SUPER_ADMIN']);
         });
 
         $this->createMany(User::class, 10, function (User $user) use ($manager) {
             $user
                 ->setFirstName($this->faker->firstName())
                 ->setEmail($this->faker->email())
-                ->setPassword($this->hasher->hashPassword($user, $this->params->get('app.user_pass')));
+                ->setPassword($this->hasher->hashPassword($user, $this->params->get('app.user_pass')))
+                ->setLogin($this->faker->randomDigitNotNull . $this->faker->email());
 
         });
     }

@@ -19,12 +19,12 @@
             v-else
           >
             <div class="text-field">
-              <label class="text-field__label" >Ник</label>
+              <label class="text-field__label" >Логин</label>
               <input class="text-field__input" 
                 id="nik" 
                 type="text" 
-                placeholder="Придумайте ник"
-                v-model="firstName"
+                placeholder="Придумайте логин"
+                v-model="login"
                 required
               />
             </div>
@@ -90,7 +90,7 @@
         confirmPassword:'',
         password:'',
         email:'',
-        firstName:'',
+        login:'',
         authorize: false,
         authorizeTitle:'Удачная регистрация'
       }
@@ -108,7 +108,7 @@
           const user = {
             confirmPassword: this.confirmPassword,
             email: this.email,
-            firstName: this.firstName,
+            login: this.login,
             password: this.password, 
           }
          
@@ -128,7 +128,7 @@
           this.confirmPassword = '',
           this.password='',
           this.email='',
-          this.firstName=''
+          this.login=''
         }
       }
       // mounted(){

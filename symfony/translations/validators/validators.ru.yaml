@@ -7,8 +7,29 @@ user.email.format: Значение адреса электронной почт
 user.password.not_blank: Пароль не может быть пустым
 user.password.length: Пароль должен быть не менее 6 символов
 user.password.regex: Не верный формат пароля. Пароль может содержать латинские буквы в разных регистрах, цифры и нижнее подчеркивание
-user.unique: Пользователь с указанным адресом почты уже существует
+user.unique: Пользователь с логином {{ value }} уже существует
+user.login.not_blank: Логин не может быть пустым
+user.login.not_null: Необходимо указать логин
+user.login.length: Логин не может быть длиннее {{ limit }} символов
+user.general.length: Строка поиска не может быть длиннее {{ limit }} символов
 
+profile.snils.format: Не верный формат СНИЛС
+profile.first_name.not_blank: Имя пользователя не может быть пустым
+profile.first_name.not_null: Имя пользователя  - обязательный параметр
+profile.middle_name.not_blank: Отчество пользователя не может быть пустым
+profile.middle_name.not_null: Отчество пользователя  - обязательный параметр
+profile.last_name.not_blank: Фамилия пользователя не может быть пустой
+profile.last_name.not_null: Фамилия пользователя  - обязательный параметр
+profile.education.choice: Не верный уровень образования
+profile.first_name.length: Имя не может быть длиннее {{ limit }} символов
+profile.middle_name.length: Отчество не может быть длиннее {{ limit }} символов
+profile.last_name.length: Фамилия не может быть длиннее {{ limit }} символов
+profile.department.length: Название подразделения не может быть длиннее {{ limit }} символов
+profile.diploma.length: Название диплома не может быть длиннее {{ limit }} символов
+profile.citizenship.length: Название гражданства не может быть длиннее {{ limit }} символов
+profile.position.length: Название должности не может быть длиннее {{ limit }} символов
+profile.position.not_blank: Должность пользователя не может быть пустой
+profile.position.not_null: Должность пользователя  - обязательный параметр
 
 worker_card.middle_name.not_blank: Отчество пользователя не может быть пустым
 worker_card.last_name.not_blank: Фамилия пользователя не может быть пустой
@@ -44,6 +65,28 @@ category.parent.exist: Такого раздела нет
 category.title.unique: Раздел с таким названием уже существует
 category.alias.not_blank: Псевдоним раздела не может быть пустым
 category.alias.max_length: Псевдоним раздела не может быть длиннее {{ limit }} символов
+category.robots.max_length: robots раздела не может быть длиннее {{ limit }} символов
+category.canonical.max_length: canonical раздела не может быть длиннее {{ limit }} символов
+
+company.tin.regex: Не корректно введен ИНН
+company.title.not_blank: Название компании не может быть пустым
+company.title.max_length: Название компании не может быть длиннее {{ limit }} символов
+company.tin.unique: Компания с таким ИНН уже существует
+
+commission.title.not_null: Название комиссии - обязательный параметр
+commission.title.not_blank: Название комиссии не может быть пустым
+commission.title.max_length: Название комиссии не может быть длиннее {{ limit }} символов
+commission.participant.min: Количество членов комиссии должно быть не менее {{ limit }}
+commission.participant.max: Количество членов комиссии должно быть не более {{ limit }}
+commission.head.not_null: Необходимо выбрать председателя комиссии
+
+group.title.length: Название группы не может быть длиннее {{ limit }} символов
+group.title.not_blank: Название группы не может быть пустым
+group.title.not_null: Название группы - обязательный параметр
+group.participant.min: Количество участников группы должно быть не менее {{ limit }}
+group.test.min: Количество доступных тестов группы должно быть не менее {{ limit }}
+group.date.not_null: Необходимо указать дату
+group.date.format: Не верный формат даты, необходимый формат 'Y-m-d H:i:s'
 
 file.extension: Расширение загружаемого файла не {{ extensions }}
 file.size.max: Файл {{ name }} слишком большой ({{ size }} {{ suffix }}). Максимально допустимый размер {{ limit }} {{ suffix }}
@@ -58,7 +101,20 @@ test.alias.max_length: Псевдоним теста не может быть д
 test.title.format: Не верный формат названия
 test.description.format: Не верный формат описания
 test.category.format: Не верный формат категории
+test.canonical.max_length: canonical теста не может быть длиннее {{ limit }} символов
+test.robots.max_length: robots теста не может быть длиннее {{ limit }} символов
 
+protocol.order_number.not_null: Номер приказа - обязательное поле
+protocol.order_number.not_blank: Номер приказа - не может быть пустым
+protocol.order_number.max: Номер приказа не может быть длиннее {{ limit }} символов
+protocol.date.not_null: Дата приказа - обязательное поле
+protocol.date.format: Формат даты YYYY-MM-DD
+protocol.check_reason.not_null: Причина проверки - обязательное поле
+protocol.check_reason.not_blank: Причина проверки - не может быть пустой
+protocol.commission.not_null: Необходимо указать комиссию
+protocol.number.not_null: Номер протокола - обязательное поле
+protocol.number.not_blank: Номер протокола - не может быть пустым
+protocol.number.max: Номер протокола не может быть длиннее {{ limit }} символов
 
 min_trud_test.title.not_blank: Название теста не может быть пустым
 min_trud_test.original_id.unique: Тест с таким идентификатором уже существует

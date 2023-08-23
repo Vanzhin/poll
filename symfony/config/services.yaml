@@ -62,7 +62,13 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\EventListener\Response\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
 
+    App\EventListener\CompanyCreatedListener:
+        tags:
+            - { name: kernel.event_listener, event: company.created }
 
 
     Gedmo\Tree\TreeListener:
@@ -92,6 +98,8 @@ services:
             $appName: '%app.name%'
             $defaultFromEmail: '%app.default_from_email%'
             $defaultFromName: '%app.default_from_name%'
+#            $loginLinkHandler: 'security.authenticator.login_link_handler.login'
+
 
     App\Service\FileHandler:
         arguments:

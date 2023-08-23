@@ -2,8 +2,10 @@
 
 namespace App\Factory\User;
 
-use App\Entity\User;
-use App\Entity\WorkerCard;
+use App\Entity\Company;
+use App\Entity\Profile\Profile;
+use App\Entity\User\User;
+use App\Entity\User\vo\WorkerCard;
 use App\Enum\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -36,10 +38,10 @@ class UserBuilder
         return $user;
     }
 
-    public function buildUser(string $email, string $password = null, string $firstName = null): ?User
+    public function buildUser(string $email, ?string $login = null, string $password = null): ?User
     {
         $user = new User();
-        $user->setEmail($email)->setFirstName($firstName);
+        $user->setEmail($email)->setLogin($login ?? $email);
         if ($password) {
             $user->setPassword(
                 $this->userPasswordHasher->hashPassword(
@@ -48,6 +50,48 @@ class UserBuilder
                 )
             );
         }
+        return $user;
+    }
+
+    // создал новый билдер для пользователя компании
+    public function buildCompanyUser(array $data, Company $company, User $user = null, Profile $profile = null): User
+    {
+        if (!$user) {
+            $user = new User();
+        }
+        foreach ($data as $key => $item) {
+            if ($key === 'email') {
+                $user->setEmail($item);
+                continue;
+            };
+            if ($key === 'login') {
+                $user->setLogin($item);
+                continue;
+            };
+            if ($key === 'roles' && is_array($item)) {
+                if (($i = array_search('ROLE_USER', $item)) !== false) {
+                    unset($item[$i]);
+                }
+                $user->setRoles($item);
+                continue;
+            };
+            if ($key === 'password') {
+                $user->setPassword(
+                    $this->userPasswordHasher->hashPassword(
+                        $user,
+                        $item
+                    )
+                );
+                continue;
+            };
+            if ($key === 'isActive') {
+                $user->setIsActive($item);
+                continue;
+            };
+        }
+        $user->setProfile($profile);
+        $user->setCompany($company);
+
         return $user;
     }
 
@@ -85,8 +129,5 @@ class UserBuilder
             )
         );
         return $user;
-
     }
-
-
 }

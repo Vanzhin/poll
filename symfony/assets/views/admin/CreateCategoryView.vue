@@ -13,7 +13,7 @@
           :value="parentId"
           v-if="parentId"
         >
-        <p class="label"><b>Категория: </b></p>
+        <p class="label"><b>Категория (title, h1): </b></p>
         <div class="custom-radio img_block">
           <textarea rows="2" required
             name="title"
@@ -25,7 +25,7 @@
             v-if="title !== ''"
           ></i>
         </div>
-        <label class="label"><b>Описание действий:</b> </label>
+        <label class="label"><b>Описание (description):</b> </label>
         <div class="custom-radio img_block">  
           <textarea rows="1" 
             name="description"
@@ -49,7 +49,57 @@
             v-if="alias !== ''"
           ></i>
         </div>
-        <div class="mb-3 w-100">
+        <label class="label"><b>Дополнительное описание для SEO:</b> </label>
+        <div class="custom-radio img_block">  
+          <textarea rows="1" 
+            name="descriptionSeo"
+            v-model= "descriptionSeo"
+            class="textarea_input" 
+          ></textarea> 
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="descriptionSeo = ''"
+            v-if="descriptionSeo !== ''"
+          ></i>
+        </div>
+        <label class="label"><b>Canonical:</b> </label>
+        <div class="custom-radio img_block">  
+          <input rows="1" 
+            name="canonical"
+            v-model= "canonical"
+            class="input_alias" 
+          >
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="canonical = ''"
+            v-if="canonical !== ''"
+          ></i>
+        </div>
+        <div  class="checkbox_label">
+          <input type="hidden" 
+          name="robots" 
+          :value="robotsText"
+        >
+          <label class="label"><b>Robots:</b>{{ robots }} </label>
+          <i class="bi bi-eraser custom-close" title="Очистить поле"
+            @click="robots = []"
+            v-if="robots.length > 0"
+          ></i>
+        </div>
+        <div class="">  
+          <div class="checkbox_label"
+            v-for="item in robotsEven"
+            :key="item.name"
+            :title="item.title"
+          >
+            <input type="checkbox" 
+              :value= "item.name"
+              v-model="robots"
+              class="custom-control-input"  
+            > 
+            <label>{{ item.name }}</label>
+          </div>
+          
+        </div>
+        <div class="mb-3 w-100 mt-3">
           <div class="img_block"
             v-if="imageUrl !== ''"
           >
@@ -89,21 +139,24 @@
     },
     data() {
       return {
-       
-        typeQuestions:[
-          {id: 1, 
-            type: "radio",
-            title: "Один из многих",
-          },
+        robotsEven:[
+          {name:'noindex', title: 'Не индексировать текст страницы. Страница не будет участвовать в результатах поиска.'}, 
+          {name:'nofollow', title: 'Не переходить по ссылкам на странице. Робот не перейдет по ссылкам при обходе сайта, но может узнать о них из других источников. Например, на других страницах или сайтах.'}, 
+          {name:'none', title: 'Соответствует директивам noindex, nofollow.'}, 
+          {name:'noarchive', title: 'Не показывать ссылку на сохраненную копию в результатах поиска.'}, 
+          {name:'noyaca', title: 'Не использовать сформированное автоматически описание.'}, 
+          {name:'all', title: 'Соответствует директивам index и follow — разрешено индексировать текст и ссылки на странице.'}
         ],
-        selectTypeQuestion: '',
         parentId: undefined,
         title: "",
         description: "",
+        descriptionSeo: "",
         imageFile: "",
         imageUrl: "",
         imageValue: "",
         alias:'',
+        canonical: "",
+        robots: [],
         message: null
       }
     },
@@ -114,6 +167,10 @@
         console.log(category)
         return category
       },
+      robotsText(){
+        console.log(this.robots.toString())
+        return this.robots.toString()
+      }
     },
    
     methods: { 
@@ -164,6 +221,10 @@
         this.title = this.getCategory.title
         this.description = this.getCategory.description ? this.getCategory.description : ''
         this.imageUrl = this.getCategory.image ? this.getCategory.image : ''
+        this.alias = this.getCategory.alias ? this.getCategory.alias : ''
+        this.descriptionSeo = this.getCategory.descriptionSeo ? this.getCategory.descriptionSeo : ''
+        this.canonical = this.getCategory.canonical ? this.getCategory.canonical : ''
+        this.robots = this.getCategory.robots ? this.getCategory.robots.split(',') : []
       }
       
       
@@ -184,6 +245,13 @@
     display:block;
     margin: 0 10px;
   }
+  .checkbox_label{
+    display: flex;
+    align-items: center;
+    & label {
+      margin-left: 10px;
+    }
+  }
   .textarea_input{
     max-width: 50%;
     padding: 0;
@@ -191,7 +259,7 @@
     margin: 5px;
   }
   .input_alias{
-    width: 22%;
+    width: 50%;
     border-color: rgb(243 243 238);
     margin: 5px;
   }
@@ -207,6 +275,21 @@
         cursor: pointer;
       }
     }
+  }
+  .custom-control {
+    position: relative;
+    display: flex;
+    align-items:flex-start;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+    margin-top: 5px;
+    align-items: center;
+  }
+  .custom-control-label {
+      position: relative;
+      margin-bottom: 0;
+      margin-left: 10px;
+      word-wrap: break-word;
   }
  @media (min-width: 1024px) {
   

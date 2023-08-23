@@ -3,7 +3,7 @@
     class="item__block"
   >
     <div class="">
-      <div class="item__card" @click="">
+      <div class="item__card" >
         <div class="item__card-block">
           <div class="item__card__img">
             <img :src="item.image" alt="" class="item__card__img"

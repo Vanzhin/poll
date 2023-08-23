@@ -4,7 +4,7 @@ namespace App\Action\Question;
 
 use App\Action\BaseAction;
 use App\Entity\Question;
-use App\Repository\QuestionRepository;
+use App\Repository\Question\QuestionRepository;
 use App\Service\Paginator;
 use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -65,6 +65,4 @@ class GetQuestion extends BaseAction
             return $this->errorResponse(['error' => $e->getMessage()]);
         }
     }
-
-
 }

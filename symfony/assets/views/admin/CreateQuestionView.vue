@@ -24,6 +24,7 @@
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li
                 v-for="typeQuestion in typeQuestions"
+                :key="typeQuestion.id"
               >
                 <p class="dropdown-item" 
                   @click="selectTypeQuestion=typeQuestion"
@@ -187,10 +188,9 @@
           await this.getQuestionIdDb ({id: this.questionId})
         }
 
-        console.log(this.getTest)
-        console.log(this.getQuestion)
+        
         const typeQuestion = this.getQuestion.type.title ? this.getQuestion.type.title : this.getQuestion.type
-        console.log(this.typeQuestions.find(item => item.type = this.getQuestion.type))
+        
         const item = this.typeQuestions.find(item => item.type = this.getQuestion.type)
         this.selectTypeQuestion = {
           id: item.id, 

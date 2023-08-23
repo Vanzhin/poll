@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Api\Module\V1\validation\vo\Error;
 use App\Entity\Question;
 use App\Interfaces\EntityWithImageInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -129,6 +128,31 @@ class ValidationService
                 'extensions' => [
                     'txt' => 'text/plain',
                     'zip' => 'application/zip'
+                ],
+
+                'maxSize' => $maxSize,
+                'extensionsMessage' => 'file.extension',
+
+            ]),
+            new NotNull([
+                'message' => 'file.is.null'
+            ])
+
+        ]);
+
+        foreach ($violations as $violation) {
+            $errors[] = $violation->getMessage();
+        }
+        return $errors;
+    }
+
+    public function excelFileValidate(File $file, string $maxSize = '512k'): array
+    {
+        $errors = [];
+        $violations = $this->validator->validate($file, [
+            new FileConstraint([
+                'extensions' => [
+                    'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 ],
 
                 'maxSize' => $maxSize,

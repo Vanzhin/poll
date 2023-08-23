@@ -18,6 +18,7 @@ import results from './modules/results'
 import metriks from './modules/metriks'
 import crumbs from './modules/crumbs'
 import searchQuery from './modules/searchQuery'
+import company from './modules/company'
 export default createStore({
   state,
   mutations,
@@ -38,6 +39,7 @@ export default createStore({
     results,
     metriks,
     crumbs,
-    searchQuery
+    searchQuery,
+    company
   },
 })

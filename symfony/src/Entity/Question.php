@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\User\User;
 use App\Interfaces\EntityWithImageInterface;
-use App\Repository\QuestionRepository;
+use App\Repository\Question\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -104,9 +105,8 @@ class Question implements EntityWithImageInterface
 
     private array $subtitleIds;
 
-    #[ORM\Column(type: 'boolean', )]
+    #[ORM\Column(type: 'boolean',)]
     #[Groups(['main', 'admin_question'])]
-
     private bool $shuffleVariants = true;
 
     /**

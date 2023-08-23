@@ -14,7 +14,7 @@ class AnswerFixtures extends BaseFixtures implements DependentFixtureInterface
 
     function loadData(ObjectManager $manager)
     {
-        $this->createMany(Answer::class, 500, function (Answer $answer) use ($manager) {
+        $this->createMany(Answer::class, 100, function (Answer $answer) use ($manager) {
             $result = $this->getRandomReference(Result::class);
             $questions = $result->getTest()->getQuestion()->toArray();
             $answer

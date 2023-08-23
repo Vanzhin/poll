@@ -32,15 +32,30 @@ services:
     depends_on:
       - mysql
 
+  node_builder:
+    container_name: node_builder
+    tty: true # Enables debugging capabilities when attached to this container.
+    image: docker.io/bitnami/node:16
+    command: sh -c 'npm install reactstrap --legacy-peer-deps && npm run dev; exit 0'
+    volumes:
+      - '../symfony:/app:rw'
+    depends_on:
+      - symfony
+
   node:
     container_name: node
     tty: true # Enables debugging capabilities when attached to this container.
     image: docker.io/bitnami/node:16
-    command: sh -c 'npm install reactstrap --legacy-peer-deps && npm run dev; exit 0'
+    command: sh -c 'yarn install --non-interactive; npm run build; node /app/.output/server/index.mjs'
+    environment:
+      - NUXT_TELEMETRY_DISABLED=1
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
     ports:
       - 3000:3000
+    networks:
+      - symfony
     volumes:
-      - '../symfony:/app:rw'
+      - '../test_nuxt:/app:rw'
     depends_on:
       - symfony
 
@@ -48,12 +63,13 @@ services:
     container_name: nginx
     image: docker.io/bitnami/nginx:latest
     ports:
-      - "81:80"
+      - "8080:8080"
       - "443:8443"
     networks:
       - symfony
     depends_on:
       - symfony
+      - node
     volumes:
       - ./../symfony/public:/app/public
       - ./nginx/server_blocks:/opt/bitnami/nginx/conf/server_blocks:ro

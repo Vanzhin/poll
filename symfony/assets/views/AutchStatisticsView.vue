@@ -94,7 +94,7 @@
                   >
                     <div v-for="(question, index ) in getResultQuestions" 
                       :key="question.id"
-                      v-if="result.answerVisible"
+                      
                     >
                     <StatistickResultQuestion
                       :question="question"

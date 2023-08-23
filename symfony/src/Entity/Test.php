@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TestRepository;
+use App\Repository\Test\TestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -23,7 +23,7 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search', 'admin_group', 'breadcrumbs'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(
@@ -34,11 +34,11 @@ class Test
         maxMessage: 'test.title.max_length',
     )]
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search', 'test'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['main', 'main_test', 'admin', 'category', 'admin_test_general'])]
+    #[Groups(['main', 'main_test', 'admin', 'category', 'admin_test_general', 'test'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, unique: true)]
@@ -61,7 +61,7 @@ class Test
         message: 'test.category.exist'
     )]
     #[ORM\ManyToOne(inversedBy: 'test')]
-    #[Groups(['result', 'search'])]
+    #[Groups(['result', 'search', 'breadcrumbs'])]
     private ?Category $category = null;
 
     #[Groups(['admin_test_general', 'category', 'search'])]
@@ -108,8 +108,25 @@ class Test
         max: 30,
         maxMessage: 'test.alias.max_length',
     )]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'result', 'search', 'breadcrumbs'])]
     private ?string $alias = null;
+
+    #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'availableTests')]
+    private Collection $groups;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['admin_test_general', 'main', 'test', 'main_test'])]
+    #[Assert\Length(max: 100, maxMessage: 'test.robots.max_length')]
+    private ?string $robots = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['admin_test_general', 'main', 'test', 'main_test'])]
+    #[Assert\Length(max: 100, maxMessage: 'test.canonical.max_length')]
+    private ?string $canonical = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['admin_test_general', 'main', 'test', 'main_test'])]
+    private ?string $descriptionSeo = null;
 
     /**
      * @return bool
@@ -190,6 +207,7 @@ class Test
         $this->section = new ArrayCollection();
         $this->ticket = new ArrayCollection();
         $this->results = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -420,6 +438,69 @@ class Test
     public function setAlias(string $alias): self
     {
         $this->alias = $alias;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Group>
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(Group $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups->add($group);
+            $group->addAvailableTest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): self
+    {
+        if ($this->groups->removeElement($group)) {
+            $group->removeAvailableTest($this);
+        }
+
+        return $this;
+    }
+
+    public function getRobots(): ?string
+    {
+        return $this->robots;
+    }
+
+    public function setRobots(?string $robots): self
+    {
+        $this->robots = $robots;
+
+        return $this;
+    }
+
+    public function getCanonical(): ?string
+    {
+        return $this->canonical;
+    }
+
+    public function setCanonical(?string $canonical): self
+    {
+        $this->canonical = $canonical;
+
+        return $this;
+    }
+
+    public function getDescriptionSeo(): ?string
+    {
+        return $this->descriptionSeo;
+    }
+
+    public function setDescriptionSeo(?string $descriptionSeo): self
+    {
+        $this->descriptionSeo = $descriptionSeo;
 
         return $this;
     }

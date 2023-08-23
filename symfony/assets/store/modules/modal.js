@@ -29,7 +29,10 @@ const actions = {
       message += `${e.response.data.message}!<hr>`
     }
     if (e.response.data.error) {
-      message += `${e.response.data.error}`
+      message += `${e.response.data.error}<hr>`
+    }
+    if (e.response.data.data) {
+      message += `${e.response.data.data.message || ''}<hr>`
     }
     commit("SET_MESSAGE", {err:true, mes: message});
     setIntevalTime({commit, state} )
