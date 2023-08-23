@@ -181,7 +181,10 @@
     let timerId = setInterval(() => {
       if ( !modal.getMessage ) {
         clearInterval(timerId)
-        if ( message.value ){navigateTo(`/admin/categorys`)}
+        if ( message.value ){
+          categorys.categorys= []
+          navigateTo(`/admin/categorys${parentId.value ?'/'+parentId.value : ''}`)
+        }
       }
     }, 200);
   }

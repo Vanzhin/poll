@@ -43,7 +43,7 @@ export const useCategoryStore = defineStore('category', {
       this.parent = parent
     },
     //запрос категорий или подкатегорий
-    async getApiCategorys({ page = null, parentId = null, admin = false, limit = 6 }){
+    async getApiCategorys({ page = null, parentId = null, admin = false, limit = 6 , loading = true}){
       let url = `${urlApi}/api/category`
       let  params = {
         method: 'GET',
@@ -57,7 +57,7 @@ export const useCategoryStore = defineStore('category', {
       if (parentId) {params.params.parent = parentId }
       if (page) { params.params.page = page }
 
-      const sections = await setUseAsyncFetch({ url, params, token: admin })
+      const sections = await setUseAsyncFetch({ url, params, token: admin, loading})
       if (sections.children) {
         this.categorys = sections.children
       } else {

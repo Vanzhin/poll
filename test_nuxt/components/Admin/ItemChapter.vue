@@ -28,7 +28,7 @@
             <div class=" btn-center"
               title="Добавить вложенную категорию"
               @click.stop="createChildrenCategory"
-              v-if="item.test.length === 0"
+              v-if="item.test && item.test.length === 0"
             >
               <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M14 19.3892H2C1.72386 19.3892 1.5 19.1653 1.5 18.8892V2.88916C1.5 2.61302 1.72386 2.38916 2 2.38916H9.47374C9.60391 2.38916 9.72895 2.43992 9.82228 2.53066L14.3485 6.93119C14.4454 7.02533 14.5 7.15464 14.5 7.28969V18.8892C14.5 19.1653 14.2761 19.3892 14 19.3892ZM0 2.88916C0 1.78459 0.895431 0.88916 2 0.88916H9.47374C9.99442 0.88916 10.4946 1.09222 10.8679 1.45517L15.3942 5.8557C15.7815 6.23226 16 6.74949 16 7.28969V18.8892C16 19.9937 15.1046 20.8892 14 20.8892H2C0.895431 20.8892 0 19.9937 0 18.8892V2.88916ZM7.25 15.8892V12.6392H4V11.1392H7.25V7.88916H8.75V11.1392H12V12.6392H8.75V15.8892H7.25Z" fill="#269EB7"/>
@@ -37,11 +37,11 @@
             <div class=" btn-center"
               title="Добавить тест"
               @click.stop="createChildrenTest"
-              v-if="item.children.length === 0"
+              v-if="item.children && item.children.length === 0"
             >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
-              <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-            </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
+                <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+              </svg>
             </div>
             <div class=" btn-center" 
               title="Удалить"
@@ -105,10 +105,9 @@
 
     function createChildrenCategory(){
       navigateTo(`/admin/categorys/${props.item.id}/create`)
-      
     }
     function createChildrenTest(){
-      this.$router.push({name: 'adminTestCreate', params: {operation:"create", id: this.item.id  } })
+      navigateTo(`/admin/categorys/${props.item.id}/test/create`)
     }
 
 
