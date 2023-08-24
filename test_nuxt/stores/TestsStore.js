@@ -8,10 +8,12 @@ export const useTestsStore = defineStore('tests', {
     parent: '',
     tests:[],
     testActive: null,
-    testTitle:'',
+    testTitle: '',
+    testsMinTrud: null
   }),
   getters: {
     getTests: (state) => state.tests,
+    getTest: (state) => state.testActive,
     getTestActive: (state) => state.testActive,
     getTestTitle: (state) => state.testTitle,
     getTestActiveTime: (state) => state.testActive ? state.testActive.time ? state.testActive.time/ 60 : 20: 20,
@@ -19,6 +21,7 @@ export const useTestsStore = defineStore('tests', {
     getTestSeoDescription: (state) => state.testActive ? state.testActive.descriptionSeo :'',
     getTestCanonical: (state) => state.testActive ? state.testActive.canonical :'',
     getTestRobots: (state) => state.testActive ? state.testActive.robots || 'max-image-preview:large' :'max-image-preview:large',
+    getTestsMinTrud: (state) => state.testsMinTrud,
   },
   actions: {
     testsToChange(tests) {
@@ -33,6 +36,7 @@ export const useTestsStore = defineStore('tests', {
       console.log('testTitleSave-',title)
       this.testTitle = title
     },
+    //получение списка тестов по id  категории
     async getApiTests({ page = null, parentId = null, admin = null, limit = 6 }){
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
@@ -43,16 +47,13 @@ export const useTestsStore = defineStore('tests', {
       // }
       let query = { limit }
       if (parentId) { query.parent = parentId }
-      
       if (page) { query.page = page }
-      
       console.log(query)
       try {
         // this.userData = await api.post({ login, password })
         const { data: sections, pending, error } = await useAsyncData(
           () => $fetch (url,
             {
-              
               query:query,
             })
         )
@@ -65,11 +66,7 @@ export const useTestsStore = defineStore('tests', {
             const categorys = useCategoryStore()
             categorys.setParentCategory(sections.value.parent)
           }
-          
           loader.setIsLoaderStatus(false)
-            
-        
-
       } catch (error) {
         console.log(error)
       }
@@ -77,16 +74,38 @@ export const useTestsStore = defineStore('tests', {
     
     //получение информации теста по его id
     async getTestIdDb( {id}){
-      
+      const url = `${urlApi}/api/admin/test/${id}`
       const config = {
         method: 'get',
-        url: `/api/admin/test/${id}`,
         headers: { 
           Accept: 'application/json', 
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json', 
         }
       }
-    
+      const test = await setUseAsyncFetch({ url, params, token: true })
+      this.testActive = test 
+    },
+    //запрос списка тестов мин труда
+    async getTestsMinTrudDb() {
+      if (localStorage.getItem('testsMinTrud')){
+        this.testsMinTrud = JSON.parse(localStorage.getItem('testsMinTrud'))
+        return
+      }
+      const url = `${urlApi}/api/admin/test/mintrud`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json', 
+        }
+      }
+      const tests = await setUseAsyncFetch({ url, params, token: true })
+      if (tests) {
+        this.testsMinTrud = tests
+        const parsed = JSON.stringify(tests)
+        localStorage.setItem('testsMinTrud', parsed)
+      }
     }
+
   }
 })
