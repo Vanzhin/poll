@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { usePaginationStore } from './PaginationStore'
 import { useLoaderStore } from './Loader'
 import { useCategoryStore } from './CategoryStore'
+import { useModalStore  } from './ModalStore'
 
 export const useTestsStore = defineStore('tests', {
   state: () => ({
@@ -37,45 +38,44 @@ export const useTestsStore = defineStore('tests', {
       this.testTitle = title
     },
     //получение списка тестов по id  категории
-    async getApiTests({ page = null, parentId = null, admin = null, limit = 6 }){
-      const loader = useLoaderStore()
-      loader.setIsLoaderStatus(true)
-      // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
+    async getApiTests({ page = null, parentId = null, admin = false, limit = 6 }){
+           
       let url = `${urlApi}/api/category`
-      // if (admin) { 
-      //   config.headers.Authorization = `Bearer ${token}`
-      // }
-      let query = { limit }
-      if (parentId) { query.parent = parentId }
-      if (page) { query.page = page }
-      console.log(query)
-      try {
-        // this.userData = await api.post({ login, password })
-        const { data: sections, pending, error } = await useAsyncData(
-          () => $fetch (url,
-            {
-              query:query,
-            })
-        )
-          console.log("sections", sections.value)
-          console.log("sections", sections)
-          this.tests = sections.value.test
-          const pagination = usePaginationStore()
-          pagination.paginationsAll(sections.value.pagination)
-          if (sections.value.parent){
-            const categorys = useCategoryStore()
-            categorys.setParentCategory(sections.value.parent)
-          }
-          loader.setIsLoaderStatus(false)
-      } catch (error) {
-        console.log(error)
+      
+      let  params = {
+        method: 'GET',
+        headers: { 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        params: { limit }
       }
+      if (parentId) { params.params.parent = parentId }
+      if (page) { params.params.page = page }
+      console.log(params)
+      
+      const sections = await setUseAsyncFetch({ url, params, token: admin })
+      
+      console.log("sections", sections)
+      if (sections && sections.test){
+        this.tests = sections.test
+      }
+      if (sections && sections.pagination){
+        const pagination = usePaginationStore()
+        pagination.paginationsAll(sections.pagination)
+      }
+      if (sections && sections.parent){
+        const categorys = useCategoryStore()
+        categorys.setParentCategory(sections.parent)
+      }
+          
+      
     },
     
     //получение информации теста по его id
     async getTestIdDb( {id}){
       const url = `${urlApi}/api/admin/test/${id}`
-      const config = {
+      const params = {
         method: 'get',
         headers: { 
           Accept: 'application/json', 
@@ -105,6 +105,24 @@ export const useTestsStore = defineStore('tests', {
         const parsed = JSON.stringify(tests)
         localStorage.setItem('testsMinTrud', parsed)
       }
+    },
+    //создание теста
+    async createTestDb({questionSend}) {
+      const data = new FormData(questionSend);
+      for(let [name, value] of data) {
+        console.dir(`${name} = ${value}`); 
+      }
+      const url = `${urlApi}/api/admin/test/create`
+      const params = {
+        method: 'post',
+        headers: { 
+          Accept: 'application/json', 
+        },
+        body: data
+      }
+      const test = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      modal.setMessage( test )
     }
 
   }

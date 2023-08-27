@@ -1,22 +1,68 @@
 <template>
   <div >
-   
-    <div class="block">
-      <div class="title">
-        <h2>Форма редактирования категорий</h2>
-      </div>
+    <div class="title">
+      <h2>Форма редактирования тестов</h2> 
     </div>
-
-    <div class="container">
+    <div class="block">
+      
+     <uiButton
+        title="Назад"
+      />
+    </div>
+    <div class="container"
+      v-if="! modal.isLoader"
+    >
+      
       <div class="row">
         <form @submit.prevent="onSubmit">
           <input type="hidden" 
-            name="parentId" 
+            name="category" 
             :value="parentId"
-            v-if="parentId"
           >
-          <p class="label"><b>Категория (title, h1): </b></p>
-          <div class="custom-radio img_block">
+        
+          <div class="custom-radio mintrud">  
+            <p class="label"><b>Тест: </b></p>
+            <input type="checkbox"
+              v-model="checkedMinTrud"
+            >
+            <b> Минтруд </b>
+          </div>
+          <div class="mintrud_block"
+            v-if="checkedMinTrud"
+          >
+            <input type="hidden" 
+              name="minTrud" 
+              :value="selectTestMinTrud"
+            >
+            <input type="hidden" 
+              name="title" 
+              :value="title"
+            >
+            <p class="mintrud_title"
+              
+            >{{ title }}</p>
+            <div class="dropdown trud_select"> 
+              <button class=" dropdown-toggle trud_select" 
+                id="dropdownMenuButton1" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+                Выберите тест
+              </button> {{ selectTestMinTrud }} 
+              <ul class="dropdown-menu trud_grup_option" aria-labelledby="dropdownMenuButton1">
+                <li class="trud_option"
+                  v-for="(item) in getTestsMinTrud"
+                  :key="item.id"
+                  :value="item.id"
+                  @click="selectedTestMinTrud(item)"
+                >{{ item.title }}</li>
+                
+              </ul>
+            </div>
+            
+          </div>
+          <div class="custom-radio img_block"
+            v-else
+          >
             <textarea rows="2" required
               name="title"
               v-model= "title"
@@ -27,7 +73,7 @@
               v-if="title !== ''"
             ></i>
           </div>
-          <label class="label"><b>Описание (description):</b> </label>
+          <label class="label"><b>Описание:</b> </label>
           <div class="custom-radio img_block">  
             <textarea rows="1" 
               name="description"
@@ -101,31 +147,37 @@
             </div>
             
           </div>
-          <div class="mb-3 w-100 mt-3">
-            <div class="img_block"
-              v-if="imageUrl !== ''"
-            >
-              <img :src="imageUrl"  width="200"/> 
-              <i class="bi bi-x-lg custom-close" title="Удалить изображение"
-                @click.stop="imgDelete()"
-              ></i>
-            </div> 
-            
-            <label class="label"
-              v-if="imageUrl !== ''"
-            >Изменить изображение </label>
-            <label class="label"
-              v-else
-            >Прикрепить изображение </label>
-            <input  class="" type="file" accept="image/*"  
-              @change="(e)=> changeImg(e)"
-              :name="(imageUrl === '') && (imageValue  === '')? '' : 'categoryImage'"
-              :value="imageValue"
-            >
+          <label class="label"><b>Укажите время на прохождение теста:</b> </label>
+          <div class="custom-radio img_block">  
+            <input  
+              name="time"
+              v-model= "time"
+              class="textarea_input" 
+              required
+              pattern="[0-9]{1,10}"
+            > 
+            <i class="bi bi-eraser custom-close" title="Очистить поле"
+              @click="time = ''"
+              v-if="time !== ''"
+            ></i>
+          </div>
+          <label class="label"><b>Укажите количество секций для  прохождения теста:</b> </label>
+          <div class="custom-radio img_block">  
+            <input  
+              name="sectionCountToPass"
+              v-model= "sectionCountToPass"
+              class="textarea_input" 
+              required
+              pattern="[0-9]{1,10}"
+            > 
+            <i class="bi bi-eraser custom-close" title="Очистить поле"
+              @click="sectionCountToPass = ''"
+              v-if="sectionCountToPass !== ''"
+            ></i>
           </div>
           <br> 
             
-          <button type="submit" class="button">Сохранить</button>
+          <button type="submit" class="button_s">Сохранить</button>
         </form>
       </div>
     </div>
@@ -136,16 +188,14 @@
     layout: "admin",
     // middleware: 'authadmin'
   })
-  import { useCategoryStore } from '../../../../stores/CategoryStore'
-  import { useModalStore } from '../../../../stores/ModalStore'
-  import { useUserStore  } from '../../../../stores/UserStore'
+  import { useModalStore } from '../../stores/ModalStore'
+  import { useUserStore  } from '../../stores/UserStore'
+  import { useTestsStore  } from '../../stores/TestsStore'
+  const tests = useTestsStore()
   const user = useUserStore()
-  const categorys = useCategoryStore()
   const modal= useModalStore()
   const route = useRoute()
-  const router = useRouter()
-  const operation = ref(route.params.operation || '')
-  const robotsEven = [
+  const robotsEven =[
     {name:'noindex', title: 'Не индексировать текст страницы. Страница не будет участвовать в результатах поиска.'}, 
     {name:'nofollow', title: 'Не переходить по ссылкам на странице. Робот не перейдет по ссылкам при обходе сайта, но может узнать о них из других источников. Например, на других страницах или сайтах.'}, 
     {name:'none', title: 'Соответствует директивам noindex, nofollow.'}, 
@@ -153,85 +203,87 @@
     {name:'noyaca', title: 'Не использовать сформированное автоматически описание.'}, 
     {name:'all', title: 'Соответствует директивам index и follow — разрешено индексировать текст и ссылки на странице.'}
   ]
+  const selectTypeQuestion = ref('')
   const parentId = ref(null)
   const title = ref("")
-  const description= ref("")
-  const descriptionSeo = ref("")
-  const imageFile = ref("")
-  const imageUrl = ref("")
-  const imageValue = ref("")
+  const description = ref("")
   const alias = ref("")
+  const time = ref(1200)
+  const sectionCountToPass = ref("")
+  const message = ref(null)
+  const isLoader = ref(true)
+  const operation = ref( route.params.operation || '')
+  const checkedMinTrud = ref(false)
+  const selectTestMinTrud = ref(null)
   const canonical = ref("")
   const robots = ref([])
-  const message = ref(null)
-  
-  const robotsText = computed(() => {
-     return robots.value.toString() 
+  const descriptionSeo = ref("")
+
+  const robotsText = computed(()=>{
+    console.log(robots.value.toString())
+    return robots.value.toString()
   })
 
   async function onSubmit(e){
     const questionSend = e.target
-    
     if ( operation.value === 'edit'){
-      await categorys.editCategory({questionSend,  id:+route.params.id})
+      await tests.editTestDb({questionSend, token: true, id:+route.params.id})
+      
     } else if ( operation.value === 'create'){
-      await categorys.createCategory({questionSend})
+      await tests.createTestDb({ questionSend })
+      
     }
     message.value = !modal.getMessage.err
     let timerId = setInterval(() => {
-      if ( !modal.getMessage ) {
+      if ( !modal.getMessage) {
         clearInterval(timerId)
-        if ( message.value ){
-          categorys.categorys = []
-          navigateTo(`/admin/categorys${parentId.value ?'/'+parentId.value : ''}`)
+        if (message.value ){
+          navigateTo(`/admin/categorys${parentId.value ?'/'+parentId.value +'/tests': ''}`)
         }
       }
     }, 200);
   }
-
-  function changeImg(e){
-    if (typeof e.target.files[0] === 'object'){
-      imageUrl.value = URL.createObjectURL(e.target.files[0])
-      imageValue.value = e.target.value
-    }
-  }
-  function imgDelete(ind){
-    imageUrl.value = ''
-    imageValue.value = ''
+  function selectedTestMinTrud(item) {
+    selectTestMinTrud.value = item.id
+    title.value = item.title
   }
   onMounted(async() => {
-    if ( operation.value === 'create'){
-        if (route.params.id > 0) {
-          parentId.value = route.params.id 
-        }
-      }
-      if ( operation.value === 'edit'){
-        console.log('categorys.getCategory =',categorys.getCategory)
-        if (!categorys.getCategory) {
-          const user = useUserStore()
-          await user.setTokenIsLocalStorage()
-          await categorys.getCategoryIdDB({id:+route.params.id})
-        }
-        
-       
-        title.value = categorys.getCategory.title
-        description.value = categorys.getCategory.description ? categorys.getCategory.description : ''
-        imageUrl.value = categorys.getCategory.image ? categorys.getCategory.image : ''
-        alias.value = categorys.getCategory.alias ? categorys.getCategory.alias : ''
-        descriptionSeo.value = categorys.getCategory.descriptionSeo ? categorys.getCategory.descriptionSeo : ''
-        canonical.value = categorys.getCategory.canonical ? categorys.getCategory.canonical : ''
-        robots.value = categorys.getCategory.robots ? categorys.getCategory.robots.split(',') : []
-      }
+    if ( route.params.operation === 'create'){
+      parentId.value = route.params.id
+    } 
+    if ( route.params.operation === 'edit'){
+      
+      await tests.getTestIdDb({id: route.params.testId})
+      title.value = tests.getTest.title || ''
+      description.value = tests.getTest.description || ''
+      descriptionSeo.value = tests.getTest.descriptionSeo || ''
+      canonical.value = tests.getTest.canonical || ''
+      robots.value = tests.getTest.robots ? tests.getTest.robots.split(',') : []
+      sectionCountToPass.value = tests.sectionCount || ''
+      alias.value = tests.getTest.alias || ''
+      time.value = tests.getTest.time || ''
+    }
+    console.log(tests.getTestsMinTrud)
+    if (!tests.getTestsMinTrud) {
+      console.log('запрос тестов минтруд')
+      await tests.getTestsMinTrudDb()
+    }
+      
+      
   })
 </script>
-
 <style lang="scss" scoped>
-  .button{
+  .button_s{
     padding: 5px 10px;
     transition: all 0.1s ease-out;
     &:hover{
       background-color: rgb(156, 156, 154);
     }
+  }
+  .block{
+    display: flex ;
+    justify-content: end;
+    padding-right: 50px;
   }
   .label{
     display:block;
@@ -250,11 +302,6 @@
     padding-left: 10px;
     margin: 5px;
   }
-  .input_alias{
-    width: 50%;
-    border-color: rgb(243 243 238);
-    margin: 5px;
-  }
   .img_block{
     display: flex;
     align-items: flex-start;
@@ -268,20 +315,46 @@
       }
     }
   }
-  .custom-control {
-    position: relative;
+  .mintrud{
     display: flex;
-    align-items:flex-start;
-    min-height: 1.5rem;
-    padding-left: 1.5rem;
-    margin-top: 5px;
     align-items: center;
-  }
-  .custom-control-label {
-      position: relative;
-      margin-bottom: 0;
+    &_block{
+      display: flex;
+      flex-direction: column;
+    }
+    &_title{
+      background-color: #fff;
+      border: var(--border) solid var(--color-secondary);
+      border-radius: var(--radius);
+      padding: 10px;
+      min-height: 50px;
+      max-width: 70%;
+    }
+    & b {
       margin-left: 10px;
-      word-wrap: break-word;
+    }
+  }
+  .trud{
+    &_select{
+      width: 80%;
+    }
+  
+    &_grup_option{
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    &_option{
+    
+      &:hover{
+        background-color: rgb(170, 185, 197);
+        cursor: pointer;
+      }
+    }
+  }
+  .input_alias{
+    width: 22%;
+    border: 1px solid rgb(235 235 232);
+    margin: 5px;
   }
  @media (min-width: 1024px) {
   

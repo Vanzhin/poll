@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TheHomePage />
+    <AdminTheTestsPage />
   </div>
 </template>
 <script setup>

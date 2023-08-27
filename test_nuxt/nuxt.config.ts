@@ -10,16 +10,21 @@ export default defineNuxtConfig({
     // "@/node_modules/bootstrap/dist/js/bootstrap.min.js"
     // 'bootstrap-vue/nuxt'
     '@pinia/nuxt',
-    '@artmizu/yandex-metrika-nuxt',
+    // '@artmizu/yandex-metrika-nuxt',
+    // [
+    //   '@rkaliev/nuxtjs-yandex-metrika',
+    //   {
+    //     id: '93328607',
+    //     webvisor: true,
+    //     clickmap: true,
+    //     debug: false,
+    //     noJS: false,
+    //     disabled: false,
+    //   },
+    // ],
   ],
-  yandexMetrika: {id:"93328607"},
-  // pinia: {
-  //   autoImports: [
-  //     // automatically imports `defineStore`
-  //     'defineStore', // import { defineStore } from 'pinia'
-  //     ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
-  //   ],
-  // },
+  // yandexMetrika: {id:"93328607"},
+ 
   
   css: [
     "bootstrap/dist/css/bootstrap.min.css",
