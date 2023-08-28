@@ -1,2 +1,1 @@
-import "dotenv";
-export const urlApi = "process.env.API_URL";
+export const urlApi = 'https://192.168.0.103'
