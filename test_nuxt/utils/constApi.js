@@ -1,2 +1,2 @@
-export const urlApi = 'https://test.9784023.ru'
-//export const urlApi = 'http://test2-open'
+import "dotenv";
+export const urlApi = "process.env.API_URL";
