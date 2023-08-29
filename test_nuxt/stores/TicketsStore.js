@@ -14,8 +14,8 @@ export const useTicketsStore = defineStore('tickets', {
   }),
   getters: {
     getTickets: (state) => state.tickets,
-    getCountTickets: (state) => state.tickets.length,
-    getTicketsIs: (state) => state.tickets.length > 0,
+    getCountTickets: (state) => state.tickets ? state.tickets.length : 0,
+    getTicketsIs: (state) => state.tickets ? state.tickets.length > 0 : 0,
     getTicketSelect: (state) => state.ticketSelect,
     getTicketSelectTitle: (state) => state.ticketSelect ? state.ticketSelect.title : ''
   },
@@ -33,41 +33,21 @@ export const useTicketsStore = defineStore('tickets', {
       this.ticketSelect = ticket
     },
     async getApiTicketsTestIdNoAuthDb({ page = null, parentId = null, admin = null, limit = 6 }){
-      console.log('getApiTicketsTestIdNoAuthDb получаю-',parentId)
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
       let url = `${this.urlApi}/api/test/${parentId}`
       try {
-        // this.userData = await api.post({ login, password })
-        console.log('получаю билеты url-',url)
         const { data: sections, pending, error } = await useAsyncData(
-          () => $fetch(url,
-            {
-              // lazy: true,
-            })
+          () => $fetch(url)
         )
+        console.log(sections.value)
         const testRespons =  sections.value.test
-        console.log("sections", testRespons)
         this.tickets = testRespons.ticket
         const test = useTestsStore()
         test.testTitleSave(testRespons.title)
-        test.testActiveSave(testRespons
-        //   {
-        //   alias:sections.value.alias,
-        //   title:sections.value.title,
-        //   time:sections.value.time,
-        //   id:sections.value.id,
-        //   slug:sections.value.slug,
-        //   minTrudTest:sections.value.minTrudTest,
-        // }
-        )
-        // this.pending = pending.value
-        console.log('getApiTicketsTestIdNoAuthDb получил -', this.tickets)
+        test.testActiveSave(testRespons)
         loader.setIsLoaderStatus(false)
-        
-        
         return pending
-
       } catch (error) {
         console.log(error)
       }

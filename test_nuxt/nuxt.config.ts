@@ -18,20 +18,10 @@ export default defineNuxtConfig({
     '@artmizu/yandex-metrika-nuxt',
   ],
   yandexMetrika: {id:"93328607"},
-  // pinia: {
-  //   autoImports: [
-  //     // automatically imports `defineStore`
-  //     'defineStore', // import { defineStore } from 'pinia'
-  //     ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
-  //   ],
-  // },
-  
   css: [
     "bootstrap/dist/css/bootstrap.min.css",
     '~/assets/styles/app.scss'
-    
   ],
-  
   postcss: {
     plugins: {
       tailwindcss: {},

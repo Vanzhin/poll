@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-
+import { useLoaderStore } from './Loader'
 export const useCrumbsStore = defineStore('crumbs', {
   state: () => ({
     crumbs:[],
@@ -51,7 +51,9 @@ export const useCrumbsStore = defineStore('crumbs', {
     },
 
     async getCategoryCrumbsDB(id){
-      let url = `${this.urlApi}/api/category/${id}/breadcrumbs`
+      const loader = useLoaderStore()
+      loader.setIsLoaderStatus(true)
+      let url = `${urlApi}/api/category/${id}/breadcrumbs`
       const params = {
         method: 'GET',
         headers: { 
@@ -59,10 +61,14 @@ export const useCrumbsStore = defineStore('crumbs', {
           'Content-Type': 'application/json',
         },
       }
-      const result = await setUseAsyncFetch({ url, params, token: false })
-      if (result.data) {
-        this.setIterationsCrumbs(result.data)
+      
+      const { data: result, pending, error } = await useAsyncData(
+        () => $fetch(url, params))
+      
+      if (result.value.data) {
+        this.setIterationsCrumbs(result.value.data)
       }
+      loader.setIsLoaderStatus(false)
     },
 
     async getTestCrumbsDB(id){

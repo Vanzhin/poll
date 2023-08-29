@@ -20,15 +20,13 @@ export const usePaginationStore = defineStore('pagination', {
     },
     paginationsAll(pagination) {
       console.log(pagination)
-      if (!pagination || pagination.error) {
+      if (!pagination || ("error" in pagination) || pagination.totalPages < 2 ) {
         this.paginations =[]
         this.activePage = 1
+        console.log('обнулил пагинацию')
         return
       }
-      else {
-        
-      }
-      let  pagin = []
+          let  pagin = []
       
       this.totalItemsPage = pagination.limit
       this.activePage = pagination.currentPage

@@ -8,7 +8,7 @@
     layout: "admin",
     middleware: 'authadmin'
   })
-  import { usePaginationStore } from '../../../stores/PaginationStore'
+  import { usePaginationStore } from '../../../../stores/PaginationStore'
   
   const pagination = usePaginationStore()
   const route = useRoute()
