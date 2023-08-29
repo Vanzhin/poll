@@ -16,6 +16,7 @@
         "league/html-to-markdown": "^5.1",
         "lexik/jwt-authentication-bundle": "^2.17",
         "liip/imagine-bundle": "^2.10",
+        "nelmio/cors-bundle": "^2.3",
         "nesbot/carbon": "^2.65",
         "oneup/flysystem-bundle": "^4.6",
         "phpoffice/phpspreadsheet": "^1.29",
