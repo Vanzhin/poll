@@ -12,6 +12,7 @@ export const useUserStore = defineStore('user', {
     profile: null,
     profileFIO: null,
     globalDescription: "Амулет Тест - Тесты Ростехнадзора по промышленной безопасности и электробезопасности",
+    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -50,7 +51,7 @@ export const useUserStore = defineStore('user', {
       const modal = useModalStore()
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      let url = `${urlApi}/api/login_check`
+      let url = `${this.urlApi}/api/login_check`
       try{
         console.log('прохожу авторизацию url-', url)
         const { data: result, pending, error } = await useAsyncData(
@@ -96,7 +97,7 @@ export const useUserStore = defineStore('user', {
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
       const data = JSON.stringify(user)
-      let url = `${urlApi}/api/register`
+      let url = `${this.urlApi}/api/register`
       const modal = useModalStore()
       try {
         const { data: result, pending, error } = await useAsyncData(
@@ -129,7 +130,7 @@ export const useUserStore = defineStore('user', {
     async getLogOutUser() {
       const data = JSON.stringify({"refresh_token": this.refresh_token} )
       try{
-        let url = `${urlApi}/api/token/invalidate`
+        let url = `${this.urlApi}/api/token/invalidate`
         const { data: result, pending, error } = await useAsyncData(
           () => $fetch(url,
             {
@@ -162,7 +163,7 @@ export const useUserStore = defineStore('user', {
     },
     // вход по ссылке
     async getLoginByLinkUser( email ) {
-      let url = `${urlApi}/api/login_link/${email}`
+      let url = `${this.urlApi}/api/login_link/${email}`
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
       const modal = useModalStore()
@@ -198,7 +199,7 @@ export const useUserStore = defineStore('user', {
     },
     //получение данных пользователя из БД
     async getAutсhUserProfileDb() {
-      let url = `${urlApi}/api/auth/user`
+      let url = `${this.urlApi}/api/auth/user`
       const params = {
         method: 'POST',
         headers: { 
@@ -219,7 +220,7 @@ export const useUserStore = defineStore('user', {
       if (refresh_token) {
         body = JSON.stringify({"refresh_token": refresh_token})
       } else { body = JSON.stringify({"refresh_token": this.refresh_token})}
-      let url = `${urlApi}/api/token/refresh`
+      let url = `${this.urlApi}/api/token/refresh`
       try {
         const { data: result, pending, error } = await useAsyncData(
           () => $fetch(url, {

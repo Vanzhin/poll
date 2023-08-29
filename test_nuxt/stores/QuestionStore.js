@@ -6,6 +6,7 @@ export const useQuestionsStore = defineStore('questions', {
   state: () => ({
     
     questions:null,
+    urlApi: useRuntimeConfig().public.urlApi,
     
   }),
   getters: {
@@ -82,7 +83,7 @@ export const useQuestionsStore = defineStore('questions', {
     async getQuestionsIsTicketIdDb({id}) {
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      let url = `${urlApi}/api/ticket/${id}/question`
+      let url = `${this.urlApi}/api/ticket/${id}/question`
       console.log('url-',url )
       try {
         

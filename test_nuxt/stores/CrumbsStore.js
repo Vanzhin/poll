@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 
 export const useCrumbsStore = defineStore('crumbs', {
   state: () => ({
-    crumbs:[]
+    crumbs:[],
+    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getCrumbs: (state) => state.crumbs,
@@ -50,7 +51,7 @@ export const useCrumbsStore = defineStore('crumbs', {
     },
 
     async getCategoryCrumbsDB(id){
-      let url = `${urlApi}/api/category/${id}/breadcrumbs`
+      let url = `${this.urlApi}/api/category/${id}/breadcrumbs`
       const params = {
         method: 'GET',
         headers: { 
@@ -65,7 +66,7 @@ export const useCrumbsStore = defineStore('crumbs', {
     },
 
     async getTestCrumbsDB(id){
-      let url = `${urlApi}/api/test/${id}/breadcrumbs`
+      let url = `${this.urlApi}/api/test/${id}/breadcrumbs`
       const params = {
         method: 'GET',
         headers: { 
@@ -85,7 +86,7 @@ export const useCrumbsStore = defineStore('crumbs', {
     },
 
     async getTicketCrumbsDB(id){
-      let url = `${urlApi}/api/ticket/${id}/breadcrumbs`
+      let url = `${this.urlApi}/api/ticket/${id}/breadcrumbs`
       const params = {
         method: 'GET',
         headers: { 

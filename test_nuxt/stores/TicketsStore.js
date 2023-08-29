@@ -9,7 +9,8 @@ export const useTicketsStore = defineStore('tickets', {
     tickets: null,
     ticketSelect: null, 
     pending: false,
-    ticketModeTitle: ""
+    ticketModeTitle: "",
+    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -35,7 +36,7 @@ export const useTicketsStore = defineStore('tickets', {
       console.log('getApiTicketsTestIdNoAuthDb получаю-',parentId)
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      let url = `${urlApi}/api/test/${parentId}`
+      let url = `${this.urlApi}/api/test/${parentId}`
       try {
         // this.userData = await api.post({ login, password })
         console.log('получаю билеты url-',url)

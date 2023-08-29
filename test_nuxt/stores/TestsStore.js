@@ -9,6 +9,7 @@ export const useTestsStore = defineStore('tests', {
     tests:[],
     testActive: null,
     testTitle:'',
+    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getTests: (state) => state.tests,
@@ -36,8 +37,8 @@ export const useTestsStore = defineStore('tests', {
     async getApiTests({ page = null, parentId = null, admin = null, limit = 6 }){
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
-      let url = `${urlApi}/api/category`
+      // let url = `${this.urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
+      let url = `${this.urlApi}/api/category`
       // if (admin) { 
       //   config.headers.Authorization = `Bearer ${token}`
       // }
