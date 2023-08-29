@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   // alias: {
   //   "@": resolve(__dirname, "/")
   // },
+  axios: {
+    withCredentials: true
+  },
   devtools: { enabled: true },
   runtimeConfig: {
     // Public keys that are exposed to the client

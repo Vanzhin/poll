@@ -25,3 +25,7 @@ yarn-error.log
 ###> liip/imagine-bundle ###
 /public/media/cache/
 ###< liip/imagine-bundle ###
+.initialized*
+.initialized
+composer.phar
+public/yandex_*
