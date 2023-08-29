@@ -2,9 +2,10 @@ import { defineStore } from 'pinia'
 import { useLoaderStore } from './Loader'
 import { useTicketsStore } from './TicketsStore'
 import { useTestsStore } from './TestsStore'
+import { useModalStore  } from './ModalStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
-    
+    questionsImportError: null,
     questions:null,
     urlApi: useRuntimeConfig().public.urlApi,
     
@@ -59,7 +60,7 @@ export const useQuestionsStore = defineStore('questions', {
         console.log ("получил вопросы  - " )
         return
       } 
-      url = urlApi + url
+      url = this.urlApi + url
       console.log('url-',url )
       try {
         // this.userData = await api.post({ login, password })
@@ -111,6 +112,21 @@ export const useQuestionsStore = defineStore('questions', {
       } catch (error) {
         console.log(error)
       }
-    }
+    },
+    //запрос на добавление  в БД а вопросов теста из файл - импорт
+    async importQuestionsFileDb( {id, testFile} ){
+      const data = new FormData(testFile);
+      const url = `${this.urlApi}/api/admin/test/${id}/upload`
+      const params = {
+        method: 'post',
+        headers: { 
+          Accept: 'application/json', 
+        },
+        body:  data
+      }
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      modal.setMessage( result )
+    },
   }
 })

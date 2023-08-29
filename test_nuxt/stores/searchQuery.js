@@ -11,13 +11,9 @@ export const useSearchQueryStore = defineStore('searchQuery', {
   getters: {
     getSearchResult: (state) => state.searchResult,
     getSearchSign: (state) => state.searchSign,
-    
   },
   actions: {
     async getSearchDb({filter = '', limit = 6, page = 1, data = state.searchValue}) {
-            
-      
-      
       const url= `${this.urlApi}/api/search/test?limit=${limit}&page=${page}`
       const params = {
         method: 'post',
@@ -27,7 +23,7 @@ export const useSearchQueryStore = defineStore('searchQuery', {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          "filter": {
+            "filter": {
             "title": data
           }
         })

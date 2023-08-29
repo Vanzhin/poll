@@ -222,7 +222,7 @@
   async function onSubmit(e){
     const questionSend = e.target
     if ( operation.value === 'edit'){
-      await tests.editTestDb({questionSend, token: true, id:+route.params.id})
+      await tests.editTestDb({questionSend, id:+route.params.testId})
       
     } else if ( operation.value === 'create'){
       await tests.createTestDb({ questionSend })

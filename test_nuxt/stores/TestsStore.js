@@ -39,7 +39,7 @@ export const useTestsStore = defineStore('tests', {
     },
     //получение списка тестов по id  категории
     async getApiTests({ page = null, parentId = null, admin = false, limit = 6, loading = true }){
-      let url = `${urlApi}/api/category`
+      let url = `${urlApi()}/api/category`
       let  params = {
         method: 'GET',
         headers: { 
@@ -67,7 +67,7 @@ export const useTestsStore = defineStore('tests', {
     
     //получение информации теста по его id
     async getTestIdDb( {id}){
-      const url = `${urlApi}/api/admin/test/${id}`
+      const url = `${urlApi()}/api/admin/test/${id}`
       const params = {
         method: 'get',
         headers: { 
@@ -84,7 +84,7 @@ export const useTestsStore = defineStore('tests', {
         this.testsMinTrud = JSON.parse(localStorage.getItem('testsMinTrud'))
         return
       }
-      const url = `${urlApi}/api/admin/test/mintrud`
+      const url = `${urlApi()}/api/admin/test/mintrud`
       const params = {
         method: 'get',
         headers: { 
@@ -102,10 +102,10 @@ export const useTestsStore = defineStore('tests', {
     //создание теста
     async createTestDb({questionSend}) {
       const data = new FormData(questionSend);
-      for(let [name, value] of data) {
-        console.dir(`${name} = ${value}`); 
-      }
-      const url = `${urlApi}/api/admin/test/create`
+      // for(let [name, value] of data) {
+      //   console.dir(`${name} = ${value}`); 
+      // }
+      const url = `${urlApi()}/api/admin/test/create`
       const params = {
         method: 'post',
         headers: { 
@@ -119,9 +119,9 @@ export const useTestsStore = defineStore('tests', {
     },
     //удаление теста по id
     async deleteTestDb({id, parentId, page, type}){
-      const token = await dispatch("getAutchUserTokenAction")
-      const url= `${urlApi}/api/admin/test/${id}/delete`
-      const config = {
+      
+      const url= `${urlApi()}/api/admin/test/${id}/delete`
+      const params = {
         method: 'get',
         headers: { 
           Accept: 'application/json', 
@@ -132,6 +132,23 @@ export const useTestsStore = defineStore('tests', {
       const modal = useModalStore()
       modal.setMessage( test )
     },
-
+    //редактирование теста
+    async editTestDb({questionSend, id}) {
+      const data = new FormData(questionSend);
+      for(let [name, value] of data) {
+        console.dir(`${name} = ${value}`); 
+      }
+      const url = `${urlApi()}/api/admin/test/${id}/edit`
+      const params = {
+        method: 'post',
+        headers: { 
+          Accept: 'application/json', 
+        },
+        body: data
+      }
+      const test = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      modal.setMessage( test )
+    },
   }
 })

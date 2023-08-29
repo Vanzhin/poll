@@ -111,19 +111,14 @@
       }, 200);
     }
     function importQuestionsFile(){
-      this.setTest(this.item)
-      this.$router.push({name: 'adminImportId',  params: {id: this.item.id}})
+      // this.setTest(this.item)
+      console.log(props.item)
+      navigateTo(`/admin/categorys/${parentId.value}/test/${props.item.id}/question/import`)
     }
     function addQuestion(){
-      this.setTest(this.item)
-      this.$router.push({
-        name: 'adminQuestionsCreate', 
-        params: {
-          testId: this.item.id,
-          questionId:0,
-          operation: "create"
-        }
-      })
+      // this.setTest(this.item)
+      console.log(props.item)
+      navigateTo(`/admin/categorys/${parentId.value}/test/${props.item.id}/question/create`)
     }
 
 </script>

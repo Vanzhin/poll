@@ -53,7 +53,7 @@ export const useCrumbsStore = defineStore('crumbs', {
     async getCategoryCrumbsDB(id){
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      let url = `${urlApi}/api/category/${id}/breadcrumbs`
+      let url = `${this.urlApi}/api/category/${id}/breadcrumbs`
       const params = {
         method: 'GET',
         headers: { 

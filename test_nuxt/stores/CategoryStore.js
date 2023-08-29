@@ -45,7 +45,10 @@ export const useCategoryStore = defineStore('category', {
     },
     //запрос категорий или подкатегорий
     async getApiCategorys({ page = null, parentId = null, admin = false, limit = 6 , loading = true}){
-      let url = `${urlApi}/api/category`
+      // console.log("urlApi -", urlApi)
+      console.log("constApi() - ", urlApi())
+     
+      let url = `${urlApi()}/api/category`
       let  params = {
         method: 'GET',
         headers: { 
