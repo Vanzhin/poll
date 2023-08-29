@@ -58,8 +58,8 @@ export const useQuestionsStore = defineStore('questions', {
         }
         console.log ("получил вопросы  - " )
         return
-      } 
-      url = urlApi + url
+      }
+      url = this.urlApi + url
       console.log('url-',url )
       try {
         // this.userData = await api.post({ login, password })
