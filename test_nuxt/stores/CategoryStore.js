@@ -12,7 +12,8 @@ export const useCategoryStore = defineStore('gategory', {
     // categorysFooter: localStorage.getItem('categorysFooter') ?
     //   JSON.parse(localStorage.getItem('categorysFooter')): null,
     categorys:[],
-    parent: ''
+    parent: '',
+    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getCategogys: (state) => state.categorys,
@@ -28,8 +29,8 @@ export const useCategoryStore = defineStore('gategory', {
     },
     async getApiCategorys({ page = null, parentId = null, admin = null, limit = 6 }){
       const loader = useLoaderStore()
-      // let url = `${urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
-      let url = `${urlApi}/api/category`
+      // let url = `${this.urlApi}/api/category?limit=6${page > 1? '&page=' + page: ''}`
+      let url = `${this.urlApi}/api/category`
       // if (admin) { 
       //   config.headers.Authorization = `Bearer ${token}`
       // }

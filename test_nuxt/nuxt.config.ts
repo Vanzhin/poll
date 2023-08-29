@@ -5,7 +5,12 @@ export default defineNuxtConfig({
   //   "@": resolve(__dirname, "/")
   // },
   devtools: { enabled: true },
- 
+  runtimeConfig: {
+    // Public keys that are exposed to the client
+    public: {
+      urlApi: process.env.NUXT_PUBLIC_URL_API || '/api'
+    }
+  },
   modules: [
     // "@/node_modules/bootstrap/dist/js/bootstrap.min.js"
     // 'bootstrap-vue/nuxt'

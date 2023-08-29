@@ -8,6 +8,7 @@ export const useTicketsStore = defineStore('tickets', {
     parent: '',
     tickets:[],
     testTitle:'',
+    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -24,7 +25,7 @@ export const useTicketsStore = defineStore('tickets', {
       const loader = useLoaderStore()
       loader.setIsLoaderStutus(true)
       
-      let url = `${urlApi}/api/test/${parentId}`
+      let url = `${this.urlApi}/api/test/${parentId}`
      
       
       try {
