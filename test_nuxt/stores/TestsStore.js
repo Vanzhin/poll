@@ -38,10 +38,8 @@ export const useTestsStore = defineStore('tests', {
       this.testTitle = title
     },
     //получение списка тестов по id  категории
-    async getApiTests({ page = null, parentId = null, admin = false, limit = 6 }){
-           
+    async getApiTests({ page = null, parentId = null, admin = false, limit = 6, loading = true }){
       let url = `${urlApi}/api/category`
-      
       let  params = {
         method: 'GET',
         headers: { 
@@ -52,24 +50,19 @@ export const useTestsStore = defineStore('tests', {
       }
       if (parentId) { params.params.parent = parentId }
       if (page) { params.params.page = page }
-      console.log(params)
-      
-      const sections = await setUseAsyncFetch({ url, params, token: admin })
-      
+      const sections = await setUseAsyncFetch({ url, params, token: admin, loading })
       console.log("sections", sections)
       if (sections && sections.test){
         this.tests = sections.test
       }
+      const pagination = usePaginationStore()
       if (sections && sections.pagination){
-        const pagination = usePaginationStore()
         pagination.paginationsAll(sections.pagination)
-      }
+      } else pagination.paginations =[]
       if (sections && sections.parent){
         const categorys = useCategoryStore()
         categorys.setParentCategory(sections.parent)
       }
-          
-      
     },
     
     //получение информации теста по его id
@@ -123,7 +116,22 @@ export const useTestsStore = defineStore('tests', {
       const test = await setUseAsyncFetch({ url, params, token: true })
       const modal = useModalStore()
       modal.setMessage( test )
-    }
+    },
+    //удаление теста по id
+    async deleteTestDb({id, parentId, page, type}){
+      const token = await dispatch("getAutchUserTokenAction")
+      const url= `${urlApi}/api/admin/test/${id}/delete`
+      const config = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      }
+      const test = await setUseAsyncFetch({ url, params, token: true })
+      this.getApiTests({ page, parentId})
+      const modal = useModalStore()
+      modal.setMessage( test )
+    },
 
   }
 })

@@ -6,7 +6,7 @@
 <script setup>
   definePageMeta({
     layout: "admin",
-    // middleware: 'authadmin'
+    middleware: 'authadmin'
   })
   import { usePaginationStore } from '../../../stores/PaginationStore'
   

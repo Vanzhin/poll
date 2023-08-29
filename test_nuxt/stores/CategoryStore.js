@@ -58,18 +58,18 @@ export const useCategoryStore = defineStore('category', {
       if (page) { params.params.page = page }
 
       const sections = await setUseAsyncFetch({ url, params, token: admin, loading})
-      if (sections.children) {
+      if (sections && sections.children) {
         this.categorys = sections.children
       } else {
         this.categorys = []
       }
       
       const pagination = usePaginationStore()
-      if ( sections.pagination ){ 
+      if (sections && sections.pagination ){ 
         pagination.paginationsAll(sections.pagination)
       } 
       
-      if (sections.parent) {
+      if (sections && sections.parent) {
         this.parent = sections.parent
       }
       

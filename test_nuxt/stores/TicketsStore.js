@@ -13,8 +13,8 @@ export const useTicketsStore = defineStore('tickets', {
   }),
   getters: {
     getTickets: (state) => state.tickets,
-    getCountTickets: (state) => state.tickets.length,
-    getTicketsIs: (state) => state.tickets.length > 0,
+    getCountTickets: (state) => state.tickets ? state.tickets.length : 0,
+    getTicketsIs: (state) => state.tickets ? state.tickets.length > 0 : 0,
     getTicketSelect: (state) => state.ticketSelect,
     getTicketSelectTitle: (state) => state.ticketSelect ? state.ticketSelect.title : ''
   },
@@ -39,6 +39,7 @@ export const useTicketsStore = defineStore('tickets', {
         const { data: sections, pending, error } = await useAsyncData(
           () => $fetch(url)
         )
+        console.log(sections.value)
         const testRespons =  sections.value.test
         this.tickets = testRespons.ticket
         const test = useTestsStore()

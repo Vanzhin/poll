@@ -5,9 +5,7 @@
     </div>
     <div class="block">
       
-     <uiButton
-        title="Назад"
-      />
+     <uiButtonBack/>
     </div>
     <div class="container"
       v-if="! modal.isLoader"
@@ -184,10 +182,7 @@
   </div>
 </template>
 <script setup>
-  definePageMeta({
-    layout: "admin",
-    // middleware: 'authadmin'
-  })
+
   import { useModalStore } from '../../stores/ModalStore'
   import { useUserStore  } from '../../stores/UserStore'
   import { useTestsStore  } from '../../stores/TestsStore'

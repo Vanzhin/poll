@@ -14,7 +14,7 @@
     v-else
   >
      <TheHeaderVsPage
-        :title="tests.testTitle"
+        :title="tests.getTestTitle"
         subTitle=""
       />
     <div class="container">
@@ -184,7 +184,6 @@
   const description = computed(() => {
     return `${tests.testTitle}. ${tests.getTestDescription}. ${user.getGlobalDescription}`
   })  
-  
 
   function clickToLink(link){
     navigateTo(`/test/${parentId.value}/${link}`)
@@ -199,7 +198,6 @@
       parentId: parentId.value,
     })
     await crumbs.getTestCrumbsDB(parentId.value)
-    
   }
 
   getCondition()

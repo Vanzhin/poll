@@ -134,7 +134,7 @@
 <script setup>
   definePageMeta({
     layout: "admin",
-    // middleware: 'authadmin'
+    middleware: 'authadmin'
   })
   import { useCategoryStore } from '../../../../stores/CategoryStore'
   import { useModalStore } from '../../../../stores/ModalStore'

@@ -74,24 +74,16 @@
   }
 
   function createTest(){
-    
+    navigateTo(`/admin/categorys/${parentId.value}/test/create`)
   }
-      
-
 
   onMounted(async() => {
-      
+    console.log('на фронте - ',parentId.value)
       // if (!this.getSearchSign){
         if (parentId.value){
           await testsSt.getApiTests({page: null, parentId: +parentId.value})
           
-        } else { 
-          // await this.getTestsDB({}) 
-          // this.typePagin='getTestsDB'
-        }
-      // } else {
-      //   // this.typePagin='getSearchDb'
-      // }
+        } 
       
     })
  

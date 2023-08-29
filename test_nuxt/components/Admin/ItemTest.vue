@@ -70,17 +70,15 @@
   </div>
 </template>
 <script setup>
-
-const props = defineProps(['item', 'index'])
-
-const id = ref( null)
- 
-const childVisible = ref( false)
-      
-
-
- 
-    
+  import { useTestsStore } from '../../stores/TestsStore'
+  import { useConfirmStore } from '../../stores/ConfirmStore'
+  const tests = useTestsStore()
+  const confirm = useConfirmStore()
+  const props = defineProps(['item', 'index'])
+  const route = useRoute()
+  const parentId = ref( route.params.id)
+  const childVisible = ref( false)
+   
    function img(item){
       const img = item ? item.slice(0, 4) + item.slice(5, item.length) : ''
       return img
@@ -89,26 +87,26 @@ const childVisible = ref( false)
       childVisible.value = !childVisible.value
     }
     function editTest(){
-      console.log()
-      this.$router.push({name: 'adminTestCreate', params: {operation:"edit" , id: this.item.id } })
+      console.log(props.item)
+      navigateTo(`/admin/categorys/${parentId.value}/test/${props.item.id}/edit`)
     }
+
     async function deleteTest(){
-      console.log('Удаляю тест № - ', this.item.id)
-      console.log('Удаляю тест № - ', this.$route)
-      await this.deleteTestDb({
-        id: this.item.id, 
-        parentId: this.getCategoryParendId, 
-        activePage: this.getActivePage,
-        type: this.$route.meta.type,
+      console.log('Удаляю тест № - ', props.item.id)
+      
+      await tests.deleteTestDb({
+        id: props.item.id, 
+        parentId:route.params.id, 
+        activePage: route.params.page,
+        // type: this.$route.meta.type,
       })
     }
     function deleteVisibleConfirm(){
-      this.setConfirmMessage("При удалении теста, так же будут удалены все его вопросы. Вы, действительно хотите это сделать?")
+      confirm.setConfirmMessage("При удалении теста, так же будут удалены все его вопросы. Вы, действительно хотите это сделать?")
       let timerId = setInterval(() => {
-        if (this.getGonfimAction) {
+        if (confirm.getConfirmAction) {
           clearInterval(timerId)
-          if (this.getGonfimAction === "yes" ){this.deleteTest()}
-
+          if (confirm.getConfirmAction === "yes" ){deleteTest()}
         }{}
       }, 200);
     }

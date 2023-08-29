@@ -19,9 +19,6 @@
   </div>
 </template>
 <script setup>
-  definePageMeta({
-    middleware: 'authadmin'
-  });
   import { useUserStore  } from '../stores/UserStore'
   const user = useUserStore()
   const isOpen = ref(true)

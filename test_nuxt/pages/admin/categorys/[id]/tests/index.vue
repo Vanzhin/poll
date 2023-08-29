@@ -6,6 +6,7 @@
 <script setup>
   definePageMeta({
     layout: "admin",
+    middleware: 'authadmin'
   })
   import { usePaginationStore } from '../../../../../stores/PaginationStore'
   const pagination = usePaginationStore()

@@ -98,7 +98,6 @@
         if (confirm.getConfirmAction) {
           clearInterval(timerId)
           if (confirm.getConfirmAction === "yes"){deleteCategoty()}
-          
         }
       }, 200);
      }
