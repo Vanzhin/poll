@@ -14,7 +14,7 @@ export const useModalStore = defineStore('modal', {
     setMessage( data ) {
       let message = ''
       if (data.error) {
-        message = {err: true, mes: `${data.message}!<hr>  ${data.error[0] ? data.error[0]:''}`}
+        message = {err: true, mes: `${data.message}!<hr>  ${(Array.isArray(data.error) ) ? data.error[0]:''}`}
       } else {
         message = {err: false, mes: data.message}
       }
@@ -61,6 +61,7 @@ export const useModalStore = defineStore('modal', {
   }
   
 })
+
 function setIntevalTime (){
   const state = useModalStore()
   let start = new Date()

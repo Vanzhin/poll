@@ -8,10 +8,11 @@ export const useQuestionsStore = defineStore('questions', {
     questionsImportError: null,
     questions:null,
     urlApi: useRuntimeConfig().public.urlApi,
-    
+    questionsImportError: null,
   }),
   getters: {
     getQuestions: (state) => state.questions,
+    getQuestionsImportError: (state) => state.questionsImportError,
   },
   actions: {
     //запрос на получение вопросов по id теста и значению параметра rnd(
@@ -125,8 +126,12 @@ export const useQuestionsStore = defineStore('questions', {
         body:  data
       }
       const result = await setUseAsyncFetch({ url, params, token: true })
-      const modal = useModalStore()
-      modal.setMessage( result )
+      console.log('получил ответ - ', result)
+      if ( result ) {
+        const modal = useModalStore()
+        modal.setMessage( result )
+      }
+      
     },
   }
 })
