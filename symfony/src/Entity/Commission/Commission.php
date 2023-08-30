@@ -3,7 +3,7 @@
 namespace App\Entity\Commission;
 
 use App\Entity\Company;
-use App\Entity\Protocol;
+use App\Entity\Protocol\Protocol;
 use App\Entity\User\User;
 use App\Repository\Commission\CommissionRepository;
 use Doctrine\Common\Collections\ArrayCollection;

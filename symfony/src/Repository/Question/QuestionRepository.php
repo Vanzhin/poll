@@ -79,7 +79,7 @@ class QuestionRepository extends ServiceEntityRepository implements QuestionRepo
             ->andWhere('qu.test = :testId')
             ->andWhere('qu.publishedAt IS NOT NULL')
             ->setParameters(['testId' => $test])
-            ->join('qu.section', 'se')
+            ->leftJoin('qu.section', 'se')
             ->addSelect('se')
             ->getQuery()
             ->getResult();
@@ -102,7 +102,7 @@ class QuestionRepository extends ServiceEntityRepository implements QuestionRepo
             ->addSelect('su')
             ->andWhere('qu.id IN (:ids)')
             ->setParameters(['ids' => $ids])
-            ->addOrderBy('se.id')
+            ->addOrderBy('se.title')
             ->getQuery()
             ->getResult();
 

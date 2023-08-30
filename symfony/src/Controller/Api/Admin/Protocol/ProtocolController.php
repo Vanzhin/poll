@@ -3,7 +3,7 @@
 namespace App\Controller\Api\Admin\Protocol;
 
 use App\Controller\Api\Admin\Protocol\Action as Actions;
-use App\Entity\Protocol;
+use App\Entity\Protocol\Protocol;
 use App\Security\Voter\ProtocolVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

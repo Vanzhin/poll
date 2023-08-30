@@ -4,7 +4,7 @@ namespace App\Controller\Api\Admin\Protocol\Action;
 
 use App\Console\Contract\GenerateProtocolInterface;
 use App\Controller\Api\BaseAction\NewBaseAction;
-use App\Entity\Protocol;
+use App\Entity\Protocol\Protocol;
 use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,16 +17,16 @@ class GenerateAction extends NewBaseAction
     public function __construct(
         SerializerService                          $serializer,
         private readonly GenerateProtocolInterface $generateProtocol,
-        private readonly EntityManagerInterface $em,
+        private readonly EntityManagerInterface    $em,
 
     )
     {
         parent::__construct($serializer);
     }
 
-    public function run(Protocol $protocol, Request $request): JsonResponse
+    public function run(Protocol $protocol): JsonResponse
     {
-        $protocol->setFile($this->generateProtocol->generate($protocol));
+        $protocol->setFiles($this->generateProtocol->generate($protocol));
         $this->em->persist($protocol);
         $this->em->flush();
 

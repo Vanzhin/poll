@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Protocol;
+use App\Entity\Protocol\Protocol;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

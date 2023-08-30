@@ -3,7 +3,7 @@
 namespace App\Controller\Api\Admin\Protocol\Action;
 
 use App\Controller\Api\BaseAction\NewBaseAction;
-use App\Entity\Protocol;
+use App\Entity\Protocol\Protocol;
 use App\Service\SerializerService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

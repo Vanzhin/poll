@@ -95,6 +95,8 @@ class GroupRepository extends ServiceEntityRepository implements GroupRepository
                 ->join('gr.owner', 'ow')
                 ->addSelect('ow')
                 ->andWhere('gr.id = :id')
+                ->leftJoin('gr.availableTests', 'te')
+                ->addSelect('te')
                 ->setParameter('id', $group_id)
                 ->getQuery()->getOneOrNullResult();
     }

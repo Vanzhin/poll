@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Protocol\Protocol;
 use App\Entity\User\User;
 use App\Repository\Group\GroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
