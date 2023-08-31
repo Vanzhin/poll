@@ -227,7 +227,6 @@ class FileHandler
 
         }
         return $files;
-
     }
 
     private function detectEncoding(File $file, array $encoding = ['utf8', 'windows-1251']): string
@@ -235,5 +234,17 @@ class FileHandler
         return mb_detect_encoding($file->getContent(), $encoding);
     }
 
+    public function getFilesList(string $dirPath, string $extension): array
+    {
+        $filesList = [];
+        $finder = new Finder();
+        $finder->files()->in($dirPath);
+        foreach ($finder as $file) {
+            if (str_ends_with($file->getRealPath(), '.' . $extension) && str_starts_with(mime_content_type($file->getRealPath()), 'application/octet-stream')) {
+                $filesList[] = $file->getFilename();
+            }
+        }
+        return $filesList;
+    }
 
 }

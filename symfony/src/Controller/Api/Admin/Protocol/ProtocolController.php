@@ -15,12 +15,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ProtocolController extends AbstractController
 {
     public function __construct(
-        private readonly Actions\CreateAction   $createAction,
-        private readonly Actions\UpdateAction   $updateAction,
-        private readonly Actions\ShowAction     $showAction,
-        private readonly Actions\DeleteAction   $deleteAction,
-        private readonly Actions\GenerateAction $generateAction,
-        private readonly Actions\ListAction     $listAction,
+        private readonly Actions\CreateAction          $createAction,
+        private readonly Actions\UpdateAction          $updateAction,
+        private readonly Actions\ShowAction            $showAction,
+        private readonly Actions\DeleteAction          $deleteAction,
+        private readonly Actions\GenerateAction        $generateAction,
+        private readonly Actions\ListAction            $listAction,
+        private readonly Actions\GetTemplateListAction $templateListAction,
     )
     {
     }
@@ -71,5 +72,11 @@ class ProtocolController extends AbstractController
     public function list(Request $request): JsonResponse
     {
         return $this->listAction->run($request);
+    }
+
+    #[Route('/template/list', name: 'template_list', methods: ['GET'])]
+    public function getTemplateList(): JsonResponse
+    {
+        return $this->templateListAction->run();
     }
 }
