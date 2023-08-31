@@ -1,28 +1,36 @@
 <?php
 
-namespace App\Repository\Group\Mapper;
+namespace App\Repository\Protocol\Mapper;
 
-use App\Repository\Group\Filter\GroupFilter;
 use App\Repository\Shared\Filter\vo\DateTimeInterval;
+use App\Repository\Protocol\Filter\ProtocolFilter;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class GroupFilterMapper
+class ProtocolFilterMapper
 {
-    public function buildFilter(array $data = []): GroupFilter
+    public function buildFilter(array $data = []): ProtocolFilter
     {
-        $response = GroupFilter::createDefault();
+        $response = ProtocolFilter::createDefault();
         $filter = $data['filter'] ?? [];
 
         if (isset($data['sort'])) {
             $response->setSort($data['sort']);
         }
 
-        if (isset($filter['title'])) {
-            $response->setTitle($filter['title']);
+        if (isset($filter['number'])) {
+            $response->setNumber($filter['number']);
         }
 
-        if (isset($filter['owner'])) {
-            $response->setOwner($filter['owner']);
+        if (isset($filter['group'])) {
+            $response->setGroup($filter['group']);
+        }
+
+        if (isset($filter['test'])) {
+            $response->setTest($filter['test']);
+        }
+
+        if (isset($filter['files'])) {
+            $response->setIsFile($filter['files']);
         }
 
         if (isset($filter['date'])) {
@@ -44,17 +52,26 @@ class GroupFilterMapper
         return new Assert\Collection([
             'filter' => new Assert\Collection(
                 [
-                    'title' => new Assert\Optional([
-                        new Assert\NotNull(),
-                        new Assert\Type('string', message: 'test.title.format'),
-                        new Assert\NotBlank(),
-                        new Assert\Length(max: 255, maxMessage: 'profile.general.length')
-                    ]),
-
-                    'owner' => new Assert\Optional([
+                    'number' => new Assert\Optional([
                         new Assert\NotNull(),
                         new Assert\Type('string'),
                         new Assert\NotBlank(),
+                        new Assert\Length(max: 10, maxMessage: 'protocol.number.max')
+                    ]),
+
+                    'group' => new Assert\Optional([
+                        new Assert\NotNull(),
+                        new Assert\Type('string'),
+                        new Assert\NotBlank(),
+                    ]),
+                    'test' => new Assert\Optional([
+                        new Assert\NotNull(),
+                        new Assert\Type('string'),
+                        new Assert\NotBlank(),
+                    ]),
+                    'files' => new Assert\Optional([
+                        new Assert\NotNull(),
+                        new Assert\Type('boolean'),
                     ]),
                     'date' => new Assert\Optional([
                         new Assert\Collection([
@@ -98,7 +115,7 @@ class GroupFilterMapper
             new Assert\Choice(['ASC', 'DESC'], multiple: false)
         ]);
         $sort = [];
-        foreach (GroupFilter::$propertiesToSort as $property) {
+        foreach (ProtocolFilter::$propertiesToSort as $property) {
             $sort[$property] = $template;
         }
         return $sort;

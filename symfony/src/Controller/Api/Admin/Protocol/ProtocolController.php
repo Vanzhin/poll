@@ -19,7 +19,8 @@ class ProtocolController extends AbstractController
         private readonly Actions\UpdateAction   $updateAction,
         private readonly Actions\ShowAction     $showAction,
         private readonly Actions\DeleteAction   $deleteAction,
-        private readonly Actions\GenerateAction $generateAction
+        private readonly Actions\GenerateAction $generateAction,
+        private readonly Actions\ListAction     $listAction,
     )
     {
     }
@@ -58,11 +59,17 @@ class ProtocolController extends AbstractController
     }
 
     #[Route('/generate/{id<\d+>}', name: 'generate', methods: ['GET'])]
-    public function download(Protocol $protocol, Request $request): JsonResponse
+    public function generate(Protocol $protocol, Request $request): JsonResponse
     {
         if (!$this->isGranted(ProtocolVoter::VIEW, $protocol)) {
             throw new AccessDeniedException();
         };
         return $this->generateAction->run($protocol, $request);
+    }
+
+    #[Route('/list', name: 'list', methods: ['GET', 'POST'])]
+    public function list(Request $request): JsonResponse
+    {
+        return $this->listAction->run($request);
     }
 }

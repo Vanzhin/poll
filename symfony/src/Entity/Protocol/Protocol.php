@@ -6,7 +6,7 @@ use App\Entity\Commission\Commission;
 use App\Entity\Group;
 use App\Entity\Protocol\vo\ProtocolSettings;
 use App\Entity\Test;
-use App\Repository\ProtocolRepository;
+use App\Repository\Protocol\ProtocolRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -64,9 +64,6 @@ class Protocol
     #[Assert\NotNull(message: 'protocol.groups.not_null')]
     private ?Group $groups = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $file = null;
-
     #[ORM\Column(type: Types::JSON, nullable: true)]
     #[Groups(['admin_protocol'])]
     #[Assert\NotNull(message: 'protocol.settings.not_null')]
@@ -81,6 +78,7 @@ class Protocol
     #[ORM\Column(type: Types::JSON, nullable: true)]
     #[Groups(['admin_protocol'])]
     private ?array $files = [];
+
 
     public function getId(): ?int
     {
@@ -155,18 +153,6 @@ class Protocol
     public function setGroups(Group $groups): self
     {
         $this->groups = $groups;
-
-        return $this;
-    }
-
-    public function getFile(): ?string
-    {
-        return $this->file;
-    }
-
-    public function setFile(?string $file): self
-    {
-        $this->file = $file;
 
         return $this;
     }
