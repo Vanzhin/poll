@@ -148,10 +148,8 @@
         let timerId = setInterval(() => {
           if ( !modal.getMessage ) {
             clearInterval(timerId)
-           
             if (message.value) {
               navigateTo(`/admin/categorys/${route.params.id}/test/${testId}/questions`)
-              
             }
           }
         }, 200);

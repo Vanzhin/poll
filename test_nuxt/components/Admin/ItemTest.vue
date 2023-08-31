@@ -113,7 +113,7 @@
     function importQuestionsFile(){
       // this.setTest(this.item)
       console.log(props.item)
-      navigateTo(`/admin/categorys/${parentId.value}/test/${props.item.id}/question/import`)
+      navigateTo(`/admin/categorys/${parentId.value}/test/${props.item.id}/questions/import`)
     }
     function addQuestion(){
       // this.setTest(this.item)

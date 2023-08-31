@@ -9,10 +9,17 @@ export const useQuestionsStore = defineStore('questions', {
     questions:null,
     urlApi: useRuntimeConfig().public.urlApi,
     questionsImportError: null,
+    questionsTicket: [],
+    questionsSection: [],
+    question:null,
+    questionsDb:[],
   }),
   getters: {
     getQuestions: (state) => state.questions,
     getQuestionsImportError: (state) => state.questionsImportError,
+    getQuestion: (state)=>state.question,
+    getQuestionsTicket: (state) => state.questionsTicket,
+    getQuestionsSection: (state) => state.questionsSection,
   },
   actions: {
     //запрос на получение вопросов по id теста и значению параметра rnd(
@@ -133,5 +140,25 @@ export const useQuestionsStore = defineStore('questions', {
       }
       
     },
+    //запрос на создание, редактирование если передается id - сохранение вопроса в БД
+    async saveQuestionDb ({questionSend, id = null}){
+      for(let [name, value] of questionSend) {
+        console.dir(`${name} = ${value}`)
+      } 
+      let url = `${this.urlApi}/api/admin/question/${id ? id + '/edit_with_variant': 'create_with_variant'}`
+      const params = {
+        method: 'post',
+        headers: { 
+          Accept: 'application/json', 
+        },
+        body:  questionSend
+      }
+      // if (id) {
+      //   url = `${this.urlApi}/api/admin/question/${id}/edit_with_variant`
+      // }
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      if (result) { modal.setMessage( result )}
+    }
   }
 })

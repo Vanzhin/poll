@@ -1,6 +1,6 @@
 <template>
   <div class="d-dropdown">
-    <button class="btn btn-secondary "  tooggle="false" 
+    <button class="btn btn-secondary"  tooggle="false" 
       @click="toggleMeny"
     >
       <div class="dropdown-button">
