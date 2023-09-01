@@ -33,7 +33,7 @@
               v-for="section in  getCategorys" 
               :key="section.id"
               :style="`background-image: url(${section.image ? section.image 
-                :'http://test2-open/img/item_fon.png'});`"
+                : (urlApi + '/img/item_fon.png')});`"
               @click="categoryUpdate({section})"
             > <!-- category.getCategogys -->
               <div class="item-info">
@@ -129,6 +129,7 @@
   const route = useRoute()
   const page = ref(route.params.page ? +route.params.page: 1)
   const loader = useLoaderStore()
+  const urlApi = useRuntimeConfig().public.urlApi;
  
   categorys.getApiCategorys({
     page: page.value > 1 ? page.value: '',
