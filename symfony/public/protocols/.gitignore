@@ -2,3 +2,5 @@
 !.gitignore
 !templates
 !templates/*
+!uploads
+!uploads/*

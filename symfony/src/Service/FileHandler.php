@@ -6,6 +6,7 @@ use FilesystemIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
@@ -245,6 +246,19 @@ class FileHandler
             }
         }
         return $filesList;
+    }
+
+    public function getFilesFromDir(array $fileNames, string $dirPath): array
+    {
+        $files = [];
+        $finder = new Finder();
+        $finder->files()->in($dirPath)
+            ->ignoreDotFiles(true)
+            ->filter(fn(SplFileInfo $fileInfo) => in_array($fileInfo->getFilename(), $fileNames));
+        foreach ($finder as $file) {
+            $files[] = $file;
+        }
+        return $files;
     }
 
 }

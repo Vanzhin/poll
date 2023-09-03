@@ -44,12 +44,14 @@ class GenerateProtocolWord implements GenerateProtocolInterface
 
                 $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($protocol->getSettings()->getTemplate()), $user);
                 $fileName = 'protocol_' . $protocol->getNumber() . '_' . mb_strtolower($this->translate($user->getProfile()->getLastName())) . '_' . $protocol->getCreatedAt()->format('Ymd');
+                $fileName .= '.docx';
                 $this->save($fileName);
                 $filenames[] = $fileName;
             }
         } else {
             $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($protocol->getSettings()->getTemplate()));
             $fileName = 'protocol_' . $protocol->getNumber() . '_' . $protocol->getCreatedAt()->format('Ymd');
+            $fileName .= '.docx';
             $this->save($fileName);
             $filenames[] = $fileName;
         }
@@ -113,8 +115,13 @@ class GenerateProtocolWord implements GenerateProtocolInterface
 
     public function save(string $fileName): bool
     {
-        $protocol = $this->templateProcessor;
-        $protocol->saveAs(self::FILE_PATH . $fileName . '.docx');
+        try {
+            $protocol = $this->templateProcessor;
+            $protocol->saveAs(self::FILE_PATH . $fileName);
+        } catch (\Exception|\Error $e) {
+//            надо будет ошибку кидать в логгер, а эту ошибку показывать клиенту
+            throw new AppException(sprintf('Не удалось сохранить файл \'%s\'.', $fileName));
+        }
         return true;
     }
 

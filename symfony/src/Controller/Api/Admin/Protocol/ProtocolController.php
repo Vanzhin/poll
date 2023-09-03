@@ -8,6 +8,7 @@ use App\Security\Voter\ProtocolVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -22,6 +23,7 @@ class ProtocolController extends AbstractController
         private readonly Actions\GenerateAction        $generateAction,
         private readonly Actions\ListAction            $listAction,
         private readonly Actions\GetTemplateListAction $templateListAction,
+        private readonly Actions\DownloadAction        $downloadAction,
     )
     {
     }
@@ -78,5 +80,11 @@ class ProtocolController extends AbstractController
     public function getTemplateList(): JsonResponse
     {
         return $this->templateListAction->run();
+    }
+
+    #[Route('/{id<\d+>}/download', name: 'download', methods: ['GET', 'POST'])]
+    public function download(Protocol $protocol, Request $request): StreamedResponse
+    {
+        return $this->downloadAction->run($protocol, $request);
     }
 }

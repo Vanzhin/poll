@@ -4,6 +4,7 @@ namespace App\Service;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemException;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -68,5 +69,13 @@ class FileUploader
                 throw new \Exception("Не удалось удалить файл: $fileName");
             }
         }
+    }
+    public function readStream(SplFileInfo $fileInfo)
+    {
+        $resource = $this->fileSystem->readStream($fileInfo->getFilename());
+        if ($resource === false) {
+            throw new \Exception(sprintf('Не удалось открыть поток "%s"', $fileInfo->getFilename()));
+        }
+        return $resource;
     }
 }
