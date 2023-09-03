@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\Admin\Protocol\Action;
 
+use App\Controller\Api\Admin\Protocol\ProtocolController;
 use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Service\FileHandler;
 use App\Service\SerializerService;
@@ -16,10 +17,6 @@ class GetTemplateListAction extends NewBaseAction
 
     public function run(): JsonResponse
     {
-        $list = array_map(
-            fn(string $file) => preg_replace('/\.\w+$/', '', $file),
-            $this->fileHandler->getFilesList('protocols/templates', 'docx')
-        );
-        return $this->successResponse($list);
+        return $this->successResponse($this->fileHandler->getFilesList(ProtocolController::TEMPLATE_PATH, 'docx'));
     }
 }

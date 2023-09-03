@@ -19,7 +19,6 @@ class DownloadAction extends NewBaseAction
     public function __construct(SerializerService             $serializer,
                                 private readonly FileHandler  $fileHandler,
                                 private readonly FileUploader $protocolFileUploader,
-
     )
     {
         parent::__construct($serializer);

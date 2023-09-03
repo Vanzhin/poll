@@ -3,6 +3,7 @@
 namespace App\Console\Handler;
 
 use App\Console\Contract\GenerateProtocolInterface;
+use App\Controller\Api\Admin\Protocol\ProtocolController;
 use App\Entity\Protocol\Protocol;
 use App\Entity\Result;
 use App\Entity\User\User;
@@ -12,14 +13,6 @@ use PhpOffice\PhpWord\TemplateProcessor;
 class GenerateProtocolWord implements GenerateProtocolInterface
 {
     private TemplateProcessor $templateProcessor;
-    private const TEMPLATES = [
-        'elektro_bezopasnost' => 'protocols/templates/elektro_bezopasnost.docx',
-        'elektro_ustanovki' => 'protocols/templates/elektro_ustanovki.docx'
-    ];
-
-    private string $defaultTemplate = 'elektro_bezopasnost';
-
-    private const FILE_PATH = 'protocols/';
 
     public function __construct()
     {
@@ -41,7 +34,6 @@ class GenerateProtocolWord implements GenerateProtocolInterface
         }
         if ($protocol->getSettings()->isForEach()) {
             foreach ($filteredUsers as $user) {
-
                 $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($protocol->getSettings()->getTemplate()), $user);
                 $fileName = 'protocol_' . $protocol->getNumber() . '_' . mb_strtolower($this->translate($user->getProfile()->getLastName())) . '_' . $protocol->getCreatedAt()->format('Ymd');
                 $fileName .= '.docx';
@@ -95,9 +87,13 @@ class GenerateProtocolWord implements GenerateProtocolInterface
                 'participant_name' => $participant->getProfile()->getShortName()
             ];
         }
+//        dd(0);
         $templateProcessor->cloneRowAndSetValues('participant_position', $participantData);
+//        dd(1);
         $templateProcessor->cloneRowAndSetValues('id', $participantData);
+//        dd(2);
         $templateProcessor->cloneRowAndSetValues('user_signature', $userData);
+//        dd(3);
 
         return $templateProcessor;
     }
@@ -105,7 +101,7 @@ class GenerateProtocolWord implements GenerateProtocolInterface
     private function getTemplateProcessor(string $template = ''): TemplateProcessor
     {
         try {
-            return $this->templateProcessor = new TemplateProcessor(self::TEMPLATES[$template] ?? 'not_found');
+            return $this->templateProcessor = new TemplateProcessor(ProtocolController::TEMPLATE_PATH . DIRECTORY_SEPARATOR . $template ?? 'not_found');
 
         } catch (\Exception $exception) {
             throw new AppException('Шаблон для протокола не найден.');
@@ -117,7 +113,7 @@ class GenerateProtocolWord implements GenerateProtocolInterface
     {
         try {
             $protocol = $this->templateProcessor;
-            $protocol->saveAs(self::FILE_PATH . $fileName);
+            $protocol->saveAs(ProtocolController::PROTOCOL_PATH . DIRECTORY_SEPARATOR . $fileName);
         } catch (\Exception|\Error $e) {
 //            надо будет ошибку кидать в логгер, а эту ошибку показывать клиенту
             throw new AppException(sprintf('Не удалось сохранить файл \'%s\'.', $fileName));

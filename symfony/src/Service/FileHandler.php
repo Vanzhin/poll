@@ -235,13 +235,13 @@ class FileHandler
         return mb_detect_encoding($file->getContent(), $encoding);
     }
 
-    public function getFilesList(string $dirPath, string $extension): array
+    public function getFilesList(string $dirPath, string $extension = 'docx'): array
     {
         $filesList = [];
         $finder = new Finder();
         $finder->files()->in($dirPath);
         foreach ($finder as $file) {
-            if (str_ends_with($file->getRealPath(), '.' . $extension) && str_starts_with(mime_content_type($file->getRealPath()), 'application/octet-stream')) {
+            if (str_ends_with($file->getRealPath(), '.' . $extension)) {
                 $filesList[] = $file->getFilename();
             }
         }

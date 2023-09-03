@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\Admin\Protocol\Action;
 
+use App\Controller\Api\Admin\Protocol\ProtocolController;
 use App\Controller\Api\BaseAction\NewBaseAction;
 use App\Entity\Protocol\Protocol;
 use App\Entity\Test;
@@ -9,6 +10,7 @@ use App\Factory\Protocol\ProtocolFactory;
 use App\Repository\Interfaces\GroupRepositoryInterface;
 use App\Response\AppException;
 use App\Security\Voter\ProtocolVoter;
+use App\Service\FileHandler;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,6 +28,7 @@ class UpdateAction extends NewBaseAction
         private readonly ProtocolFactory          $factory,
         private readonly Security                 $security,
         private readonly GroupRepositoryInterface $groupRepository,
+        private readonly FileHandler              $fileHandler,
     )
     {
         parent::__construct($serializer);
@@ -38,13 +41,18 @@ class UpdateAction extends NewBaseAction
 // протокол формируется для тестов группы
         if (isset($data['group_id']) && isset($data['test_id'])) {
             if ($group = $this->groupRepository->getById($data['group_id'])) {
-                if($group->getAvailableTests()->filter(fn(Test $test) => ($test->getId() === (int)$data['test_id']))->isEmpty()){
+                if ($group->getAvailableTests()->filter(fn(Test $test) => ($test->getId() === (int)$data['test_id']))->isEmpty()) {
                     throw new AppException('Для этого теста/ группы протокол не может быть сформирован');
                 };
             };
         }
 
         $protocol = $this->factory->createBuilder()->build($data, $protocol);
+
+        if (!in_array($protocol->getSettings()->getTemplate(), $this->fileHandler->getFilesList(ProtocolController::TEMPLATE_PATH))) {
+            throw new AppException(
+                sprintf('Шаблон с названием \'%s\' не найден.', $protocol->getSettings()->getTemplate()));
+        }
         if ($errors = $this->validator->validate($protocol)) {
             throw new AppException(implode(', ', $errors));
         }

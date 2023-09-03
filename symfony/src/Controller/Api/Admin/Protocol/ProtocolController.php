@@ -15,6 +15,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 #[Route('/api/admin/protocol', name: 'app_api_admin_protocol_')]
 class ProtocolController extends AbstractController
 {
+//    todo вынести в конфиг?
+    public const PROTOCOL_PATH = 'protocols';
+    public const TEMPLATE_PATH = 'protocols/templates';
+
     public function __construct(
         private readonly Actions\CreateAction          $createAction,
         private readonly Actions\UpdateAction          $updateAction,
