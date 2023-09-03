@@ -58,6 +58,7 @@ class GenerateProtocolWord implements GenerateProtocolInterface
             'number' => $protocol->getNumber(),
             'date' => $protocol->getOrderDate()->format('d\.m\.Y'),
             'company' => $protocol->getGroups()->getCompany()->getTitle(),
+            'tin' => $protocol->getGroups()->getCompany()->getTin(),
             'reason' => $protocol->getCheckReason(),
             'head_position' => $protocol->getCommission()->getHead()->getProfile()->getPosition(),
             'head_name' => $protocol->getCommission()->getHead()->getProfile()->getShortName(),
@@ -80,20 +81,21 @@ class GenerateProtocolWord implements GenerateProtocolInterface
         $templateProcessor->cloneRowAndSetValues('user_id', $userData);
 
         $participantData = [];
-        foreach ($protocol->getCommission()->getParticipant() as $participant) {
+//        выбираю только членов комиссии без председателя
+        $participants = $protocol->getCommission()->getParticipant()->filter(function (User $participant) use ($protocol) {
+            $head = $protocol->getCommission()->getHead();
+            return $participant !== $head;
+        });
+        foreach ($participants as $participant) {
             $participantData[] = [
                 'id' => '',
                 'participant_position' => $participant->getProfile()->getPosition(),
                 'participant_name' => $participant->getProfile()->getShortName()
             ];
         }
-//        dd(0);
         $templateProcessor->cloneRowAndSetValues('participant_position', $participantData);
-//        dd(1);
         $templateProcessor->cloneRowAndSetValues('id', $participantData);
-//        dd(2);
         $templateProcessor->cloneRowAndSetValues('user_signature', $userData);
-//        dd(3);
 
         return $templateProcessor;
     }
