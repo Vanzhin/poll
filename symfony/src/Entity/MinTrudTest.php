@@ -34,11 +34,14 @@ class MinTrudTest
 
     #[ORM\Column]
     #[Groups(['admin'])]
-
     private ?int $originalId = null;
 
     #[ORM\OneToMany(mappedBy: 'minTrudTest', targetEntity: Test::class)]
     private Collection $tests;
+
+    #[ORM\Column(length: 50)]
+    #[Groups(['admin'])]
+    private ?string $type = null;
 
     public function __construct()
     {
@@ -100,6 +103,18 @@ class MinTrudTest
                 $test->setMinTrudTest(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

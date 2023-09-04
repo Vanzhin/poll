@@ -23,7 +23,10 @@ class MinTrudTestBuilder
             if ($key === 'originalId') {
                 $test->setOriginalId($item);
                 continue;
-
+            };
+            if ($key === 'type') {
+                $test->setType($item);
+                continue;
             };
         }
 
