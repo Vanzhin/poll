@@ -19,7 +19,7 @@ export default {
   .sub{
   &-block{
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
   }
   &-close{
     cursor: pointer;

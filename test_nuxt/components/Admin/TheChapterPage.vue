@@ -149,7 +149,7 @@
     margin-right: 20px;
     &-cont{
       display: flex;
-      justify-content: end;
+      justify-content: flex-end;
     }
     
     transition: all 0.1s ease-out;
