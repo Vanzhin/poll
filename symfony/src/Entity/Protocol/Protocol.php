@@ -79,6 +79,9 @@ class Protocol
     #[Groups(['admin_protocol'])]
     private ?array $files = [];
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['admin_protocol'])]
+    private ?string $reg_number = null;
 
     public function getId(): ?int
     {
@@ -189,6 +192,18 @@ class Protocol
     public function setFiles(?array $files): self
     {
         $this->files = $files;
+
+        return $this;
+    }
+
+    public function getRegNumber(): ?string
+    {
+        return $this->reg_number;
+    }
+
+    public function setRegNumber(?string $reg_number): self
+    {
+        $this->reg_number = $reg_number;
 
         return $this;
     }

@@ -62,6 +62,10 @@ class ProtocolBuilder
                 $protocol->setNumber($item);
                 continue;
             }
+            if ($key === 'reg_number') {
+                $protocol->setRegNumber($item);
+                continue;
+            }
             if ($key === 'test_id') {
                 $test = $this->em->getRepository(Test::class)->findOneBy(['id' => (int)$item]);
                 if (!$test) {

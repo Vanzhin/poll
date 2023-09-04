@@ -36,14 +36,14 @@ class GenerateProtocolWord implements GenerateProtocolInterface
             foreach ($filteredUsers as $user) {
                 $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($protocol->getSettings()->getTemplate()), $user);
                 $fileName = 'protocol_' . $protocol->getNumber() . '_' . mb_strtolower($this->translate($user->getProfile()->getLastName())) . '_' . $protocol->getCreatedAt()->format('Ymd');
-                $fileName .= '.docx';
+                $fileName = $this->removeSpecialChars($fileName) . '.docx';
                 $this->save($fileName);
                 $filenames[] = $fileName;
             }
         } else {
             $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($protocol->getSettings()->getTemplate()));
             $fileName = 'protocol_' . $protocol->getNumber() . '_' . $protocol->getCreatedAt()->format('Ymd');
-            $fileName .= '.docx';
+            $fileName = $this->removeSpecialChars($fileName) . '.docx';
             $this->save($fileName);
             $filenames[] = $fileName;
         }
@@ -62,6 +62,8 @@ class GenerateProtocolWord implements GenerateProtocolInterface
             'reason' => $protocol->getCheckReason(),
             'head_position' => $protocol->getCommission()->getHead()->getProfile()->getPosition(),
             'head_name' => $protocol->getCommission()->getHead()->getProfile()->getShortName(),
+            'program' => $protocol->getTest()->getMinTrudTest()->getTitle() ?? $protocol->getTest()->getTitle(),
+
         ]);
 
 //        формируем данные по пользователю или пользователям
@@ -75,7 +77,8 @@ class GenerateProtocolWord implements GenerateProtocolInterface
                 'user_name' => $user->getProfile()->getShortName(),
                 'company' => $protocol->getGroups()->getCompany()->getTitle(),
                 'user_position' => $user->getProfile()->getPosition(),
-                'result' => $result ? 'Удовлетворительно' : 'Не удовлетворительно'
+                'result' => $result ? 'Удовлетворительно' : 'Не удовлетворительно',
+                'reg_number' => $protocol->getRegNumber() ?? '',
             ];
         }
         $templateProcessor->cloneRowAndSetValues('user_id', $userData);
@@ -132,6 +135,12 @@ class GenerateProtocolWord implements GenerateProtocolInterface
             'A', 'B', 'V', 'G', 'D', 'E', 'E', 'ZH', 'Z', 'I', 'Y', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'F', 'H', 'C', 'Ch', 'Sh', 'Sch', 'Y', 'Y', 'Y', 'Ye', 'Yu', 'Ya', 'a', 'b', 'v', 'g', 'd', 'e', 'e', 'zh', 'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh', 'sch', '', 'y', '', 'ye', 'yu', 'ya'
         ];
         return str_replace($rus, $lat, $value);
+    }
+
+    private function removeSpecialChars(string $name): string
+    {
+        return preg_replace('/[^\w+]/u', '', $name);
+
     }
 
 }
