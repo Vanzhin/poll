@@ -1,6 +1,6 @@
 <template>
   <div >
-    страница теста
+    <AdminTheTestPage/>
   </div>
 </template>
 <script setup>
@@ -8,5 +8,6 @@
     layout: "admin",
     middleware: 'authadmin'
   })
+ </script>
 
-</script>
+

@@ -70,7 +70,7 @@
   </div>
 </template>
 <script setup>
-  import { useTestsStore } from '../../stores/TestsStore'
+  import { useTestsStore } from '@/stores/TestsStore'
   import { useConfirmStore } from '../../stores/ConfirmStore'
   const tests = useTestsStore()
   const confirm = useConfirmStore()

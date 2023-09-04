@@ -60,7 +60,7 @@
   </div>
 </template>
 <script setup>
-  import { useCategoryStore } from '../../stores/CategoryStore'
+  import { useCategoryStore } from '@/stores/CategoryStore'
   import { useConfirmStore } from '../../stores/ConfirmStore'
   const categorys = useCategoryStore()
   const confirm = useConfirmStore()
