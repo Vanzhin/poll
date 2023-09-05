@@ -87,6 +87,7 @@
                 class="tickets-block-coll-tickets-itemticket"
                 v-for="(ticket) in tickets"
                 @click="saveSelectTicket({ticket})"
+                :key="ticket.id"
               >
                 Билет № {{ ticket.title }}
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
