@@ -139,7 +139,7 @@ export default {
     };
     &-cont{
       display: flex;
-      justify-content: end;
+      justify-content: flex-end;
       width: 100%;
       @media (max-width: 480px) {
         justify-content:flex-start;

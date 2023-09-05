@@ -62,11 +62,12 @@
                       :question="question"
                       :index="index"
                     />
-                     <TestQuestionConformity
+                    <TestQuestionConformity
                       v-else-if="type(question) === 'conformity'"
                       :question="question"
                       :index="index"
                     />
+                    <div class="question_separator"></div>
                   </div>
                   <div class="button-cont">
                     <button type="submit" class="button">Проверить</button>
@@ -84,8 +85,8 @@
   import { storeToRefs } from 'pinia'
   import { useTestsStore } from '../stores/TestsStore'
   import { useLoaderStore } from '../stores/Loader'
-  import { useQuestionsStore } from '../stores/QuestionStore'
-  import { useTicketsStore  } from '../stores/TicketsStore'
+  import { useQuestionsStore } from '@/stores/QuestionStore'
+  import { useTicketsStore  } from '@/stores/TicketsStore'
   import { useResultStore  } from '../stores/ResultStore'
   import { useModalStore } from '../stores/ModalStore'
   import { useCrumbsStore } from '../stores/CrumbsStore'
@@ -244,6 +245,7 @@
       }
     }
   }
+ 
 @media (min-width: 1024px) {
  
 }

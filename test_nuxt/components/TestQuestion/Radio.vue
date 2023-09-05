@@ -13,7 +13,7 @@
         :value="answerSelect">
       <hr>
       
-      <div class="custom-control custom-radio"
+      <div class="custom-control custom-radio variant_separator"
         v-for="(answer, ind ) in question.variant" 
         :key="answer"
       >
@@ -34,6 +34,7 @@
         </label>
 
         <div class="">
+          
           <img :src="answer.image"  
             v-if="answer.image"
             class="img"
@@ -123,7 +124,7 @@ hr {
     }
   }
   .f_sm {
-      font-size: 0.9rem;
+    font-size: 0.9rem;
   }
   .custom-control-label {
     position: relative;
@@ -159,5 +160,11 @@ hr {
       opacity: 1;
       
     }
+  }
+  .variant_separator{
+    border-bottom: 2px solid rgb(211 208 208);
+    width: 100%;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
   }
 </style>

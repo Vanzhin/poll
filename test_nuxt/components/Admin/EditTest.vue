@@ -183,9 +183,9 @@
 </template>
 <script setup>
 
-  import { useModalStore } from '../../stores/ModalStore'
-  import { useUserStore  } from '../../stores/UserStore'
-  import { useTestsStore  } from '../../stores/TestsStore'
+  import { useModalStore } from '@/stores/ModalStore'
+  import { useUserStore  } from '@/stores/UserStore'
+  import { useTestsStore  } from '@/stores/TestsStore'
   const tests = useTestsStore()
   const user = useUserStore()
   const modal= useModalStore()
@@ -277,7 +277,7 @@
   }
   .block{
     display: flex ;
-    justify-content: end;
+    justify-content: flex-end;
     padding-right: 50px;
   }
   .label{

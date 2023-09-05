@@ -23,6 +23,9 @@ export const useTestsStore = defineStore('tests', {
     getTestCanonical: (state) => state.testActive ? state.testActive.canonical :'',
     getTestRobots: (state) => state.testActive ? state.testActive.robots || 'max-image-preview:large' :'max-image-preview:large',
     getTestsMinTrud: (state) => state.testsMinTrud,
+    getTestQuestionCount: (state) => state.testActive ? state.testActive.questionCount : "",
+    getTestSectionCount: (state) => state.testActive ? state.testActive.sectionCount : "",
+    getTestTicketCount: (state) => state.testActive ? state.testActive.ticketCount : "",
   },
   actions: {
     testsToChange(tests) {

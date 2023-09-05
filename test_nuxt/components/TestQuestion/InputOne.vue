@@ -100,4 +100,10 @@ hr {
   @media (max-width: 576px) {
     
 }
+  .variant_separator{
+    border-bottom: 2px solid rgb(211 208 208);
+    width: 100%;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+  }
 </style>
