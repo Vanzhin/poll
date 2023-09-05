@@ -25,21 +25,21 @@ const state = () => ({
 
 const actions = {
   //запрос на получение вопросов пользователем при тестированиии
-  async getQuestionsDb({dispatch, commit }, {id, slug}) {
+  async getQuestionsDb({dispatch, commit }, {id, slug, testId}) {
     //  const slag = 'mindal-kraiola-ooo-kompaniia-rybvektorzheldorprof' // опен серв
     // const slag = 'korichnyi-ooo-kompaniia-bashkirorion'// докер
    
     let url = ''
     if (id === "rnd20" || id === "rnd20t") {
-      url = `/api/test/${slug}/question/20`
+      url = `/api/test/${testId}/question/20`
     } else if (id === "rnd"){
       const i = Math.floor(Math.random() * (30 - 1) )
      
-      url = `/api/test/${slug}/question/${i}`
+      url = `/api/test/${testId}/question/${i}`
     } else if (id === "rndmax"){
       const i = await dispatch("getCountQuestionsTest")
     
-      url = `/api/test/${slug}/question/${i}`
+      url = `/api/test/${testId}/question/${i}`
     } else if (id === "rndb"){
       
       const tickets = await dispatch("getTicketsRND")

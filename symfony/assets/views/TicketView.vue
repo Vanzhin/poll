@@ -195,7 +195,7 @@ export default {
     this.info.test = this.getTestId
     this.setTicketInfo(this.info) 
    
-    await this.getQuestionsDb({id: this.ticketId, slug: this.getSlug})
+    await this.getQuestionsDb({id: this.ticketId,  testId: this.getTestId})
     if (this.$route.params.id === "rnd20t" ) {this.timeTicket = true}
     this.setIsLoaderStatus({status: false})
   }
