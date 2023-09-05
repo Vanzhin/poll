@@ -10,7 +10,7 @@
       <hr>
       <i class="i">Варианты ответов:</i> 
       <div class="custom-control custom-radio"
-        v-for="(answer, ind ) in question.variant" 
+        v-for="(answer ) in question.variant" 
         :key="answer"
       >
         <input type="checkbox" 

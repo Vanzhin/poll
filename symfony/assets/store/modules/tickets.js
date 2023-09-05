@@ -31,9 +31,11 @@ const actions = {
       if (page) {config.url = config.url + `&page=${page}`}
       await axios(config)
         .then(({data})=>{
+          if (data.ticket) {
+            commit("SET_TICKETS", data.ticket);
+            dispatch("setPagination", data.pagination);
+          }
           
-          commit("SET_TICKETS", data.ticket);
-          dispatch("setPagination", data.pagination);
         })
     } catch (e) {
       if (e.response.data.message === "Expired JWT Token") {
@@ -122,8 +124,7 @@ const actions = {
      
       await axios(config)
         .then(({data})=>{
-          
-          commit("SET_TICKETS", data.ticket);
+          if (data.ticket) {commit("SET_TICKETS", data.ticket)}
         })
     } catch (e) {
       dispatch('setMessageError', e)
