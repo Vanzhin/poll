@@ -26,6 +26,7 @@ export const useTestsStore = defineStore('tests', {
     getTestQuestionCount: (state) => state.testActive ? state.testActive.questionCount : "",
     getTestSectionCount: (state) => state.testActive ? state.testActive.sectionCount : "",
     getTestTicketCount: (state) => state.testActive ? state.testActive.ticketCount : "",
+    getTestTitleActive: (state) => state.testActive ? state.testActive.title : '',
   },
   actions: {
     testsToChange(tests) {
@@ -59,9 +60,10 @@ export const useTestsStore = defineStore('tests', {
         this.tests = sections.test
       }
       const pagination = usePaginationStore()
+      pagination.paginations = []
       if (sections && sections.pagination){
         pagination.paginationsAll(sections.pagination)
-      } else pagination.paginations =[]
+      } 
       if (sections && sections.parent){
         const categorys = useCategoryStore()
         categorys.setParentCategory(sections.parent)

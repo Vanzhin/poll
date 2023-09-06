@@ -81,12 +81,10 @@
   onMounted(async() => {
     console.log('на фронте - ',parentId.value)
       // if (!this.getSearchSign){
-        if (parentId.value){
-          await testsSt.getApiTests({page: null, parentId: +parentId.value})
-          
-        } 
-      
-    })
+    if (parentId.value){
+      await testsSt.getApiTests({page: null, parentId: +parentId.value})
+    } 
+  })
  
  
 </script>

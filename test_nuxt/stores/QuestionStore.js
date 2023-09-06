@@ -3,6 +3,7 @@ import { useLoaderStore } from './Loader'
 import { useTicketsStore } from './TicketsStore'
 import { useTestsStore } from './TestsStore'
 import { useModalStore  } from './ModalStore'
+import { usePaginationStore } from './PaginationStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
     questionsImportError: null,
@@ -121,7 +122,7 @@ export const useQuestionsStore = defineStore('questions', {
         console.log(error)
       }
     },
-    //запрос на добавление  в БД а вопросов теста из файл - импорт
+    //запрос на добавление  в БД а вопросов теста из файла - импорт
     async importQuestionsFileDb( {id, testFile} ){
       const data = new FormData(testFile);
       const url = `${this.urlApi}/api/admin/test/${id}/upload`
@@ -138,7 +139,6 @@ export const useQuestionsStore = defineStore('questions', {
         const modal = useModalStore()
         modal.setMessage( result )
       }
-      
     },
     //запрос на создание, редактирование если передается id - сохранение вопроса в БД
     async saveQuestionDb ({questionSend, id = null}){
@@ -153,12 +153,54 @@ export const useQuestionsStore = defineStore('questions', {
         },
         body:  questionSend
       }
-      // if (id) {
-      //   url = `${this.urlApi}/api/admin/question/${id}/edit_with_variant`
-      // }
       const result = await setUseAsyncFetch({ url, params, token: true })
       const modal = useModalStore()
       if (result) { modal.setMessage( result )}
-    }
+    },
+     //запрос на получение вопросов теста по его id для админки
+    async getAdminQuestionsTestIdDb( {id, page=null, limit=10}) {
+      let url = `${this.urlApi}/api/admin/test/${id}/question?limit=${limit}`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      }
+      if (page) {url = url + `&page=${page}`}
+      const result = await setUseAsyncFetch({ url, params, token: true })  
+                 
+      this.questions =   result.question
+      const pagination = usePaginationStore()
+      if (result && result.pagination ){ 
+        pagination.paginationsAll(result.pagination)
+      } 
+     
+    },
+    //получение вороса по его id
+    async getQuestionIdDb( {id}) {
+      const url = `${this.urlApi}/api/admin/question/${id}`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      }
+      const result = await setUseAsyncFetch({ url, params, token: true }) 
+      this.question =  result
+    },
+    //удаление вопроса из БД
+    async deleteQuestionDb({ id, testId, page = null} ){
+      const url = `${this.urlApi}/api/admin/question/${id}/delete`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        },
+      };
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      if (result) { modal.setMessage( result )}
+      await this.getAdminQuestionsTestIdDb({id: testId, page})
+    },
   }
 })

@@ -142,7 +142,7 @@ export default {
     if (this.operationEdit) {
       this.answerSelect = this.questions.getQuestion.answer[0]
       this.uniqueNumber = this.numberAnswers = this.questions.getQuestion.variant.length
-      this.answers = questions.getQuestion.variant.map(item => 
+      this.answers = this.questions.getQuestion.variant.map(item => 
         {
           return {
             id: item.id,

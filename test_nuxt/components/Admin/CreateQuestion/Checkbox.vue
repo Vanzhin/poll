@@ -139,9 +139,9 @@ export default {
   },
   created(){
     if (this.operationEdit) {
-      this.answerSelect = questions.getQuestion.answer
-      this.uniqueNumber = this.numberAnswers = questions.getQuestion.variant.length
-      this.answers = questions.getQuestion.variant.map(item => 
+      this.answerSelect = this.questions.getQuestion.answer
+      this.uniqueNumber = this.numberAnswers = this.questions.getQuestion.variant.length
+      this.answers = this.questions.getQuestion.variant.map(item => 
         {
           return {
             id: item.id,

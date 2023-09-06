@@ -1,7 +1,7 @@
 <template>
   <div class="block">
     <div class="title">
-      <h2>Тест: {{ tests.getTestTitle }}</h2>
+      <h2>Тест: {{tests.testTitle || tests.getTest ? tests.getTest.title : '' }}</h2>
     </div>
     <UiButtonBack />
     <ul class="nav nav-tabs" role="tablist">
@@ -18,19 +18,19 @@
       
     </ul>
     
-    <component :is="AdminTestTabsTickets" 
+    <AdminTestTabsTickets 
       v-if="layout === 'AdminTestTabsTickets'"
     />
-    <component :is="AdminTestTabsSections" 
+    <AdminTestTabsSections 
       v-else-if="layout === 'AdminTestTabsSections'"
     />
-    <component :is="AdminTestTabsQuestions" 
+    <AdminTestTabsQuestions 
       v-else-if="layout === 'AdminTestTabsQuestions'"
     />
   </div>
 </template>
 <script setup>
-import { AdminTestTabsTickets, AdminTestTabsSections, AdminTestTabsQuestions } from '#components'
+  
   import { useTestsStore  } from '@/stores/TestsStore'
   const tests = useTestsStore()
   const route = useRoute()
@@ -80,11 +80,11 @@ import { AdminTestTabsTickets, AdminTestTabsSections, AdminTestTabsQuestions } f
     }
   
   onMounted(async() => {
-    if (!tests.getTestActive){
-      await tests.getTestIdDb({id: route.params.testId})
-    }
-   
+    const testsRs = useTestsStore()
     
+    // if (!testsRs.getTestActive){
+    //   await testsRs.getTestIdDb({id: route.params.testId})
+    // }
   })
 </script>
 <style lang="scss" scoped>

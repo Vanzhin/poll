@@ -12,7 +12,8 @@ export const usePaginationStore = defineStore('pagination', {
     url:''
   }),
   getters: {
-
+    getTotalItemsPage: (state) => state.totalItemsPage,
+    getActivePage: (state) => state.activePage
   },
   actions: {
     activePageToChange(page) {
@@ -26,7 +27,7 @@ export const usePaginationStore = defineStore('pagination', {
         console.log('обнулил пагинацию')
         return
       }
-          let  pagin = []
+      let  pagin = []
       
       this.totalItemsPage = pagination.limit
       this.activePage = pagination.currentPage
