@@ -202,5 +202,34 @@ export const useQuestionsStore = defineStore('questions', {
       if (result) { modal.setMessage( result )}
       await this.getAdminQuestionsTestIdDb({id: testId, page})
     },
+    //утверждение вопроса
+    async approveQuestionDb( {questionSend} ){
+      const url = `${this.urlApi}/api/admin/question/publish`
+      const params = {
+        method: 'post',
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"questionIds": questionSend})
+      };
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      if (result) { modal.setMessage( result )}
+      
+    },
+    //утверждение или скрытие всех вопросов теста по его id
+  async approveQuestionsAllDb( {id, param} ){
+    const url = `${this.urlApi}/api/admin/question/publish/test/${id}?publish=${param}`
+    const params = {
+      method: 'get',
+      headers: { 
+        Accept: 'application/json', 
+      }
+    };
+    const result = await setUseAsyncFetch({ url, params, token: true })
+    const modal = useModalStore()
+    if (result) { modal.setMessage( result )}
+  },
   }
 })

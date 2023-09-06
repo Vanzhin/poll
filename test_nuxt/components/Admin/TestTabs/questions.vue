@@ -104,26 +104,7 @@
   const testId = route.params.id
       
   const testTitle = ref ("")
-  const massege = {
-    approveTestQuestions:{
-      massege:`Вы хотите утвердить все вопросы теста. <br>
-      Подтвердите свои действия.`,
-      func:'questionsAllPublished'
-    },
-    approvePageQuestions:{
-      massege:`Вы хотите утвердить все вопросы на странице. <br>
-      Подтвердите свои действия.`,
-      func:'approveQuestion'
-    },
-    hideTestQuestions:{
-      massege:`Вы хотите скрыть все вопросы теста. <br>
-      Подтвердите свои действия.`,
-      func:'questionsAllNoPublished'
-    },
-  }
-   
-  
-    
+       
   const  noPublishedQuestionPriznak = computed(()=>{ // неопубликованные есть 
     if (tests.getTest){
       return tests.getTest.questionUnPublishedCount > 0
@@ -164,32 +145,53 @@
     navigateTo(`/admin/categorys/${+route.params.id}/test/${+route.params.testId}/questions/import`)
   }
 
-  async function approveQuestions(){
-    await questionsSt.approveQuestionDb({questionSend: questionsPublished})
-    await questionsSt.getQuestionsTestIdDb({id: +route.params.testId})
+  const approveQuestions = async function(){
+    await questionsSt.approveQuestionDb({questionSend: questionsPublished.value})
+    await questionsSt.getAdminQuestionsTestIdDb({id: +route.params.testId})
     await tests.getTestIdDb({id: +route.params.testId})
   }
-   
+
+  const questionsAllPublished = async function() {
+    await questionsSt.approveQuestionsAllDb({id: +route.params.testId, param: true})
+    await questionsSt.getAdminQuestionsTestIdDb({id: +route.params.testId})
+    await tests.getTestIdDb({id: +route.params.testId})
+  }
+
+  const questionsAllNoPublished = async function() {
+    await questionsSt.approveQuestionsAllDb({id: +route.params.testId, param: false})
+    await questionsSt.getAdminQuestionsTestIdDb({id: +route.params.testId})
+    await tests.getTestIdDb({id: +route.params.testId})
+  }
+
+  const massege = {
+    approveTestQuestions:{
+      massege:`Вы хотите утвердить все вопросы теста. <br>
+      Подтвердите свои действия.`,
+      func: questionsAllPublished
+    },
+    approvePageQuestions:{
+      massege:`Вы хотите утвердить все вопросы на странице. <br>
+      Подтвердите свои действия.`,
+      func: approveQuestions
+    },
+    hideTestQuestions:{
+      massege:`Вы хотите скрыть все вопросы теста. <br>
+      Подтвердите свои действия.`,
+      func: questionsAllNoPublished
+    },
+  }
   function visibleConfirm(activity){
+    console.log("activity - ", activity)
     confirm.setConfirmMessage(activity.massege)
     let timerId = setInterval(() => {
       if (confirm.getConfirmAction) {
         clearInterval(timerId)
-        if (confirm.getConfirmAction === "yes" ){[activity.func]()}
+        if (confirm.getConfirmAction === "yes" ){
+          console.log("activity - ", activity.func)
+          activity.func()
+        }
       }
     }, 200);
-  }
-
-  async function questionsAllPublished(){
-    await questionsSt.approveQuestionsAllDb({id: +route.params.testId, param: true})
-    await questionsSt.getQuestionsTestIdDb({id: +route.params.testId})
-    await tests.getTestIdDb({id: +route.params.testId})
-  }
-
-  async function questionsAllNoPublished(){
-    await questionsSt.approveQuestionsAllDb({id: +route.params.testId, param: false})
-    await questionsSt.getQuestionsTestIdDb({id: +route.params.testId})
-    await tests.getTestIdDb({id: +route.params.testId})
   }
 
   onMounted (async() => {

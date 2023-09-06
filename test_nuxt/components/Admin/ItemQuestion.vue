@@ -98,7 +98,6 @@
 
   async function deleteQuestin(){
     console.log('Удаляю вопрос № - ', props.question)
-    console.log('роут  - ', route)
     await questions.deleteQuestionDb({
       id: props.question.id, 
       testId: +route.params.testId, 
@@ -109,15 +108,13 @@
 
   function editQuestion(){
     console.log('Редактировать № - ',props.question)
-   
     questions.question = props.question
     navigateTo(`/admin/categorys/${route.params.id}/test/${route.params.testId}/question/${props.question.id}/edit`)
-    
   }
   async function approveQuestion(){
-    await this.approveQuestionDb({questionSend: [this.question.id]})
-    await this.getTestIdDb({id: +this.$route.params.id})
-    this.question.publishedAt = !this.question.publishedAt
+    await questions.approveQuestionDb({questionSend: [props.question.id]})
+    await tests.getTestIdDb({id: +route.params.testId})
+    props.question.publishedAt = !props.question.publishedAt
   }
 
 </script>
