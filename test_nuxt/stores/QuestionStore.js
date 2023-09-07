@@ -169,8 +169,9 @@ export const useQuestionsStore = defineStore('questions', {
       if (page) {url = url + `&page=${page}`}
       const result = await setUseAsyncFetch({ url, params, token: true })  
                  
-      this.questions =   result.question
+      this.questions = result.question
       const pagination = usePaginationStore()
+      pagination.paginations = []
       if (result && result.pagination ){ 
         pagination.paginationsAll(result.pagination)
       } 

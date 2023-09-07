@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 export const usePaginationStore = defineStore('pagination', {
   state: () => ({
     activePage: 1,
-    paginations:[],
+    paginations: [],
     totalItemsPage: 0,
     paginVisible: 10,
     paginLeft: 1,
@@ -13,7 +13,8 @@ export const usePaginationStore = defineStore('pagination', {
   }),
   getters: {
     getTotalItemsPage: (state) => state.totalItemsPage,
-    getActivePage: (state) => state.activePage
+    getActivePage: (state) => state.activePage,
+    getPaginationLength: (state) => state.paginations.length
   },
   actions: {
     activePageToChange(page) {

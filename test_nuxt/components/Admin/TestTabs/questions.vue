@@ -196,7 +196,10 @@
 
   onMounted (async() => {
     await tests.getTestIdDb({id: +route.params.testId})
-    await questionsSt.getAdminQuestionsTestIdDb({id: +route.params.testId})
+    await questionsSt.getAdminQuestionsTestIdDb({
+      id: +route.params.testId, 
+      page: +route.params.page
+    })
   })
   
 

@@ -30,10 +30,12 @@
   </div>
 </template>
 <script setup>
-  
   import { useTestsStore  } from '@/stores/TestsStore'
+  import { usePaginationStore } from '@/stores/PaginationStore'
+  const pagination = usePaginationStore()
   const tests = useTestsStore()
   const route = useRoute()
+  
   const testId = ref(route.params.testId)
   const categoryId = ref(route.params.testId)
   const test = ref(null)
@@ -43,49 +45,39 @@
   const url = ref(route.path)
   const navs = ref([])
   const navsActive = computed(()=>{
-    // url.value = route.path
-     return navs.value = [
-        {
-          title: `Вопросы `,
-          link: 'questions',
-          active: (new RegExp("questions", 'i')).test(url.value),
-          count: tests.getTestQuestionCount
-        },
-        {
-          title: `Билеты `,
-          link: 'tickets',
-          active: (new RegExp("tickets", 'i')).test(url.value),
-          count: tests.getTestTicketCount
-        },
-        {
-          title: `Секции `,
-          link: 'sections',
-          active: (new RegExp("sections", 'i')).test(url.value),
-          count: tests.getTestSectionCount
-        }
-      ]
-    
+    return navs.value = [
+      {
+        title: `Вопросы `,
+        link: 'questions',
+        active: (new RegExp("questions", 'i')).test(url.value),
+        count: tests.getTestQuestionCount
+      },
+      {
+        title: `Билеты `,
+        link: 'tickets',
+        active: (new RegExp("tickets", 'i')).test(url.value),
+        count: tests.getTestTicketCount
+      },
+      {
+        title: `Секции `,
+        link: 'sections',
+        active: (new RegExp("sections", 'i')).test(url.value),
+        count: tests.getTestSectionCount
+      }
+    ]
   })
   const layout = computed(()=>{
     const link = navsActive.value.find((nav)=>nav.active).link
-    console.log('AdminTestTabs' + link.slice(0,1).toUpperCase() + link.slice(1,10))
     return 'AdminTestTabs' + link.slice(0,1).toUpperCase() + link.slice(1,10) 
   })
 
   function activeTogge(index) {
-      navs.value =[ ...navs.value.map((nav, ind) => {
-        index === ind ? nav.active = true: nav.active = false
-        return nav
-      })]
-    }
+    navs.value =[ ...navs.value.map((nav, ind) => {
+      index === ind ? nav.active = true: nav.active = false
+      return nav
+    })]
+  }
   
-  onMounted(async() => {
-    const testsRs = useTestsStore()
-    
-    // if (!testsRs.getTestActive){
-    //   await testsRs.getTestIdDb({id: route.params.testId})
-    // }
-  })
 </script>
 <style lang="scss" scoped>
   .tabs-fonts{
