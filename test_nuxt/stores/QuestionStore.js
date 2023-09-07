@@ -12,8 +12,9 @@ export const useQuestionsStore = defineStore('questions', {
     questionsImportError: null,
     questionsTicket: [],
     questionsSection: [],
-    question:null,
-    questionsDb:[],
+    question: null,
+    questionsDb: [],
+    
   }),
   getters: {
     getQuestions: (state) => state.questions,
@@ -21,6 +22,7 @@ export const useQuestionsStore = defineStore('questions', {
     getQuestion: (state)=>state.question,
     getQuestionsTicket: (state) => state.questionsTicket,
     getQuestionsSection: (state) => state.questionsSection,
+    
   },
   actions: {
     //запрос на получение вопросов по id теста и значению параметра rnd(
@@ -220,17 +222,30 @@ export const useQuestionsStore = defineStore('questions', {
       
     },
     //утверждение или скрытие всех вопросов теста по его id
-  async approveQuestionsAllDb( {id, param} ){
-    const url = `${this.urlApi}/api/admin/question/publish/test/${id}?publish=${param}`
-    const params = {
-      method: 'get',
-      headers: { 
-        Accept: 'application/json', 
+    async approveQuestionsAllDb( {id, param} ){
+      const url = `${this.urlApi}/api/admin/question/publish/test/${id}?publish=${param}`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      };
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      if (result) { modal.setMessage( result )}
+    },
+     //запрос на получение вопросов секции по id для админки
+     async getQuestionsSectionIdDb( {id, limit = 10000}) {
+      let url = `${this.urlApi}/api/admin/question/section/${id}?limit=${limit}`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
       }
-    };
-    const result = await setUseAsyncFetch({ url, params, token: true })
-    const modal = useModalStore()
-    if (result) { modal.setMessage( result )}
-  },
+      const result = await setUseAsyncFetch({ url, params, token: true })  
+                 
+      this.questionsSection = result.question
+    },
   }
 })

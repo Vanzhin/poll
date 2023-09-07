@@ -11,21 +11,21 @@
       >
         <NuxtLink class="nav-link tabs-fonts" :class="{active: nav.active}"  
           @click="activeTogge(index)"
-          :to="{ path: nav.link}" >{{ nav.title }} {{ nav.count }}
+          :to="`/admin/categorys/${categoryId}/test/${testId}/${nav.link}`" 
+        >
+          {{ nav.title }} {{ nav.count }}
         </NuxtLink>
-        
       </li>
-      
     </ul>
     
     <AdminTestTabsTickets 
-      v-if="layout === 'AdminTestTabsTickets'"
+      v-if="layout === 'tickets'"
     />
     <AdminTestTabsSections 
-      v-else-if="layout === 'AdminTestTabsSections'"
+      v-else-if="layout === 'sections'"
     />
     <AdminTestTabsQuestions 
-      v-else-if="layout === 'AdminTestTabsQuestions'"
+      v-else-if="layout === 'questions'"
     />
   </div>
 </template>
@@ -37,7 +37,7 @@
   const route = useRoute()
   
   const testId = ref(route.params.testId)
-  const categoryId = ref(route.params.testId)
+  const categoryId = ref(route.params.id)
   const test = ref(null)
   const classObject = ref({
     active: true,
@@ -68,7 +68,7 @@
   })
   const layout = computed(()=>{
     const link = navsActive.value.find((nav)=>nav.active).link
-    return 'AdminTestTabs' + link.slice(0,1).toUpperCase() + link.slice(1,10) 
+    return  link
   })
 
   function activeTogge(index) {
