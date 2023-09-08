@@ -16,7 +16,6 @@ export const useCategoryStore = defineStore('category', {
     parent: '',
     allСategories: null,
     category: null,
-    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getCategory: (state) => state.category,
@@ -81,7 +80,7 @@ export const useCategoryStore = defineStore('category', {
      //запрос категорий для футера
     async getCategorysDBFooter() {
       const modal = useModalStore()
-      let url = `${this.urlApi}/api/category?limit=1000`
+      let url = `${urlApi()}/api/category?limit=1000`
       
       const config = {
         method: 'get',
@@ -111,7 +110,7 @@ export const useCategoryStore = defineStore('category', {
     },
     //удаление категории из БД
     async deleteCategoryDb({id, parentId, page}){
-      let url = `${this.urlApi}/api/admin/category/${id}/delete`
+      let url = `${urlApi()}/api/admin/category/${id}/delete`
       let  params = {
         method: 'GET',
         headers: { 
@@ -135,7 +134,7 @@ export const useCategoryStore = defineStore('category', {
       // for(let [name, value] of data) {
       //   console.dir(`${name} = ${value}`); 
       // }
-      const url = `${this.urlApi}/api/admin/category/create`
+      const url = `${urlApi()}/api/admin/category/create`
       const params = {
         method: 'post',
         headers: { 
@@ -149,7 +148,7 @@ export const useCategoryStore = defineStore('category', {
     },
     //получение информации категории по id
     async getCategoryIdDB({id}){
-      const url = `${this.urlApi}/api/admin/category/${id}`
+      const url = `${urlApi()}/api/admin/category/${id}`
       const params = {
         method: 'get',
         headers: { 
@@ -166,7 +165,7 @@ export const useCategoryStore = defineStore('category', {
       // for(let [name, value] of data) {
       //   console.dir(`${name} = ${value}`)
       // }
-      const url = `${this.urlApi}/api/admin/category/${id}/edit`
+      const url = `${urlApi()}/api/admin/category/${id}/edit`
       const params = {
         method: 'post',
         headers: { 
