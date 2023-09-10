@@ -73,7 +73,10 @@
 <script setup>
   import { useTestsStore  } from '@/stores/TestsStore'
   import { useQuestionsStore } from '@/stores/QuestionStore'
+
   import { useSectionsStore  } from '../../stores/SectionsStore'
+
+
   import { useModalStore } from '@/stores/ModalStore'
 
   const tests = useTestsStore()
@@ -164,6 +167,7 @@
 
 </script>
 <style lang="scss" scoped>
+
 .img_block{
     display: flex;
     align-items: flex-start;
@@ -177,6 +181,7 @@
       }
     }
   }
+
 .block{
   margin-top: 10px;
 }

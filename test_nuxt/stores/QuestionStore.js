@@ -6,23 +6,21 @@ import { useModalStore  } from './ModalStore'
 import { usePaginationStore } from './PaginationStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
-   
-
     urlApi: useRuntimeConfig().public.urlApi,
     questionsImportError: null,
     questionsSection: [],
     questionsTicket: [],
     question: null,
     questionsDb: [],
-
-    
+   
   }),
   getters: {
     getQuestions: (state) => state.questions,
     getQuestionsImportError: (state) => state.questionsImportError,
     getQuestion: (state)=>state.question,
+    getQuestionsTicket: (state) => state.questionsTicket,
     getQuestionsSection: (state) => state.questionsSection,
-    getQuestionsTicket: (state) => state. questionsTicket,
+    
   },
   actions: {
     //запрос на получение вопросов по id теста и значению параметра rnd(
@@ -246,6 +244,7 @@ export const useQuestionsStore = defineStore('questions', {
       const result = await setUseAsyncFetch({ url, params, token: true })  
                  
       this.questionsSection = result.question
+
     },
      //запрос на получение вопросов билетов по id для админки
      async getQuestionsTicketIdDb( {id, limit = 10000}) {
@@ -265,6 +264,7 @@ export const useQuestionsStore = defineStore('questions', {
         ticketsStore.ticketSelectToChange(result.ticket)
         console.log("билет -", result.ticket.title)
       }
+
     },
      
   }

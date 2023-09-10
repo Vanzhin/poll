@@ -51,7 +51,9 @@
 </template>
 <script setup>
   import { useTestsStore } from '@/stores/TestsStore'
+
   import { useSectionsStore  } from '../../stores/SectionsStore'
+
   import { useConfirmStore } from '../../stores/ConfirmStore'
 
   const tests = useTestsStore()

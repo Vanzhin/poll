@@ -1,11 +1,8 @@
 <template>
-    <div class="block">
+   <div class="block">
     <div class="title">
-      
       <h2>Билеты: </h2>
-        
-      
-      <div class="button-group " >
+       <div class="button-group " >
         <div class="button-item"
           title="Добавить билет"
           @click.stop="addTicket"
