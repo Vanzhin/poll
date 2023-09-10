@@ -15,6 +15,7 @@ class UserVoter extends Voter
     public const VIEW = 'VIEW';
     public const EDIT = 'EDIT';
     public const DELETE = 'DELETE';
+    public const STATISTIC = 'STATISTIC';
 
     public function __construct(private readonly Security $security)
     {
@@ -24,7 +25,7 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::DELETE])
+        return in_array($attribute, [self::CREATE, self::VIEW, self::EDIT, self::DELETE, self::STATISTIC])
             && $subject instanceof User;
     }
 
@@ -76,7 +77,17 @@ class UserVoter extends Voter
                 if ($this->security->isGranted('ROLE_ADMIN') && $subject->getCompany()?->getUsers()->contains($user)) {
                     return true;
                 }
+                break;
+            case self::STATISTIC:
+                // могу, если админ
+                if ($this->security->isGranted('ROLE_ADMIN')) {
+                    return true;
+                }
+                // могу, если наставник группы
 
+                if ($this->security->isGranted('ROLE_TUTOR')) {
+                    return true;
+                }
                 break;
         }
 

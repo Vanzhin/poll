@@ -60,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Result::class, orphanRemoval: true)]
-    #[Groups(['account', 'result'])]
+    #[Groups(['account', 'result', 'test_statistic'])]
     private Collection $results;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Question::class)]
@@ -91,7 +91,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Commission::class, mappedBy: 'participant')]
     private Collection $commissions;
-
+    #[Groups(['test_statistic'])]
     #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'participants')]
     private Collection $groups;
 

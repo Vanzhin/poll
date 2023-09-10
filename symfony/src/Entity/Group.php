@@ -36,7 +36,7 @@ class Group
     private Collection $participants;
 
     #[ORM\ManyToMany(targetEntity: Test::class, inversedBy: 'groups')]
-    #[Groups(['admin_group'])]
+    #[Groups(['admin_group', 'test_statistic'])]
     #[Assert\Count(min: 1, minMessage: 'group.test.min')]
     private Collection $availableTests;
 

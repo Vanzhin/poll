@@ -53,7 +53,7 @@ class Result
     protected $updatedAt;
 
     #[ORM\ManyToOne(inversedBy: 'results')]
-    #[Groups(['result'])]
+    #[Groups(['result', 'test_statistic'])]
     #[Assert\NotNull(message: 'result.test.not_null')]
     private ?Test $test = null;
 
