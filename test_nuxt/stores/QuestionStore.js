@@ -7,11 +7,11 @@ import { usePaginationStore } from './PaginationStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
     questionsImportError: null,
-    questions:null,
+    questions: null,
     urlApi: useRuntimeConfig().public.urlApi,
     questionsImportError: null,
-    questionsTicket: [],
     questionsSection: [],
+    questionsTicket: [],
     question: null,
     questionsDb: [],
     
@@ -20,9 +20,8 @@ export const useQuestionsStore = defineStore('questions', {
     getQuestions: (state) => state.questions,
     getQuestionsImportError: (state) => state.questionsImportError,
     getQuestion: (state)=>state.question,
-    getQuestionsTicket: (state) => state.questionsTicket,
     getQuestionsSection: (state) => state.questionsSection,
-    
+    getQuestionsTicket: (state) => state. questionsTicket,
   },
   actions: {
     //запрос на получение вопросов по id теста и значению параметра rnd(
@@ -117,7 +116,7 @@ export const useQuestionsStore = defineStore('questions', {
               ticketsStore.ticketSelectToChange(questions.value.ticket)
               console.log("билет -", questions.value.ticket.title)
             }
-             loader.setIsLoaderStatus(false)
+            loader.setIsLoaderStatus(false)
           }
         }, 200);
       } catch (error) {
@@ -247,5 +246,25 @@ export const useQuestionsStore = defineStore('questions', {
                  
       this.questionsSection = result.question
     },
+     //запрос на получение вопросов билетов по id для админки
+     async getQuestionsTicketIdDb( {id, limit = 10000}) {
+      let url = `${this.urlApi}/api/ticket/${id}/question`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      }
+      const result = await setUseAsyncFetch({ url, params })  
+                 
+      this.questionsTicket = result.questions
+      
+      if (result.ticket) {
+        const ticketsStore = useTicketsStore()
+        ticketsStore.ticketSelectToChange(result.ticket)
+        console.log("билет -", result.ticket.title)
+      }
+    },
+     
   }
 })

@@ -81,9 +81,9 @@
 <script setup>
   import { storeToRefs } from 'pinia'
   import { usePaginationStore } from '../stores/PaginationStore'
-  import { useTestsStore } from '../stores/TestsStore'
+  import { useTestsStore } from '@/stores/TestsStore'
   import { useLoaderStore } from '../stores/Loader'
-  import { useCategoryStore } from '../stores/CategoryStore'
+  import { useCategoryStore } from '@/stores/CategoryStore'
   import { useUserStore  } from '../stores/UserStore'
   import { useCrumbsStore } from '../stores/CrumbsStore'
   

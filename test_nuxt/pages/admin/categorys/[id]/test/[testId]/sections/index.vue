@@ -12,6 +12,6 @@
   const pagination = usePaginationStore()
   const route = useRoute()
   pagination.urlToChange(route.path)
- </script>
+</script>
 
 

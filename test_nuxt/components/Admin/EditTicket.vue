@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <div class="container">
+  <div class="container">
     <div class="row">
       <div class="block">
         <UiClose
           :toLink="`/admin/categorys/${route.params.id}/test/${route.params.testId}/sections`"
         />
         <div class="title">
-          <h2>Форма редактирования секций</h2>
+          <h2>Форма редактирования билетов</h2>
         </div>
       </div>
     </div>
@@ -20,7 +19,7 @@
           name="category" 
           :value="testId"
         >
-        <p class="label"><b>Секция: </b></p>
+        <p class="label"><b>Билет №: </b></p>
         <div class="custom-radio img_block">
           <input required
             name="title"
@@ -32,53 +31,51 @@
             v-if="title !== ''"
           ></i>
         </div>
-        <p class="label"><b>Укажите минимальное количество вопросов для прохождения секции: </b></p>
-        <div class="custom-radio img_block">
-          <input required
-            name="questionCountToPass"
-            v-model= "questionCountToPass"
-            class="textarea_input"
-            pattern="[0-9]{1,10}" 
-          /> 
-          <i class="bi bi-eraser custom-close" title="Очистить поле"
-            @click="questionCountToPass = ''"
-            v-if="questionCountToPass !== ''"
-          ></i>
+        <div class="block_number">
+          <label for="number" class="label"> Количество вопросов в билете:</label>
+          <label for="number" class="label"> {{ numberQuestions }}</label>
         </div>
         <div class="block_number">
-          <label for="number" class="label"> Количество вопросов в секции:</label>
-          <label for="number" class="label"> {{ numberQuestions }}</label>
+          <label class="label"> Вопросы списком</label>
+          <input type="checkbox"
+            name="list_check"
+            v-model= "listСheck"
+            class="textarea_input" 
+          /> 
         </div>
         <div class="questions-block">  
           <div class="questions-item"
-            
             v-for="(question, index ) in questions"
             :key="question.id"
             :title="question.title"
             @click="selectQuestion({question, index })"
-            :class="{'questions-item-select': question.select}"
+            :class="{
+              'questions-item-select': question.select,
+              'questions-item-list': listСheck
+              }"
             >  
-            {{ index + 1 }}
+            {{listСheck ? `${index + 1} ${question.title}` :index + 1 }}
           </div>
         </div>
         <br> 
-        {{ sectionQuestions }}  
+        {{ ticketQuestions }}  
         <br> 
         <button type="submit" class="button">Сохранить</button>
       </form>
     </div>
-  </div>
   </div>
 </template>
 <script setup>
   import { useTestsStore  } from '@/stores/TestsStore'
   import { useQuestionsStore } from '@/stores/QuestionStore'
   import { useSectionsStore  } from '../../stores/SectionsStore'
+  import { useTicketsStore  } from '@/stores/TicketsStore'
   import { useModalStore } from '@/stores/ModalStore'
 
   const tests = useTestsStore()
   const questionsSt = useQuestionsStore()
   const sections = useSectionsStore()
+  const tickets = useTicketsStore()
   const modal = useModalStore()
 
   const route = useRoute()
@@ -86,32 +83,32 @@
 
   const testId = ref(route.params.testId)
   const title = ref("")
-  const questionCountToPass = ref(1)
+  const description = ref("")
   const message = ref( null)
   const operation = ref(route.params.operation)
   const numberQuestions = ref( 0)
   const questions = ref([] )
-  const sectionQuestions= ref( [])
+  const ticketQuestions= ref( [])
+  const listСheck= ref(false)
 
   async function onSubmit(e){
-    
-    const section = {
-      "title": title.value,
+    const ticket = {
+      "title": +title.value,
       "test": +testId.value, 
-      "question": [...sectionQuestions.value],
-      "questionCountToPass": +questionCountToPass.value
+      "question": [...ticketQuestions.value]
     }
     if ( operation.value === 'edit'){
-      await sections.createSectionDb({
-        section, 
-        id: +route.params.sectionId, 
+      await tickets.createTicketDb({
+        ticket, 
+        id: +route.params.ticketId, 
         testId: testId.value,
         page: +route.params.page
       })
     } else if ( operation.value === 'create'){
-      await sections.createSectionDb({
-        section,
-        testId: testId.value
+      await tickets.createTicketDb({
+        ticket,
+        testId: testId.value,
+        page: +route.params.page
       })
     }
     message.value = !modal.getMessage.err
@@ -121,48 +118,47 @@
         if (message.value ){router.go(-1)}
       }
     }, 200);
-  }  
+  }
 
-  function selectQuestion({question }){
+  function selectQuestion({question}){
     if (question.select) {
       question.select = false
-      sectionQuestions.value=[...sectionQuestions.value.filter(
+      ticketQuestions.value =[...ticketQuestions.value.filter(
         item => item !== question.id
       )] 
     } else {
       question.select = true
-      sectionQuestions.value.push(question.id)
+      ticketQuestions.value.push(question.id)
     }
-    numberQuestions.value = sectionQuestions.value.length
+    numberQuestions.value = ticketQuestions.value.length
   }
-
+   
   onMounted(async() => {
-      await questionsSt.getAdminQuestionsTestIdDb({id: testId.value, limit: 1000})
-      questions.value = [...questionsSt.getQuestions]
-      
-      if ( route.params.operation === 'create'){
-        
-      } 
-      if ( route.params.operation === 'edit'){
-        await questionsSt.getQuestionsSectionIdDb({id: +route.params.sectionId})
-        
-        title.value = sections.getSection.title ?? ''
-        questionCountToPass.value = sections.getSection.questionCountToPass ?? ''
-        sectionQuestions.value = questionsSt.getQuestionsSection ? questionsSt.getQuestionsSection.map((question)=>{
-            const num = questions.value.findIndex((item)=>item.id === question.id)
-            
-            if (num >= 0) {questions.value[num].select = true}
-            return question.id
-          }
-        ) : []
-        numberQuestions.value = sectionQuestions.value.length
+    await questionsSt.getAdminQuestionsTestIdDb({id: testId.value, limit: 1000})
+    questions.value = [...questionsSt.getQuestions]
+  
+    if ( route.params.operation === 'create'){
+      title.value = `${(tickets.getCountTickets) + 1}`
+    } 
+    
+    if ( route.params.operation === 'edit'){
+        await questionsSt.getQuestionsTicketIdDb({id: +route.params.ticketId})
+        title.value = tickets.getTicketSelectTitle
+        ticketQuestions.value = questionsSt.getQuestionsTicket.map((question)=>{
+          const num = questions.value.findIndex((item)=>item.id === question.id)
+          if (num >= 0) {questions.value[num].select = true}
+          return question.id
+        })
+        numberQuestions.value = ticketQuestions.value.length
       }
-      
-      
-    })
+  
+  
+  })
 
 
 </script>
+
+
 <style lang="scss" scoped>
 .img_block{
     display: flex;
@@ -195,7 +191,7 @@
     margin: 0 10px;
   }
   .textarea_input{
-    width: 80%;
+    max-width: 50%;
     padding: 0;
     padding-left: 10px;
     margin: 5px;
@@ -208,7 +204,7 @@
     }
     &-item{
       width: 45px;
-      height: 30px;
+      min-height: 30px;
       border-radius: 6px;
       background-color: rgb(141 135 135);
       border: 2px solid rgb(141 135 135);
@@ -220,6 +216,10 @@
       }
       &-select{
         background-color: rgb(139, 118, 72);
+      }
+      &-list{
+        width: 100%;
+        text-align: left;
       }
     }
   }
