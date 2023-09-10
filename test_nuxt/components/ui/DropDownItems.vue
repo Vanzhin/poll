@@ -181,5 +181,9 @@
   }
   .active{
     display: block;
+    @media (max-width: 480px) {
+      transform: translate(-144px, 21px);
+    }
+    
   }
 </style>
