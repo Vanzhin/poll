@@ -33,7 +33,7 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('pageLink', page);
     },
     savePageIsLocalStorage() {
-      console.log('savePageIsLocalStorage-', page)
+      console.log('savePageIsLocalStorage-')
       this.page = localStorage.getItem('pageLink') ?
       JSON.parse(localStorage.getItem('pageLink')): null
     },
