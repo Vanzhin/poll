@@ -6,7 +6,6 @@ export const useSearchQueryStore = defineStore('searchQuery', {
     searchResult: null,
     searchSign: false,
     searchValue: null,
-    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getSearchResult: (state) => state.searchResult,
@@ -14,7 +13,7 @@ export const useSearchQueryStore = defineStore('searchQuery', {
   },
   actions: {
     async getSearchDb({filter = '', limit = 6, page = 1, data = state.searchValue}) {
-      const url= `${this.urlApi}/api/search/test?limit=${limit}&page=${page}`
+      const url= `${urlApi()}/api/search/test?limit=${limit}&page=${page}`
       const params = {
         method: 'post',
         maxBodyLength: Infinity,
