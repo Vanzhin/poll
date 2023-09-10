@@ -76,7 +76,7 @@
               Уже есть аккаунт
            </NuxtLink>
          </div>
-         <input class="btn" type="submit" value="Зерегистрироваться"/> 
+         <input class="btn" type="submit" value="Зарегистрироваться"/> 
        </div>
      </form>
    </div>
@@ -115,7 +115,7 @@
       
     
     authorize.value = true
-    await  user.setLogInUser({username:email.value,password: password.value})
+    await  user.setLogInUser({username:login.value,password: password.value})
     clearForm()
     setTimeout(() => 
         {
