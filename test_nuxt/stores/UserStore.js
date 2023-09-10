@@ -115,7 +115,8 @@ export const useUserStore = defineStore('user', {
           modal.setMessageError(error.value.data)
           return true
         } else {
-          console.log("setRegistrationUser - ", result )
+          console.log("setRegistrationUser - ", result.value )
+          modal.setMessage(result.value)
           return false
         }
        
@@ -142,7 +143,7 @@ export const useUserStore = defineStore('user', {
             }
           )
         )
-        console.log(result)    
+        console.log(result.value)    
         this.setDeleteUserToken()
       } catch (e) {
         console.log(e)    
