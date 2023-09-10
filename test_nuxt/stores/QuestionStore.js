@@ -6,14 +6,15 @@ import { useModalStore  } from './ModalStore'
 import { usePaginationStore } from './PaginationStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
-    questionsImportError: null,
-    questions:null,
+   
+
     urlApi: useRuntimeConfig().public.urlApi,
     questionsImportError: null,
     questionsTicket: [],
     questionsSection: [],
     question: null,
     questionsDb: [],
+
     
   }),
   getters: {
@@ -71,7 +72,7 @@ export const useQuestionsStore = defineStore('questions', {
         console.log ("получил вопросы  - " )
         return
       } 
-      url = this.urlApi + url
+      url = urlApi() + url
       console.log('url-',url )
       try {
         // this.userData = await api.post({ login, password })
@@ -95,7 +96,7 @@ export const useQuestionsStore = defineStore('questions', {
     async getQuestionsIsTicketIdDb({id}) {
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      let url = `${this.urlApi}/api/ticket/${id}/question`
+      let url = `${urlApi()}/api/ticket/${id}/question`
       console.log('url-',url )
       try {
         
@@ -127,7 +128,7 @@ export const useQuestionsStore = defineStore('questions', {
     //запрос на добавление  в БД а вопросов теста из файла - импорт
     async importQuestionsFileDb( {id, testFile} ){
       const data = new FormData(testFile);
-      const url = `${this.urlApi}/api/admin/test/${id}/upload`
+      const url = `${urlApi()}/api/admin/test/${id}/upload`
       const params = {
         method: 'post',
         headers: { 

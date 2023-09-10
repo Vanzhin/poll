@@ -15,7 +15,6 @@ export const useResultStore = defineStore('result', {
     formInfoVisible: false,
     formInfoParam: null,
     resultId: null,
-    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getResultTicketUser: (state) => state.resultTicketUser,
@@ -32,7 +31,7 @@ export const useResultStore = defineStore('result', {
     // отправка результата прохождения теста на сервер
     async setResultDb(){
       const user = useUserStore()
-      let url = `${this.urlApi}/api/test/handle`
+      let url = `${urlApi()}/api/test/handle`
         
       let params = {
         method: 'POST',
@@ -43,7 +42,7 @@ export const useResultStore = defineStore('result', {
         },
       }
       if (user.getIsAutchUser) {
-        url = `${this.urlApi}/api/auth/test/handle`
+        url = `${urlApi()}/api/auth/test/handle`
         params.headers.Authorization = `Bearer ${user.token}`
       }
       const result = await setUseAsyncFetch({ url, params, token: true })
@@ -54,7 +53,7 @@ export const useResultStore = defineStore('result', {
     async getAuthAccountResultsDb() {
       const user = useUserStore()
       const pagination = usePaginationStore()
-      const url= `${this.urlApi}/api/auth/result`
+      const url= `${urlApi()}/api/auth/result`
       const params = {
         method: 'get',
         headers: { 
@@ -75,7 +74,7 @@ export const useResultStore = defineStore('result', {
     },
     //получение вопросов результата по его id
     async getResultIdAnswersDb( {id} ){
-      const url= `${this.urlApi}/api/auth/result/${id}/answer`
+      const url= `${urlApi()}/api/auth/result/${id}/answer`
       const params = {
         method: 'get',
         headers: { 
@@ -122,7 +121,7 @@ export const useResultStore = defineStore('result', {
     },
     async getResultsXmlDb({info}){
 
-      const url= `${this.urlApi}/api/auth/result/${this.resultId}/report`
+      const url= `${urlApi()}/api/auth/result/${this.resultId}/report`
       const params = {
         method: 'post',
         headers: { 

@@ -10,7 +10,6 @@ export const useTicketsStore = defineStore('tickets', {
     ticketSelect: null, 
     pending: false,
     ticketModeTitle: "",
-    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -35,7 +34,7 @@ export const useTicketsStore = defineStore('tickets', {
     async getApiTicketsTestIdNoAuthDb({ page = null, parentId = null, admin = null, limit = 6 }){
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      let url = `${this.urlApi}/api/test/${parentId}`
+      let url = `${urlApi()}/api/test/${parentId}`
       try {
         const { data: sections, pending, error } = await useAsyncData(
           () => $fetch(url)
