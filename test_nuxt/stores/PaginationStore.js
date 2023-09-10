@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 export const usePaginationStore = defineStore('pagination', {
   state: () => ({
     activePage: 1,
-    paginations:[],
+    paginations: [],
     totalItemsPage: 0,
     paginVisible: 10,
     paginLeft: 1,
@@ -12,7 +12,9 @@ export const usePaginationStore = defineStore('pagination', {
     url:''
   }),
   getters: {
-
+    getTotalItemsPage: (state) => state.totalItemsPage,
+    getActivePage: (state) => state.activePage,
+    getPaginationLength: (state) => state.paginations.length
   },
   actions: {
     activePageToChange(page) {
@@ -26,7 +28,7 @@ export const usePaginationStore = defineStore('pagination', {
         console.log('обнулил пагинацию')
         return
       }
-          let  pagin = []
+      let  pagin = []
       
       this.totalItemsPage = pagination.limit
       this.activePage = pagination.currentPage

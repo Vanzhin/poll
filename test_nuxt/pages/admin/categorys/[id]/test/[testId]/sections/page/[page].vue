@@ -1,6 +1,6 @@
 <template>
-  <div>
-    создание
+  <div >
+    <AdminTheTestPage/>
   </div>
 </template>
 <script setup>
@@ -8,5 +8,5 @@
     layout: "admin",
     middleware: 'authadmin'
   })
-
-</script>
+  
+ </script>

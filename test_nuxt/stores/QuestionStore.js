@@ -3,14 +3,27 @@ import { useLoaderStore } from './Loader'
 import { useTicketsStore } from './TicketsStore'
 import { useTestsStore } from './TestsStore'
 import { useModalStore  } from './ModalStore'
+import { usePaginationStore } from './PaginationStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
+   
+
+    urlApi: useRuntimeConfig().public.urlApi,
     questionsImportError: null,
-    questions:null,
+    questionsTicket: [],
+    questionsSection: [],
+    question: null,
+    questionsDb: [],
+
     
   }),
   getters: {
     getQuestions: (state) => state.questions,
+    getQuestionsImportError: (state) => state.questionsImportError,
+    getQuestion: (state)=>state.question,
+    getQuestionsTicket: (state) => state.questionsTicket,
+    getQuestionsSection: (state) => state.questionsSection,
+    
   },
   actions: {
     //запрос на получение вопросов по id теста и значению параметра rnd(
@@ -112,7 +125,7 @@ export const useQuestionsStore = defineStore('questions', {
         console.log(error)
       }
     },
-    //запрос на добавление  в БД а вопросов теста из файл - импорт
+    //запрос на добавление  в БД а вопросов теста из файла - импорт
     async importQuestionsFileDb( {id, testFile} ){
       const data = new FormData(testFile);
       const url = `${urlApi()}/api/admin/test/${id}/upload`
@@ -124,8 +137,116 @@ export const useQuestionsStore = defineStore('questions', {
         body:  data
       }
       const result = await setUseAsyncFetch({ url, params, token: true })
+      console.log('получил ответ - ', result)
+      if ( result ) {
+        const modal = useModalStore()
+        modal.setMessage( result )
+      }
+    },
+    //запрос на создание, редактирование если передается id - сохранение вопроса в БД
+    async saveQuestionDb ({questionSend, id = null}){
+      for(let [name, value] of questionSend) {
+        console.dir(`${name} = ${value}`)
+      } 
+      let url = `${this.urlApi}/api/admin/question/${id ? id + '/edit_with_variant': 'create_with_variant'}`
+      const params = {
+        method: 'post',
+        headers: { 
+          Accept: 'application/json', 
+        },
+        body:  questionSend
+      }
+      const result = await setUseAsyncFetch({ url, params, token: true })
       const modal = useModalStore()
-      modal.setMessage( result )
+      if (result) { modal.setMessage( result )}
+    },
+     //запрос на получение вопросов теста по его id для админки
+    async getAdminQuestionsTestIdDb( {id, page=null, limit=10}) {
+      let url = `${this.urlApi}/api/admin/test/${id}/question?limit=${limit}`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      }
+      if (page) {url = url + `&page=${page}`}
+      const result = await setUseAsyncFetch({ url, params, token: true })  
+                 
+      this.questions = result.question
+      const pagination = usePaginationStore()
+      pagination.paginations = []
+      if (result && result.pagination ){ 
+        pagination.paginationsAll(result.pagination)
+      } 
+     
+    },
+    //получение вороса по его id
+    async getQuestionIdDb( {id}) {
+      const url = `${this.urlApi}/api/admin/question/${id}`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      }
+      const result = await setUseAsyncFetch({ url, params, token: true }) 
+      this.question =  result
+    },
+    //удаление вопроса из БД
+    async deleteQuestionDb({ id, testId, page = null} ){
+      const url = `${this.urlApi}/api/admin/question/${id}/delete`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        },
+      };
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      if (result) { modal.setMessage( result )}
+      await this.getAdminQuestionsTestIdDb({id: testId, page})
+    },
+    //утверждение вопроса
+    async approveQuestionDb( {questionSend} ){
+      const url = `${this.urlApi}/api/admin/question/publish`
+      const params = {
+        method: 'post',
+        headers: { 
+          Accept: 'application/json', 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"questionIds": questionSend})
+      };
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      if (result) { modal.setMessage( result )}
+      
+    },
+    //утверждение или скрытие всех вопросов теста по его id
+    async approveQuestionsAllDb( {id, param} ){
+      const url = `${this.urlApi}/api/admin/question/publish/test/${id}?publish=${param}`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      };
+      const result = await setUseAsyncFetch({ url, params, token: true })
+      const modal = useModalStore()
+      if (result) { modal.setMessage( result )}
+    },
+     //запрос на получение вопросов секции по id для админки
+     async getQuestionsSectionIdDb( {id, limit = 10000}) {
+      let url = `${this.urlApi}/api/admin/question/section/${id}?limit=${limit}`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      }
+      const result = await setUseAsyncFetch({ url, params, token: true })  
+                 
+      this.questionsSection = result.question
     },
   }
 })

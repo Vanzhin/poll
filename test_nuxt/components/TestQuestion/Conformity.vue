@@ -13,7 +13,7 @@
         :value="answerSelect">
       <hr>
       <i class="i">Выберите ответы из выпадающего списка.</i>
-      <div class="custom-control custom-radio"
+      <div class="custom-control custom-radio variant_separator"
         v-for="(answer, ind ) in question.subtitles" 
         :key="answer"
       >
@@ -118,5 +118,11 @@ hr {
       position: relative;
       margin-bottom: 0;
       margin-left: 10px;
+  }
+  .variant_separator{
+    border-bottom: 2px solid rgb(211 208 208);
+    width: 100%;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
   }
 </style>

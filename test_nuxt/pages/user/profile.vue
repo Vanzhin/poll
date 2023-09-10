@@ -95,7 +95,7 @@
   }
   .button-cont{
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
   }
  @media (min-width: 1024px) {
  }

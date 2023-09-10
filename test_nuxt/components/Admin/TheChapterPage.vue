@@ -77,9 +77,9 @@
  
 <script setup>
   
-  import { useCategoryStore } from '../../stores/CategoryStore'
-  import { useLoaderStore } from '../../stores/Loader'
-  import { useUserStore  } from '../../stores/UserStore'
+  import { useCategoryStore } from '@/stores/CategoryStore'
+  import { useLoaderStore } from '@/stores/Loader'
+  import { useUserStore  } from '@/stores/UserStore'
   const categorys = useCategoryStore()
   const loader = useLoaderStore() 
   const route = useRoute()
@@ -105,7 +105,6 @@
 
   onMounted(async() => {
     console.log('запрос категорий')
-    
     const user = useUserStore()
     await user.setTokenIsLocalStorage()
     await categorys.getApiCategorys({
@@ -114,12 +113,7 @@
       parentId: categoryId.value,
       loading: !(categoryId.value && categorys.getCategorys.length > 0)
     })
-    
   })
-    
-   
-  
- 
 </script>
 <style lang="scss" scoped>
   .title{
@@ -149,7 +143,7 @@
     margin-right: 20px;
     &-cont{
       display: flex;
-      justify-content: end;
+      justify-content: flex-end;
     }
     
     transition: all 0.1s ease-out;

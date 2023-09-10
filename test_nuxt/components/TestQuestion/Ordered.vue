@@ -89,7 +89,8 @@ export default {
     }
   },
   mounted(){
-    if (this.question.variant){
+    console.log(this.question)
+    if (this.question && this.question.variant){
     this.question.variant.forEach((item, index ) => 
       this.questionVariant.push({
         id:index, 

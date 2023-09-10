@@ -46,8 +46,8 @@
       </div>
       
       <div class="row"
-        v-if="(getQuestionsImportError && (Array.isArray(getQuestionsImportError) || 
-        typeof getQuestionsImportError === 'object'
+        v-if="(questions.getQuestionsImportError && (Array.isArray(questions.getQuestionsImportError) || 
+        typeof questions.getQuestionsImportError === 'object'
         ))"
       >
       
@@ -56,7 +56,7 @@
         <h5>При импорте обнаруженны ошибки в следующих вопросах:</h5>
         <ol>
           <li 
-            v-for="(item) in getQuestionsImportError"
+            v-for="(item) in questions.getQuestionsImportError"
             :key="item.id"
             class="question-item"
           >
@@ -148,20 +148,17 @@
         let timerId = setInterval(() => {
           if ( !modal.getMessage ) {
             clearInterval(timerId)
-            
             if (message.value) {
               navigateTo(`/admin/categorys/${route.params.id}/test/${testId}/questions`)
-              
             }
           }
         }, 200);
       }
       function changeFileValue(e){
         if (typeof e.target.files[0] === 'object'){
-          
+          questions.questionsImportError = null
           testFile.value = e.target.files[0]
           testValue.value = e.target.value
-          modal.setMessage(null)
           const regexp = new RegExp("zip", 'i');
           const regexp1 = new RegExp("txt", 'i');
           if (!(regexp.test(e.target.files[0].name) || regexp1.test(e.target.files[0].name))) {
@@ -177,37 +174,9 @@
       function testFileDelete(){
         testFile.value = ''
         testValue.value = null
-        modal.setMessage(null)
+        
       }
-      function changeQuestionsImgs(e){
-        if (typeof e.target.files[0] === 'object'){
-          inputImage.value = e.target
-          const  files = [...e.target.files]
-          let arrayImg = []
-          for(let i = 0; i < files.length; i++){
-            let item = files[i]
-            arrayImg.push({
-              url: URL.createObjectURL(item),
-              name: item.name,
-              size: (item.size / 1024).toFixed(0)
-            })
-            if ( (item.size / 1024).toFixed(0) > maxSizeImg.value){
-              imagesMaxSize.value.push(item.name)
-            }
-          }
-          questionsImgs.value = arrayImg
-        }
-      }
-      function questionImgDelete(img, index){
-        imagesMaxSize.value = imagesMaxSize.value.filter(item => item != img.name)
-        questionsImgs.value = questionsImgs.value.filter(item => item.name !== img.name)
-
-        let dt = new DataTransfer()
-        for(let i=0; i <= inputimg.value.files.length-1; i++){
-          if(i !== index) {dt.items.add(inputimg.files[i])}
-        }
-        inputimg.files = dt.files
-      }
+      
 </script>
 <style lang="scss" scoped>
 .variants{

@@ -37,47 +37,39 @@
 </template>
 <script setup>
   import { usePaginationStore } from '../stores/PaginationStore'
-  
   const pagination = usePaginationStore()
-    
-  const nextTotalPriznak = (pagination.totalPages > 10) ? 
-    (parseInt( pagination.paginations[9].label) < pagination.totalPages) ? 
-      true 
+  const nextTotalPriznak = computed(()=>{
+    return (pagination.totalPages > 10) ? 
+      (parseInt( pagination.paginations[9].label) < parseInt(pagination.totalPages)) ? 
+        true 
+        : false
       : false
-    : false
+  })
   
  function paginate (pag) {
     console.log("pag -- ", pag)
-    
+    console.log("activePage --", pagination.activePage)
     switch (pag) {
-        case '-1' : {
-          if (pagination.activePage > 1) {
-            pagination.activePageToChange( parseInt(pagination.paginations[0].label) - 1)
-          } else { return }
-        break;
-        }
-        case '+1' : {
-         
-          if  (pagination.activePage = parseInt(pagination.paginations[9].label) < pagination.totalPages) {
-            pagination.activePageToChange (parseInt(pagination.paginations[9].label) + 1)
-          } else { return }
-        break;
-        }
-        default:{
-          console.log("activePage --", pagination.activePage)
-          pagination.activePageToChange(pag)
-          console.log("pagination.url --",pagination.url)
-          navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :''}`)
-
-          console.log("activePage -- ", pagination.activePage)
-          // router.push({ path: `/page/${pag}` })
-
-         
-        }
+      case '-1' : {
+        if (pagination.activePage > 1) {
+          if (pagination.activePage - 10 > 0){
+            pag = pagination.activePage - 10
+          } else pag = pagination.activePage - 1
+        } else { return }
+      break;
       }
+      case '+1' : {
+        if  (pagination.activePage < pagination.totalPages) {
+          if (pagination.activePage + 10 < pagination.totalPages){
+            pag = pagination.activePage + 10
+          } else pag = pagination.activePage + 1
+        } else { return }
+      break;
+      }
+      default:{ }
+    }
+    navigateTo(`${pagination.url}${pag>1? '/page/'+ pag :''}`)
   }
-
-// { "currentPage": 1, "totalPages": 3, "totalItem": 15, "totalItemsPerPage": 6, "limit": 6 }
 </script>
 
 

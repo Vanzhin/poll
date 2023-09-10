@@ -1,6 +1,6 @@
 <template>
   <div class="d-dropdown">
-    <button class="btn btn-secondary "  tooggle="false" 
+    <button class="btn btn-secondary"  tooggle="false" 
       @click="toggleMeny"
     >
       <div class="dropdown-button">
@@ -181,5 +181,9 @@
   }
   .active{
     display: block;
+    @media (max-width: 480px) {
+      transform: translate(-144px, 21px);
+    }
+    
   }
 </style>

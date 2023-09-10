@@ -1,12 +1,11 @@
 <template>
-  <div >
-    страница теста
+  <div>
+    <AdminTheTestPage/>
   </div>
 </template>
 <script setup>
-  definePageMeta({
+ definePageMeta({
     layout: "admin",
     middleware: 'authadmin'
   })
-
 </script>

@@ -53,10 +53,10 @@
   </div>
 </template>
 <script setup>
-  import { useCategoryStore } from '../../stores/CategoryStore'
-  import { useModalStore } from '../../stores/ModalStore'
-  import { useUserStore  } from '../../stores/UserStore'
-  import { useTestsStore  } from '../../stores/TestsStore'
+  import { useCategoryStore } from '@/stores/CategoryStore'
+  import { useModalStore } from '@/stores/ModalStore'
+  import { useUserStore  } from '@/stores/UserStore'
+  import { useTestsStore  } from '@/stores/TestsStore'
   const categorys = useCategoryStore()
   const testsSt = useTestsStore()
   const user = useUserStore()
@@ -69,8 +69,9 @@
     return testsSt.getTests ? testsSt.getTests : []
   })
   async function testRoute(item){
-    await this.setTestItem(item)
-    this.$router.push({name: 'adminTestQuestions', params: { id: item.id }})
+    // await this.setTestItem(item)
+    navigateTo(`/admin/categorys/${parentId.value}/test/${item.id}/questions`)
+    
   }
 
   function createTest(){
@@ -80,12 +81,10 @@
   onMounted(async() => {
     console.log('на фронте - ',parentId.value)
       // if (!this.getSearchSign){
-        if (parentId.value){
-          await testsSt.getApiTests({page: null, parentId: +parentId.value})
-          
-        } 
-      
-    })
+    if (parentId.value){
+      await testsSt.getApiTests({page: null, parentId: +parentId.value})
+    } 
+  })
  
  
 </script>

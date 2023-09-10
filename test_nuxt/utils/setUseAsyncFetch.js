@@ -1,7 +1,7 @@
 import { useUserStore } from '../stores/UserStore'
 import { useLoaderStore } from '../stores/Loader'
 import { useModalStore  } from '../stores/ModalStore'
-
+import { useQuestionsStore  } from '../stores/QuestionStore'
 
 
 export default async function setUseAsyncFetch ({url, params, token, loading = true}){
@@ -18,7 +18,7 @@ export default async function setUseAsyncFetch ({url, params, token, loading = t
     () => $fetch(url, params))
     
   if (error.value) {
-    console.log(error.value.data)
+    console.log('error.value - ', error.value.data)
     if (error.value.data){
       if (error.value.data.message === "Expired JWT Token"||
         error.value.data.message === "Invalid JWT Token") 
@@ -31,12 +31,16 @@ export default async function setUseAsyncFetch ({url, params, token, loading = t
         }
         setUseAsyncFetch({ url, params, token })
       } else {
+        if (error.value.data.message === 'Ошибка при создании вопроса'){
+          const questions = useQuestionsStore()
+          questions.questionsImportError = error.value.data.error
+        }
         modal.setMessageError(error.value.data)
       }
     } else {
       modal.setMessageError(error.value)
     }
-  } else{
+  } else {
     console.log('result.value -',result.value)
     loader.setIsLoaderStatus(false)
     return result.value
