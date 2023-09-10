@@ -6,16 +6,13 @@ import { useModalStore  } from './ModalStore'
 import { usePaginationStore } from './PaginationStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
-   
-
     urlApi: useRuntimeConfig().public.urlApi,
     questionsImportError: null,
-    questionsTicket: [],
     questionsSection: [],
+    questionsTicket: [],
     question: null,
     questionsDb: [],
-
-    
+   
   }),
   getters: {
     getQuestions: (state) => state.questions,
@@ -118,7 +115,7 @@ export const useQuestionsStore = defineStore('questions', {
               ticketsStore.ticketSelectToChange(questions.value.ticket)
               console.log("билет -", questions.value.ticket.title)
             }
-             loader.setIsLoaderStatus(false)
+            loader.setIsLoaderStatus(false)
           }
         }, 200);
       } catch (error) {
@@ -247,6 +244,28 @@ export const useQuestionsStore = defineStore('questions', {
       const result = await setUseAsyncFetch({ url, params, token: true })  
                  
       this.questionsSection = result.question
+
     },
+     //запрос на получение вопросов билетов по id для админки
+     async getQuestionsTicketIdDb( {id, limit = 10000}) {
+      let url = `${this.urlApi}/api/ticket/${id}/question`
+      const params = {
+        method: 'get',
+        headers: { 
+          Accept: 'application/json', 
+        }
+      }
+      const result = await setUseAsyncFetch({ url, params })  
+                 
+      this.questionsTicket = result.questions
+      
+      if (result.ticket) {
+        const ticketsStore = useTicketsStore()
+        ticketsStore.ticketSelectToChange(result.ticket)
+        console.log("билет -", result.ticket.title)
+      }
+
+    },
+     
   }
 })

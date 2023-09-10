@@ -8,22 +8,20 @@
         <div class="item__card-row" >
           <div class="item__card-header"> 
             <div class="item__card-block">
+             
               <div class="item__card-title">
-                {{ section.id }} - {{ section.title }}
+                {{ ticket.id }} - Билет №{{ ticket.title }}
               </div>
               <div class="item__card-title">
-                Вопросов в секции - {{ section.questionCount }}
-              </div>
-              <div class="item__card-title">
-                Количество правильных ответов для прохождения секции - {{ section.questionCountToPass }}
+                Вопросов в билете - {{ ticket.question.length }}
               </div>
             </div>
+           
           </div>
-          
           <div class="button-group" >
             <div class="button-item"
               title="Редактировать"
-              @click.stop="editSection"
+              @click.stop="editTicket"
             >
               <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M18.2407 6.75552L17.2857 5.71353C16.9165 5.31072 16.2924 5.27879 15.884 5.64183L14.3216 7.03088L16.6198 9.56793L18.1714 8.17538C18.5854 7.80377 18.6166 7.16567 18.2407 6.75552ZM5.5 14.8737L13.2006 8.02756L15.5035 10.5699L7.90674 17.388H5.5V14.8737ZM19.3465 5.74204L18.3915 4.70005C17.4686 3.69303 15.9083 3.61321 14.8874 4.5208L4.33557 13.9019C4.12212 14.0916 4 14.3636 4 14.6492V17.888C4 18.4403 4.44772 18.888 5 18.888H8.09822C8.34478 18.888 8.58266 18.7969 8.76616 18.6322L19.1733 9.29171C20.2084 8.36268 20.2863 6.76743 19.3465 5.74204ZM20 20.3847H4V21.8847H20V20.3847Z" fill="#269EB7"/>
@@ -42,58 +40,80 @@
        </div>
       <div class="item__card__child"
         v-if="childVisible"
-        @click.stop="childToggle"
+        @click.stop=""
       >
-        Включает:
+        <div class="block_number">
+          <label class="label"> Вопросы:         списком     </label>
+          <input type="checkbox"
+            name="list_check"
+            v-model= "listСheck"
+            class="textarea_input" 
+          /> 
+        </div>
+        <div class="questions-block">
+          <div
+            class="questions-item"
+            v-for="(question) in ticket.question"
+            :key="question.id"
+           
+            :class="{
+              'questions-item-list': listСheck
+            }"
+          >
+            {{listСheck ? `${question.id} - ${question.title}` :question.id }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
   import { useTestsStore } from '@/stores/TestsStore'
-
   import { useSectionsStore  } from '../../stores/SectionsStore'
-
   import { useConfirmStore } from '../../stores/ConfirmStore'
+  import { useTicketsStore  } from '@/stores/TicketsStore'
 
   const tests = useTestsStore()
   const sections = useSectionsStore()
+  const tickets = useTicketsStore()
   const confirm = useConfirmStore()
 
-  const props = defineProps(['section', 'index'])
+  const props = defineProps(['ticket', 'index'])
   const route = useRoute()
 
   const id = ref(null)
   const childVisible = ref(false)
+  const listСheck= ref(false)
 
   function childToggle(){
     childVisible.value = !childVisible.value
   }
-  function editSection(){
-    sections.setSectionActive(props.section)
-    navigateTo(`/admin/categorys/${route.params.id}/test/${route.params.testId}/section/${props.section.id}/edit`)
+
+  function editTicket(){
+    tickets.setTicketActive(props.section)
+    navigateTo(`/admin/categorys/${route.params.id}/test/${route.params.testId}/ticket/${props.ticket.id}/edit`)
   }
-  
-  async function deleteSection(){
-    await sections.deleteSectionIdDb({
-      id: props.section.id, 
-      testId: route.params.testId,
-      page: route.params.page,
+
+  async function deleteTicket(){
+    console.log('Удаляю билет № - ', props.ticket)
+    await tickets.deleteTicketIdDb({
+      id: props.ticket.id, 
+      testId: +route.params.testId, 
+      page: +route.params.page
     })
-    await tests.getTestIdDb({id: route.params.testId})
+    await tests.getTestIdDb({id: +route.params.testId})
   }
 
   function deleteVisibleConfirm(){
-    confirm.setConfirmMessage(`Вы, действительно хотите удалить секцию - "${props.section.title}"?`)
-    let timerId = setInterval(() => {
-      if (confirm.getConfirmAction) {
-        clearInterval(timerId)
-        if (confirm.getConfirmAction === "yes" ){deleteSection()}
-      }{}
-    }, 200);
-  }
-
-
+    confirm.setConfirmMessage(`Вы, действительно хотите удалить Билет № ${props.ticket.title}?`)
+      let timerId = setInterval(() => {
+        if (confirm.getConfirmAction) {
+          clearInterval(timerId)
+          if (confirm.getConfirmAction === "yes" ){deleteTicket()}
+        }{}
+      }, 200);
+    }
+  
 </script>
 <style lang="scss" scoped>
   .item{
@@ -149,7 +169,7 @@
       margin-right: 15px;
     }
     &__child{
-      height: 100px;
+      min-height: 100px;
       background-color: rgb(219 216 227);
     }
     &__parend{
@@ -158,7 +178,30 @@
     }
     
   }
-
-  
-
+  .questions{
+    &-block{
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    &-item{
+      min-width: 45px;
+      min-height: 30px;
+      border-radius: 6px;
+      padding: 0 3px;
+      background-color: rgb(141 135 135);
+      border: 2px solid rgb(141 135 135);
+      margin: 3px;
+      text-align: center;
+    
+      
+      &-list{
+        width: 100%;
+        text-align: left;
+      }
+    }
+  }
+  .textarea_input{
+    margin-left: 10px;
+  }
 </style>
