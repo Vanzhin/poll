@@ -42,7 +42,7 @@ export const useTestsStore = defineStore('tests', {
       this.testTitle = title
     },
     //получение списка тестов по id  категории
-    async getApiTests({ page = null, parentId = null, admin = false, limit = 6, loading = true }){
+    async getApiTestsIdDb({ page = null, parentId = null, admin = false, limit = 6, loading = true }){
       let url = `${urlApi()}/api/category`
       let  params = {
         method: 'GET',
@@ -133,7 +133,7 @@ export const useTestsStore = defineStore('tests', {
         }
       }
       const test = await setUseAsyncFetch({ url, params, token: true })
-      this.getApiTests({ page, parentId})
+      this.getApiTestsIdDb({ page, parentId})
       const modal = useModalStore()
       modal.setMessage( test )
     },
@@ -154,6 +154,32 @@ export const useTestsStore = defineStore('tests', {
       const test = await setUseAsyncFetch({ url, params, token: true })
       const modal = useModalStore()
       modal.setMessage( test )
+    },
+    //получение списка всех тестов 
+    async getApiAllTestsDb({ page = null, limit = 10, loading = true }){
+      let url = `${urlApi()}/api/admin/test?limit=${limit}`
+      let  params = {
+        method: 'GET',
+        headers: { 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        params: { limit }
+      }
+      if (page) { params.params.page = page }
+
+      const result = await setUseAsyncFetch({ url, params, token: true, loading })
+     
+      console.log("result", result)
+      if (result && result.test){
+        this.tests = result.test
+      }
+      const pagination = usePaginationStore()
+      pagination.paginations = []
+      if (result && result.pagination){
+        pagination.paginationsAll(result.pagination)
+      } 
+      
     },
   }
 })

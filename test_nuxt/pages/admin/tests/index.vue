@@ -1,20 +1,18 @@
 <template>
-  <div class="block">
-    <div class="title">
-      Тесты
-    </div>
-   <div class="container">
-      <div class="row">
-        
-      </div>
-    </div>
+  <div >
+   <AdminTheTestsPage />
   </div>
 </template>
+
 <script setup>
- definePageMeta({
+  definePageMeta({
     layout: "admin",
     middleware: 'authadmin'
-  });
+  })
+  import { usePaginationStore } from '@/stores/PaginationStore'
   
- 
+  const pagination = usePaginationStore()
+  const route = useRoute()
+  pagination.urlToChange(route.path)
 </script>
+

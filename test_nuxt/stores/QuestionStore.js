@@ -6,6 +6,7 @@ import { useModalStore  } from './ModalStore'
 import { usePaginationStore } from './PaginationStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
+    questions:[],
     urlApi: useRuntimeConfig().public.urlApi,
     questionsImportError: null,
     questionsSection: [],
