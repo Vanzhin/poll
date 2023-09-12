@@ -17,7 +17,7 @@ export const useUserStore = defineStore('user', {
     getTickets: (state) => state.tickets,
     getCountTickets: (state) => state.tickets.length,
     getIsAutchUser: (state) => state.token ? true : false,
-    getPageName: (state) => state.page,
+    getPageName: (state) => state.page ? state.page : '/',
     getUserAdmin: (state) => state.role === "ROLE_ADMIN" || state.role === "ROLE_SUPER_ADMIN",
     getToken: (state) => state.token,
     getProfile: (state) => state.profile,
@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', {
       this.page = page
       localStorage.setItem('pageLink', page);
     },
-    savePageIsLocalStorage() {
+    async savePageIsLocalStorage() {
       console.log('savePageIsLocalStorage-')
       this.page = localStorage.getItem('pageLink') ?
       JSON.parse(localStorage.getItem('pageLink')): null

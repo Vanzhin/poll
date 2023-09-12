@@ -63,12 +63,13 @@
   const modal= useModalStore()
   const route = useRoute()
   const getSearchSign = ref(false)
-  const  parentId = ref(route.params.id)
+  const  parentId = ref(+route.params.id)
   const tests = computed(()=>{
     if (!testsSt.getTests) {route.go(-1)}
     return testsSt.getTests ? testsSt.getTests : []
   })
   async function testRoute(item){
+    console.log('testRoute - ',item)
     // await this.setTestItem(item)
     navigateTo(`/admin/categorys/${parentId.value}/test/${item.id}/questions`)
     
@@ -82,8 +83,10 @@
     console.log('на фронте - ',parentId.value)
       // if (!this.getSearchSign){
     if (parentId.value){
-      await testsSt.getApiTests({page: null, parentId: +parentId.value})
-    } 
+      await testsSt.getApiTestsIdDb({page: null, parentId: +parentId.value})
+    } else {
+      await testsSt.getApiAllTestsDb({page: +route.params.page}) 
+    }
   })
  
  
