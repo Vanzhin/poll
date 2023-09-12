@@ -1,60 +1,72 @@
 <template>
   <div class="fon">
   <ul class="sidenav app-sidenav" :class="{open: value}">
+    <div
+      v-for="link in links"
+      :key="link.url"
+    >
+    
     <NuxtLink
       tag="li"
       active-class="list-active"
       :to="link.url"
       :exact="link.exact"
       class="list-link"
-      v-for="link in links"
-      :key="link.url"
-    >    
+      v-if="link.visible"
+    >   
       <li class="list"> 
-       
         {{link.title}}
       </li>
     </NuxtLink>
+    </div>
   </ul>
 </div>
 </template>
 
-<script>
-
-export default {
-  props: ['value'],
-  data: () => ({
-    links: [
+<script setup>
+import { useUserStore  } from '../stores/UserStore'
+const user = useUserStore()
+const props = defineProps(['value'])
+ 
+    
+   const links = [
       {title: 'Главная', url: '/admin', exact: true,
         icon: `<svg width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-home align-text-bottom"
-                                 aria-hidden="true">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            </svg>`
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" class="feather feather-home align-text-bottom"
+              aria-hidden="true">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>`,
+         visible: user.getUserAdmin,
       },
       {title: 'Разделы', url: '/admin/categorys',
         icon:`<svg  width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-file align-text-bottom"
-                                 aria-hidden="true">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>`
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" class="feather feather-file align-text-bottom"
+              aria-hidden="true">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+            <polyline points="13 2 13 9 20 9"></polyline>
+          </svg>`,
+          visible: user.getSuperAdmin,
       },
       {title: 'Тесты', url: '/admin/tests',
+        visible: user.getSuperAdmin,
         icon:`<i class="bi bi-archive"></i>`},
       {title: 'Вопросы', url: '/admin/questions',
+        visible: user.getSuperAdmin,
         icon:`<i class="bi bi-question-square"></i>`},
       {title: 'Импорт из файла', url: '/admin/import',
+        visible: user.getSuperAdmin,
         icon:`<i class="bi bi-cloud-arrow-down"></i>`},
       {title: 'Пользователи', url: '/admin/users',
+      visible: user.getUserAdmin,
         icon:` <i class="bi bi-people"></i>`},
-       
+      {title: 'Компании', url: '/admin/companys',
+        visible: user.getUserAdmin,
+        icon:` <i class="bi bi-people"></i>`},
     ]
-  })
-}
+ 
 </script>
 
 <style lang="scss" scoped>
