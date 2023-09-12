@@ -1,19 +1,11 @@
 <template>
   <div class="block">
-    <div class="title">
-      Ипорт вопросов.
-    </div>
-   <div class="container">
-      <div class="row">
-        
-      </div>
-    </div>
+   <AdminTheImportQuestionsFile />
   </div>
 </template>
 <script setup>
   definePageMeta({
     layout: "admin",
     middleware: 'authadmin'
-  });
- 
+  })
 </script>

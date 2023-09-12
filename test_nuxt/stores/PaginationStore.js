@@ -14,7 +14,8 @@ export const usePaginationStore = defineStore('pagination', {
   getters: {
     getTotalItemsPage: (state) => state.totalItemsPage,
     getActivePage: (state) => state.activePage,
-    getPaginationLength: (state) => state.paginations.length
+    getPaginationLength: (state) => state.paginations.length,
+    getTotalItem: (state) => state.totalItem
   },
   actions: {
     activePageToChange(page) {
