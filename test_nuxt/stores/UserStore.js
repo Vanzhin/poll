@@ -19,6 +19,7 @@ export const useUserStore = defineStore('user', {
     getIsAutchUser: (state) => state.token ? true : false,
     getPageName: (state) => state.page ? state.page : '/',
     getUserAdmin: (state) => state.role === "ROLE_ADMIN" || state.role === "ROLE_SUPER_ADMIN",
+    getSuperAdmin: (state) => state.role === "ROLE_SUPER_ADMIN",
     getToken: (state) => state.token,
     getProfile: (state) => state.profile,
     getAutchUserProfileFIO: (state) => state.profileFIO,
@@ -32,12 +33,12 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('pageLink', page);
     },
     async savePageIsLocalStorage() {
-      console.log('savePageIsLocalStorage-')
       this.page = localStorage.getItem('pageLink') ?
-      JSON.parse(localStorage.getItem('pageLink')): null
+        localStorage.getItem('pageLink'): null
+      console.log('savePageIsLocalStorage-', this.page)
     },
     async setTokenIsLocalStorage(){
-      console.log('проверяю стор')
+      console.log('проверяю token стор ')
       this.token = localStorage.getItem('token') ?
         JSON.parse(localStorage.getItem('token')).token: null
       this.refresh_token = localStorage.getItem('token') ?
@@ -213,25 +214,25 @@ export const useUserStore = defineStore('user', {
       this.profile = result 
     },
     // повторное получение токена
-    async getAuthRefresh( refresh_token) {
-      console.log('обновляю токен')
+    async getAuthRefresh( refresh_token = null) {
+      console.log('обновляю токен - ',refresh_token)
       const modal = useModalStore()
       let body = ''
       if (refresh_token) {
-        body = JSON.stringify({"refresh_token": refresh_token})
-      } else { body = JSON.stringify({"refresh_token": this.refresh_token})}
+        body = {"refresh_token": refresh_token}
+      } else { body = {"refresh_token": this.refresh_token}}
       let url = `${urlApi()}/api/token/refresh`
       try {
         const { data: result, pending, error } = await useAsyncData(
           () => $fetch(url, {
             method: 'post',
             headers: { 
-              'Accept': 'application/json',
               'Content-Type': 'application/json'
             },
             body: body 
           }
         ))
+
         if (error.value) {
           console.log(error.value.data)
           if (error.value.data.message === "No refresh_token found." ||
@@ -245,19 +246,23 @@ export const useUserStore = defineStore('user', {
           modal.setMessageError(error.value.data)
         } else {
           console.log('обновление токена - ', result.value)
-          this.token = result.value.token
-          this.refresh_token = result.value.refresh_token
-          const base64Url = result.value.token.split('.')[1]
-          const base64 = JSON.parse(atob(base64Url))
-          this.role = base64.roles[0]
-          const parsed = JSON.stringify({
-            token: result.value.token,
-            refresh_token: result.value.refresh_token
-          });
-          localStorage.setItem('token', parsed);
+          if (result.value){ this.token = result.value.token
+            this.refresh_token = result.value.refresh_token
+            const base64Url = result.value.token.split('.')[1]
+            const base64 = JSON.parse(atob(base64Url))
+            this.role = base64.roles[0]
+            const parsed = JSON.stringify({
+              token: result.value.token,
+              refresh_token: result.value.refresh_token
+            });
+            localStorage.setItem('token', parsed);
+          } else {
+            this.getAuthRefresh( refresh_token )
+          }
+
         }
       } catch (e) {
-        console.log(e)
+        console.log("ошибка - ",e)
         modal.setMessageError(e.value)
       }
     },
