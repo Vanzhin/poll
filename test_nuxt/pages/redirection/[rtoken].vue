@@ -15,30 +15,29 @@
       <p>Вы успешно авторизовались. 
         И скоро будете перенаправлены на сайт. 
         Если этого не произойдет, кликните по ссылке. </p>
-        <NuxtLink :to='pageLink'> Обратно на сайт</NuxtLink>
+        <NuxtLink :to='user.getPageName'> Обратно на сайт</NuxtLink>
     </div>
   </section>
 </div>
 </template>
  
 <script setup>
+  definePageMeta({
+    layout: "logout",
+  });
   import { useUserStore  } from '../../stores/UserStore'
   const user = useUserStore()
   const route = useRoute()
   const rtoken = ref(route.params.rtoken ? route.params.rtoken: false)
-  const pageLink = computed(() => {
-    return user.getPageName  ? user.getPageName : '/'
-  })
  
   onMounted(async() => {
       if ( rtoken ) {
-        user.savePageIsLocalStorage()
         await user.getAuthRefresh(rtoken)
-
-        setTimeout(() => {
-          navigateTo( user.getPageName )
-        },15000);
+        await user.savePageIsLocalStorage()
       }
+      setTimeout(() => {
+        navigateTo( user.getPageName )
+      },15000);
     })
   
 </script>
