@@ -32,12 +32,12 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('pageLink', page);
     },
     async savePageIsLocalStorage() {
-      console.log('savePageIsLocalStorage-')
       this.page = localStorage.getItem('pageLink') ?
-      JSON.parse(localStorage.getItem('pageLink')): null
+        localStorage.getItem('pageLink'): null
+      console.log('savePageIsLocalStorage-', this.page)
     },
     async setTokenIsLocalStorage(){
-      console.log('проверяю стор')
+      console.log('проверяю token стор ')
       this.token = localStorage.getItem('token') ?
         JSON.parse(localStorage.getItem('token')).token: null
       this.refresh_token = localStorage.getItem('token') ?
@@ -213,25 +213,25 @@ export const useUserStore = defineStore('user', {
       this.profile = result 
     },
     // повторное получение токена
-    async getAuthRefresh( refresh_token) {
-      console.log('обновляю токен')
+    async getAuthRefresh( refresh_token = null) {
+      console.log('обновляю токен - ',refresh_token)
       const modal = useModalStore()
       let body = ''
       if (refresh_token) {
-        body = JSON.stringify({"refresh_token": refresh_token})
-      } else { body = JSON.stringify({"refresh_token": this.refresh_token})}
+        body = {"refresh_token": refresh_token}
+      } else { body = {"refresh_token": this.refresh_token}}
       let url = `${urlApi()}/api/token/refresh`
       try {
         const { data: result, pending, error } = await useAsyncData(
           () => $fetch(url, {
             method: 'post',
             headers: { 
-              'Accept': 'application/json',
               'Content-Type': 'application/json'
             },
             body: body 
           }
         ))
+
         if (error.value) {
           console.log(error.value.data)
           if (error.value.data.message === "No refresh_token found." ||
@@ -245,19 +245,23 @@ export const useUserStore = defineStore('user', {
           modal.setMessageError(error.value.data)
         } else {
           console.log('обновление токена - ', result.value)
-          this.token = result.value.token
-          this.refresh_token = result.value.refresh_token
-          const base64Url = result.value.token.split('.')[1]
-          const base64 = JSON.parse(atob(base64Url))
-          this.role = base64.roles[0]
-          const parsed = JSON.stringify({
-            token: result.value.token,
-            refresh_token: result.value.refresh_token
-          });
-          localStorage.setItem('token', parsed);
+          if (result.value){ this.token = result.value.token
+            this.refresh_token = result.value.refresh_token
+            const base64Url = result.value.token.split('.')[1]
+            const base64 = JSON.parse(atob(base64Url))
+            this.role = base64.roles[0]
+            const parsed = JSON.stringify({
+              token: result.value.token,
+              refresh_token: result.value.refresh_token
+            });
+            localStorage.setItem('token', parsed);
+          } else {
+            this.getAuthRefresh( refresh_token )
+          }
+
         }
       } catch (e) {
-        console.log(e)
+        console.log("ошибка - ",e)
         modal.setMessageError(e.value)
       }
     },
@@ -267,3 +271,5 @@ export const useUserStore = defineStore('user', {
     }
   }
 })
+
+//redirection/fd19b50527dc2e610f94ad2995e647c96219579f976cbeef591e1316ccd95e5c2763cf3de6da0afb7461d0f1f72de75a1deedc70263b8b408d985049a494bd9f
