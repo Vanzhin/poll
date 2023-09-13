@@ -28,6 +28,7 @@ class ProtocolController extends AbstractController
         private readonly Actions\ListAction            $listAction,
         private readonly Actions\GetTemplateListAction $templateListAction,
         private readonly Actions\DownloadAction        $downloadAction,
+        private readonly Actions\MassCreationAction    $creationAction,
     )
     {
     }
@@ -90,5 +91,11 @@ class ProtocolController extends AbstractController
     public function download(Protocol $protocol, Request $request): StreamedResponse
     {
         return $this->downloadAction->run($protocol, $request);
+    }
+
+    #[Route('/mass_create', name: 'mass_create', methods: ['POST'])]
+    public function massCreate(Request $request): JsonResponse
+    {
+        return $this->creationAction->run($request);
     }
 }
