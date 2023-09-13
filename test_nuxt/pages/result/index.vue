@@ -74,19 +74,21 @@
   const autch = ref(false)
   const result = useResultStore()
   const getGlobalDescription = ref('')
-  onMounted(() => {
+  onMounted(async () => {
     const user = useUserStore()
     autch.value = user.getIsAutchUser
     getGlobalDescription.value = `Результаты прохождения тестирования. ${user.getGlobalDescription}`
+    await result.saveResultIsLocalStorageTicketUser()
+    if (result.resultTicketUser) {
+      await result.setResultDb()
+      crumbs.addIteration({
+          title:`/результат тестирования`,
+          link: `/`,
+          active: false
+        }) 
+    }
   })
-  if (result.resultTicketUser) {
-    result.setResultDb()
-    crumbs.addIteration({
-        title:`/результат тестирования`,
-        link: `/`,
-        active: false
-      }) 
-  }
+  
   
 </script> 
 

@@ -27,6 +27,15 @@ export const useResultStore = defineStore('result', {
     saveResultTicketUser( ticket ){
       this.resultTicketUser = ticket
       this.info = ticket.info
+      localStorage.setItem('resultTicketUser', JSON.stringify(ticket))
+    },
+    async saveResultIsLocalStorageTicketUser( ){
+      if (localStorage.getItem('resultTicketUser') 
+        && localStorage.getItem('resultTicketUser') !== undefined) {
+          this.resultTicketUser = JSON.parse(localStorage.getItem('resultTicketUser'))
+          this.info = JSON.parse(localStorage.getItem('resultTicketUser')).info
+      }
+      
     },
     // отправка результата прохождения теста на сервер
     async setResultDb(){
