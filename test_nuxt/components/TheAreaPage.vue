@@ -104,7 +104,7 @@
   
   
   async function getCondition() {
-    await tests.getApiTests({
+    await tests.getApiTestsIdDb({
       page: page.value > 1 ? page.value: '',
       parentId: parentId.value,
     })
