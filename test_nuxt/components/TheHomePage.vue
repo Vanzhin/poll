@@ -22,20 +22,15 @@
             Выберите область проверки знаний
           </h2>
         </div>
-        
-        
-        <div class="b-container" 
-        
-        >
+        <div class="b-container">
           <div class="sections__block row" v-if="categorys.getCategorys !==''">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
-             
               v-for="section in  getCategorys" 
               :key="section.id"
               :style="`background-image: url(${section.image ? section.image 
                 : (urlApi + '/img/item_fon.png')});`"
               @click="categoryUpdate({section})"
-            > <!-- category.getCategogys -->
+            > 
               <div class="item-info">
                 <div class="item-info-title">{{ section.title }}</div>
                 <div class="item-info-discrabe">{{ section.description }}</div>
