@@ -14,13 +14,14 @@
               v-for="(crumb, ind) in crumbs.getCrumbs" 
               :key="crumb.title"
             >
-              <div class="page-header-navigation-crumbs-link"
+              <NuxtLink class="page-header-navigation-crumbs-link"
                 v-if="ind < crumbs.getCrumbsLendch"
                 @click="crumbsLinkClick(crumb)"
                 :title="crumb.link"
+                :to="`${crumb.link}`"
               >
                 {{ crumb.title }}
-              </div>
+              </NuxtLink>
               <div class=""
                 v-else
                 :title="crumb.link"
@@ -29,10 +30,14 @@
               </div>
              </div>
           </div>
-          <UiButton
-            title="Назад"
-            @click="backLink"
-          /> 
+          <NuxtLink
+            class="routerLink"
+            :to="`${crumbs.getCrumbsLendch > 0 ? crumbs.getCrumbs.at(-2).link : '/'}`" 
+          >
+            <UiButton
+              title="Назад"
+            /> 
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -46,10 +51,6 @@
   
   const router = useRouter();
   const  crumbs = useCrumbsStore()
-  
-  function crumbsLinkClick(crumb){
-    navigateTo(`${crumb.link}`)
-  }
   
   function backLink(){
     if (crumbs.getCrumbsLendch > 0){

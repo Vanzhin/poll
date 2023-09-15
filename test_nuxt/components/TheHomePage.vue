@@ -24,18 +24,19 @@
         </div>
         <div class="b-container">
           <div class="sections__block row" v-if="categorys.getCategorys !==''">
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item"
+            <NuxtLink 
+              class="col-sm-12 col-md-6 col-lg-4 col-xs-2 item routerLink"
               v-for="section in  getCategorys" 
               :key="section.id"
               :style="`background-image: url(${section.image ? section.image 
-                : (urlApi + '/img/item_fon.png')});`"
-              @click="categoryUpdate({section})"
+                  : (urlApi + '/img/item_fon.png')});`"
+              :to="`${section.test.length > 0 ? '/area/'+section.id : '/iter/1/group/'+ section.id }`" 
             > 
               <div class="item-info">
                 <div class="item-info-title">{{ section.title }}</div>
                 <div class="item-info-discrabe">{{ section.description }}</div>
               </div>
-            </div>
+            </NuxtLink>
           </div>
           <ThePagination />
         </div> 
@@ -129,16 +130,7 @@
   categorys.getApiCategorys({
     page: page.value > 1 ? page.value: '',
   })
-
-  async function categoryUpdate({section}){
-    if (section.test.length > 0 ){
-      navigateTo(`/area/${section.id}`)
-    } else if (section.children.length > 0) {
-      navigateTo(`/iter/1/group/${section.id}`)
-    }  else {
-      navigateTo(`/iter/1/group/${section.id}`)
-    }
-  }
+ 
   onMounted(() => {
     // console.log('я на клиенте')
     // // console.dir( window)

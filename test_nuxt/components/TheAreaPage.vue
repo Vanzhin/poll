@@ -25,17 +25,18 @@
               <div
                 v-if="test.questionCount > test.questionUnPublishedCount"
               >
-              <!-- getIsAutchUser || index < 3 -->
-                <div 
+                <NuxtLink
+                  class="routerLink"
                   @click="testLink({test})"
                   v-if="true"
+                  :to="`/test/${test.id}`" 
                 >
                   <div class="test__card">
                     <div>
                       {{ test.title }}
                     </div>
                   </div>
-                </div>
+                </NuxtLink>
                 <div class="test__card-limitation"
                   v-else
                   title="У Вас ограниченный доступ. Подпишитесь на нашу группу."

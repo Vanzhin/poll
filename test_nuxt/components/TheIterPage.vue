@@ -25,9 +25,10 @@
                   v-for="(area) in categorys.getCategorys" 
                   :key="area.id"
                 >
-                  <div class="test__card"
+                  <NuxtLink  
+                    class="test__card routerLink"
                     v-if="true"
-                    @click="categoryUpdate({section: area })"
+                    :to="`${area.test.length > 0 ? '/area/'+area.id : '/iter/'+iterUp(iterNum)+'/group/'+ area.id }`" 
                   >
                     <div>
                       {{ area.title }}
@@ -37,7 +38,7 @@
                         <path d="M9.50356 9.39524C9.22523 9.11625 9.22515 8.66465 9.50337 8.38556C9.78263 8.10544 10.2363 8.1053 10.5157 8.38525L14.2949 12.1715C14.6845 12.5619 14.6845 13.1941 14.2949 13.5844L10.5157 17.3707C10.2363 17.6507 9.78263 17.6505 9.50337 17.3704C9.22515 17.0913 9.22523 16.6397 9.50356 16.3607L12.9781 12.878L9.50356 9.39524Z" fill="#269EB7"/>
                       </svg>
                     </div>
-                  </div>
+                  </NuxtLink>
                   <div class="test__card-limitation"
                     v-else
                     title="У Вас ограниченный доступ. Подпишитесь на группу."
@@ -65,7 +66,6 @@
               > 
                 Данная категория в разработке.
               </div> 
-              
             </div>
           </div>
         </div>
@@ -94,24 +94,16 @@
     return `${categorys.getCategoryTitle}. ${categorys.getCategoryDescription}. ${user.getGlobalDescription}`
   })
 
-  //переход при выборе категории
-  async function categoryUpdate({section}){
-    iterNum.value++
-    if (section.test.length > 0 ){
-      navigateTo(`/area/${section.id}`)
-    } else if (section.children.length > 0) {
-      navigateTo(`/iter/${iterNum.value}/group/${section.id}`)
-    }  else {
-      navigateTo(`/iter/${iterNum.value}/group/${section.id}`)
-    }
-  }
-
   async function getCondition() {
     await categorys.getApiCategorys({
       page: page.value > 1 ? page.value: '',
       parentId: parentId.value,
     })
     await crumbs.getCategoryCrumbsDB(parentId.value)
+  }
+  function iterUp(iterNum){
+    console.log(iterNum)
+    return +iterNum + 1
   }
 
   getCondition()
