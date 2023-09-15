@@ -1,17 +1,22 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Protocol;
 
 use App\Entity\Commission\Commission;
-use App\Repository\ProtocolRepository;
+use App\Entity\Group;
+use App\Entity\Protocol\vo\ProtocolSettings;
+use App\Entity\Test;
+use App\Repository\Protocol\ProtocolRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ProtocolRepository::class)]
+#[UniqueEntity(fields: ['groups', 'test'], message: 'protocol.test.unique')]
 class Protocol
 {
     use TimestampableEntity;
@@ -50,11 +55,33 @@ class Protocol
     #[Assert\NotNull(message: 'protocol.number.not_null')]
     #[Assert\NotBlank(message: 'protocol.number.not_blank')]
     #[Assert\Length(max: 25, maxMessage: 'protocol.number.max')]
+    #[Groups(['admin_protocol'])]
     private ?string $number = null;
 
-    #[ORM\OneToOne(inversedBy: 'protocol', cascade: ['persist'])]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'protocol')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['admin_protocol'])]
+    #[Assert\NotNull(message: 'protocol.groups.not_null')]
     private ?Group $groups = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups(['admin_protocol'])]
+    #[Assert\NotNull(message: 'protocol.settings.not_null')]
+    private array $settings = [];
+
+    #[ORM\ManyToOne(inversedBy: 'protocols')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'protocol.test.not_null')]
+    #[Groups(['admin_protocol'])]
+    private ?Test $test = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups(['admin_protocol'])]
+    private ?array $files = [];
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['admin_protocol'])]
+    private ?string $reg_number = null;
 
     public function getId(): ?int
     {
@@ -129,6 +156,54 @@ class Protocol
     public function setGroups(Group $groups): self
     {
         $this->groups = $groups;
+
+        return $this;
+    }
+
+    public function getSettings(): ?ProtocolSettings
+    {
+        return new ProtocolSettings(...$this->settings);
+    }
+
+    public function setSettings(?ProtocolSettings $settings): self
+    {
+        $this->settings = $settings->jsonSerialize();
+
+        return $this;
+    }
+
+    public function getTest(): ?Test
+    {
+        return $this->test;
+    }
+
+    public function setTest(?Test $test): self
+    {
+        $this->test = $test;
+
+        return $this;
+    }
+
+    public function getFiles(): ?array
+    {
+        return $this->files;
+    }
+
+    public function setFiles(?array $files): self
+    {
+        $this->files = $files;
+
+        return $this;
+    }
+
+    public function getRegNumber(): ?string
+    {
+        return $this->reg_number;
+    }
+
+    public function setRegNumber(?string $reg_number): self
+    {
+        $this->reg_number = $reg_number;
 
         return $this;
     }

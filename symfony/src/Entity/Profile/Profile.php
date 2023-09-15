@@ -275,4 +275,14 @@ class Profile
         }
         return $types;
     }
+
+    public function getShortName(): string
+    {
+        $shortName = $this->getLastName() . ' ' .
+            mb_substr($this->getFirstName(), 0, 1) . '. ';
+        if ($this->getMiddleName()) {
+            $shortName .= mb_substr($this->getMiddleName(), 0, 1) . '.';
+        }
+        return $shortName;
+    }
 }

@@ -6,7 +6,9 @@ namespace App\Factory\Protocol;
 
 use App\Entity\Commission\Commission;
 use App\Entity\Group;
-use App\Entity\Protocol;
+use App\Entity\Protocol\Protocol;
+use App\Entity\Protocol\vo\ProtocolSettings;
+use App\Entity\Test;
 use App\Response\AppException;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -60,8 +62,35 @@ class ProtocolBuilder
                 $protocol->setNumber($item);
                 continue;
             }
+            if ($key === 'reg_number') {
+                $protocol->setRegNumber($item);
+                continue;
+            }
+            if ($key === 'test_id') {
+                $test = $this->em->getRepository(Test::class)->findOneBy(['id' => (int)$item]);
+                if (!$test) {
+                    throw new AppException(sprintf('Тест с идентификатором \'%s\' не найден.', $item));
+                }
+                $protocol->setTest($test);
+                continue;
+            }
+            if ($key === 'settings') {
+                $protocol->setSettings($this->buildSettings($item));
+                continue;
+            }
         }
 
         return $protocol;
+    }
+
+    private function buildSettings(array $items): ProtocolSettings
+    {
+        try {
+            return new ProtocolSettings(...$items);
+
+        } catch (\Exception|\Error $e) {
+            throw new AppException(sprintf('Настройки протокола не созданы. Обязательные поля: %s',
+                implode(', ', array_map(fn($property) => ($property->getName()), (new \ReflectionClass(ProtocolSettings::class))->getProperties()))));
+        }
     }
 }

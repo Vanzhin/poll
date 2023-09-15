@@ -25,16 +25,11 @@ class CreateMinTrudTest extends BaseAction
     }
 
 
-    public function createOrUpdate(Request $request): JsonResponse
+    public function createOrUpdate(Request $request, MinTrudTest $testToUpdate = null): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
-            $testToUpdate = $this->em->find(MinTrudTest::class, $request->attributes->get('_route_params', [])['id']);
 
-            if (!$testToUpdate) {
-                return $this->errorResponse(['error' => 'Тест с таким идентификатором не найден']);
-
-            }
             $test = $this->builder->createOrUpdateMinTrudTest($data, $testToUpdate);
             $errors = $this->validation->validate($test);
             if (!empty($errors)) {
@@ -44,7 +39,7 @@ class CreateMinTrudTest extends BaseAction
             $this->em->persist($test);
             $this->em->flush();
             return $this->successResponse([
-                'message' => 'МинТрудТест создан',
+                'message' => $testToUpdate ? 'МинТрудТест обновлен' : 'МинТрудТест создан',
                 'data' => $test
             ], ['admin']);
 

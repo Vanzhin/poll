@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Protocol\Protocol;
 use App\Repository\Test\TestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,7 +24,7 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search', 'admin_group', 'breadcrumbs'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search', 'admin_group', 'breadcrumbs', 'admin_protocol'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(
@@ -128,6 +129,9 @@ class Test
     #[Groups(['admin_test_general', 'main', 'test', 'main_test'])]
     private ?string $descriptionSeo = null;
 
+    #[ORM\OneToMany(mappedBy: 'test', targetEntity: Protocol::class)]
+    private Collection $protocols;
+
     /**
      * @return bool
      */
@@ -208,6 +212,7 @@ class Test
         $this->ticket = new ArrayCollection();
         $this->results = new ArrayCollection();
         $this->groups = new ArrayCollection();
+        $this->protocols = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -501,6 +506,36 @@ class Test
     public function setDescriptionSeo(?string $descriptionSeo): self
     {
         $this->descriptionSeo = $descriptionSeo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Protocol>
+     */
+    public function getProtocols(): Collection
+    {
+        return $this->protocols;
+    }
+
+    public function addProtocol(Protocol $protocol): self
+    {
+        if (!$this->protocols->contains($protocol)) {
+            $this->protocols->add($protocol);
+            $protocol->setTest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProtocol(Protocol $protocol): self
+    {
+        if ($this->protocols->removeElement($protocol)) {
+            // set the owning side to null (unless already changed)
+            if ($protocol->getTest() === $this) {
+                $protocol->setTest(null);
+            }
+        }
 
         return $this;
     }

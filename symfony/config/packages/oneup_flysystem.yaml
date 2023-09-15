@@ -11,6 +11,9 @@ oneup_flysystem:
         upload_category_adapter:
             local:
                 location: '%kernel.project_dir%/public/%category_upload%'
+        upload_protocol_adapter:
+            local:
+                 location: '%kernel.project_dir%/public/%protocol_upload%'
 
     filesystems:
         upload_question:
@@ -21,3 +24,6 @@ oneup_flysystem:
 
         upload_category:
             adapter: upload_category_adapter
+
+        upload_protocol:
+            adapter: upload_protocol_adapter

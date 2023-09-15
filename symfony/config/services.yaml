@@ -30,6 +30,10 @@ parameters:
     category_upload_url: '%env(SITE_URL)%/%category_upload%'
     category_upload_dir: '%kernel.project_dir%/public/%category_upload%'
 
+    protocol_upload: 'protocols'
+    protocol_upload_url: '%env(SITE_URL)%/%protocol_upload%'
+    protocol_upload_dir: '%kernel.project_dir%/public/%protocol_upload%'
+
 
 services:
     # default configuration for services in *this* file
@@ -44,6 +48,7 @@ services:
             App\Service\FileUploader $questionImageUploader: '@image_uploader.question'
             App\Service\FileUploader $variantImageUploader: '@image_uploader.variant'
             App\Service\FileUploader $categoryImageUploader: '@image_uploader.category'
+            App\Service\FileUploader $protocolFileUploader: '@file_uploader.protocol'
 
 
 
@@ -92,6 +97,11 @@ services:
         class: App\Service\FileUploader
         arguments:
             $fileSystem: '@oneup_flysystem.upload_category_filesystem'
+    file_uploader.protocol:
+        class: App\Service\FileUploader
+        arguments:
+            $fileSystem: '@oneup_flysystem.upload_protocol_filesystem'
+
 
     App\Service\Mailer:
         arguments:
