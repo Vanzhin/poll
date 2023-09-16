@@ -12,12 +12,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ProtocolRepository::class)]
-//#[UniqueEntity(fields: ['groups', 'test'], message: 'protocol.test.unique')]
+#[UniqueEntity(fields: ['number'], message: 'protocol.number.unique')]
 class Protocol
 {
     use TimestampableEntity;
@@ -52,7 +53,7 @@ class Protocol
     #[Assert\NotNull(message: 'protocol.commission.not_null')]
     private ?Commission $commission = null;
 
-    #[ORM\Column(length: 25)]
+    #[ORM\Column(length: 25, unique: true)]
     #[Assert\NotNull(message: 'protocol.number.not_null')]
     #[Assert\NotBlank(message: 'protocol.number.not_blank')]
     #[Assert\Length(max: 25, maxMessage: 'protocol.number.max')]

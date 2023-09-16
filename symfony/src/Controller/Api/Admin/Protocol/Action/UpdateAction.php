@@ -16,6 +16,7 @@ use App\Response\AppException;
 use App\Security\Voter\GroupVoter;
 use App\Security\Voter\ProtocolVoter;
 use App\Service\FileHandler;
+use App\Service\FileUploader;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,6 +36,8 @@ class UpdateAction extends NewBaseAction
         private readonly GroupRepositoryInterface $groupRepository,
         private readonly FileHandler              $fileHandler,
         private readonly ProtocolMapper           $mapper,
+        private readonly FileUploader             $protocolFileUploader
+
     )
     {
         parent::__construct($serializer);
@@ -67,7 +70,7 @@ class UpdateAction extends NewBaseAction
         };
 
         if ($group->getAvailableTests()->filter(fn(Test $test) => ($test->getId() === (int)$createProtocol->getTestId()))->isEmpty()) {
-            throw new AppException('Для этого теста/ группы протокол не может быть сформирован');
+            throw new AppException('Для этого теста/ группы протокол не может быть сформирован.');
         };
 
         if (!in_array($createProtocol->getTemplate(), $this->fileHandler->getFilesList(ProtocolController::TEMPLATE_PATH))) {
@@ -76,13 +79,12 @@ class UpdateAction extends NewBaseAction
         }
 
         $protocol = $this->factory->createBuilder()->build($createProtocol, $protocol);
-
         $this->checkPermission($protocol);
-
         $this->entityManager->persist($protocol);
-
         $this->entityManager->flush();
-
+        if ($protocol->getFile()) {
+            $this->protocolFileUploader->delete($protocol->getFile());
+        }
         return $this->successResponse($protocol, ['admin_protocol'], 'Протокол обновлен.');
     }
 

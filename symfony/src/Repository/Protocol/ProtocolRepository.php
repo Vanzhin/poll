@@ -63,9 +63,9 @@ class ProtocolRepository extends ServiceEntityRepository implements ProtocolRepo
         }
         if (!is_null($filter->getIsFile())) {
             if ($filter->getIsFile()) {
-                $query->andWhere('pr.files IS NOT NULL');
+                $query->andWhere('pr.file IS NOT NULL');
             } else {
-                $query->andWhere('pr.files IS NULL');
+                $query->andWhere('pr.file IS NULL');
             }
         }
         if ($filter->getTest()) {

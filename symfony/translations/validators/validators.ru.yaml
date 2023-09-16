@@ -118,7 +118,7 @@ protocol.number.max: Номер протокола не может быть дл
 protocol.test.not_null: Тест протокола - обязательное поле
 protocol.groups.not_null: Группа протокола - обязательное поле
 protocol.settings.not_null: Настройки протокола - обязательное поле
-protocol.test.unique: На указанный тест протокол уже сформирован
+protocol.number.unique: Номер протокола уже существует
 protocol.user.not_null: Пользователей не обнаружено
 
 min_trud_test.title.not_blank: Название теста не может быть пустым

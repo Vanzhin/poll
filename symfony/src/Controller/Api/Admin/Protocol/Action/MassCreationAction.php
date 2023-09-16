@@ -73,30 +73,30 @@ class MassCreationAction extends NewBaseAction
             //        фильтруем пользователей, у которых есть результаты по тесту
             $filteredUsers = $users->filter(fn(User $user) => ($user->getResults()->filter(fn(Result $result) => ($result->getTest()->getId() === (int)$massCreateProtocol->getTestId()))->count() > 0));
         }
-
+        $created = [];
         if ($massCreateProtocol->getSettings()->isForEach()) {
-
+//            каждый протокол должен иметь уникальный номер
+            $i = 1;
             foreach ($filteredUsers as $user) {
                 $createProtocol = $this->mapper->buildCreateProtocolFromMass($massCreateProtocol, new UserList($user));
                 $protocol = $this->factory->createBuilder()->build($createProtocol);
-
+                $protocol->setNumber($protocol->getNumber() . '-' . $i++);
                 $this->checkPermission($protocol);
-
                 $this->entityManager->persist($protocol);
+                $created[] = $protocol;
             }
         } else {
             $createProtocol = $this->mapper->buildCreateProtocolFromMass($massCreateProtocol, new UserList(...$filteredUsers->toArray()));
-
             $protocol = $this->factory->createBuilder()->build($createProtocol);
-
             $this->checkPermission($protocol);
-
             $this->entityManager->persist($protocol);
+            $created[] = $protocol;
+
         }
 
         $this->entityManager->flush();
 
-        return $this->successResponse($protocol, ['admin_protocol'], 'Протокол создан.');
+        return $this->successResponse($created, ['admin_protocol'], 'Протокол(ы) созданы.');
     }
 
     private function checkPermission(Protocol $protocol): void
