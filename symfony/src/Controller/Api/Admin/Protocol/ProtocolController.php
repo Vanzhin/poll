@@ -4,11 +4,13 @@ namespace App\Controller\Api\Admin\Protocol;
 
 use App\Controller\Api\Admin\Protocol\Action as Actions;
 use App\Entity\Protocol\Protocol;
+use App\Repository\Protocol\ProtocolRepository;
+use App\Response\AppException;
 use App\Security\Voter\ProtocolVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -16,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ProtocolController extends AbstractController
 {
 //    todo вынести в конфиг?
+// вынести файлы из public
     public const PROTOCOL_PATH = 'protocols';
     public const TEMPLATE_PATH = 'protocols/templates';
 
@@ -28,6 +31,8 @@ class ProtocolController extends AbstractController
         private readonly Actions\ListAction            $listAction,
         private readonly Actions\GetTemplateListAction $templateListAction,
         private readonly Actions\DownloadAction        $downloadAction,
+        private readonly Actions\MassCreationAction    $creationAction,
+        private readonly ProtocolRepository            $repository,
     )
     {
     }
@@ -65,13 +70,14 @@ class ProtocolController extends AbstractController
         return $this->deleteAction->run($protocol);
     }
 
-    #[Route('/generate/{id<\d+>}', name: 'generate', methods: ['GET'])]
-    public function generate(Protocol $protocol, Request $request): JsonResponse
+    #[Route('/generate', name: 'generate', methods: ['POST', 'GET'])]
+    public function generate(Request $request): JsonResponse
     {
-        if (!$this->isGranted(ProtocolVoter::VIEW, $protocol)) {
-            throw new AccessDeniedException();
-        };
-        return $this->generateAction->run($protocol, $request);
+        $protocols = $this->getProtocol($request);
+        if (!current($protocols)) {
+            throw new AppException('Протоколы не найдены.');
+        }
+        return $this->generateAction->run(...$protocols);
     }
 
     #[Route('/list', name: 'list', methods: ['GET', 'POST'])]
@@ -86,9 +92,40 @@ class ProtocolController extends AbstractController
         return $this->templateListAction->run();
     }
 
-    #[Route('/{id<\d+>}/download', name: 'download', methods: ['GET', 'POST'])]
-    public function download(Protocol $protocol, Request $request): StreamedResponse
+    #[Route('/download', name: 'download', methods: ['POST'])]
+    public function download(Request $request): BinaryFileResponse
     {
-        return $this->downloadAction->run($protocol, $request);
+        $protocols = $this->getProtocol($request);
+        if (!current($protocols)) {
+            throw new AppException('Протоколы не найдены.');
+        }
+        return $this->downloadAction->run(...$protocols);
+
+    }
+
+    #[Route('/mass_create', name: 'mass_create', methods: ['POST'])]
+    public function massCreate(Request $request): JsonResponse
+    {
+        return $this->creationAction->run($request);
+    }
+
+    private function getProtocol(Request $request, string $property = 'list'): array
+    {
+        $protocols = [];
+        $data = json_decode($request->getContent(), true);
+        if (isset($data[$property]) && is_array($data[$property])) {
+            foreach ($data[$property] as $protocolId) {
+                $protocol = $this->repository->find($protocolId);
+                if ($protocol) {
+                    if (!$this->isGranted(ProtocolVoter::VIEW, $protocol)) {
+                        throw new AccessDeniedException();
+                    };
+                    $protocols[] = $protocol;
+                } else {
+                    throw new AppException('Протокол не найден.');
+                }
+            }
+        };
+        return $protocols;
     }
 }

@@ -7,6 +7,7 @@ use App\Factory\User\UserFactory;
 use App\Repository\Interfaces\UserRepositoryInterface;
 use App\Response\AppException;
 use App\Service\Mailer;
+use App\Service\SecurityService;
 use App\Service\SerializerService;
 use App\Service\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,6 +23,7 @@ class LinkLoginAction extends NewBaseAction
         private readonly Mailer                  $mailer,
         private readonly UserRepositoryInterface $userRepository,
         private readonly ValidationService       $validation,
+        private readonly SecurityService         $service,
         SerializerService                        $serializer,
 
     )
@@ -67,7 +69,7 @@ class LinkLoginAction extends NewBaseAction
             throw new AppException('Не верные почта или логин.');
 
         }
-        $this->mailer->sendLoginLinkEmail($user);
+        $this->mailer->sendLoginLinkEmail($user, $this->service->getLoginLink($user));
         return $this->successResponse([], [], 'Ссылка для входа в личный кабинет отправлена на ' . $user->getEmail());
     }
 }

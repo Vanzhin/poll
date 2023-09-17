@@ -39,7 +39,7 @@ class TestController extends AbstractController
             ['charset=utf-8'],
             [
                 'groups' => 'admin_test_general',
-                AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+                AbstractObjectNormalizer::SKIP_NULL_VALUES => false,
             ],
         )->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }

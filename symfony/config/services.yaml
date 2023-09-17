@@ -50,6 +50,8 @@ services:
             App\Service\FileUploader $categoryImageUploader: '@image_uploader.category'
             App\Service\FileUploader $protocolFileUploader: '@file_uploader.protocol'
 
+    App\Repository\User\UserRepository: ~
+    App\Repository\Interfaces\UserRepositoryInterface: '@App\Repository\User\UserRepository'
 
 
     #            League\Flysystem\Filesystem $questionFileSystem: '@oneup_flysystem.upload_question_filesystem'
@@ -109,6 +111,10 @@ services:
             $defaultFromEmail: '%app.default_from_email%'
             $defaultFromName: '%app.default_from_name%'
 #            $loginLinkHandler: 'security.authenticator.login_link_handler.login'
+
+    App\Service\SecurityService:
+        arguments:
+            $host: '%env(CORS_ALLOW_ORIGIN)%'
 
 
     App\Service\FileHandler:

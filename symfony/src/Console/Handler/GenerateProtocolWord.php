@@ -19,39 +19,18 @@ class GenerateProtocolWord implements GenerateProtocolInterface
     }
 
 
-    public function generate(Protocol $protocol): array
+    public function generate(Protocol $protocol): string
     {
-        $filenames = [];
-        $users = $protocol->getGroups()->getParticipants();
-        if ($protocol->getSettings()->isIgnoreFailedUsers()) {
-            //        фильтруем, если нужны только пользователи с положительными результатами
-            $filteredUsers = $users
-                ->filter(fn(User $user) => ($user->getResults()->filter(fn(Result $result) => ($result->getTest() === $protocol->getTest() && $result->isPass()))->count() > 0));
-        } else {
-            //        фильтруем пользователей, у которых есть результаты по тесту
-            $filteredUsers = $users->filter(fn(User $user) => ($user->getResults()->filter(fn(Result $result) => ($result->getTest() === $protocol->getTest()))->count() > 0));
+        $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($protocol->getTemplate()));
+        $fileName = 'protocol_' . $protocol->getNumber() . '_' . $protocol->getCreatedAt()->format('Ymd');
+        $fileName = $this->removeSpecialChars($fileName) . '.docx';
+        $this->save($fileName);
 
-        }
-        if ($protocol->getSettings()->isForEach()) {
-            foreach ($filteredUsers as $user) {
-                $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($protocol->getSettings()->getTemplate()), $user);
-                $fileName = 'protocol_' . $protocol->getNumber() . '_' . mb_strtolower($this->translate($user->getProfile()->getLastName())) . '_' . $protocol->getCreatedAt()->format('Ymd');
-                $fileName = $this->removeSpecialChars($fileName) . '.docx';
-                $this->save($fileName);
-                $filenames[] = $fileName;
-            }
-        } else {
-            $this->fillProtocolTemplate($protocol, $this->getTemplateProcessor($protocol->getSettings()->getTemplate()));
-            $fileName = 'protocol_' . $protocol->getNumber() . '_' . $protocol->getCreatedAt()->format('Ymd');
-            $fileName = $this->removeSpecialChars($fileName) . '.docx';
-            $this->save($fileName);
-            $filenames[] = $fileName;
-        }
 
-        return $filenames;
+        return $fileName;
     }
 
-    private function fillProtocolTemplate(Protocol $protocol, TemplateProcessor $templateProcessor, User $user = null): TemplateProcessor
+    private function fillProtocolTemplate(Protocol $protocol, TemplateProcessor $templateProcessor): TemplateProcessor
     {
 //      определяем постоянные шаблона, для каждого будут свои
         $templateProcessor->setValues([
@@ -67,9 +46,8 @@ class GenerateProtocolWord implements GenerateProtocolInterface
         ]);
 
 //        формируем данные по пользователю или пользователям
-        $userData = [];
-        $filteredUser = $protocol->getGroups()->getParticipants()->filter(fn(User $item) => (!$user || $item === $user));
-        foreach ($filteredUser as $user) {
+
+        foreach ($protocol->getUser() as $user) {
             $result = $user->getResults()->filter(fn(Result $result) => ($result->getTest() === $protocol->getTest()))->first()->isPass();
             $userData[] = [
                 'user_id' => '',
@@ -143,4 +121,12 @@ class GenerateProtocolWord implements GenerateProtocolInterface
 
     }
 
+    public function generateMany(Protocol ...$protocols): array
+    {
+        $fileNames = [];
+        foreach ($protocols as $protocol) {
+            $fileNames[(string)$protocol->getId()] = $this->generate($protocol);
+        };
+        return $fileNames;
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Controller\Api\BaseAction;
 use App\Service\FileUploader;
 use App\Service\SerializerService;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,7 +64,18 @@ class NewBaseAction
         );
 
         $response->headers->set('Content-Disposition', $disposition);
+        return $response;
+    }
 
+    public function fileResponse(SplFileInfo $fileInfo, bool $deleteAfterSend = false): BinaryFileResponse
+    {
+        $response = new BinaryFileResponse($fileInfo);
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $fileInfo->getFilename()
+        );
+        $response->deleteFileAfterSend($deleteAfterSend);
+        $response->headers->set('Content-Disposition', $disposition);
         return $response;
     }
 }

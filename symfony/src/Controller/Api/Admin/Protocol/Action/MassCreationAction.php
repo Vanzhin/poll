@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class CreateAction extends NewBaseAction
+class MassCreationAction extends NewBaseAction
 {
     public function __construct(
         SerializerService                         $serializer,
@@ -44,46 +44,59 @@ class CreateAction extends NewBaseAction
     {
         $data = json_decode($request->getContent(), true);
 
-        $errors = $this->validator->dataValidate($data, $this->mapper->getValidationCollectionProtocol());
+        $errors = $this->validator->dataValidate($data, $this->mapper->getValidationCollectionMassProtocol());
         if ($errors) {
             throw new AppException(implode(', ', $errors));
 
         }
-//        если нет пользователей, формировать протокол не надо
-        $users = $this->entityManager->getRepository(User::class)->findBy(['id' => $data['users']]);
-        //фильтруем тех у кого есть результат
-        $filteredUsers = array_filter($users, fn(User $user) => ($user->getResults()->filter(fn(Result $result) => ($result->getTest()->getId() === (int)$data['test_id']))->count() > 0));
-
-        if (!$filteredUsers) {
-            throw new AppException('Пользователей не найдено.');
-
-        }
-        $createProtocol = $this->mapper->buildCreateProtocol($data, new UserList(...$filteredUsers));
-
+        $massCreateProtocol = $this->mapper->buildMassCreateProtocol($data);
 // протокол формируется для тестов группы
-        $group = $this->groupRepository->getById($createProtocol->getGroupId());
+        $group = $this->groupRepository->getById($massCreateProtocol->getGroupId());
         if (!$group) {
             throw new AppException('Группа не обнаружена.');
-        };
 
-        if ($group->getAvailableTests()->filter(fn(Test $test) => ($test->getId() === (int)$createProtocol->getTestId()))->isEmpty()) {
+        };
+        if ($group->getAvailableTests()->filter(fn(Test $test) => ($test->getId() === (int)$massCreateProtocol->getTestId()))->isEmpty()) {
             throw new AppException('Для этого теста/ группы протокол не может быть сформирован');
         };
-
-        if (!in_array($createProtocol->getTemplate(), $this->fileHandler->getFilesList(ProtocolController::TEMPLATE_PATH))) {
+        if (!in_array($massCreateProtocol->getSettings()->getTemplate(), $this->fileHandler->getFilesList(ProtocolController::TEMPLATE_PATH))) {
             throw new AppException(
-                sprintf('Шаблон с названием \'%s\' не найден.', $createProtocol->getTemplate()));
+                sprintf('Шаблон с названием \'%s\' не найден.', $massCreateProtocol->getSettings()->getTemplate()));
         }
 
-        $protocol = $this->factory->createBuilder()->build($createProtocol);
+        $users = $group->getParticipants();
+        if ($massCreateProtocol->getSettings()->isIgnoreFailedUsers()) {
+            //        фильтруем, если нужны только пользователи с положительными результатами
+            $filteredUsers = $users
+                ->filter(fn(User $user) => ($user->getResults()->filter(fn(Result $result) => ($result->getTest()->getId() === (int)$massCreateProtocol->getTestId() && $result->isPass()))->count() > 0));
+        } else {
+            //        фильтруем пользователей, у которых есть результаты по тесту
+            $filteredUsers = $users->filter(fn(User $user) => ($user->getResults()->filter(fn(Result $result) => ($result->getTest()->getId() === (int)$massCreateProtocol->getTestId()))->count() > 0));
+        }
+        $created = [];
+        if ($massCreateProtocol->getSettings()->isForEach()) {
+//            каждый протокол должен иметь уникальный номер
+            $i = 1;
+            foreach ($filteredUsers as $user) {
+                $createProtocol = $this->mapper->buildCreateProtocolFromMass($massCreateProtocol, new UserList($user));
+                $protocol = $this->factory->createBuilder()->build($createProtocol);
+                $protocol->setNumber($protocol->getNumber() . '-' . $i++);
+                $this->checkPermission($protocol);
+                $this->entityManager->persist($protocol);
+                $created[] = $protocol;
+            }
+        } else {
+            $createProtocol = $this->mapper->buildCreateProtocolFromMass($massCreateProtocol, new UserList(...$filteredUsers->toArray()));
+            $protocol = $this->factory->createBuilder()->build($createProtocol);
+            $this->checkPermission($protocol);
+            $this->entityManager->persist($protocol);
+            $created[] = $protocol;
 
-        $this->checkPermission($protocol);
-
-        $this->entityManager->persist($protocol);
+        }
 
         $this->entityManager->flush();
 
-        return $this->successResponse($protocol, ['admin_protocol'], 'Протокол создан.');
+        return $this->successResponse($created, ['admin_protocol'], 'Протокол(ы) созданы.');
     }
 
     private function checkPermission(Protocol $protocol): void

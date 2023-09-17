@@ -8,7 +8,6 @@ use App\Entity\Protocol\Protocol;
 use App\Service\SerializerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class GenerateAction extends NewBaseAction
 {
@@ -24,12 +23,15 @@ class GenerateAction extends NewBaseAction
         parent::__construct($serializer);
     }
 
-    public function run(Protocol $protocol): JsonResponse
+    public function run(Protocol ...$protocols): JsonResponse
     {
-        $protocol->setFiles($this->generateProtocol->generate($protocol));
-        $this->em->persist($protocol);
+        foreach ($protocols as $protocol) {
+            $protocol->setFile($this->generateProtocol->generate($protocol));
+            $this->em->persist($protocol);
+        }
+
         $this->em->flush();
 
-        return $this->successResponse($protocol, ['admin_protocol'], 'Протокол создан.');
+        return $this->successResponse($protocol, ['admin_protocol'], 'Протокол сгенерирован.');
     }
 }

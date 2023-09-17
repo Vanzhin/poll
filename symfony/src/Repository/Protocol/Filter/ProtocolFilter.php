@@ -14,7 +14,7 @@ class ProtocolFilter implements \JsonSerializable
         "started_at",
         "finished_at",
         "number",
-        'files'
+        'file'
     ];
 
     private ?string $number = null;

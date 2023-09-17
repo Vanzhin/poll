@@ -8,6 +8,8 @@ interface GenerateProtocolInterface
 {
     public function save(string $fileName): bool;
 
-    public function generate(Protocol $protocol): array;
+    public function generate(Protocol $protocol): string;
+
+    public function generateMany(Protocol ...$protocols): array;
 
 }

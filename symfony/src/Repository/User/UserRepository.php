@@ -6,6 +6,7 @@ use App\Entity\Company;
 use App\Entity\Group;
 use App\Entity\User\User;
 use App\Repository\Interfaces\UserRepositoryInterface;
+use App\Repository\Test\Filter\UserTest;
 use App\Repository\User\Filter\UserFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -177,6 +178,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()->getResult();
     }
 
+    public function findUsersByCompany(Company $company): array
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('u.company = :company')
+            ->setParameter('company', $company)
+            ->getQuery()->getResult();
+    }
+
     public function findGroupOwnerToChange(Group $group, array $roles): array
     {
         $query = $this->getOrCreateQueryBuilder();
@@ -192,5 +201,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('id', $group->getOwner()->getId());
 
         return $query->getQuery()->getResult();
+    }
+
+    public function getGeneralStatistic(UserTest $request): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('u.id IN (:userIds)')
+            ->setParameter('userIds', $request->getUsers())
+            ->leftJoin('u.groups', 'gr')
+            ->addSelect('gr')
+            ->leftJoin('u.results', 're')
+            ->addSelect('re')
+            ->addOrderBy('u.id','DESC')
+            ->leftJoin('re.test', 'te_re')
+            ->addSelect('te_re')
+            ->join('gr.availableTests', 'te_gr')
+            ->addSelect('te_gr')
+        ;
     }
 }

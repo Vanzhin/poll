@@ -24,7 +24,9 @@ class Test
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general', 'search', 'admin_group', 'breadcrumbs', 'admin_protocol'])]
+    #[Groups(['main', 'main_test', 'category', 'admin', 'admin_test_general',
+        'search', 'admin_group', 'breadcrumbs', 'admin_protocol',
+        'test_statistic'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(
@@ -62,7 +64,7 @@ class Test
         message: 'test.category.exist'
     )]
     #[ORM\ManyToOne(inversedBy: 'test')]
-    #[Groups(['result', 'search', 'breadcrumbs'])]
+    #[Groups(['result', 'search', 'breadcrumbs', 'admin_test_general'])]
     private ?Category $category = null;
 
     #[Groups(['admin_test_general', 'category', 'search'])]

@@ -29,8 +29,8 @@ class ProtocolFilterMapper
             $response->setTest($filter['test']);
         }
 
-        if (isset($filter['files'])) {
-            $response->setIsFile($filter['files']);
+        if (isset($filter['file'])) {
+            $response->setIsFile($filter['file']);
         }
 
         if (isset($filter['date'])) {
@@ -61,15 +61,15 @@ class ProtocolFilterMapper
 
                     'group' => new Assert\Optional([
                         new Assert\NotNull(),
-                        new Assert\Type('string'),
+                        new Assert\Type('digit'),
                         new Assert\NotBlank(),
                     ]),
                     'test' => new Assert\Optional([
                         new Assert\NotNull(),
-                        new Assert\Type('string'),
+                        new Assert\Type('digit'),
                         new Assert\NotBlank(),
                     ]),
-                    'files' => new Assert\Optional([
+                    'file' => new Assert\Optional([
                         new Assert\NotNull(),
                         new Assert\Type('boolean'),
                     ]),
