@@ -71,7 +71,7 @@
   async function testRoute(item){
     console.log('testRoute - ',item)
     // await this.setTestItem(item)
-    navigateTo(`/admin/categorys/${parentId.value}/test/${item.id}/questions`)
+    navigateTo(`/admin/categorys/${item.category.id}/test/${item.id}/questions`)
     
   }
 
