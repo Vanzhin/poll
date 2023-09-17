@@ -1,66 +1,140 @@
 <template>
-  <div class="fon">
-    <div class="container">
-      <div class="wrapper">
-        <div class="row">
-          <div class="title">
-            <h2>Компании</h2>
-            <div class="button-cont">
-              <div class="button"
-                title="Добавить новую команию"
-                @click.stop="createCompany"
-              >
-                <svg width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M30.4023 18.8252C30.4023 25.9054 24.6627 31.645 17.5825 31.645C10.5023 31.645 4.7627 25.9054 4.7627 18.8252C4.7627 11.745 10.5023 6.00537 17.5825 6.00537C24.6627 6.00537 30.4023 11.745 30.4023 18.8252ZM31.9023 18.8252C31.9023 26.7338 25.4911 33.145 17.5825 33.145C9.6739 33.145 3.2627 26.7338 3.2627 18.8252C3.2627 10.9166 9.6739 4.50537 17.5825 4.50537C25.4911 4.50537 31.9023 10.9166 31.9023 18.8252ZM24.7419 19.899H10.4221V17.751H24.7419V19.899Z" fill="#269EB7"/>
-                  <path d="M16.5088 11.6646L16.5088 25.9844L18.6567 25.9844L18.6567 11.6646L16.5088 11.6646Z" fill="#269EB7"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="block">
+    <div class="title">
+      <div>
+        <h2>Компания: </h2>
+        <p>{{ companyName }}</p>
+        <p>админ - {{ companys.getAdminCompany }}</p>
       </div>
+      <UiButtonBack/>
     </div>
-    <div class="container">
-      <div class="row">
-        <div class="tests__block"
-          v-if="getCompanyList">
-          <AdminItemCompany
-            v-for="(item, index) in getCompanyList" 
-            :key="item.id"
-            :item="item"
-            :index="index"
-           @click.stop="companyRoute({item})"
-          /> 
-        </div>
-        <div class="tests__block"
-          v-else>
-        <h4>Создайте компанию.</h4>
-        </div>
-        <ThePagination/>
-      </div>
-    </div>
-  </div>
-</template>
-<script setup>
-  import { useCompanyStore } from '@/stores/CompanyStore'
-  import { useLoaderStore } from '@/stores/Loader'
-  import { useUserStore  } from '@/stores/UserStore'
-  
-  const companys = useCompanyStore()
-  const loader = useLoaderStore() 
-  const route = useRoute()
-  const page = ref(route.params.page ? +route.params.page: 1)
+    
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation"
+        v-for="(nav, index ) in navsActive" 
+          :key="nav.title"
+      >
+        <NuxtLink class="nav-link tabs-fonts" :class="{active: nav.active}"  
+          @click="activeTogge(index)"
+          :to="{ path: nav.link}" >{{ nav.title }} 
+        </NuxtLink>
+      </li>
+    </ul>
+    <AdminCompanyTabsStaff 
+      v-if="layout === 'staff'"
+    />
+    <AdminCompanyTabsGroups 
+      v-else-if="layout === 'groups'"
+    />
 
-  function createCompany(){
-    // this.$router.push({name: 'adminCompanyCreate', params: {operation:"create", id: 0  } })
-    navigateTo(``)
-  }
-  function companyRoute({item}){
-    this.SET_COMPANY(item)
-    // this.$router.push({name: 'adminCompanyStaff', params: { id:item.id } })
-    navigateTo(``)
-  }
-  onMounted(async() => {
-    await companys.getCompanyListDB({})
+  </div>
+  
+</template>
+
+
+<script setup>
+  import { useCompanyStore } from '../../stores/CompanyStore'
+  import { usePaginationStore } from '@/stores/PaginationStore'
+  
+  const pagination = usePaginationStore()
+  const companys = useCompanyStore()
+
+  const route = useRoute()
+
+  const companyId = ref( route.params.companyId)
+  
+  const classObject= ref( {
+    active: true,
   })
+  const url = ref( route.path)
+  const navs= ref([])
+        
+  const layout = computed(()=>{
+    const link = navsActive.value.find((nav)=>nav.active).link
+    return  link
+  })
+
+
+  const companyName = computed(()=>{
+    console.log(companys.getCompany)
+    return companys.getCompany ? companys.getCompany.title : ''
+  })
+    
+  const navsActive = computed(()=>{
+    
+    return navs.value=[
+      {
+        title: `Сотрудники `,
+        link: 'staff',
+        active: (new RegExp("staff", 'i')).test(url.value),
+        // count: this.countQuestion
+      },
+      {
+        title: `Группы `,
+        link: 'groups',
+        active: (new RegExp("groups", 'i')).test(url.value),
+        // count: this.countTicket
+      },
+      
+    ]
+  })
+  
+  
+  
+  function activeTogge(index) {
+    navs.value = [ ...navs.value.map((nav, ind) => {
+      index === ind ? nav.active = true: nav.active = false
+      return nav
+    })]
+  }
+  
+ 
+  async function created(){
+    console.log(companys.getCompany)
+    if (!companys.getCompany){
+      console.log("получаю данные компании")
+      await companys.getCompanyIdDB({id: +route.params.companyId})
+    }
+  }
+
 </script>
+<style lang="scss" scoped>
+  .tabs-fonts{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0B1F33;
+  }
+  .block{
+    
+    padding: 10px ;
+  }
+  .title{
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    & h2{
+      font-family: "Lato";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 40px;
+      color: var(--color-blue);
+    }
+  }
+  .test{
+    display: flex;
+  }
+  [class*="col-"] {
+  padding-top: 7px;
+  padding-right: 7px;
+  padding-left: 7px;
+  margin-bottom: 10px;
+  }
+  
+@media (min-width: 1024px) {
+ 
+}
+</style>

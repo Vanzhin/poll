@@ -1,6 +1,6 @@
 <template>
   <div >
-    <AdminTheCompanysPage/>
+    <AdminEditStaffer/>
   </div>
 </template>
  

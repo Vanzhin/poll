@@ -141,7 +141,7 @@
   import { useUserStore  } from '../../../../stores/UserStore'
   const user = useUserStore()
   const categorys = useCategoryStore()
-  const modal= useModalStore()
+  const modal = useModalStore()
   const route = useRoute()
   const router = useRouter()
   const operation = ref(route.params.operation || '')

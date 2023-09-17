@@ -7,7 +7,6 @@ import { usePaginationStore } from './PaginationStore'
 export const useQuestionsStore = defineStore('questions', {
   state: () => ({
     questions:[],
-    urlApi: useRuntimeConfig().public.urlApi,
     questionsImportError: null,
     questionsSection: [],
     questionsTicket: [],
@@ -146,7 +145,7 @@ export const useQuestionsStore = defineStore('questions', {
       for(let [name, value] of questionSend) {
         console.dir(`${name} = ${value}`)
       } 
-      let url = `${this.urlApi}/api/admin/question/${id ? id + '/edit_with_variant': 'create_with_variant'}`
+      let url = `${urlApi()}/api/admin/question/${id ? id + '/edit_with_variant': 'create_with_variant'}`
       const params = {
         method: 'post',
         headers: { 
@@ -160,7 +159,7 @@ export const useQuestionsStore = defineStore('questions', {
     },
      //запрос на получение вопросов теста по его id для админки
     async getAdminQuestionsTestIdDb( {id, page=null, limit=10}) {
-      let url = `${this.urlApi}/api/admin/test/${id}/question?limit=${limit}`
+      let url = `${urlApi()}/api/admin/test/${id}/question?limit=${limit}`
       const params = {
         method: 'get',
         headers: { 
@@ -180,7 +179,7 @@ export const useQuestionsStore = defineStore('questions', {
     },
     //получение вороса по его id
     async getQuestionIdDb( {id}) {
-      const url = `${this.urlApi}/api/admin/question/${id}`
+      const url = `${urlApi()}/api/admin/question/${id}`
       const params = {
         method: 'get',
         headers: { 
@@ -192,7 +191,7 @@ export const useQuestionsStore = defineStore('questions', {
     },
     //удаление вопроса из БД
     async deleteQuestionDb({ id, testId, page = null} ){
-      const url = `${this.urlApi}/api/admin/question/${id}/delete`
+      const url = `${urlApi()}/api/admin/question/${id}/delete`
       const params = {
         method: 'get',
         headers: { 
@@ -206,7 +205,7 @@ export const useQuestionsStore = defineStore('questions', {
     },
     //утверждение вопроса
     async approveQuestionDb( {questionSend} ){
-      const url = `${this.urlApi}/api/admin/question/publish`
+      const url = `${urlApi()}/api/admin/question/publish`
       const params = {
         method: 'post',
         headers: { 
@@ -222,7 +221,7 @@ export const useQuestionsStore = defineStore('questions', {
     },
     //утверждение или скрытие всех вопросов теста по его id
     async approveQuestionsAllDb( {id, param} ){
-      const url = `${this.urlApi}/api/admin/question/publish/test/${id}?publish=${param}`
+      const url = `${urlApi()}/api/admin/question/publish/test/${id}?publish=${param}`
       const params = {
         method: 'get',
         headers: { 
@@ -235,7 +234,7 @@ export const useQuestionsStore = defineStore('questions', {
     },
      //запрос на получение вопросов секции по id для админки
      async getQuestionsSectionIdDb( {id, limit = 10000}) {
-      let url = `${this.urlApi}/api/admin/question/section/${id}?limit=${limit}`
+      let url = `${urlApi()}/api/admin/question/section/${id}?limit=${limit}`
       const params = {
         method: 'get',
         headers: { 
@@ -249,7 +248,7 @@ export const useQuestionsStore = defineStore('questions', {
     },
      //запрос на получение вопросов билетов по id для админки
      async getQuestionsTicketIdDb( {id, limit = 10000}) {
-      let url = `${this.urlApi}/api/ticket/${id}/question`
+      let url = `${urlApi()}/api/ticket/${id}/question`
       const params = {
         method: 'get',
         headers: { 

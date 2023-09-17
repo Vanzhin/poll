@@ -1,18 +1,16 @@
 <template>
   <div >
-    <AdminTheCompanysPage/>
+    <AdminTheCompanyPage/>
   </div>
 </template>
- 
 <script setup>
- definePageMeta({
+  definePageMeta({
     layout: "admin",
     middleware: 'authadmin'
-  });
+  })
   import { usePaginationStore } from '@/stores/PaginationStore'
-  
   const pagination = usePaginationStore()
   const route = useRoute()
   pagination.urlToChange(route.path)
- 
+
 </script>

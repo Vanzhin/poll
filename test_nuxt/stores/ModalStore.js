@@ -36,9 +36,14 @@ export const useModalStore = defineStore('modal', {
         } else {
            messag += `${e.error}`
         }
-       
       }
-
+      if (e.data) {
+        if (Array.isArray(e.data.message)){
+          e.data.message.forEach(element => messag += `${element} <hr>`)
+        } else {
+           messag += `${e.data.message}`
+        }
+      }
       console.log("messag", messag)
       this.message = {err: true, mes: messag};
       setIntevalTime({ state: this.message } )

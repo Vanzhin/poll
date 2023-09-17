@@ -1,14 +1,12 @@
 <template>
   <div >
-    <AdminTheCompanysPage/>
+    <AdminEditCompany />
   </div>
 </template>
- 
 <script setup>
- definePageMeta({
+  definePageMeta({
     layout: "admin",
     middleware: 'authadmin'
-  });
-  
- 
+  })
+
 </script>

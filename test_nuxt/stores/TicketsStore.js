@@ -11,7 +11,6 @@ export const useTicketsStore = defineStore('tickets', {
     pending: false,
     ticketModeTitle: "",
     ticket: null,
-    urlApi: useRuntimeConfig().public.urlApi,
   }),
   getters: {
     getTickets: (state) => state.tickets,
@@ -41,7 +40,7 @@ export const useTicketsStore = defineStore('tickets', {
     async getApiTicketsTestIdNoAuthDb({ page = null, parentId = null, admin = null, limit = 6 }){
       const loader = useLoaderStore()
       loader.setIsLoaderStatus(true)
-      let url = `${this.urlApi}/api/test/${parentId}`
+      let url = `${urlApi()}/api/test/${parentId}`
       try {
         const { data: sections, pending, error } = await useAsyncData(
           () => $fetch(url)
@@ -77,7 +76,7 @@ export const useTicketsStore = defineStore('tickets', {
     },
     //удаление билета из БД
     async deleteTicketIdDb({ id, testId, page} ){
-      const url = `${this.urlApi}/api/admin/ticket/${id}/delete`
+      const url = `${urlApi()}/api/admin/ticket/${id}/delete`
       const params = {
         method: 'get',
         headers: { 
@@ -91,7 +90,7 @@ export const useTicketsStore = defineStore('tickets', {
     },
     //запрос на создание, редактирование если передается id - сохранение билета в БД
     async createTicketDb ({ ticket, id = null, testId, page = null }){
-      let url = `${this.urlApi}/api/admin/ticket/${id ? id + '/edit': 'create'}`
+      let url = `${urlApi()}/api/admin/ticket/${id ? id + '/edit': 'create'}`
       const params = {
         method: 'post',
         headers: { 
