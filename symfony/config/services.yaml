@@ -112,6 +112,10 @@ services:
             $defaultFromName: '%app.default_from_name%'
 #            $loginLinkHandler: 'security.authenticator.login_link_handler.login'
 
+    App\Service\SecurityService:
+        arguments:
+            $host: '%env(CORS_ALLOW_ORIGIN)%'
+
 
     App\Service\FileHandler:
         arguments:

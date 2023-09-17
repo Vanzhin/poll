@@ -11,7 +11,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 class Mailer
 {
@@ -22,13 +21,12 @@ class Mailer
 
 
     public function __construct(
-        private readonly MailerInterface           $mailer,
-        private readonly LoginLinkHandlerInterface $loginLinkHandler,
-        private readonly UrlGeneratorInterface     $urlGenerator,
-        private readonly UserRepository            $repository,
-        string                                     $appName,
-        string                                     $defaultFromEmail,
-        string                                     $defaultFromName,
+        private readonly MailerInterface       $mailer,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UserRepository        $repository,
+        string                                 $appName,
+        string                                 $defaultFromEmail,
+        string                                 $defaultFromName,
     )
     {
         $this->appName = $appName;
@@ -91,7 +89,7 @@ class Mailer
             ->htmlTemplate($template);
     }
 
-    public function sendLoginLinkEmail(User $user): void
+    public function sendLoginLinkEmail(User $user, string $link): void
     {
         try {
             $email = (new TemplatedEmail())
@@ -101,7 +99,7 @@ class Mailer
                 ->htmlTemplate('emails/login_link.html.twig')
                 ->context(['user' => $user,
                     'appName' => $this->appName,
-                    'loginLinkDetails' => $this->loginLinkHandler->createLoginLink($user)]);
+                    'loginLink' => $link]);
             $this->mailer->send($email);
         } catch (\Exception $e) {
             throw new \Error(sprintf("Не удалось отправить письмо на %s", $user->getEmail()));
@@ -109,7 +107,7 @@ class Mailer
 
     }
 
-    public function sendCompanyCreatedEmail(User $user): void
+    public function sendCompanyCreatedEmail(User $user, string $link): void
     {
         try {
             $email = (new TemplatedEmail())
@@ -120,7 +118,7 @@ class Mailer
                 ->context(
                     ['user' => $user,
                         'appName' => $this->appName,
-                        'loginLinkDetails' => $this->loginLinkHandler->createLoginLink($user)
+                        'loginLink' => $link
                     ]);
             $this->mailer->send($email);
         } catch (\Exception|\Error $e) {
