@@ -16,14 +16,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class UserController extends AbstractController
 {
     public function __construct(
-        private readonly Actions\ShowAction              $showAction,
-        private readonly Actions\CreateAction            $createAction,
-        private readonly Actions\UpdateAction            $updateAction,
-        private readonly Actions\DeleteAction            $deleteAction,
-        private readonly Actions\ListAction              $listAction,
-        private readonly Actions\MassAdditionAction      $massAdditionAction,
-        private readonly Actions\GetAvailableRolesAction $availableRolesAction,
-        private readonly Action\SendLoginLinkAction      $sendLoginLinkToUser,
+        private readonly Actions\ShowAction                                 $showAction,
+        private readonly Actions\CreateAction                               $createAction,
+        private readonly Actions\UpdateAction                               $updateAction,
+        private readonly Actions\DeleteAction                               $deleteAction,
+        private readonly Actions\ListAction                                 $listAction,
+        private readonly Actions\MassAdditionAction                         $massAdditionAction,
+        private readonly Actions\GetAvailableRolesAction                    $availableRolesAction,
+        private readonly Action\SendLoginLinkAction                         $sendLoginLinkToUser,
 
     )
     {

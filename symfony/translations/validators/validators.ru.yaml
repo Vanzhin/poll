@@ -115,6 +115,11 @@ protocol.commission.not_null: Необходимо указать комисси
 protocol.number.not_null: Номер протокола - обязательное поле
 protocol.number.not_blank: Номер протокола - не может быть пустым
 protocol.number.max: Номер протокола не может быть длиннее {{ limit }} символов
+protocol.test.not_null: Тест протокола - обязательное поле
+protocol.groups.not_null: Группа протокола - обязательное поле
+protocol.settings.not_null: Настройки протокола - обязательное поле
+protocol.number.unique: Номер протокола уже существует
+protocol.user.not_null: Пользователей не обнаружено
 
 min_trud_test.title.not_blank: Название теста не может быть пустым
 min_trud_test.original_id.unique: Тест с таким идентификатором уже существует

@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
-#[UniqueEntity(['title', 'test'], 'question.title.already_exist')]
+//#[UniqueEntity(['title', 'test'], 'question.title.already_exist')]
 class Question implements EntityWithImageInterface
 {
     use TimestampableEntity;

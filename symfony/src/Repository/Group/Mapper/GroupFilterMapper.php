@@ -3,7 +3,7 @@
 namespace App\Repository\Group\Mapper;
 
 use App\Repository\Group\Filter\GroupFilter;
-use App\Repository\Group\Filter\vo\DateTimeInterval;
+use App\Repository\Shared\Filter\vo\DateTimeInterval;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class GroupFilterMapper

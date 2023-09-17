@@ -6,6 +6,7 @@ use App\Entity\Commission\Commission;
 use App\Entity\Company;
 use App\Entity\Group;
 use App\Entity\Profile\Profile;
+use App\Entity\Protocol\Protocol;
 use App\Entity\Question;
 use App\Entity\Result;
 use App\Entity\User\vo\Permissions;
@@ -32,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user', 'admin_user', 'user_editable', 'admin_commission', 'admin_group'])]
+    #[Groups(['user', 'admin_user', 'user_editable', 'admin_commission', 'admin_group','admin_protocol'])]
     private ?int $id = null;
 
 
@@ -60,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Result::class, orphanRemoval: true)]
-    #[Groups(['account', 'result'])]
+    #[Groups(['account', 'result', 'test_statistic'])]
     private Collection $results;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Question::class)]
@@ -91,9 +92,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Commission::class, mappedBy: 'participant')]
     private Collection $commissions;
-
+    #[Groups(['test_statistic'])]
     #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'participants')]
     private Collection $groups;
+
+    #[ORM\ManyToMany(targetEntity: Protocol::class, mappedBy: 'user')]
+    private Collection $protocols;
 
     /**
      * @return WorkerCard|null
@@ -117,6 +121,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->questions = new ArrayCollection();
         $this->commissions = new ArrayCollection();
         $this->groups = new ArrayCollection();
+        $this->protocols = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -391,6 +396,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->groups->removeElement($group)) {
             $group->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Protocol>
+     */
+    public function getProtocols(): Collection
+    {
+        return $this->protocols;
+    }
+
+    public function addProtocol(Protocol $protocol): self
+    {
+        if (!$this->protocols->contains($protocol)) {
+            $this->protocols->add($protocol);
+            $protocol->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProtocol(Protocol $protocol): self
+    {
+        if ($this->protocols->removeElement($protocol)) {
+            $protocol->removeUser($this);
         }
 
         return $this;

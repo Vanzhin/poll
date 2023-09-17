@@ -30,6 +30,10 @@ parameters:
     category_upload_url: '%env(SITE_URL)%/%category_upload%'
     category_upload_dir: '%kernel.project_dir%/public/%category_upload%'
 
+    protocol_upload: 'protocols'
+    protocol_upload_url: '%env(SITE_URL)%/%protocol_upload%'
+    protocol_upload_dir: '%kernel.project_dir%/public/%protocol_upload%'
+
 
 services:
     # default configuration for services in *this* file
@@ -44,7 +48,10 @@ services:
             App\Service\FileUploader $questionImageUploader: '@image_uploader.question'
             App\Service\FileUploader $variantImageUploader: '@image_uploader.variant'
             App\Service\FileUploader $categoryImageUploader: '@image_uploader.category'
+            App\Service\FileUploader $protocolFileUploader: '@file_uploader.protocol'
 
+    App\Repository\User\UserRepository: ~
+    App\Repository\Interfaces\UserRepositoryInterface: '@App\Repository\User\UserRepository'
 
 
     #            League\Flysystem\Filesystem $questionFileSystem: '@oneup_flysystem.upload_question_filesystem'
@@ -92,6 +99,11 @@ services:
         class: App\Service\FileUploader
         arguments:
             $fileSystem: '@oneup_flysystem.upload_category_filesystem'
+    file_uploader.protocol:
+        class: App\Service\FileUploader
+        arguments:
+            $fileSystem: '@oneup_flysystem.upload_protocol_filesystem'
+
 
     App\Service\Mailer:
         arguments:
@@ -99,6 +111,10 @@ services:
             $defaultFromEmail: '%app.default_from_email%'
             $defaultFromName: '%app.default_from_name%'
 #            $loginLinkHandler: 'security.authenticator.login_link_handler.login'
+
+    App\Service\SecurityService:
+        arguments:
+            $host: '%env(CORS_ALLOW_ORIGIN)%'
 
 
     App\Service\FileHandler:

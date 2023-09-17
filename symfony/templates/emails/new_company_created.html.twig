@@ -1,7 +1,7 @@
 {% extends 'emails/base.html.twig' %}
 {% block title %} Зарегистрирована новая компания {{ company.title }} на портале {{ app_name }} {% endblock %}
 {% block body %}
-    <p>Здравствуйте, {{ user.firstName?? 'Пользователь' }}!</p>
+    <p>Здравствуйте, {{ user.profile.firstName?? 'Пользователь' }}!</p>
     <p>Зарегистрирована новая компания {{ company.title }}.
         Это письмо отправлено автоматически на указанную почту администратора портала {{ app_name }}.
     </p>

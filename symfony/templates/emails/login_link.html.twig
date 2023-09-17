@@ -1,10 +1,10 @@
 {% extends 'emails/base.html.twig' %}
 {% block title %} Welcome to {{ app_name }} {% endblock %}
 {% block body %}
-    <p>Хеллоу, дорогой {{ user.firstName?? 'Пользователь' }}!</p>
-    <p>Это тестовое письмо, которое отсылается после регистрации пользователя.</p>
+    <p>Хеллоу, дорогой {{ user.profile.firstName?? 'Пользователь' }}!</p>
+    <p>Это письмо, которое содержит ссылку для авторизации пользователя. Ссылка будет активной пару минут.</p>
     <p class="button">
-        <a class="text-no-decoration text-cornflowerblue" href="{{ loginLinkDetails.url }}">Авторизоваться</a>
+        <a class="text-no-decoration text-cornflowerblue" href="{{ loginLink }}">Авторизоваться</a>
     </p>
 
 {% endblock %}

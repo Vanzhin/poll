@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Protocol\Protocol;
 use App\Entity\User\User;
 use App\Repository\Group\GroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -35,7 +36,7 @@ class Group
     private Collection $participants;
 
     #[ORM\ManyToMany(targetEntity: Test::class, inversedBy: 'groups')]
-    #[Groups(['admin_group'])]
+    #[Groups(['admin_group', 'test_statistic'])]
     #[Assert\Count(min: 1, minMessage: 'group.test.min')]
     private Collection $availableTests;
 

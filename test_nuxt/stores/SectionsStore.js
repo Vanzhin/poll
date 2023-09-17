@@ -3,7 +3,6 @@ import { usePaginationStore } from './PaginationStore'
 import { useModalStore  } from './ModalStore'
 export const useSectionsStore = defineStore('sections', {
   state: () => ({
-    urlApi: useRuntimeConfig().public.urlApi,
     sections: [],
     section: null,
     
@@ -37,7 +36,7 @@ export const useSectionsStore = defineStore('sections', {
     },
     //удаление секции из БД
     async deleteSectionIdDb({ id, testId, page} ){
-      const url = `${this.urlApi}/api/admin/section/${id}/delete`
+      const url = `${urlApi()}/api/admin/section/${id}/delete`
       const params = {
         method: 'get',
         headers: { 
@@ -52,7 +51,7 @@ export const useSectionsStore = defineStore('sections', {
     //запрос на создание, редактирование если передается id - сохранение секуии в БД
     async createSectionDb ({ section, id = null, testId, page = null }){
       
-      let url = `${this.urlApi}/api/admin/section/${id ? id + '/edit': 'create'}`
+      let url = `${urlApi()}/api/admin/section/${id ? id + '/edit': 'create'}`
       const params = {
         method: 'post',
         headers: { 

@@ -32,7 +32,7 @@ class Category implements EntityWithImageInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['main', 'admin', 'category', 'breadcrumbs'])]
+    #[Groups(['main', 'admin', 'category', 'breadcrumbs', 'admin_test_general'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 500)]

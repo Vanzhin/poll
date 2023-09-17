@@ -1,6 +1,6 @@
 <template>
   <div >
-    <AdminTheCompanyPage/>
+    <AdminTheCompanysPage/>
   </div>
 </template>
  

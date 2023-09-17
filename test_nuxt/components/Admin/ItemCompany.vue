@@ -74,38 +74,26 @@
   const id = ref( null)
   const childVisible = ref(false)
       
-   
-
+  async function editCompany(){
+    companys.company = props.item
+    navigateTo(`/admin/company/${props.item.id}/edit`)
     
-   
-    async function editCompany(){
-      this.SET_COMPANY(this.item)
-      this.$router.push({name: 'adminCompanyCreate', params: {operation:"edit", id: this.item.id  } })
-    }
-    async function deleteCompany(){
-      this.deleteCompanyDb({id: this.item.id })
-    }
-    function deleteVisibleConfirm(){
-      this.setConfirmMessage("При удалении компании, так же будут удалены все связанные данные. Вы, действительно хотите это сделать?")
-      let timerId = setInterval(() => {
-        if (this.getGonfimAction) {
-          clearInterval(timerId)
-          if (this.getGonfimAction === "yes"){this.deleteCompany()}
-        }
-      }, 200);
-    }
+  }
 
-    
-    function createChildrenCategory(){
-      // this.$router.push({name: 'adminCategoryCreate', params: {operation:"create", id: this.item.id  } })
-      navigateTo(``)
-    }
-    function createChildrenTest(){
-      // this.$router.push({name: 'adminTestCreate', params: {operation:"create", id: this.item.id  } })
-      navigateTo(``)
-    }
-  
+  async function deleteCompany(){
+    console.log('Удаляю компанию - ',props.item)
+    companys.deleteCompanyDB({id: props.item.id })
+  }
 
+  function deleteVisibleConfirm(){
+    confirm.setConfirmMessage("При удалении компании, так же будут удалены все связанные данные. Вы, действительно хотите это сделать?")
+    let timerId = setInterval(() => {
+      if (confirm.getConfirmAction) {
+        clearInterval(timerId)
+        if (confirm.getConfirmAction === "yes"){deleteCompany()}
+      }
+    }, 200);
+  }
 
 </script>
 <style lang="scss" scoped>

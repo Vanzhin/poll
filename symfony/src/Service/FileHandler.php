@@ -6,6 +6,7 @@ use FilesystemIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
@@ -227,7 +228,6 @@ class FileHandler
 
         }
         return $files;
-
     }
 
     private function detectEncoding(File $file, array $encoding = ['utf8', 'windows-1251']): string
@@ -235,5 +235,30 @@ class FileHandler
         return mb_detect_encoding($file->getContent(), $encoding);
     }
 
+    public function getFilesList(string $dirPath, string $extension = 'docx'): array
+    {
+        $filesList = [];
+        $finder = new Finder();
+        $finder->files()->in($dirPath);
+        foreach ($finder as $file) {
+            if (str_ends_with($file->getRealPath(), '.' . $extension)) {
+                $filesList[] = $file->getFilename();
+            }
+        }
+        return $filesList;
+    }
+
+    public function getFilesFromDir(array $fileNames, string $dirPath): array
+    {
+        $files = [];
+        $finder = new Finder();
+        $finder->files()->in($dirPath)
+            ->ignoreDotFiles(true)
+            ->filter(fn(SplFileInfo $fileInfo) => in_array($fileInfo->getFilename(), $fileNames));
+        foreach ($finder as $file) {
+            $files[] = $file;
+        }
+        return $files;
+    }
 
 }
